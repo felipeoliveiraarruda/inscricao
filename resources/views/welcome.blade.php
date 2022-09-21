@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@auth
-    @php redirect()->intended('index'); @endphp
-@endauth
-
 @section('content')
 
 <main role="main" class="container-fluid">
@@ -14,6 +10,16 @@
                 <h5 class="card-header">Inscrições Abertas</h5>
                 
                 <div class="card-body">
+                    <div class="flash-message">
+                        @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                            @if(Session::has('alert-' . $msg))
+                                <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                                </p>
+                            @endif
+                        @endforeach
+                    </div>
+
                     <table class="table">
                         <tbody>
                             <tr>

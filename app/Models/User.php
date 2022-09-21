@@ -57,4 +57,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $prefixo.$codigo;
     }
+
+    public function setCpfAttribute($value) 
+    {
+        $this->attributes['cpf'] = preg_replace('/[^0-9]/', '', $value);
+    }
 }

@@ -13,7 +13,5 @@
 
 @section('javascripts_bottom')
   @parent
-  <script>
-    // Seu código .js
-  </script>
+  <script type="text/javascript" src="{{ asset('js/mascara.js') }}"></script>
 @endsection

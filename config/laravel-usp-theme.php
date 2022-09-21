@@ -5,7 +5,7 @@ $admin = [
         'text' => '<i class="fas fa-atom"></i>  SubItem 1',
         'url' => 'subitem1',
     ],
-    [
+    /*[
         'text' => 'SubItem 2',
         'url' =>  '/subitem2',
         'can' => 'admin',
@@ -20,7 +20,7 @@ $admin = [
     [
         'text' => 'SubItem 3',
         'url' => 'subitem3',
-    ],
+    ],*/
 ];
 
 /*$submenu2 = [
@@ -44,16 +44,11 @@ $menu = [
         # este item de menu será substituido no momento da renderização
         'key' => 'menu_dinamico',
     ],
-    [
+    /*[
         'text' => 'Drop Down',
         'submenu' => $submenu2,
         'can' => '',
-    ],
-    [
-        'text' => 'Está logado',
-        'url' => config('app.url') . '/logado', // com caminho absoluto
-        'can' => 'user',
-    ],
+    ],   */ 
     [
         'text' => 'Menu gerente',
         'url' => 'gerente',
@@ -71,20 +66,20 @@ $right_menu = [
         // menu utilizado para views da biblioteca senhaunica-socialite.
         'key' => 'senhaunica-socialite',
     ],
-    [
+    /*[
         'text' => '<i class="fas fa-cog"></i>',
         'title' => 'Configurações',
         'target' => '_blank',
         'url' => config('app.url') . '/item1',
         'align' => 'right',
-    ],
+    ],*/
 ];
 
 
 return [
     # valor default para a tag title, dentro da section title.
     # valor pode ser substituido pela aplicação.
-    'title' => config('app.name'),
+    //'title' => config('app.name'),
 
     # USP_THEME_SKIN deve ser colocado no .env da aplicação 
     'skin' => env('USP_THEME_SKIN', 'uspdev'),
@@ -99,7 +94,7 @@ return [
     # login e logout
     'logout_method' => 'POST',
     'logout_url' => 'logout',
-    'login_url' => 'login',
+    'login_url' => 'acesso',
 
     # menus
     'menu' => $menu,

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\AcessoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +21,16 @@ Route::get('/', function () {
 
 Route::middleware(['auth','verified'])->group(function () 
 {
-    Route::get('/dashboard', function () {
-        return view('dashboard')->name('dashboard');
+    Route::get('/dashboard', function () 
+    {        
+        if (session('cpf') == 1)
+        {    
+            return view('admin.dados'); 
+        }
+        else
+        {
+            return redirect('/');
+        }
     });
 });
 
