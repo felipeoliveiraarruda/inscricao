@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AcessoController;
+use App\Http\Controllers\InscricaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,23 +16,26 @@ use App\Http\Controllers\Auth\AcessoController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function () 
+{
     return view('welcome');
 });
 
 Route::middleware(['auth','verified'])->group(function () 
 {
-    Route::get('/dashboard', function () 
+    Route::get('dashboard', [InscricaoController::class, 'index']);
+
+
+   /* Route::get('/dashboard', function () 
     {        
         if (session('cpf') == 1)
         {    
             return view('admin.dados'); 
         }
-        else
-        {
-            return redirect('/');
-        }
-    });
+        
+        return view('dashboard');        
+    });*/
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';

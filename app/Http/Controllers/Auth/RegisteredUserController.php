@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'cpf'   => $request->cpf,
-            'codpes' => \App\Models\User::gerarCodigoPessoaExterna(),
+            'codpes' => User::gerarCodigoPessoaExterna(),
             'password' => Hash::make($request->password),
         ]);
 

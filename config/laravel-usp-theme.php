@@ -2,8 +2,8 @@
 
 $admin = [
     [
-        'text' => '<i class="fas fa-atom"></i>  SubItem 1',
-        'url' => 'subitem1',
+        'text' => '<i class="fas fa-atom"></i> Edital',
+        'url' => 'admin/edital',
     ],
     /*[
         'text' => 'SubItem 2',
@@ -38,7 +38,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => 'home',
+        'url' => '/',
     ],
     [
         # este item de menu será substituido no momento da renderização
@@ -49,15 +49,15 @@ $menu = [
         'submenu' => $submenu2,
         'can' => '',
     ],   */ 
-    [
+    /*[
         'text' => 'Menu gerente',
         'url' => 'gerente',
         'can' => 'gerente',
-    ],
+    ],*/
     [
-        'text' => 'Menu admin',
+        'text' => 'Administração',
         'submenu' => $admin,
-        'can' => 'admin',
+        'can' => 'admin', 'gerente',
     ],
 ];
 

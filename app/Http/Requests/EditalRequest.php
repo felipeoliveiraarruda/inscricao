@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserUpdateRequest extends FormRequest
+class EditalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +24,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'cpf'  => ['cpf', 'unique:users'],
-        ];
-    }
 
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'cpf' => preg_replace('/[^0-9]/', '', $this->cpf),
-        ]);
+        ];
     }
 }

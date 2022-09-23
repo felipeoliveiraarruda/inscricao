@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <br/>        
             <div class="card bg-default">
-                <h5 class="card-header">Inscrições Abertas</h5>
+                <h5 class="card-header">Inscrições Abertas - welcome</h5>
                 
                 <div class="card-body">
                     <div class="flash-message">
