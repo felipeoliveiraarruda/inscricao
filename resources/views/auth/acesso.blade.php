@@ -32,13 +32,13 @@
                             <input type="password" class="form-control" name="password" value="" required>
                         </div>
                                                                     
-                        <div class="flex items-center text-right mt-4">
+                        <!--<div class="flex items-center text-right mt-4">
                             @if (Route::has('password.request'))
                                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
-                        </div><br/>
+                        </div><br/>-->
 
                         <button type="submit" class="btn btn-primary btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">{{ __('Log in') }}</button>
 

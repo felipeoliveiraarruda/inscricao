@@ -21,7 +21,7 @@
                         @csrf
                         <div class="form-group">                            
                             <label for="cpf">{{ __('CPF') }}</label>
-                            <input type="text" class="form-control" id="cpf" name="cpf" value="{{ old('cpf') }}"  required autofocus>
+                            <input type="text" class="form-control" id="cpf" name="cpf" value="{{ old('cpf') }}" required autofocus>
                         </div>
 
                         <div class="form-group">                            
@@ -32,6 +32,16 @@
                         <div class="form-group">                            
                             <label for="email">{{ __('Email') }}</label>
                             <input type="email" class="form-control" id="cpf" name="email" value="{{ old('email') }}" required>
+                        </div>
+
+                        <div class="form-group">                            
+                            <label for="rg">{{ __('RG') }}</label>
+                            <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') }}" required>
+                        </div>
+
+                        <div class="form-group">                            
+                            <label for="telefone">{{ __('Telefone') }}</label>
+                            <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('rg') }}"  required>
                         </div>
 
                         <div class="form-group">                            
@@ -46,7 +56,7 @@
                                                                 
                         <button type="submit" class="btn btn-primary btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">{{ __('Register') }}</button>
 
-                        <div class="flex items-center mt-4">
+                        <div class="flex items-center mt-4 text-center">
                             <a class="underline text-sm text-gray-600 hover:text-gray-900" href="/acesso">
                                 {{ __('Already registered?') }}
                             </a>

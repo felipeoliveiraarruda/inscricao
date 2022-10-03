@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@auth
-    @php redirect()->intended('index'); @endphp
-@endauth
-
 @section('content')
 
 <main role="main" class="container-fluid">
@@ -23,11 +19,21 @@
                             <label for="cpf">{{ __('CPF') }}</label>
                             <input type="text" class="form-control" id="cpf" name="cpf"
                             @if (Auth::user()->cpf != "99999999999")
-                                value="{{ Auth::user()->cpf }}"                                
+                                value="{{ Auth::user()->cpf }}" disabled
                             @else                                
                                 autofocus
                             @endif>
                         </div>
+
+                        <div class="form-group">                            
+                            <label for="rg">{{ __('RG') }}</label>
+                            <input type="text" class="form-control" id="rg" name="rg" value="{{ Auth::user()->rg }}"  required>
+                        </div>
+
+                        <div class="form-group">                            
+                            <label for="telefone">{{ __('Telefone') }}</label>
+                            <input type="text" class="form-control" id="telefone" name="telefone" value="{{ Auth::user()->telefone }}"  required>
+                        </div>                           
 
                         <div class="form-group">                            
                             <label for="name">{{ __('Name') }}</label>

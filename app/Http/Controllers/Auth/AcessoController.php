@@ -18,8 +18,8 @@ class AcessoController extends Controller
 
     public function index()
     {
-        if (session()->exists('cpf'))
-        {
+        if (Auth::user()->cpf == '99999999999')
+        {   
             return view('admin.dados');
         }
         else
@@ -30,9 +30,14 @@ class AcessoController extends Controller
 
     public function update(UserUpdateRequest $request)
     {        
-        $user = User::find(Auth::user()->id);
         $validated = $request->validated();
-        $user->update($validated);
+
+        User::where('id', Auth::user()->id)->update([
+            'cpf' => $request->cpf,
+            'rg' => $request->rg,
+            'telefone' => $request->telefone
+        ]);        
+
         request()->session()->flash('alert-success','Dados Pessoais atualizado com sucesso');
         session()->forget('cpf');
         return redirect("/");

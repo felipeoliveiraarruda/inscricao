@@ -25,6 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'codpes',
         'password',
         'cpf',
+        'rg',
+        'telefone',
     ];
 
     /**
@@ -61,5 +63,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function setCpfAttribute($value) 
     {
         $this->attributes['cpf'] = preg_replace('/[^0-9]/', '', $value);
+    }
+
+    public function inscricoes()
+    {
+        return $this->hasMany(\App\Models\Inscricao::class);
+    }
+
+    public function arquivos()
+    {
+        return $this->hasMany(\App\Models\Arquivo::class);
+    }
+
+    public function enderecos()
+    {
+        return $this->hasMany(\App\Models\Endereco::class);
     }
 }

@@ -5,6 +5,10 @@ $admin = [
         'text' => '<i class="fas fa-atom"></i> Edital',
         'url' => 'admin/edital',
     ],
+    [
+        'text' => '<i class="fas fa-atom"></i> Tipo de Documento',
+        'url' => 'admin/tipo-documento',
+    ],    
     /*[
         'text' => 'SubItem 2',
         'url' =>  '/subitem2',
@@ -38,7 +42,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => '/',
+        'url' => '/dashboard',
     ],
     [
         # este item de menu será substituido no momento da renderização

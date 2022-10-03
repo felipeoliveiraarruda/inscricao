@@ -4,10 +4,10 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <br/>        
             <div class="card bg-default">
-                <h5 class="card-header">Inscrições Abertas - dashboard</h5>
+                <h5 class="card-header">Inscrições Abertas</h5>
                 
                 <div class="card-body">
                     <div class="flash-message">
@@ -27,12 +27,18 @@
                             @else
                                 @foreach ($editais as $edital)
                                     @php
-                                        $curso = $utils->obterCurso($edital->codigoCurso);
-                                    @endphp   
+                                        $curso    = $utils->obterCurso($edital->codigoCurso);
+                                        $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
+                                    @endphp       
                                     <tr>
                                         <td>{{ $utils->obterNivelEdital($edital->nivelEdital) }} - {{ $curso['nomcur'] }}</td>
-                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y - H:i') }} a {{ $edital->dataFinalEdital->format('d/m/Y - H:i') }}</td>
-                                        <td>Inscreva-se</td>
+                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                        
+                                        
+                                        @if ($inscrito == 0)
+                                            <td><a href="/inscricao/{{ $edital->codigoEdital }}">Inscreva-se</a></td>
+                                        @else
+                                            <td><a href="/inscricao/{{ $edital->codigoEdital }}">Inscrito</a></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             @endif

@@ -14,12 +14,13 @@ class CreateEditaisTable extends Migration
     public function up()
     {
         Schema::create('editais', function (Blueprint $table) {
-            $table->increments('codigoEdital');
+            $table->id('codigoEdital');
             $table->integer('codigoCurso');
             $table->char('nivelEdital', 2);
             $table->string('linkEdital');
             $table->timestamp('dataInicioEdital');
             $table->timestamp('dataFinalEdital');
+            $table->timestamp('dataDoeEdital');
             $table->timestamps();
             $table->integer('codigoPessoaAlteracao');
         });

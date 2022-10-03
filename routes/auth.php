@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
 
-    Route::get('dados', [AcessoController::class, 'index'])->name('dados');
-    Route::post('dados', [AcessoController::class, 'update']);
+    Route::get('admin/dados',  [AcessoController::class, 'index'])->name('dados');
+    Route::post('admin/dados', [AcessoController::class, 'update']);
+
+    /*Route::get('/', function () 
+    {
+        return view('dashboard');
+    });*/
 });

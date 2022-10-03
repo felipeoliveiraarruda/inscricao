@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Auth\AcessoController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
+use App\Http\Controllers\ArquivoController;
+use App\Http\Controllers\EnderecoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,26 +17,46 @@ use App\Http\Controllers\InscricaoController;
 |
 */
 
-Route::get('/', function () 
+/*Route::get('/', function () 
 {
-    return view('welcome');
-});
+    return view('index');
+});*/
+
+Route::get('/', [HomeController::class, 'index']);
+Route::get('email', [ArquivoController::class, 'email']);
+
 
 Route::middleware(['auth','verified'])->group(function () 
 {
     Route::get('dashboard', [InscricaoController::class, 'index']);
+    
+    Route::group(['prefix' => 'inscricao'], function()
+    { 
+        Route::get('{id}',                      [InscricaoController::class, 'create']);
+        Route::get('comprovante/{id}',          [InscricaoController::class, 'comprovante'])->name('comprovante');
+        Route::get('{id}/endereco',             [InscricaoController::class, 'endereco']);
+        Route::get('{id}/documento',            [InscricaoController::class, 'documento']);
+                
+        Route::get('arquivos/novo/{id}',        [ArquivoController::class, 'create'])->name('novo');
+        Route::post('arquivos/salvar',          [ArquivoController::class, 'store'])->name('salvar');
+        Route::get('arquivos/editar/{id}',      [ArquivoController::class, 'edit'])->name('editar');   
+        Route::get('arquivos/comprovante/{id}', [ArquivoController::class, 'comprovante'])->name('comprovante');
 
+        Route::get('endereco/novo/{id}',    [EnderecoController::class, 'create'])->name('novo');
+        Route::post('endereco/salvar',      [EnderecoController::class, 'store'])->name('salvar');
+    });
+    
+   /* Route::get('endereco', [EnderecoController::class, 'index']);
 
-   /* Route::get('/dashboard', function () 
-    {        
-        if (session('cpf') == 1)
-        {    
-            return view('admin.dados'); 
-        }
+    Route::group(['prefix' => 'endereco'], function()
+    { 
         
-        return view('dashboard');        
+        Route::post('salvar',     [EnderecoController::class, 'store'])->name('salvar');
+        Route::get('editar/{id}', [EnderecoController::class, 'edit'])->name('editar');           
     });*/
+
 });
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
+

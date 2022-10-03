@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class Utils extends Model
 {
@@ -42,6 +44,25 @@ class Utils extends Model
         return $temp[0];
     }
 
+    public function obterSiglCurso($codcur)
+    {
+        switch ($codcur) 
+        {
+            case 97001:
+                return 'PPGBI';
+                break;
+            case 97002:
+                return 'PPGEM';
+                break;
+            case 97003:
+                return 'PPGEQ';
+                break;
+            case 97004:
+                return 'PPGPE';
+                break;                                                
+        }
+    }    
+
     public function obterNivelEdital($nivel)
     {
         switch ($nivel) 
@@ -60,5 +81,18 @@ class Utils extends Model
                 break;
                                                 
         }
+    }
+
+    public function obterEndereco($cep)
+    {
+        $cep = preg_replace('/[^0-9]/', '', $cep);
+
+        $link = "https://viacep.com.br/ws/{$cep}/json/";
+
+        $response = Http::get($link);
+
+        $temp = $response->json(); 
+ 
+        return $temp;
     }
 }

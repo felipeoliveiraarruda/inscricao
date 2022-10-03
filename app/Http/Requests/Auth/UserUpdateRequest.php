@@ -24,7 +24,9 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'cpf'  => ['cpf', 'unique:users'],
+            'cpf'      => ['cpf', 'unique:users'],
+            'rg'       => ['string'],
+            'telefone' => ['string'],
         ];
     }
 
