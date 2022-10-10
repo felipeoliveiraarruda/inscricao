@@ -65,7 +65,7 @@ class ArquivoController extends Controller
 
         /*if ($request->codigoTipoDocumento == 12)
         {
-            Inscricao::where('codigoInscricao', $request->codigoInscricao)->update(['situacaoInscricao' => 'P']);        
+            Inscricao::where('codigoInscricao', $request->codigoInscricao)->update(['situacaoInscricao' => 'P']);
             Mail::to('felipeoa@usp.br')->send(new EnviarEmailComprovante($request->codigoInscricao, $path));
 
             if (Mail::failures()) 

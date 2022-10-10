@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\EditalRequest;
 use App\Models\Edital;
 use App\Models\Utils;
@@ -12,7 +13,12 @@ use App\Models\Utils;
 class EditalController extends Controller
 {
     public function index()
-    {                            
+    {              
+        if (!Gate::allows('gerente'))
+        {
+            return redirect("/");
+        }
+
         $editais = Edital::all();
         
         return view('admin.edital.index',

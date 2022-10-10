@@ -1,7 +1,7 @@
 <?php
 
 $admin = [
-    [
+   /* [
         'text' => '<i class="fas fa-atom"></i> Edital',
         'url' => 'admin/edital',
     ],
@@ -42,7 +42,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => '/dashboard',
+        'url' => '/',
     ],
     [
         # este item de menu será substituido no momento da renderização
@@ -57,12 +57,27 @@ $menu = [
         'text' => 'Menu gerente',
         'url' => 'gerente',
         'can' => 'gerente',
-    ],*/
+    ],
     [
         'text' => 'Administração',
         'submenu' => $admin,
         'can' => 'admin', 'gerente',
+    ],*/
+    [
+        'text' => '<i class="fas fa-user"></i> Usuário',
+        'url' => 'admin/usuario',
+        'can' => 'admin',
     ],
+    [
+        'text' => '<i class="fas fa-file-contract"></i> Edital',
+        'url' => 'admin/edital',
+        'can' => 'gerente',
+    ],
+    [
+        'text' => '<i class="fas fa-file"></i> Tipo de Documento',
+        'url' => 'admin/tipo-documento',
+        'can' => 'admin',
+    ],     
 ];
 
 $right_menu = [

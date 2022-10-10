@@ -17,7 +17,8 @@ class Inscricao extends Model
 
     protected $fillable = [
         'codigoEdital',
-        'codigoUsuario',        
+        'codigoUsuario',    
+        'numeroInscricao',    
         'situacaoInscricao',
         'codigoPessoaAlteracao'
     ];

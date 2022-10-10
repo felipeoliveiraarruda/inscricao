@@ -30,8 +30,8 @@
                             @endforeach
                         </div>
                         <div class="col-md-12 text-right">
-                            <a href="/endereco/novo" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
-                            <a href="/dashboard" role="button" aria-pressed="true" class="btn btn-primary btn-sm">Voltar</a>
+                            <a href="public/endereco/novo" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
+                            <a href="public/dashboard" role="button" aria-pressed="true" class="btn btn-primary btn-sm">Voltar</a>
                         </div>
                                                         
                         <div class="col-md-12">                                    

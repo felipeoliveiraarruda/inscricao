@@ -21,7 +21,7 @@
                         @method('patch')
                         @include('arquivo.partials.form')                          
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Atualizar</button>
-                        <a href="/inscricao/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-lg btn-block">Voltar</a>
+                        <a href="public/inscricao/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-lg btn-block">Voltar</a>
                     </form>
                 </div>
             </div>

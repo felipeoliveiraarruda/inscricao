@@ -25,7 +25,7 @@
 
 <div class="form-group">
     <label for="cidade">Cidade</label>
-    <input class="form-control" type="text" id="cidade" name="cidade" value="{{ old('cidade') }}" maxlength="255">
+    <input class="form-control" type="text" id="localidade" name="localidade" value="{{ old('localidade') }}" maxlength="255">
 </div>
 
 <div class="form-group">

@@ -27,22 +27,12 @@
                             @else
                                 @foreach ($editais as $edital)
                                     @php
-                                        $curso    = $utils->obterCurso($edital->codigoCurso);
-                                        $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
+                                        $curso = $utils->obterCurso($edital->codigoCurso);
                                     @endphp       
                                     <tr>
                                         <td>{{ $utils->obterNivelEdital($edital->nivelEdital) }} - {{ $curso['nomcur'] }}</td>
-                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                        
-                                        
-                                        @if (Gate::check('admin'))
-                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/listar">Lista de Inscritos</a></td>
-                                        @else
-                                            @if ($inscrito == 0)
-                                                <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a></td>
-                                            @else
-                                                <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
-                                            @endif
-                                        @endif                                    
+                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                                                            
+                                        <td><a href="admin/listar-inscritos/{{ $edital->codigoEdital }}">Lista de Inscritos</a></td>
                                     </tr>
                                 @endforeach
                             @endif

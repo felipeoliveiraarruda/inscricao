@@ -28,8 +28,8 @@
 
                             @if ($total == 7 && $comprovante == 0)
                                 <hr></hr>
-                                <a href="/inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-block" role="button" aria-pressed="true">Comprovante de Inscrição</a>                                                                                      
-                                <a href="/inscricao/arquivos/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-secondary btn-block" role="button" aria-pressed="true">Enviar Comprovante</a>                                
+                                <a href="public/inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-block" role="button" aria-pressed="true">Comprovante de Inscrição</a>                                                                                      
+                                <a href="public/inscricao/arquivos/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-secondary btn-block" role="button" aria-pressed="true">Enviar Comprovante</a>                                
                             @endif                            
                         </div>
         
@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="col-md-3 text-right">
                                     @if ($total < 7)
-                                        <a href="/inscricao/arquivos/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
+                                        <a href="public/inscricao/arquivos/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
                                     @endif
                                 </div>
                                                                 
@@ -79,7 +79,7 @@
                                             <td><a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" target="_new">Visualizar</a></td>
                                             @if ($status == 'N')
                                             <td>
-                                                <a href="inscricao/arquivos/editar/{{ $arquivo->codigoArquivo }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
+                                                <a href="publicinscricao/arquivos/editar/{{ $arquivo->codigoArquivo }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
                                             </td>
                                             @endif
                                         </tr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\Inscricao;
@@ -22,9 +23,7 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
-        $editais = Edital::where('dataFinalEdital', '>',  Carbon::now())->get();        
-
-       // dd(Utils::obterEndereco('12609-260'));
+        $editais = Edital::where('dataFinalEdital', '>', Carbon::now())->get();        
 
         return view('dashboard',
         [
@@ -68,15 +67,65 @@ class InscricaoController extends Controller
         ]);
     }
 
-    public function show(Inscricao $inscricao)
+    public function show($id)
     {
+        $temps = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('codigoInscricao', $id)->get();
+        
+        $enderecos = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
+                             ->where('inscricoes_enderecos.codigoInscricao', $id)->get();
 
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                             ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                             ->where('inscricoes_arquivos.codigoInscricao', $id)->get();
+
+        foreach($temps as $temp)
+        {
+            $inscricao = $temp;
+        }
+
+        return view('inscricao.visualizar',
+        [
+            'inscricao' => $inscricao,
+            'enderecos' => $enderecos,
+            'arquivos'  => $arquivos,
+        ]);
     }
 
     public function comprovante($id, Fpdf $pdf)
     {
-        $requerimento = 'Eu, '.Auth::user()->name.', portador do CPF Nº '.Auth::user()->cpf.', venho requerer minha inscrição para o processo seletivo conforme regulamenta o edital PPGPE Nº 02/2022 (DOESP de 30/09/2022).';
-        
+        if (Gate::check('admin'))
+        {
+            Inscricao::where('codigoInscricao', $id)
+                     ->where('situacaoInscricao', 'N')->update(['situacaoInscricao' => 'P']);
+
+            $temps = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $id)->get();
+
+            foreach($temps as $temp)
+            {
+                $inscricao = $temp;
+            }
+        }
+        else
+        {
+            Inscricao::where('codigoUsuario', Auth::user()->id)
+                     ->where('codigoInscricao', $id)
+                     ->where('situacaoInscricao', 'N')->update(['situacaoInscricao' => 'P']);
+
+            $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                  ->where('codigoUsuario', Auth::user()->id)
+                                  ->where('codigoInscricao', $id)
+                                  ->where('situacaoInscricao', 'P')->first();   
+                                  
+            foreach($temps as $temp)
+            {
+                $inscricao = $temp;
+            }
+        }
+
+        $edital = Edital::obterNumeroEdital($inscricao->codigoEdital);
+        $requerimento = 'Eu, '.$inscricao->name.', portador do CPF Nº '.$inscricao->cpf.', venho requerer minha inscrição para o processo seletivo conforme regulamenta o edital PPGPE Nº '.$edital.' (DOESP de 30/09/2022).';
+
         $pdf->AddPage();
         $pdf->SetFillColor(190,190,190);
         $pdf->Image(asset('images/cabecalho.png'), 10, 10, 190);
@@ -84,11 +133,10 @@ class InscricaoController extends Controller
 
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(190, 8, utf8_decode('COMPROVANTE DE REQUERIMENTO'), 1, 0, 'C', true);
-        //$pdf->Cell(50, 8, utf8_decode("M{$id} - 02/2022"), 1, 0, 'C', true);
         $pdf->Ln();        
         $pdf->Cell(190, 2, '', 'LR',  0, 'C', false);
         $pdf->Ln();
-        $pdf->Cell(190, 8, utf8_decode("NÚMERO DE INSCRIÇÃO: ME{$id} - 02/2022"), 'LR',  0, 'C', false);
+        $pdf->Cell(190, 8, utf8_decode("NÚMERO DE INSCRIÇÃO: {$inscricao->numeroInscricao} - {$edital}"), 'LR',  0, 'C', false);
         $pdf->Ln();
         $pdf->Cell(190, 2, '', 'LR',  0, 'C', false);
         $pdf->Ln();   
@@ -117,15 +165,15 @@ class InscricaoController extends Controller
     public function endereco($id)
     {
         $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
-                              ->where('codigoEdital', $id)
+                              ->where('codigoInscricao', $id)
                               ->first();
 
         $enderecos = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
-                             ->where('inscricoes_enderecos.codigoInscricao', $id)->get();
+                             ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->get();
 
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
                              ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                             ->where('inscricoes_arquivos.codigoInscricao', $id)->get();
+                             ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
   
         $cpf         = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(1));
         $rg          = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(2, 3, 4));
@@ -141,6 +189,7 @@ class InscricaoController extends Controller
         return view('endereco',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
+            'codigoEdital'    => $inscricao->codigoEdital,
             'status'          => $inscricao->situacaoInscricao,
             'enderecos'       => $enderecos,
             'cpf'             => $cpf,
@@ -158,7 +207,7 @@ class InscricaoController extends Controller
     public function documento($id)
     {
         $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
-                              ->where('codigoEdital', $id)
+                              ->where('codigoInscricao', $id)
                               ->first();
 
         $endereco = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
@@ -166,7 +215,7 @@ class InscricaoController extends Controller
 
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $id)->get();
+                           ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
   
         $cpf         = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(1));
         $rg          = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(2, 3, 4));
@@ -182,6 +231,7 @@ class InscricaoController extends Controller
         return view('arquivo',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
+            'codigoEdital'    => $inscricao->codigoEdital,
             'status'          => $inscricao->situacaoInscricao,
             'arquivos'        => $arquivos,
             'endereco'        => $endereco,

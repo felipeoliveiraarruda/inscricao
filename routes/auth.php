@@ -65,9 +65,4 @@ Route::middleware('auth')->group(function () {
 
     Route::get('admin/dados',  [AcessoController::class, 'index'])->name('dados');
     Route::post('admin/dados', [AcessoController::class, 'update']);
-
-    /*Route::get('/', function () 
-    {
-        return view('dashboard');
-    });*/
 });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Utils;
 
 class Edital extends Model
 {
@@ -38,16 +39,26 @@ class Edital extends Model
         return $this->hasMany(\App\Models\Inscricao::class);
     }
 
-    public function obterNumeroEdital($codigoEdital)
+    public function obterNumeroEdital($codigoEdital, $curso = false)
     {
-        $edital = Edital::select('dataInicioEdital')
-                        ->where('codigoEdital', $codigoEdital)
-                        ->first();
+        $edital = Edital::where('codigoEdital', $codigoEdital)->first();
 
         $ano      = $edital->dataInicioEdital->format('Y');
         $semestre = ($edital->dataInicioEdital->format('m') < 7 ? "01" : "02");
-        
-        return "{$semestre}/{$ano}";
+
+        if ($curso)
+        {
+            $retorno = array();
+            $sigla = Utils::obterSiglCurso($edital->codigoCurso);
+            $retorno['sigla']  = $sigla;
+            $retorno['edital'] = "{$semestre}/{$ano}";
+
+            return $retorno;
+        }
+        else
+        {
+            return "{$semestre}/{$ano}";
+        }
     }
 
     public function obterNivelEdital($codigoEdital)

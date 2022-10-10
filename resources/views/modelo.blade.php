@@ -10,17 +10,17 @@
         <div class="col-md-6">
             <br/>        
             <div class="card bg-default">
-                <h5 class="card-header">Novo Endereço</h5>
+                <h5 class="card-header">Novo Documento</h5>
                 
                 <div class="card-body">
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
-                    <form class="needs-validation" novalidate method="POST" action="inscricao/endereco/salvar">
+                    <form class="needs-validation" novalidate method="POST" action="teste" enctype="multipart/form-data">
                         @csrf
-                        @include('endereco.partials.form')                          
+                        
+                        @include('arquivo.partials.form') 
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
-                        <a href="inscricao/{{ $codigoInscricao }}/endereco" role="button" aria-pressed="true" class="btn btn-info btn-lg btn-block">Voltar</a>
                     </form>
                 </div>
             </div>

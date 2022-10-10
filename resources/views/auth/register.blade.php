@@ -57,7 +57,7 @@
                         <button type="submit" class="btn btn-primary btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">{{ __('Register') }}</button>
 
                         <div class="flex items-center mt-4 text-center">
-                            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="/acesso">
+                            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="acesso">
                                 {{ __('Already registered?') }}
                             </a>
                         </div>

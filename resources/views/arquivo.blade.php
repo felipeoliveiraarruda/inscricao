@@ -21,7 +21,7 @@
                             <button type="button" class="btn @if ($projeto == 1) btn-success @else btn-secondary @endif btn-block">Pré-projeto</button>
                             <button type="button" class="btn @if ($taxa == 1) btn-success @else btn-secondary @endif btn-block">Comprovante da Taxa de Inscrição</button>
 
-                            <a href="/inscricao/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
+                            <a href="inscricao/{{ $codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
 
                             <!--@if ($total == 7 && $comprovante == 0)
                                 <hr></hr>
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="col-md-3 text-right">
                                     @if ($total < 7)
-                                        <a href="/inscricao/arquivos/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
+                                        <a href="inscricao/arquivos/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
                                     @endif
                                 </div>
                                                                 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\TipoDocumento;
 use App\Models\Utils;
 
@@ -12,6 +13,16 @@ class TipoDocumentoController extends Controller
 {    
     public function index()
     {
+        if (!Gate::allows('admin'))
+        {
+            $item = array();
+
+            $item['title'] = 'AVISO';
+            $item['story'] = 'Você não tem permissão para acessar essa página';
+
+            return view('components.modal', compact('item'));
+        }
+
         $tipos = TipoDocumento::all();
         
         return view('admin.tipo_documento.index',

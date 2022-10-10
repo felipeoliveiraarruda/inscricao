@@ -38,6 +38,8 @@
 
     $(document).ready(function()
     {
+        $('#modalAviso').modal('show');
+
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function()
         {
             $("#success-alert").slideUp(500);
@@ -48,7 +50,7 @@
             // Limpa valores do formulário de cep.
             $("#logradouro").val("");
             $("#bairro").val("");
-            $("#cidade").val("");
+            $("#localidade").val("");
             $("#uf").val("");
         }
 
@@ -78,26 +80,26 @@
                           //Atualiza os campos com os valores da consulta.
                           $("#logradouro").val(dados.logradouro);
                           $("#bairro").val(dados.bairro);
-                          $("#cidade").val(dados.localidade);
+                          $("#localidade").val(dados.localidade);
                           $("#uf").val(dados.uf);
                           $("#ibge").val(dados.ibge);
                       } //end if.
                       else {
                           //CEP pesquisado não foi encontrado.
-                          limpa_formulário_cep();
+                          limpa_formulario_cep();
                           alert("CEP não encontrado.");
                       }
                   });
               } //end if.
               else {
                   //cep é inválido.
-                  limpa_formulário_cep();
+                  limpa_formulario_cep();
                   alert("Formato de CEP inválido.");
               }
           } //end if.
           else {
               //cep sem valor, limpa formulário.
-              limpa_formulário_cep();
+              limpa_formulario_cep();
           }
         });
     })
