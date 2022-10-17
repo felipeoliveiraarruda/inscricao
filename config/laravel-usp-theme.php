@@ -77,7 +77,12 @@ $menu = [
         'text' => '<i class="fas fa-file"></i> Tipo de Documento',
         'url' => 'admin/tipo-documento',
         'can' => 'admin',
-    ],     
+    ],
+    [
+        'text' => '<i class="fas fa-file"></i> Endereço',
+        'url' => 'endereco',
+        'can' => '',
+    ],    
 ];
 
 $right_menu = [

@@ -13,6 +13,8 @@ use App\Models\Endereco;
 use App\Models\TipoDocumento;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
+use Mail;
+use App\Mail\ConfirmacaoMail;
 
 class InscricaoController extends Controller
 {
@@ -115,12 +117,7 @@ class InscricaoController extends Controller
             $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                   ->where('codigoUsuario', Auth::user()->id)
                                   ->where('codigoInscricao', $id)
-                                  ->where('situacaoInscricao', 'P')->first();   
-                                  
-            foreach($temps as $temp)
-            {
-                $inscricao = $temp;
-            }
+                                  ->where('situacaoInscricao', 'P')->first();
         }
 
         $edital = Edital::obterNumeroEdital($inscricao->codigoEdital);
@@ -245,6 +242,27 @@ class InscricaoController extends Controller
             'comprovante'     => $comprovante,
             'total'           => $total
         ]);
+    }
+    
+    public function validar($id)
+    {
+        $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $id)->first();
+
+
+        Mail::to($inscricao->email)->send(new ConfirmacaoMail($id));
+
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', 'Ocorreu um erro na validação da inscrição.');
+        }    
+        else
+        {
+            Inscricao::where('codigoInscricao', $id)->where('situacaoInscricao', 'P')->update(['situacaoInscricao' => 'C']);
+
+            request()->session()->flash('alert-success', 'Inscrição validada com sucesso.');
+        } 
+
+        return redirect("/inscricao/visualizar/{$id}");
     }
 
 }

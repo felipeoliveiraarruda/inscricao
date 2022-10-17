@@ -14,7 +14,7 @@
                     @endforeach
 
                     @if ($inscricao->situacaoInscricao == 'P')
-                        <a href="inscricao/comprovante/{{  $inscricao->codigoInscricao }}" target="_new" class="btn btn-primary btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>
+                        <a href="inscricao/validar/{{ $inscricao->codigoInscricao }}" target="_new" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
                     @endif
 
                     <a href="admin/listar-inscritos/{{ $inscricao->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
@@ -23,6 +23,16 @@
             
         </div>        
         <div class="col-md-9">
+            <div class="flash-message">
+                @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                    @if(Session::has('alert-' . $msg))
+                        <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                        </p>
+                    @endif
+                @endforeach
+            </div>
+
             <div class="card bg-default">
                 <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}</h5>
 

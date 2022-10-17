@@ -3,63 +3,57 @@
 @section('content')
 
 <main role="main" class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <br/>        
-            <div class="card bg-default">
-                <h5 class="card-header">Endereço</h5>
-                
-                <div class="card-body">                    
-                    <div class="row justify-content-center">
-                        <div class="flash-message">
-                            @foreach (['danger', 'warning', 'success', 'info'] as $msg)
-                                @if(Session::has('alert-' . $msg))
-                                    @if ($msg == 'success')
-                                    <div class="alert alert-success" id="success-alert">
-                                        {{ Session::get('alert-' . $msg) }}
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    @else
-                                    <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
-                                        <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
-                                    </p>
-                                    @endif
-                                @endif
-                            @endforeach
-                        </div>
-                        <div class="col-md-12 text-right">
-                            <a href="public/endereco/novo" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
-                            <a href="public/dashboard" role="button" aria-pressed="true" class="btn btn-primary btn-sm">Voltar</a>
-                        </div>
-                                                        
-                        <div class="col-md-12">                                    
-                            <p></p>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>    
-                                        <th scope="col">Logradrouro</th>
-                                        <th scope="col">Cidade/Uf</th>
-                                        <th scope="col">CEP</th>
-                                    </tr>
-                                </thead>
-                                @foreach ($enderecos as $endereco)
-                                <tr>
-                                    <td>{{ $endereco->codigoEndereco }}</td>
-                                    <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
-                                    <td>{{ $endereco->cidadeEndereco }}/{{ $endereco->ufEndereco }}</td>                                            
-                                    <td>
-                                        <a href="endereco/editar/{{ $endereco->codigoEndereco }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </table>                                  
-                        </div>                                
-                    </div>
-                </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page">Endereços</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="list-group">
+                <a href="/endereco/novo" class="list-group-item list-group-item-action">Novo Endereço</a>
             </div>
+        </div>
+
+        <div class="col-sm-9">
+            <h4>Endereço</h4>
+            <div class="flash-message">
+                @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                    @if(Session::has('alert-' . $msg))
+                        <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                        </p>
+                    @endif
+                @endforeach
+            </div>
+            
+            @if (count($enderecos) == 0)
+                <div class="alert alert-warning">Nenhum endereço cadastrado</div>
+            @else
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Logradrouro</th>
+                            <th scope="col">Cidade/Uf</th>
+                            <th scope="col">CEP</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    @foreach ($enderecos as $endereco)
+                    <tr>
+                        <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
+                        <td>{{ $endereco->localidadeEndereco }}/{{ $endereco->ufEndereco }}</td>
+                        <td>{{ $endereco->cepEndereco }}</td>
+                        <td>
+                            <a href="endereco/editar/{{ $endereco->codigoEndereco }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="endereco/excluir/{{ $endereco->codigoEndereco }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm">Excluir</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </table>  
+            @endif                            
         </div>
     </div>
 </main>
