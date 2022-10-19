@@ -16,7 +16,7 @@
                             <button type="button" class="btn @if ($cpf == 1) btn-success @else btn-secondary @endif btn-block">CPF</button>
                             <button type="button" class="btn @if ($rg == 1) btn-success @else btn-secondary @endif btn-block">RG / Passaporte / RNM</button>
                             <button type="button" class="btn @if ($historico == 1) btn-success @else btn-secondary @endif btn-block">Histórico Escolar</button>
-                            <button type="button" class="btn @if ($diploma == 1) btn-success @else btn-secondary @endif btn-block">Diploma / Declaração de Conclusão</button>
+                            <button type="button" class="btn @if ($diploma >= 1) btn-success @else btn-secondary @endif btn-block">Diploma / Declaração de Conclusão</button>
                             <button type="button" class="btn @if ($curriculo == 1) btn-success @else btn-secondary @endif btn-block">Currículo Vitae / Currículo Lattes</button>
                             <button type="button" class="btn @if ($projeto == 1) btn-success @else btn-secondary @endif btn-block">Pré-projeto</button>
                             <button type="button" class="btn @if ($taxa == 1) btn-success @else btn-secondary @endif btn-block">Comprovante da Taxa de Inscrição</button>                    

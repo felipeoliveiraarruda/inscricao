@@ -16,7 +16,7 @@
                             <button type="button" class="btn @if ($cpf == 1) btn-success @else btn-secondary @endif btn-block">CPF</button>
                             <button type="button" class="btn @if ($rg == 1) btn-success @else btn-secondary @endif btn-block">RG / Passaporte / RNM</button>
                             <button type="button" class="btn @if ($historico == 1) btn-success @else btn-secondary @endif btn-block">Histórico Escolar</button>
-                            <button type="button" class="btn @if ($diploma > 1) btn-success @else btn-secondary @endif btn-block">Diploma / Declaração de Conclusão</button>
+                            <button type="button" class="btn @if ($diploma >= 1) btn-success @else btn-secondary @endif btn-block">Diploma / Declaração de Conclusão</button>
                             <button type="button" class="btn @if ($curriculo == 1) btn-success @else btn-secondary @endif btn-block">Currículo Vitae / Currículo Lattes</button>
                             <button type="button" class="btn @if ($projeto == 1) btn-success @else btn-secondary @endif btn-block">Pré-projeto</button>
                             <button type="button" class="btn @if ($taxa == 1) btn-success @else btn-secondary @endif btn-block">Comprovante da Taxa de Inscrição</button>
@@ -55,7 +55,7 @@
                                     <h4>Documentos</h4>
                                 </div>
                                 <div class="col-md-3 text-right">
-                                    @if ($total < 7)
+                                    @if ($total < 2)
                                         <a href="inscricao/arquivos/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
                                     @endif
                                 </div>
@@ -73,12 +73,14 @@
                                         @foreach ($arquivos as $arquivo)
                                         <tr>
                                             <td>{{ $arquivo->tipoDocumento }}</td>
-                                            <td><a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" target="_new">Visualizar</a></td>
-                                            <!--@if ($status == 'N')
                                             <td>
-                                                <a href="inscricao/arquivos/editar/{{ $arquivo->codigoArquivo }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
+                                                <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                                <a href="inscricao/arquivos/remover/{{ $codigoInscricao }}/{{ $arquivo->codigoArquivo }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" title="Remover">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
                                             </td>
-                                            @endif-->
                                         </tr>
                                         @endforeach
                                     </table>

@@ -54,11 +54,17 @@ class InscricaoController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
         } 
+        
         $arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
 
         $endereco = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
-                            ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->count();                        
+                            ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->count();
+
+        $projeto     = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(10));
+        $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
+        
+        $total = $projeto + $taxa;
 
         return view('inscricao',
         [
@@ -66,6 +72,7 @@ class InscricaoController extends Controller
             'status'          => $inscricao->situacaoInscricao,
             'arquivo'         => $arquivo,
             'endereco'        => $endereco,
+            'total'           => $total,
         ]);
     }
 
@@ -181,7 +188,7 @@ class InscricaoController extends Controller
         $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
         $comprovante = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(12));    
         
-        $total = $cpf + $rg + $historico + $diploma + $curriculo + $projeto + $taxa;
+        $total = $projeto + $taxa;
  
         return view('endereco',
         [
@@ -223,7 +230,7 @@ class InscricaoController extends Controller
         $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
         $comprovante = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(12));    
         
-        $total = $cpf + $rg + $historico + $diploma + $curriculo + $projeto + $taxa;
+        $total = $projeto + $taxa;
  
         return view('arquivo',
         [
@@ -248,18 +255,17 @@ class InscricaoController extends Controller
     {
         $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $id)->first();
 
-
         Mail::to($inscricao->email)->send(new ConfirmacaoMail($id));
-
+        
         if (Mail::failures()) 
         {
-            request()->session()->flash('alert-danger', 'Ocorreu um erro na validação da inscrição.');
+            request()->session()->flash('alert-danger', "Ocorreu um erro na validação da inscrição Nº {$inscricao->numeroInscricao}.");
         }    
         else
         {
             Inscricao::where('codigoInscricao', $id)->where('situacaoInscricao', 'P')->update(['situacaoInscricao' => 'C']);
 
-            request()->session()->flash('alert-success', 'Inscrição validada com sucesso.');
+            request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} validada com sucesso.");
         } 
 
         return redirect("/inscricao/visualizar/{$id}");

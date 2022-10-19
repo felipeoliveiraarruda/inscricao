@@ -15,20 +15,14 @@ use App\Mail\EnviarEmailComprovante;
 
 class ArquivoController extends Controller
 {    
-    public function email()
+    public function index()
     {
-        Mail::to('felipeoa@usp.br')->send(new EnviarEmailComprovante(1, 'arquivos/RcYhM9iTRtYyaaReDUBe1X7AnG4013VSyjRecQc6.pdf'));
-
-        if (Mail::failures()) 
-        {
-            request()->session()->flash('alert-danger', 'Ocorreu um erro no envio do Comprovante de Inscrição.');
-        }    
-        else
-        {
-            request()->session()->flash('alert-success', 'Comprovante de Inscrição enviado com sucesso.');
-        }
-
-        return redirect("/inscricao/1");
+        $arquivos = Arquivo::where('codigoUsuario', Auth::user()->id)->get(); 
+        
+        return view('arquivo.index',
+        [
+            'arquivos' => $arquivos,
+        ]);        
     }
 
     public function create($id)
@@ -113,6 +107,31 @@ class ArquivoController extends Controller
             'codigoInscricao'     => $id,
             'codigoTipoDocumento' => 12,
         ]);
+    }
+
+    public function remover($codigoInscricao, $codigoArquivo)
+    {
+        $arquivo = Arquivo::find($codigoArquivo);
+                
+        $remover = unlink(Storage::path('public/'.$arquivo->linkArquivo));
+
+        $inscricao = InscricoesArquivos::where([
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoArquivo'     => $codigoArquivo,
+        ])->delete();
+
+        $arquivo = Arquivo::where(['codigoArquivo' => $codigoArquivo])->delete();        
+
+        if(($remover) && ($inscricao) && ($arquivo))
+        {
+            request()->session()->flash('alert-success', 'Documento removido com sucesso');  
+        }
+        else
+        {
+            request()->session()->flash('alert-danger', 'Ocorreu um erro na remoção do Documento.');
+        }
+        
+        return redirect("/inscricao/{$codigoInscricao}/documento");
     }
 }
 

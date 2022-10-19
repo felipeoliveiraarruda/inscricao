@@ -33,6 +33,7 @@ Route::middleware(['auth','verified'])->group(function ()
     //Route::post('teste',    [HomeController::class, 'teste']);
 
     Route::get('endereco/',     [EnderecoController::class, 'index']);
+    Route::get('documento/',    [ArquivoController::class, 'index']);
     
     Route::group(['prefix' => 'inscricao'], function()
     { 
@@ -43,10 +44,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('visualizar/{id}',           [InscricaoController::class, 'show']);
         Route::get('validar/{id}',              [InscricaoController::class, 'validar']);
                 
-        Route::get('arquivos/novo/{id}',        [ArquivoController::class, 'create'])->name('novo');
-        Route::post('arquivos/salvar',          [ArquivoController::class, 'store'])->name('salvar');
-        Route::get('arquivos/editar/{id}',      [ArquivoController::class, 'edit'])->name('editar');   
-        Route::get('arquivos/comprovante/{id}', [ArquivoController::class, 'comprovante'])->name('comprovante');
+        Route::get('arquivos/novo/{id}',                                    [ArquivoController::class, 'create'])->name('novo');
+        Route::post('arquivos/salvar',                                      [ArquivoController::class, 'store'])->name('salvar');
+        Route::get('arquivos/editar/{id}',                                  [ArquivoController::class, 'edit'])->name('editar');
+        Route::get('arquivos/remover/{codigoInscricao}/{codigoArquivo}',    [ArquivoController::class, 'remover'])->name('remover');
+        Route::get('arquivos/comprovante/{id}',                             [ArquivoController::class, 'comprovante'])->name('comprovante');
         
         Route::get('endereco/novo/{id}',        [EnderecoController::class, 'create'])->name('novo');
         Route::post('endereco/salvar',          [EnderecoController::class, 'store'])->name('salvar');

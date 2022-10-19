@@ -36,7 +36,7 @@ class AdminController extends Controller
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                ->where('editais.codigoEdital', $id)
                                ->where('users.name', 'LIKE', "%{$request->search}%")
-                               ->whereOr('users.email', 'LIKE', "%{$request->search}%")
+                               ->whereOr('users.email', '=', "{$request->search}")
                                ->get();
         } 
         else 
