@@ -17,16 +17,23 @@ use App\Http\Controllers\EnderecoController;
 |
 */
 
+/*Route::get('/', function () 
+{
+    return view('index');
+});*/
+
 Route::get('/', [HomeController::class, 'index']);
+//Route::get('email', [ArquivoController::class, 'email']);
 
 Route::middleware(['auth','verified'])->group(function () 
 {
     Route::get('dashboard',     [InscricaoController::class, 'index']);
-    
-    /*Route::get('modelo',        [HomeController::class, 'modelo']);
+    Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);
-    Route::post('teste',    [HomeController::class, 'teste']);
-    Route::get('endereco/',     [EnderecoController::class, 'index']);*/
+    //Route::post('teste',    [HomeController::class, 'teste']);
+
+    Route::get('endereco/',     [EnderecoController::class, 'index']);
+    Route::get('documento/',    [ArquivoController::class, 'index']);
     
     Route::group(['prefix' => 'inscricao'], function()
     { 
@@ -39,7 +46,7 @@ Route::middleware(['auth','verified'])->group(function ()
                 
         Route::get('arquivos/novo/{id}',                                    [ArquivoController::class, 'create'])->name('novo');
         Route::post('arquivos/salvar',                                      [ArquivoController::class, 'store'])->name('salvar');
-        Route::get('arquivos/editar/{id}',                                  [ArquivoController::class, 'edit'])->name('editar');   
+        Route::get('arquivos/editar/{id}',                                  [ArquivoController::class, 'edit'])->name('editar');
         Route::get('arquivos/remover/{codigoInscricao}/{codigoArquivo}',    [ArquivoController::class, 'remover'])->name('remover');
         Route::get('arquivos/comprovante/{id}',                             [ArquivoController::class, 'comprovante'])->name('comprovante');
         

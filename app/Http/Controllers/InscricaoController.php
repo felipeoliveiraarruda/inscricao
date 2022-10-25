@@ -175,8 +175,8 @@ class InscricaoController extends Controller
                              ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->get();
 
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
+                             ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                             ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
   
         $cpf         = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(1));
         $rg          = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(2, 3, 4));

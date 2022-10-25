@@ -21,6 +21,14 @@
                     </form>
                 </div>
             </div>
+            <br/>
+            <div class="card bg-default">
+                <h6 class="card-header">E-mail</h6>
+
+                <div class="card-body"> 
+                    <a href="admin/enviar-email/{{ $id }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Enviar E-mail</a>
+                </div>
+            </div>            
         </div>
 
         <div class="col-md-9">    

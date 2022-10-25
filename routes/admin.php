@@ -13,6 +13,8 @@ Route::middleware(['auth','verified'])->group(function ()
     { 
         Route::get('/',                     [AdminController::class, 'index']);
         Route::get('listar-inscritos/{id}', [AdminController::class, 'listar']);
+        Route::get('enviar-email/{id}',     [AdminController::class, 'email']);
+        Route::post('enviar-email',         [AdminController::class, 'enviar_email']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');

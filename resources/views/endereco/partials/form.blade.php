@@ -19,18 +19,18 @@
 </div>
 
 <div class="form-group">
-    <label for="bairro">Bairro</label>
-    <input class="form-control" type="text" id="bairro" name="bairro" value="{{ old('bairro') }}" maxlength="255">
+    <label for="bairro">Bairro<span class="text-danger">*</span></label>
+    <input class="form-control" type="text" id="bairro" name="bairro" value="{{ old('bairro') }}" maxlength="255" required>
 </div>
 
 <div class="form-group">
-    <label for="cidade">Cidade</label>
-    <input class="form-control" type="text" id="localidade" name="localidade" value="{{ old('localidade') }}" maxlength="255">
+    <label for="cidade">Cidade<span class="text-danger">*</span></label>
+    <input class="form-control" type="text" id="localidade" name="localidade" value="{{ old('localidade') }}" maxlength="255" required>
 </div>
 
 <div class="form-group">
-    <label for="uf">UF</label>
-    <input class="form-control" type="text" id="uf" name="uf" value="{{ old('uf') }}" maxlength="2">
+    <label for="uf">UF<span class="text-danger">*</span></label>
+    <input class="form-control" type="text" id="uf" name="uf" value="{{ old('uf') }}" maxlength="2" required>
 </div>
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">

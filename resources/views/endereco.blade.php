@@ -62,7 +62,7 @@
                                                 <th scope="col">Logradrouro</th>
                                                 <th scope="col">Cidade/Uf</th>
                                                 <th scope="col">CEP</th>
-                                                <!--@<th scope="col"></th>-->
+                                                <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         @foreach ($enderecos as $endereco)
@@ -70,9 +70,14 @@
                                             <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
                                             <td>{{ $endereco->localidadeEndereco }}/{{ $endereco->ufEndereco }}</td>
                                             <td>{{ $endereco->cepEndereco }}</td>
-                                            <!--@<td>
-                                                <a href="endereco/editar/{{ $endereco->codigoEndereco }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm">Editar</a>
-                                            </td>-->
+                                            <td>
+                                                <a href="endereco/editar" role="button" aria-pressed="true" class="btn btn-warning btn-sm" target="_new" title="Editar">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                                <a href="inscricao/endereco/remover/{{ $codigoInscricao }}/{{ $endereco->codigoEndereco }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" title="Remover">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </table> 

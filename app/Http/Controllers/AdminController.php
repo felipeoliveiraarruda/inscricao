@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
+use Mail;
+use App\Mail\InscritosMail;
 
 class AdminController extends Controller
 {
@@ -29,14 +31,14 @@ class AdminController extends Controller
     }
 
     public function listar(Request $request, $id)
-    {
+    {  
         if(isset($request->search)) 
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                ->where('editais.codigoEdital', $id)
                                ->where('users.name', 'LIKE', "%{$request->search}%")
-                               ->whereOr('users.email', '=', "{$request->search}")
+                               ->orWhere('users.email', 'LIKE', "%{$request->search}%")
                                ->get();
         } 
         else 
@@ -46,7 +48,7 @@ class AdminController extends Controller
                                ->where('editais.codigoEdital', $id)->paginate(10);
         }
 
-        $editais = Edital::where('codigoEdital', $id)->get();    
+        $editais = Edital::where('codigoEdital', $id)->get();
         
         foreach($editais as $edital)
         {
@@ -59,5 +61,51 @@ class AdminController extends Controller
             'inscritos' => $inscritos,
             'curso'     => $curso['nomcur'],
         ]);
+    }
+
+    public function email($id)
+    {
+        return view('admin.email',
+        [
+            'id' => $id,            
+        ]);  
+    }
+
+    public function enviar_email(Request $request)
+    {
+        if ($request->tipoDestinatario[0] == 'T')
+        {
+            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                ->where('editais.codigoEdital', $request->codigoEdital)                                
+                                ->get();
+        }
+        else 
+        {
+            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+            ->where('editais.codigoEdital', $request->codigoEdital)
+            ->where('editais.situacaoInscricao', $request->tipoDestinatario[0])
+            ->get();
+        }
+        
+        foreach($inscritos as $inscrito)
+        {
+            //$inscrito->email
+
+            Mail::to('felipeoa@usp.br')->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
+
+            if (Mail::failures()) 
+            {
+                request()->session()->flash('alert-danger', "Ocorreu um erro no envio do e-mail.");
+                return redirect("admin/enviar-email/{$request->codigoEdital}");  
+            }    
+            else
+            {    
+                request()->session()->flash('alert-success', "E-mail enviado com sucesso.");
+            } 
+            
+            return redirect("admin/enviar-email/{$request->codigoEdital}");
+        }              
     }
 }
