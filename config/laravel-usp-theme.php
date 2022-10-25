@@ -1,7 +1,30 @@
 <?php
 
 $admin = [
-
+   /* [
+        'text' => '<i class="fas fa-atom"></i> Edital',
+        'url' => 'admin/edital',
+    ],
+    [
+        'text' => '<i class="fas fa-atom"></i> Tipo de Documento',
+        'url' => 'admin/tipo-documento',
+    ],    
+    /*[
+        'text' => 'SubItem 2',
+        'url' =>  '/subitem2',
+        'can' => 'admin',
+    ],
+    [
+        'type' => 'divider',
+    ],
+    [
+        'type' => 'header',
+        'text' => 'Cabeçalho',
+    ],
+    [
+        'text' => 'SubItem 3',
+        'url' => 'subitem3',
+    ],*/
 ];
 
 /*$submenu2 = [
@@ -19,7 +42,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => '/',
+        'url' => '/inscricao/public',
     ],
     [
         # este item de menu será substituido no momento da renderização
@@ -46,25 +69,20 @@ $menu = [
         'can' => 'admin',
     ],
     [
-        'text' => '<i class="fas fa-file"></i> Tipo de Documento',
-        'url' => 'admin/tipo-documento',
-        'can' => 'admin',
-    ],
-    [
         'text' => '<i class="fas fa-file-contract"></i> Edital',
         'url' => 'admin/edital',
         'can' => 'gerente',
     ],
     [
-        'text' => '<i class="fas fa-address-book"></i> Endereço',
-        'url' => 'endereco',
-        'can' => 'user',
+        'text' => '<i class="fas fa-file"></i> Tipo de Documento',
+        'url' => 'admin/tipo-documento',
+        'can' => 'admin',
     ],
-    [
-        'text' => '<i class="fas fa-file-upload"></i> Documentos',
-        'url' => 'documento',
-        'can' => 'user',
-    ],    
+   /* [
+        'text' => '<i class="fas fa-file"></i> Endereço',
+        'url' => 'endereco',
+        'can' => '',
+    ],    */
 ];
 
 $right_menu = [

@@ -54,12 +54,11 @@ class InscricaoController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
         } 
-        
         $arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
 
         $endereco = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
-                            ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->count();
+                            ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->count();                        
 
         $projeto     = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(10));
         $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
@@ -128,7 +127,7 @@ class InscricaoController extends Controller
         }
 
         $edital = Edital::obterNumeroEdital($inscricao->codigoEdital);
-        $requerimento = 'Eu, '.$inscricao->name.', portador do CPF Nº '.$inscricao->cpf.', venho requerer minha inscrição para o processo seletivo conforme regulamenta o edital PPGPE Nº '.$edital.' (DOESP de 30/09/2022).';
+        $requerimento = 'Eu, '.mb_strtoupper($inscricao->name).', portador do CPF Nº '.$inscricao->cpf.', venho requerer minha inscrição para o processo seletivo conforme regulamenta o edital PPGPE Nº '.$edital.' (DOESP de 30/09/2022).';
 
         $pdf->AddPage();
         $pdf->SetFillColor(190,190,190);
@@ -176,8 +175,8 @@ class InscricaoController extends Controller
                              ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->get();
 
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                             ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                             ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
+                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                           ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->get();
   
         $cpf         = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(1));
         $rg          = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(2, 3, 4));
