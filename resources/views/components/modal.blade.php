@@ -12,7 +12,7 @@
                 <p class="text-danger text-center">{{ $item['story'] }}</p>
             </div>
             <div class="modal-footer">
-                <a href="/" role="button" aria-pressed="true" class="btn btn-primary">Fechar</a>
+                <a href="{{ env('APP_URL') }}" role="button" aria-pressed="true" class="btn btn-primary">Fechar</a>
             </div>
         </div>
     </div>

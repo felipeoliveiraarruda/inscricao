@@ -19,7 +19,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => '/',
+        'url' => '/inscricao/public',
     ],
     [
         # este item de menu será substituido no momento da renderização
@@ -55,7 +55,7 @@ $menu = [
         'url' => 'admin/edital',
         'can' => 'gerente',
     ],
-    [
+   /* [
         'text' => '<i class="fas fa-address-book"></i> Endereço',
         'url' => 'endereco',
         'can' => 'user',
@@ -64,7 +64,7 @@ $menu = [
         'text' => '<i class="fas fa-file-upload"></i> Documentos',
         'url' => 'documento',
         'can' => 'user',
-    ],    
+    ], */   
 ];
 
 $right_menu = [

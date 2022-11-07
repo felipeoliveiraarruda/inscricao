@@ -24,7 +24,7 @@ class ArquivoRequest extends FormRequest
     public function rules()
     {
         return [
-            'arquivo'             => 'file|mimes:jpeg,png,pdf|max:2048',
+            'arquivo'             => 'file|mimes:jpeg,png,pdf|max:65536',
             'codigoInscricao'     => 'integer|exists:inscricoes,codigoInscricao',
             'codigoTipoDocumento' => 'integer|exists:tipo_documentos,codigoTipoDocumento'
         ];

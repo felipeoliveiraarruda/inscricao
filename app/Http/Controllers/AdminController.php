@@ -85,15 +85,13 @@ class AdminController extends Controller
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
             ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
             ->where('editais.codigoEdital', $request->codigoEdital)
-            ->where('editais.situacaoInscricao', $request->tipoDestinatario[0])
+            ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
             ->get();
         }
         
         foreach($inscritos as $inscrito)
         {
-            //$inscrito->email
-
-            Mail::to('felipeoa@usp.br')->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
+            Mail::to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
 
             if (Mail::failures()) 
             {
@@ -103,9 +101,9 @@ class AdminController extends Controller
             else
             {    
                 request()->session()->flash('alert-success', "E-mail enviado com sucesso.");
-            } 
-            
-            return redirect("admin/enviar-email/{$request->codigoEdital}");
-        }              
+            }
+        }
+        
+        return redirect("admin/enviar-email/{$request->codigoEdital}");
     }
 }

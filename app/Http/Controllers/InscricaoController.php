@@ -25,7 +25,7 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
-        $editais = Edital::where('dataFinalEdital', '>', Carbon::now())->get();        
+        $editais = Edital::where('dataFinalEdital', '>', Carbon::now())->get();
 
         return view('dashboard',
         [
@@ -37,7 +37,22 @@ class InscricaoController extends Controller
     }
 
     public function create($id)
-    {
+    {        
+        $editais = Edital::where('dataFinalEdital', '>', Carbon::now())
+                         ->where('codigoEdital', $id)->count();
+
+        if($editais == 0)
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'Inscricão Encerrada';
+
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
+        }
+
         $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
                               ->where('codigoEdital', $id)
                               ->first();
@@ -54,6 +69,7 @@ class InscricaoController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
         } 
+
         $arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
 
@@ -116,6 +132,22 @@ class InscricaoController extends Controller
         }
         else
         {
+            $editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
+                            ->where('editais.dataFinalEdital', '>', Carbon::now())
+                            ->where('inscricoes.codigoInscricao', $id)->count();
+
+            if($editais == 0)
+            {
+                $item = array();
+                $item['title'] = 'Aviso';
+                $item['story'] = 'Inscricão Encerrada';
+
+                return view('components.modal',
+                [
+                    'item' => $item,                
+                ]);
+            }
+
             Inscricao::where('codigoUsuario', Auth::user()->id)
                      ->where('codigoInscricao', $id)
                      ->where('situacaoInscricao', 'N')->update(['situacaoInscricao' => 'P']);
@@ -167,6 +199,22 @@ class InscricaoController extends Controller
 
     public function endereco($id)
     {
+        $editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
+                         ->where('editais.dataFinalEdital', '>', Carbon::now())
+                         ->where('inscricoes.codigoInscricao', $id)->count();
+
+        if($editais == 0)
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'Inscricão Encerrada';
+
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
+        }
+
         $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
                               ->where('codigoInscricao', $id)
                               ->first();
@@ -209,6 +257,22 @@ class InscricaoController extends Controller
 
     public function documento($id)
     {
+        $editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
+                         ->where('editais.dataFinalEdital', '>', Carbon::now())
+                         ->where('inscricoes.codigoInscricao', $id)->count();
+
+        if($editais == 0)
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'Inscricão Encerrada';
+
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
+        }
+
         $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
                               ->where('codigoInscricao', $id)
                               ->first();
