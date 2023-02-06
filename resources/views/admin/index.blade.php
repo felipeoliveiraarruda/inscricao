@@ -33,6 +33,7 @@
                                         <td>{{ $utils->obterNivelEdital($edital->nivelEdital) }} - {{ $curso['nomcur'] }}</td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                                                            
                                         <td><a href="admin/listar-inscritos/{{ $edital->codigoEdital }}">Lista de Inscritos</a></td>
+                                        <td><a href="admin/classificados/{{ $edital->codigoEdital }}">Classificados</a></td>
                                     </tr>
                                 @endforeach
                             @endif

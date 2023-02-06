@@ -17,7 +17,7 @@
                         <a href="inscricao/validar/{{ $inscricao->codigoInscricao }}" target="_new" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
                     @endif
 
-                    <a href="admin/listar-inscritos/{{ $inscricao->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
+                    <a href="admin/classificados/{{ $inscricao->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
                 </div>
             </div>
             
