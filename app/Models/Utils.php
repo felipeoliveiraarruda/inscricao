@@ -13,7 +13,7 @@ class Utils extends Model
 {
     use HasFactory;
 
-    public function listarCurso()
+    public static function listarCurso()
     {
         $link = env('URL_API_EEL')."posgraduacao/curso/listar";
 

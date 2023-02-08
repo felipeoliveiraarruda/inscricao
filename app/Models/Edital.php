@@ -20,6 +20,7 @@ class Edital extends Model
     
     protected $fillable = [
         'codigoCurso',
+        'codigoUsuario',
         'nivelEdital',
         'linkEdital',
         'dataInicioEdital',

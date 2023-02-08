@@ -44,6 +44,7 @@ class EditalController extends Controller
 
         Edital::create([
             'codigoCurso'           => $request->codigoCurso,
+            'codigoUsuario'         => Auth::user()->id,
             'nivelEdital'           => $request->nivelEdital,
             'linkEdital'            => $request->linkEdital,
             'dataInicioEdital'      => $request->dataInicioEdital,
