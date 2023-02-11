@@ -31,7 +31,7 @@ class Arquivo extends Model
         return $this->belongsTo(\App\Models\TipoDocumento::class);
     }
 
-    public function verificarArquivo($codigoInscricao, $codigoTipoDocumento)
+    public static function verificarArquivo($codigoInscricao, $codigoTipoDocumento)
     {
         $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('codigoInscricao',       $codigoInscricao)

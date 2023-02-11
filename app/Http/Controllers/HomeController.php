@@ -31,7 +31,7 @@ class HomeController extends Controller
         else
         {
             if (Gate::check('admin') || Gate::check('gerente'))
-            {
+            {                
                 return redirect('admin');                
             }
             else

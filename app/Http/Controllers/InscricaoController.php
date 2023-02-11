@@ -10,6 +10,7 @@ use App\Models\Utils;
 use App\Models\Inscricao;
 use App\Models\Arquivo;
 use App\Models\Endereco;
+use App\Models\DadosPessoais;
 use App\Models\TipoDocumento;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
@@ -70,7 +71,7 @@ class InscricaoController extends Controller
             ]);
         } 
 
-        $arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+        /*$arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
 
         $endereco = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
@@ -79,15 +80,19 @@ class InscricaoController extends Controller
         $projeto     = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(10));
         $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
         
-        $total = $projeto + $taxa;
+        $total = $projeto + $taxa;*/
 
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'status'          => $inscricao->situacaoInscricao,
-            'arquivo'         => $arquivo,
-            'endereco'        => $endereco,
-            'total'           => $total,
+            'pessoal'         => 0,
+            'arquivo'         => 0,
+            'endereco'        => 0,
+            'total'           => 0,
+            //'arquivo'         => $arquivo,
+            //'endereco'        => $endereco,
+            //'total'           => $total,*/
         ]);
     }
 
@@ -334,4 +339,24 @@ class InscricaoController extends Controller
         return redirect("/inscricao/visualizar/{$id}");
     }
 
+    public function pessoal($id)
+    {        
+        $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
+                              ->where('codigoInscricao', $id)
+                              ->first();
+
+        $pessoais = DadosPessoais::where('codigoUsuario', Auth::user()->id)->get();
+
+        $pessoais = DadosPessoais::leftJoin('users', 'pessoais.codigoUsuario', '=', 'users.id')
+                                 ->leftJoin('inscricoes_pessoais', 'pessoais.codigoPessoal', '=', 'inscricoes_pessoais.codigoPessoal')
+                                 ->where('inscricoes_pessoais.codigoInscricao', $inscricao->codigoInscricao)->get();
+
+        return view('pessoal',
+        [
+            'codigoInscricao' => $inscricao->codigoInscricao, 
+            'codigoEdital'    => $inscricao->codigoEdital,
+            'status'          => $inscricao->situacaoInscricao,                        
+            'pessoais'        => $pessoais
+        ]);                            
+    }
 }

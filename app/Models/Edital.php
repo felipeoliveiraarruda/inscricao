@@ -40,7 +40,7 @@ class Edital extends Model
         return $this->hasMany(\App\Models\Inscricao::class);
     }
 
-    public function obterNumeroEdital($codigoEdital, $curso = false)
+    public static function obterNumeroEdital($codigoEdital, $curso = false)
     {
         $edital = Edital::where('codigoEdital', $codigoEdital)->first();
 
@@ -62,7 +62,7 @@ class Edital extends Model
         }
     }
 
-    public function obterNivelEdital($codigoEdital)
+    public static function obterNivelEdital($codigoEdital)
     {
         $nivel = Edital::select('nivelEdital')->where('codigoEdital', $codigoEdital)->first();        
         return $nivel->nivelEdital;

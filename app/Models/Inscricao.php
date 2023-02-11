@@ -33,13 +33,13 @@ class Inscricao extends Model
         return $this->belongsTo(App\Models\Edital::class);
     }
     
-    public function gerarNumeroInscricao($codigoEdital)
+    public static function gerarNumeroInscricao($codigoEdital)
     {
         $total = Inscricao::where('codigoEdital', $codigoEdital)->count() + 1;
         return $total;
     }
 
-    public function verificarInscricao($codigoEdital, $user_id)
+    public static function verificarInscricao($codigoEdital, $user_id)
     {
         $total = Inscricao::where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->count();
         return $total;

@@ -48,7 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function gerarCodigoPessoaExterna()
+    public static function gerarCodigoPessoaExterna()
     {
         $tamanho = 5;
         $prefixo = "88";
@@ -78,5 +78,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function enderecos()
     {
         return $this->hasMany(\App\Models\Endereco::class);
+    }
+
+    public function pessoais()
+    {
+        return $this->hasMany(\App\Models\DadosPessoais::class);
     }
 }

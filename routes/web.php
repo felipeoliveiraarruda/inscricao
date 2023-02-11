@@ -5,22 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\ArquivoController;
 use App\Http\Controllers\EnderecoController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-/*Route::get('/', function () 
-{
-    return view('index');
-});*/
+use App\Http\Controllers\DadosPessoaisController;
 
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
@@ -34,11 +19,14 @@ Route::middleware(['auth','verified'])->group(function ()
 
     Route::get('endereco/',     [EnderecoController::class, 'index']);
     Route::get('documento/',    [ArquivoController::class, 'index']);
+
+    Route::get('pessoal/novo/{id?}', [DadosPessoaisController::class, 'create'])->name('novo');
     
     Route::group(['prefix' => 'inscricao'], function()
     { 
         Route::get('{id}',                      [InscricaoController::class, 'create']);
         Route::get('comprovante/{id}',          [InscricaoController::class, 'comprovante'])->name('comprovante');
+        Route::get('{id}/pessoal',              [InscricaoController::class, 'pessoal']);
         Route::get('{id}/endereco',             [InscricaoController::class, 'endereco']);
         Route::get('{id}/documento',            [InscricaoController::class, 'documento']);
         Route::get('visualizar/{id}',           [InscricaoController::class, 'show']);

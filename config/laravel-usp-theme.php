@@ -19,7 +19,7 @@ $admin = [
 $menu = [
     [
         'text' => '<i class="fas fa-home"></i> Home',
-        'url' => '/inscricao/public',
+        'url' => '/',
     ],
     [
         # este item de menu será substituido no momento da renderização

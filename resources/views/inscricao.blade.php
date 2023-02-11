@@ -26,7 +26,8 @@
                                     <p class="text-justify">Você deve enviar por e-mail, em uma única mensagem, o comprovante de pagamento da taxa de inscrição e o Requerimento de Inscrição (devidamente assinado), digitalizados, para o endereço eletrônico informado no formulário de inscrição, com cópia para ppgpe@eel.usp.br. Colocar no assunto o seu nome e o texto “Seleção PPGPE 2023”.</p>
                                     <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>                                    
                                 @elseif ($status == 'N')
-                                    <a href="inscricao/{{ $codigoInscricao }}/endereco" role="button" aria-pressed="true" class="btn @if ($endereco == 1) btn-success @else btn-secondary @endif btn-lg btn-block">Endereço</a>
+                                    <a href="inscricao/{{ $codigoInscricao }}/pessoal" role="button" aria-pressed="true" class="btn @if ($pessoal == 1) btn-success @else btn-secondary @endif btn-lg btn-block">Dados Pessoais</a>
+                                    <!--<a href="inscricao/{{ $codigoInscricao }}/endereco" role="button" aria-pressed="true" class="btn @if ($endereco == 1) btn-success @else btn-secondary @endif btn-lg btn-block">Endereço</a>
                                     <a href="inscricao/{{ $codigoInscricao }}/documento" role="button" aria-pressed="true" class="btn @if ($total == 2) btn-success @else btn-secondary @endif btn-lg btn-block">Documentos</a>
 
                                     @if ($total == 2)
@@ -34,7 +35,7 @@
                                         <p class="text-justify">Você deve enviar por e-mail, em uma única mensagem, o comprovante de pagamento da taxa de inscrição e o Requerimento de Inscrição (devidamente assinado), digitalizados, para o endereço eletrônico informado no formulário de inscrição, com cópia para ppgpe@eel.usp.br. Colocar no assunto o seu nome e o texto “Seleção PPGPE 2023”.</p>
                                         <p class="text-justify text-danger font-weight-bold">Atenção: só clique no botão abaixo após ter certeza de ter feito o upload de todos os seu documentos</p>
                                         <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>
-                                    @endif                                        
+                                    @endif-->
                                 @elseif ($status == 'C')
                                     <p class="text-center">Sua inscrição para esse processo seletivo já está confirmada.</p>
                                     <p class="text-center">Aguarde mais informações no seu e-mail.</p>

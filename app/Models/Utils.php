@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 
 class Utils extends Model
 {
@@ -21,13 +22,11 @@ class Utils extends Model
         [
             'x-api-key' => env('KEY_API_EEL')
         ])->post($link);
- 
-        //dd($response->json());
 
         return $response->json();
     }
 
-    public function obterCurso($codcur)
+    public static function obterCurso($codcur)
     {
         $link = env('URL_API_EEL')."posgraduacao/curso/obter/";
 
@@ -44,7 +43,7 @@ class Utils extends Model
         return $temp[0];
     }
 
-    public function obterSiglCurso($codcur)
+    public static function obterSiglCurso($codcur)
     {
         switch ($codcur) 
         {
@@ -63,7 +62,7 @@ class Utils extends Model
         }
     }    
 
-    public function obterNivelEdital($nivel)
+    public static function obterNivelEdital($nivel)
     {
         switch ($nivel) 
         {
@@ -83,7 +82,7 @@ class Utils extends Model
         }
     }
 
-    public function obterEndereco($cep)
+    public static function obterEndereco($cep)
     {
         $cep = preg_replace('/[^0-9]/', '', $cep);
 
@@ -94,5 +93,26 @@ class Utils extends Model
         $temp = $response->json(); 
  
         return $temp;
+    }
+
+    public static function obterDadosSysUtils($tipo)
+    {
+        if($tipo == 'sexo')
+        {
+            $coluna = 'dadosSexo';
+        }
+        
+        if ($tipo == 'raça')
+        {
+            $coluna = 'dadosRaca';
+        }
+
+        if ($tipo == 'civil')
+        {
+            $coluna = 'dadosEstadoCivil';
+        }
+
+        $dados = DB::table('sys_utils')->select($coluna)->first();
+        return Str::of($dados->$coluna)->explode('|');
     }
 }
