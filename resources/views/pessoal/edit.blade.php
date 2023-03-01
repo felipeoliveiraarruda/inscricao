@@ -16,16 +16,16 @@
 
         <div class="col-sm-9">
             <div class="card bg-default">
-                <h5 class="card-header">Editar Documento</h5>
+                <h5 class="card-header">Editar Dados Pessoais</h5>
                 
                 <div class="card-body">
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
-                    <form class="needs-validation" novalidate method="POST" action="arquivo/{{ $arquivo->codigoArquivo }}" enctype="multipart/form-data">
+                    <form class="needs-validation" novalidate method="POST" action="/pessoal/{{ $pessoais->codigoPessoal }}" enctype="multipart/form-data"" enctype="multipart/form-data">
                         @csrf
                         @method('patch')
-                        @include('arquivo.partials.form')                          
+                        @include('pessoal.partials.form')
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Atualizar</button>
                     </form>
                 </div>

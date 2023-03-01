@@ -24,3 +24,4 @@
 </div>
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
+<input type="hidden" name="linkVoltar" value="{{ $link_voltar }}">

@@ -39,6 +39,8 @@
 
     $(document).ready(function()
     {
+        $("#exibirQuais").hide();
+
         $('#modalAviso').modal('show');
 
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function()
@@ -102,6 +104,44 @@
               //cep sem valor, limpa formulário.
               limpa_formulario_cep();
           }
+        });
+
+        $("#paisPessoal").change(function() 
+        {  
+          $.ajax({          
+            url: "/estados/"+$("#paisPessoal").val(),
+            type: "get",          
+            success: function(response)
+            {
+              $("#exibirEstados").html(response);
+            },
+          });        
+        });
+
+        $("#estadoPessoal").change(function() 
+        {  
+          $.ajax({          
+            url: "/cidades/"+$("#paisPessoal").val()+"/"+ $("#estadoPessoal").val(),
+            type: "get",          
+            success: function(response)
+            {
+              $("#exibirCidades").html(response);
+            },
+          });
+        });
+
+        $("#especialPessoal").change(function() 
+        {  
+          if ($("#especialPessoal").val() == 'S')
+          {
+            $("#tipoEspecialPessoal").prop('disabled', false);
+            $("#exibirQuais").show();
+          }
+          else
+          {
+            $("#tipoEspecialPessoal").prop('disabled', true);
+            $("#exibirQuais").hide();
+          }          
         });
     })
 

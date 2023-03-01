@@ -45,21 +45,47 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-sm-9">
                                     <h4>Dados Pessoais</h4>
                                 </div>
 
-                                <div class="col-md-3 text-right">
+                                <div class="col-sm-3 text-right">
                                     @if (count($pessoais) == 0)
                                         <a href="pessoal/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
                                     @endif
                                 </div>
-                                                                
-                                <div class="col-md-12" >                                    
+                            </div>
+                            
+                            <div class="row">                             
+                                <div class="col-sm-12" > 
                                     <p></p>
-       
+                                    @if (count($pessoais) > 0)
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Nome</th>
+                                                    <th scope="col">CPF</th>
+                                                    <th scope="col">RG</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            @foreach($pessoais as $pessoal)
+                                            <tr>
+                                                <td>{{ $pessoal->name }}</td>
+                                                <td>{{ $pessoal->cpf }}</td>
+                                                <td>{{ $pessoal->rg }}</td>
+                                                <td>
+                                                    <a href="pessoal/{{ $pessoal->id }}/editar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Editar">
+                                                        <i class="far fa-eye"></i>
+                                                    </a>
+
+                                                    <i class="fa fa-exclamation-triangle text-danger"></i>
+                                                </td>
+                                            </tr>                                        
+                                            @endforeach
+                                        @endif
+                                    </table>
                                 </div>                                 
-                                 
                             </div>                                                        
                         </div>
                     </div>

@@ -14,7 +14,7 @@ class CreateDocumentosTable extends Migration
     public function up()
     {
         Schema::create('documentos', function (Blueprint $table) {
-            $table->id('codigoDocumentos');
+            $table->id('codigoDocumento');
             $table->unsignedBigInteger('codigoUsuario');
             $table->string('numeroRG', 20)->nullable();
             $table->char('ufEmissorRG', 2)->nullable();

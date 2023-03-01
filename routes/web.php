@@ -6,6 +6,7 @@ use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\ArquivoController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\DadosPessoaisController;
+use App\Http\Controllers\UtilsController;
 
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
@@ -20,7 +21,15 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::get('endereco/',     [EnderecoController::class, 'index']);
     Route::get('documento/',    [ArquivoController::class, 'index']);
 
-    Route::get('pessoal/novo/{id?}', [DadosPessoaisController::class, 'create'])->name('novo');
+    Route::get('pessoal/novo/{id?}',                [DadosPessoaisController::class, 'create'])->name('novo');
+    Route::get('pessoal/{id}/editar/{inscricao?}',  [DadosPessoaisController::class, 'edit'])->name('editar');
+    Route::post('pessoal/salvar',                   [DadosPessoaisController::class, 'store'])->name('salvar');
+    
+    Route::get('arquivo/{id}/editar/{inscricao?}',  [ArquivoController::class, 'edit'])->name('editar');
+    Route::patch('arquivo/{id}',                    [ArquivoController::class, 'update']);
+
+    Route::get('estados/{codpas}',          [UtilsController::class, 'estados']);
+    Route::get('cidades/{codpas}/{sglest}', [UtilsController::class, 'cidades']);
     
     Route::group(['prefix' => 'inscricao'], function()
     { 
@@ -34,7 +43,7 @@ Route::middleware(['auth','verified'])->group(function ()
                 
         Route::get('arquivos/novo/{id}',                                    [ArquivoController::class, 'create'])->name('novo');
         Route::post('arquivos/salvar',                                      [ArquivoController::class, 'store'])->name('salvar');
-        Route::get('arquivos/editar/{id}',                                  [ArquivoController::class, 'edit'])->name('editar');
+        //Route::get('arquivos/editar/{id}',                                  [ArquivoController::class, 'edit'])->name('editar');
         Route::get('arquivos/remover/{codigoInscricao}/{codigoArquivo}',    [ArquivoController::class, 'remover'])->name('remover');
         Route::get('arquivos/comprovante/{id}',                             [ArquivoController::class, 'comprovante'])->name('comprovante');
         

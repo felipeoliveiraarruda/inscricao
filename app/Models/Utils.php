@@ -112,7 +112,70 @@ class Utils extends Model
             $coluna = 'dadosEstadoCivil';
         }
 
+        if ($tipo == 'especial')
+        {
+            $coluna = 'dadosNecessidadeEspecial';
+        }
+
         $dados = DB::table('sys_utils')->select($coluna)->first();
         return Str::of($dados->$coluna)->explode('|');
+    }
+
+    public static function listarPais()
+    {
+        $link = env('URL_API_EEL')."/comum/pais/listar";
+
+        $response = Http::withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link);
+
+        return $response->json();
+    }
+
+    public static function obterPais($codpas)
+    {
+        $link = env('URL_API_EEL')."/comum/pais/obter";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codpas' => $codpas
+        ]);
+
+        return $response[0];
+    }
+
+    public static function listarEstado($codpas)
+    {
+        $link = env('URL_API_EEL')."/comum/estado/listar";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codpas' => $codpas
+        ]);
+
+        return $response->json();
+    }
+
+    public static function listarLocalidades($codpas, $sglest)
+    {
+        $link = env('URL_API_EEL')."/comum/localidade/listar";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codpas' => $codpas,
+            'sglest' => $sglest
+        ]);
+
+        return $response->json();
     }
 }

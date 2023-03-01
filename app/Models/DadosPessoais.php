@@ -19,13 +19,26 @@ class DadosPessoais extends Model
     
     protected $fillable = [
         'codigoUsuario',
+        'dataNascimentoPessoal',
         'sexoPessoal',
         'estadoCivilPessoal',
-        'naturalidadePessoal',
-        'dependentePesssoal',
-        'racaPesssoal',
-        'especialPesssoal',
-        'tipoEspecialPesssoal',
+        'natualidadePessoal',
+        'estadoPessoal',
+        'paisPessoal',
+        'dependentePessoal',
+        'racaPessoal',
+        'especialPessoal',
+        'tipoEspecialPessoal',
         'codigoPessoaAlteracao',
     ];
+
+    
+    protected $casts = [
+        'dataNascimentoPessoal' => 'date',
+     ];
+
+     public function user()
+     {
+         return $this->belongsTo(\App\Models\User::class);
+     }
 }

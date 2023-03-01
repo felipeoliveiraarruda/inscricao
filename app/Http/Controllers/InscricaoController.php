@@ -345,11 +345,9 @@ class InscricaoController extends Controller
                               ->where('codigoInscricao', $id)
                               ->first();
 
-        $pessoais = DadosPessoais::where('codigoUsuario', Auth::user()->id)->get();
+        //$pessoais = DadosPessoais::where('codigoUsuario', Auth::user()->id)->get();
 
-        $pessoais = DadosPessoais::leftJoin('users', 'pessoais.codigoUsuario', '=', 'users.id')
-                                 ->leftJoin('inscricoes_pessoais', 'pessoais.codigoPessoal', '=', 'inscricoes_pessoais.codigoPessoal')
-                                 ->where('inscricoes_pessoais.codigoInscricao', $inscricao->codigoInscricao)->get();
+        $pessoais = DadosPessoais::join('users', 'pessoais.codigoUsuario', '=', 'users.id')->where('users.id', Auth::user()->id)->get();
 
         return view('pessoal',
         [

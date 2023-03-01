@@ -80,8 +80,18 @@ class ArquivoController extends Controller
         return redirect("/inscricao/{$request->codigoInscricao}/documento");
     }
 
-    public function edit($id)
+    public function edit($id, $inscricao = '')
     {
+        if (!empty($inscricao))
+        {
+            //$temp = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $inscricao)->first();
+            $voltar = "pessoal/novo/{$inscricao}";
+        }
+        else
+        {
+            $voltar = 'arquivo';
+        }
+
         $tipos = TipoDocumento::all();
 
         $arquivo = Arquivo::find($id);
@@ -90,13 +100,46 @@ class ArquivoController extends Controller
         [
             'arquivo'         => $arquivo,
             'tipos'           => $tipos, 
-            'codigoInscricao' => $arquivo->codigoInscricao, 
+            'codigoInscricao' => $inscricao,
+            'link_voltar'     => $voltar, 
         ]);
+
+        /*return view('pessoal.edit',
+        [
+            'codigoInscricao'   => $inscricao,
+            'link_voltar'       => $voltar,
+            'sexos'             => Utils::obterDadosSysUtils('sexo'),
+            'racas'             => Utils::obterDadosSysUtils('raça'),
+            'estados_civil'     => Utils::obterDadosSysUtils('civil'),
+        ]);*/
     }
 
     public function update(Request $request, $id)
-    {
-        //
+    { 
+        $temp = explode('/', $request->arquivoAtual);
+
+        $remover = unlink(Storage::path('public/'.$request->arquivoAtual));
+
+        $path = $request->file('arquivo')->storeAs('arquivos', $temp[1], 'public');
+
+        $arquivo = Arquivo::find($id);
+
+        $arquivo->codigoUsuario             = Auth::user()->id; 
+        $arquivo->codigoTipoDocumento       = $request->codigoTipoDocumento;
+        $arquivo->linkArquivo               = $path;
+        $arquivo->codigoPessoaAlteracao     = Auth::user()->codpes;
+        $arquivo->save();
+
+        request()->session()->flash('alert-success', 'Documento atualizado com sucesso');
+
+        if(!empty($request->codigoInscricao))
+        {
+            return redirect("pessoal/novo/".$request->codigoInscricao);
+        }
+        else
+        {
+            return redirect('arquivos');
+        }        
     }
 
     public function comprovante($id)
@@ -133,5 +176,31 @@ class ArquivoController extends Controller
         
         return redirect("/inscricao/{$codigoInscricao}/documento");
     }
+
+    public function alterar(Request $request, $codigoArquivo)
+    {
+        /*$arquivo = Arquivo::find($codigoArquivo);
+                
+        $remover = unlink(Storage::path('public/'.$arquivo->linkArquivo));
+
+        $inscricao = InscricoesArquivos::where([
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoArquivo'     => $codigoArquivo,
+        ])->delete();
+
+        $arquivo = Arquivo::where(['codigoArquivo' => $codigoArquivo])->delete();        
+
+        if(($remover) && ($inscricao) && ($arquivo))
+        {
+            request()->session()->flash('alert-success', 'Documento removido com sucesso');  
+        }
+        else
+        {
+            request()->session()->flash('alert-danger', 'Ocorreu um erro na remoção do Documento.');
+        }
+        
+        return redirect("/inscricao/{$codigoInscricao}/documento");*/
+        dd($request);
+    }    
 }
 

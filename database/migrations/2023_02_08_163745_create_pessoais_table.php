@@ -19,10 +19,10 @@ class CreatePessoaisTable extends Migration
             $table->string('sexoPessoal', 10)->nullable();
             $table->string('estadoCivilPessoal', 20)->nullable();
             $table->string('naturalidadePessoal', 50)->nullable();
-            $table->char('dependentePesssoal', 1)->nullable();
-            $table->char('racaPesssoal', 20)->nullable();
-            $table->char('especialPesssoal', 1)->nullable();
-            $table->string('tipoEspecialPesssoal', 20)->nullable();
+            $table->char('dependentePessoal', 1)->nullable();
+            $table->char('racaPessoal', 20)->nullable();
+            $table->char('especialPessoal', 1)->nullable();
+            $table->string('tipoEspecialPessoal', 20)->nullable();
             $table->timestamps();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoUsuario')->references('id')->on('users');
