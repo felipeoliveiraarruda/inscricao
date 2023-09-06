@@ -29,6 +29,7 @@
                                     @php
                                         $curso    = $utils->obterCurso($edital->codigoCurso);
                                         $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
+                                        $status   = $inscricao->obterSituacaoInscricao($edital->codigoEdital, $user_id);
                                         $hoje     = date('d/m/Y H:i:s');
                                     @endphp       
                                     <tr>
@@ -42,7 +43,13 @@
                                                 @if ($inscrito == 0)
                                                     <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a></td>
                                                 @else
-                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
+                                                    @if ($status == 'P')
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                    @elseif ($status == 'N')
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
+                                                    @elseif ($status == 'C')
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @else 

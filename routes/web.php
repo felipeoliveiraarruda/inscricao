@@ -22,8 +22,10 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::get('documento/',    [ArquivoController::class, 'index']);
 
     Route::get('pessoal/novo/{id?}',                [DadosPessoaisController::class, 'create'])->name('novo');
+    Route::get('pessoal/anexo/{id?}',               [DadosPessoaisController::class, 'anexo'])->name('anexo');
     Route::get('pessoal/{id}/editar/{inscricao?}',  [DadosPessoaisController::class, 'edit'])->name('editar');
     Route::post('pessoal/salvar',                   [DadosPessoaisController::class, 'store'])->name('salvar');
+    Route::post('pessoal/anexo/salvar',             [DadosPessoaisController::class, 'anexo_salvar']);
     
     Route::get('arquivo/{id}/editar/{inscricao?}',  [ArquivoController::class, 'edit'])->name('editar');
     Route::patch('arquivo/{id}',                    [ArquivoController::class, 'update']);

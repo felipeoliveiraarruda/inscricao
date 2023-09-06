@@ -24,7 +24,7 @@
                     
                     <form class="needs-validation" novalidate method="POST" action="pessoal/salvar">
                         @csrf
-                        @include('pessoal.partials.form')                          
+                        @include('pessoal.partials.form')
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                     </form>
                 </div>

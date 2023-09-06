@@ -40,6 +40,8 @@
     $(document).ready(function()
     {
         $("#exibirQuais").hide();
+        $("#exibirTipoDocumentoPessoal").hide();
+        $("#exibirArquivoDocumentoPessoal").hide();
 
         $('#modalAviso').modal('show');
 
@@ -143,8 +145,23 @@
             $("#exibirQuais").hide();
           }          
         });
-    })
 
+        $("#cadastrarDocumentoPessoal").click(function() 
+        {
+          if ($("#codigoTipoDocumento").val() == "" || $("#arquivo").val() == "")
+          {
+            $("#exibirTipoDocumentoPessoal").show();
+            $("#exibirArquivoDocumentoPessoal").show();
+          }
+          else
+          {
+            $("#exibirTipoDocumentoPessoal").hide();
+            $("#exibirArquivoDocumentoPessoal").hide();
+
+            var arquivo
+          }           
+        });
+    })  
 
     tinymce.init({
       selector: 'textarea',

@@ -44,4 +44,11 @@ class Inscricao extends Model
         $total = Inscricao::where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->count();
         return $total;
     }
+
+
+    public static function obterSituacaoInscricao($codigoEdital, $user_id)
+    {
+        $inscricao = Inscricao::select('situacaoInscricao')->where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->first();
+        return $inscricao->situacaoInscricao;
+    }
 }

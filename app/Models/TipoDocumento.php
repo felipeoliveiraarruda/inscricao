@@ -23,4 +23,11 @@ class TipoDocumento extends Model
     {
         return $this->hasMany(App\Models\Arquivo::class);
     }
+
+    public static function listarTipoDocumentosPessoal()
+    {
+        $tipos = TipoDocumento::whereIn('codigoTipoDocumento', [1,2,3,4])->get();
+
+        return $tipos;                  
+    }
 }

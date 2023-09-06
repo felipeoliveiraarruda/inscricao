@@ -131,10 +131,10 @@
 
 @if (!empty($codigoInscricao))
 <div class="card bg-default">
-    <h5 class="card-header">Anexo(s)</h5>
-        <div class="card-body">
+    <h5 class="card-header">Anexo(s) <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a></h5>
+    <div class="card-body">
         @if (count($arquivos) == 0)
-            <div class="alert alert-warning">Nenhum documento cadastrado</div>
+            <div class="alert alert-warning">Nenhum documento cadastrado</div>                    
         @else                
             <div class="table-responsive">
                 <table class="table">

@@ -10,10 +10,12 @@ use App\Models\Endereco;
 use App\Models\Arquivo;
 use App\Models\User;
 use App\Models\Documento;
+use App\Models\TipoDocumento;
 use App\Models\InscricoesPessoais;
 use App\Models\InscricoesArquivos;
 use App\Models\InscricoesDocumentos;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ArquivoRequest;
 
 class DadosPessoaisController extends Controller
 {
@@ -48,6 +50,7 @@ class DadosPessoaisController extends Controller
 
         $paises  = Utils::listarPais();
         $estados = Utils::listarEstado(1);
+        $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
     
         return view('pessoal.create',
         [
@@ -83,7 +86,7 @@ class DadosPessoaisController extends Controller
             'dataNascimentoPessoal' => $request->dataNascimentoPessoal,
             'sexoPessoal'           => $request->sexoPessoal,
             'estadoCivilPessoal'    => $request->estadoCivilPessoal,
-            'natualidadePessoal'    => $request->natualidadePessoal,
+            'naturalidadePessoal'   => $request->naturalidadePessoal,
             'estadoPessoal'         => $request->estadoPessoal,
             'paisPessoal'           => $pais['nompas'],
             'dependentePessoal'     => $request->dependentePessoal,
@@ -164,5 +167,46 @@ class DadosPessoaisController extends Controller
     public function update(Request $request, DadosPessoais $dadosPessoais)
     {
         dd($request);
+    }
+
+    public function anexo($id = '')
+    {
+        $arquivos = '';
+
+        if (!empty($id))
+        {
+            $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $id)->first();
+            $voltar = "pessoal/novo/{$inscricao->codigoEdital}";
+        }
+        else
+        {
+            $voltar = 'pessoal';
+        }
+
+        $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
+    
+        return view('pessoal.anexos',
+        [
+            'codigoInscricao'   => $id,
+            'link_voltar'       => $voltar,
+            'tipos'             => $tipos,
+        ]);
+    }
+
+    public function anexo_salvar(ArquivoRequest $request)
+    {
+        $validated = $request->validated();
+
+        $path = $request->file('arquivo')->store('arquivos', 'public');
+
+        $arquivo = Arquivo::create([
+            'codigoUsuario'         => Auth::user()->id,
+            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
+            'linkArquivo'           => $path,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
+        return redirect($request->linkVoltar);
     }
 }

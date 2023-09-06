@@ -15,7 +15,7 @@ class CreatePessoaisTable extends Migration
     {
         Schema::create('pessoais', function (Blueprint $table) {
             $table->id('codigoPessoal');
-            $table->unsignedBigInteger('codigoUsuario');
+            $table->unsignedBigInteger('codigoUsuario')->unique();
             $table->string('sexoPessoal', 10)->nullable();
             $table->string('estadoCivilPessoal', 20)->nullable();
             $table->string('naturalidadePessoal', 50)->nullable();
