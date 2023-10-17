@@ -50,8 +50,8 @@
                                 </div>
 
                                 <div class="col-sm-3 text-right">
-                                    @if (count($pessoais) == 0)
-                                        <a href="pessoal/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
+                                    @if (!empty($pessoais) == 0)
+                                        <a href="{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
                                     @endif
                                 </div>
                             </div>
@@ -59,32 +59,92 @@
                             <div class="row">                             
                                 <div class="col-sm-12" > 
                                     <p></p>
-                                    @if (count($pessoais) > 0)
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Nome</th>
-                                                    <th scope="col">CPF</th>
-                                                    <th scope="col">RG</th>
-                                                    <th scope="col"></th>
-                                                </tr>
-                                            </thead>
-                                            @foreach($pessoais as $pessoal)
-                                            <tr>
-                                                <td>{{ $pessoal->name }}</td>
-                                                <td>{{ $pessoal->cpf }}</td>
-                                                <td>{{ $pessoal->rg }}</td>
-                                                <td>
-                                                    <a href="pessoal/{{ $pessoal->id }}/editar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Editar">
-                                                        <i class="far fa-eye"></i>
-                                                    </a>
-
-                                                    <i class="fa fa-exclamation-triangle text-danger"></i>
-                                                </td>
-                                            </tr>                                        
-                                            @endforeach
-                                        @endif
+                                    @if (!empty($pessoais))
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th scope="col">Nome</th>
+                                                <th scope="col">CPF</th>
+                                                <th scope="col">RG</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tr>
+                                            <td>{{ $pessoais->name }}</td>
+                                            <td class="text-center">{{ $pessoais->cpf }}</td>
+                                            <td class="text-center">{{ $pessoais->rg }}</td>
+                                            <td class="text-center">
+                                                @if (!empty($pessoais->codigoInscricaoPessoal) || (!empty($pessoais->codigoInscricaoDocumento)))
+                                                    <i class="fa fa-check text-success"></i>
+                                                @else
+                                                    <i class="fa fa-times text-danger"></i>
+                                                @endif                                                
+                                            </td>                                            
+                                            <td class="text-center">
+                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Editar">
+                                                    Atualizar
+                                                </a>                                               
+                                            </td>
+                                        </tr>
                                     </table>
+
+                                    <div class="card bg-default">
+                                        <h5 class="card-header">Anexo(s) <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a></h5>
+                                        <div class="card-body">
+                                            @if (count($arquivos) == 0)
+                                                <div class="alert alert-warning">Nenhum documento cadastrado</div>                    
+                                            @else                
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr class="text-center">
+                                                                <th scope="col">Arquivo</th>
+                                                                <th scope="col">Status</th>                                                                
+                                                                <th scope="col"></th>
+                                                            </tr>
+                                                        </thead>
+
+                                                    @foreach ($arquivos as $arquivo)
+                                                        @php
+                                                            $arquivo_inscricao .= $arquivo->codigoArquivo."|";
+                                                        @endphp
+                                                        <tr>
+                                                            <th>{{ $arquivo->tipoDocumento }}</th>
+                                                            <td class="text-center">                          
+                                                                @if (!empty($arquivo->codigoInscricaoArquivo))
+                                                                    <i class="fa fa-check text-success"></i>
+                                                                @else
+                                                                    <i class="fa fa-times text-danger"></i>
+                                                                @endif                                                                 
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                                                    <i class="far fa-eye"></i>
+                                                                </a>
+                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/editar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Alterar">
+                                                                    <i class="fa fa-wrench"></i>
+                                                                </a>                                                              
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach                   
+                                                    </table>  
+                                                </div>                
+                                            @endif
+                                            @if (empty($arquivo->codigoInscricaoArquivo))
+                                            <!-- Validation Errors -->
+                                            <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                            
+                                            <form class="needs-validation" novalidate method="POST" action="inscricao/anexar">
+                                                @csrf
+                                                <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
+                                                <input type="hidden" name="codigoArquivoInscricao" value="{{ $arquivo_inscricao }}">
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Anexar documentos a inscrição</button>
+                                            </form>
+                                            @endif
+                                        </div>
+                                    </div>                                    
+                                    @endif
                                 </div>                                 
                             </div>                                                        
                         </div>

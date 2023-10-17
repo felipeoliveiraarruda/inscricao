@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\Inscricao;
@@ -12,14 +13,170 @@ use App\Models\Arquivo;
 use App\Models\Endereco;
 use App\Models\DadosPessoais;
 use App\Models\TipoDocumento;
+use App\Models\User;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
 use App\Mail\ConfirmacaoMail;
+use App\Models\InscricoesArquivos;
 
 class InscricaoController extends Controller
 {
     public function index()
+    {
+        if (Auth::user()->cpf == '99999999999')
+        {    
+            return redirect('admin/dados'); 
+        }
+
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
+
+        return view('dashboard',
+        [
+            'editais'   => $editais,
+            'utils'     => new Utils,
+            'inscricao' => new Inscricao,
+            'user_id'   => Auth::user()->id
+        ]);
+    }
+
+    public function create($codigoEdital)
+    {        
+        $inscricao = Utils::obterTotalInscricao(Auth::user()->id, $codigoInscricao);
+
+        return view('inscricao',
+        [
+            'codigoInscricao' => $inscricao->codigoInscricao,
+            'status'          => $inscricao->statusInscricao,
+            'pessoal'         => $inscricao->pessoal,
+            'arquivo'         => $inscricao->arquivo,
+            'endereco'        => $inscricao->endereco,
+            'total'           => 0,
+        ]);
+    }
+
+    public function store($codigoEdital)
+    {        
+        $editais = Edital::where('dataFinalEdital', '>', Carbon::now())
+                         ->where('codigoEdital', $codigoEdital)->count();
+
+        if($editais == 0)
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'Inscrições Encerradas';
+
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
+        }
+
+        $inscricao = Inscricao::verificarInscricao($codigoEdital, Auth::user()->id);
+
+        if (empty($inscricao))
+        {            
+            $numero = Inscricao::gerarNumeroInscricao($codigoEdital);
+            $nivel  = Edital::obterNivelEdital($codigoEdital);
+
+            $inscricao = Inscricao::create([
+                'codigoEdital'          => $codigoEdital,
+                'codigoUsuario'         => Auth::user()->id,
+                'numeroInscricao'       => "{$nivel}{$numero}",
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]); 
+        }
+
+        return redirect("inscricao/{$inscricao->codigoInscricao}");
+    }
+    
+    public function pessoal($codigoInscricao)
+    {        
+        $arquivos = '';
+
+        $inscricao = Inscricao::obterDadosPessoaisInscricao(Auth::user()->id, $codigoInscricao);
+        $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4), $codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
+    
+        return view('pessoal',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'arquivos'          => $arquivos,
+            'pessoais'          => $inscricao,
+            'arquivo_inscricao' => '',
+        ]); 
+    }
+
+    public function pessoal_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterDadosPessoaisInscricao(Auth::user()->id, $codigoInscricao);
+        
+        $paises  = Utils::listarPais();
+        $estados = Utils::listarEstado(1);
+        $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
+
+        return view('inscricao.pessoal',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'status'            => $inscricao->statusInscricao,                        
+            'pessoais'          => $inscricao,
+            'sexos'             => Utils::obterDadosSysUtils('sexo'),
+            'racas'             => Utils::obterDadosSysUtils('raça'),
+            'estados_civil'     => Utils::obterDadosSysUtils('civil'),
+            'especiais'         => Utils::obterDadosSysUtils('especial'),
+            'paises'            => $paises,
+            'estados'           => $estados,
+        ]); 
+    }
+
+    public function anexar(Request $request)
+    {
+        if (!empty($request->codigoArquivoInscricao))
+        {
+            $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $request->codigoInscricao)->first();
+            $temp = explode('|', $request->codigoArquivoInscricao);
+
+            for($i = 0; $i < count($temp) - 1; $i++)
+            {
+                $inscricaoArquivos = InscricoesArquivos::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoArquivo'         => $temp[$i],
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+
+            $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
+        }
+        
+        request()->session()->flash('alert-success', 'Documento(s) anexado(s) com sucesso');    
+        return redirect($voltar);
+    }
+
+    public function endereco($codigoInscricao)
+    {        
+        $arquivos = '';
+
+        $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoInscricao);
+        $pessoais  = User::obterDadosPessoais(Auth::user()->id, $codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
+    
+        return view('endereco',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'arquivos'          => $arquivos,
+            'pessoais'          => $pessoais,
+        ]); 
+    }    
+
+    /*public function index()
     {
         if (Auth::user()->cpf == '99999999999')
         {    
@@ -38,7 +195,7 @@ class InscricaoController extends Controller
     }
 
     public function create($id)
-    {        
+    {
         $editais = Edital::where('dataFinalEdital', '>', Carbon::now())
                          ->where('codigoEdital', $id)->count();
 
@@ -53,10 +210,8 @@ class InscricaoController extends Controller
                 'item' => $item,                
             ]);
         }
-
-        $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
-                              ->where('codigoEdital', $id)
-                              ->first();
+        
+        $inscricao = Utils::obterTotalInscricao($id, Auth::user()->id);
 
         if (empty($inscricao))
         {            
@@ -72,7 +227,7 @@ class InscricaoController extends Controller
         } 
 
         /*$arquivo = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
+                          ->where('inscricoes_arquivos.codigoInscricao', $inscricao->codigoInscricao)->count();
 
         $endereco = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
                             ->where('inscricoes_enderecos.codigoInscricao', $inscricao->codigoInscricao)->count();                        
@@ -80,19 +235,19 @@ class InscricaoController extends Controller
         $projeto     = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(10));
         $taxa        = Arquivo::verificarArquivo($inscricao->codigoInscricao, array(11));
         
-        $total = $projeto + $taxa;*/
+        $total = $projeto + $taxa;
 
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
-            'status'          => $inscricao->situacaoInscricao,
-            'pessoal'         => 0,
-            'arquivo'         => 0,
-            'endereco'        => 0,
+            'status'          => $inscricao->statusInscricao,
+            'pessoal'         => $inscricao->pessoal,
+            'arquivo'         => $inscricao->arquivo,
+            'endereco'        => $inscricao->endereco,
             'total'           => 0,
             //'arquivo'         => $arquivo,
             //'endereco'        => $endereco,
-            //'total'           => $total,*/
+            //'total'           => $total,
         ]);
     }
 
@@ -126,7 +281,7 @@ class InscricaoController extends Controller
         if (Gate::check('admin'))
         {
             Inscricao::where('codigoInscricao', $id)
-                     ->where('situacaoInscricao', 'N')->update(['situacaoInscricao' => 'P']);
+                     ->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
 
             $temps = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $id)->get();
 
@@ -155,12 +310,12 @@ class InscricaoController extends Controller
 
             Inscricao::where('codigoUsuario', Auth::user()->id)
                      ->where('codigoInscricao', $id)
-                     ->where('situacaoInscricao', 'N')->update(['situacaoInscricao' => 'P']);
+                     ->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
 
             $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                   ->where('codigoUsuario', Auth::user()->id)
                                   ->where('codigoInscricao', $id)
-                                  ->where('situacaoInscricao', 'P')->first();
+                                  ->where('statusInscricao', 'P')->first();
         }
 
         $edital = Edital::obterNumeroEdital($inscricao->codigoEdital);
@@ -246,7 +401,7 @@ class InscricaoController extends Controller
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'codigoEdital'    => $inscricao->codigoEdital,
-            'status'          => $inscricao->situacaoInscricao,
+            'status'          => $inscricao->statusInscricao,
             'enderecos'       => $enderecos,
             'cpf'             => $cpf,
             'rg'              => $rg,
@@ -304,7 +459,7 @@ class InscricaoController extends Controller
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'codigoEdital'    => $inscricao->codigoEdital,
-            'status'          => $inscricao->situacaoInscricao,
+            'status'          => $inscricao->statusInscricao,
             'arquivos'        => $arquivos,
             'endereco'        => $endereco,
             'cpf'             => $cpf,
@@ -331,30 +486,11 @@ class InscricaoController extends Controller
         }    
         else
         {
-            Inscricao::where('codigoInscricao', $id)->where('situacaoInscricao', 'P')->update(['situacaoInscricao' => 'C']);
+            Inscricao::where('codigoInscricao', $id)->where('statusInscricao', 'P')->update(['statusInscricao' => 'C']);
 
             request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} validada com sucesso.");
         } 
 
         return redirect("/inscricao/visualizar/{$id}");
-    }
-
-    public function pessoal($id)
-    {        
-        $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)
-                              ->where('codigoInscricao', $id)
-                              ->first();
-
-        //$pessoais = DadosPessoais::where('codigoUsuario', Auth::user()->id)->get();
-
-        $pessoais = DadosPessoais::join('users', 'pessoais.codigoUsuario', '=', 'users.id')->where('users.id', Auth::user()->id)->get();
-
-        return view('pessoal',
-        [
-            'codigoInscricao' => $inscricao->codigoInscricao, 
-            'codigoEdital'    => $inscricao->codigoEdital,
-            'status'          => $inscricao->situacaoInscricao,                        
-            'pessoais'        => $pessoais
-        ]);                            
-    }
+    }*/
 }

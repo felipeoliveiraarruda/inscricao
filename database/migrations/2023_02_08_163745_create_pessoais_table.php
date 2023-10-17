@@ -22,8 +22,9 @@ class CreatePessoaisTable extends Migration
             $table->char('dependentePessoal', 1)->nullable();
             $table->char('racaPessoal', 20)->nullable();
             $table->char('especialPessoal', 1)->nullable();
-            $table->string('tipoEspecialPessoal', 20)->nullable();
+            $table->string('tipoEspecialPessoal', 100)->nullable();            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoUsuario')->references('id')->on('users');
         });

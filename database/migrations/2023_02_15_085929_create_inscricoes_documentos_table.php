@@ -14,9 +14,11 @@ class CreateInscricoesDocumentosTable extends Migration
     public function up()
     {
         Schema::create('inscricoes_documentos', function (Blueprint $table) {
+            $table->id('codigoInscricaoDocumento');
             $table->unsignedBigInteger('codigoInscricao');
-            $table->unsignedBigInteger('codigoDocumento');
+            $table->unsignedBigInteger('codigoDocumento');            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoInscricao')->references('codigoInscricao')->on('inscricoes');
             $table->foreign('codigoDocumento')->references('codigoDocumento')->on('documentos');

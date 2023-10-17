@@ -12,6 +12,7 @@ class InscricoesPessoais extends Model
     use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey = 'codigoInscricaoPessoal';
     protected $table = 'inscricoes_pessoais';
 
     protected $fillable = [

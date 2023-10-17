@@ -87,6 +87,27 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function documentos()
     {
-        return $this->belongsTo(\App\Models\Documento::class);
+        return $this->hasMany(\App\Models\Documento::class);
     }
+
+    public function obterLevel($id)
+    {
+        $user = User::with('permissions', 'roles')->find($id);
+        return $user->level;
+    }
+
+    public function obterVinculos($id)
+    {
+        $user = User::with('permissions', 'roles')->find($id);   
+        $vinculos = array();
+        
+        foreach ($user->permissions->where('guard_name', User::$vinculoNs)->whereIn('name', User::$permissoesVinculo) as $p)
+        {
+            array_push($vinculos, $p->name);
+        }
+
+        return $vinculos;
+    }
+
+
 }

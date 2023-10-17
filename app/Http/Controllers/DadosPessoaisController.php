@@ -16,6 +16,7 @@ use App\Models\InscricoesArquivos;
 use App\Models\InscricoesDocumentos;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ArquivoRequest;
+use App\Models\Views\ViewArquivos;
 
 class DadosPessoaisController extends Controller
 {
@@ -33,24 +34,17 @@ class DadosPessoaisController extends Controller
     public function create($id = '')
     {
         $arquivos = '';
-
-        if (!empty($id))
-        {
-            $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $id)->first();
-            $voltar = "inscricao/{$inscricao->codigoEdital}";
-
-            $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                               ->where('arquivos.codigoUsuario', Auth::user()->id)
-                               ->where('arquivos.codigoTipoDocumento', '<=', 4)->get();
-        }
-        else
-        {
-            $voltar = 'pessoal';
-        }
-
+        $voltar = '/pessoal';
         $paises  = Utils::listarPais();
         $estados = Utils::listarEstado(1);
         $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
+
+        if (!empty($id))
+        {
+            $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $id)->first();         
+            $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1,2,3,4), $id);
+            $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
+        }
     
         return view('pessoal.create',
         [
@@ -61,7 +55,6 @@ class DadosPessoaisController extends Controller
             'estados_civil'     => Utils::obterDadosSysUtils('civil'),
             'especiais'         => Utils::obterDadosSysUtils('especial'),
             'arquivos'          => $arquivos,
-            'arquivo_inscricao' => '',
             'paises'            => $paises,
             'estados'           => $estados,
         ]); 
@@ -69,17 +62,33 @@ class DadosPessoaisController extends Controller
 
     public function store(Request $request)
     {
+        $temp = '';
         $voltar = '/pessoal';
+        $inscricaoPessoal    = true;
+        $inscricaoDocumentos = true;
+
+        \DB::beginTransaction();
 
         /* Atualiza os dados do Usuário */
         $user = User::find(Auth::user()->id);
         $user->name  = $request->name;
         $user->email = $request->email;
         $user->rg    = $request->rg;
+        
+        if(Auth::user()->cpf == Auth::user()->codpes)
+        {
+            $user->cpf = $request->cpf;
+        }
+        
         $user->save();
 
         /* Cadastra os dados pessoais */
         $pais = Utils::obterPais($request->paisPessoal);
+
+        if($request->especialPessoal == 'S')
+        {
+            $request->tipoEspecialPessoal = Utils::obterTipoEspecial($request->tipoEspecialPessoal);
+        }
 
         $pessoal = DadosPessoais::create([
             'codigoUsuario'         => Auth::user()->id,
@@ -116,20 +125,34 @@ class DadosPessoaisController extends Controller
 
             $inscricaoDocumentos = InscricoesDocumentos::create([
                 'codigoInscricao'       => $request->codigoInscricao,
-                'codigoDocumento'       => $pessoal->codigoDocumento,
+                'codigoDocumento'       => $documento->codigoDocumento,
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
 
-            for($i = 0; $i < count($temp) - 1; $i++)
+            /*if (!empty($request->codigoArquivoInscricao))
             {
-                $inscricaoDocumentos = InscricoesArquivos::create([
-                    'codigoInscricao'       => $request->codigoInscricao,
-                    'codigoArquivo'         => $temp[$i],
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]);
-            }
+                $temp = explode('|', $request->codigoArquivoInscricao);
+
+                for($i = 0; $i < count($temp) - 1; $i++)
+                {
+                    $inscricaoDocumentos = InscricoesArquivos::create([
+                        'codigoInscricao'       => $request->codigoInscricao,
+                        'codigoArquivo'         => $temp[$i],
+                        'codigoPessoaAlteracao' => Auth::user()->codpes,
+                    ]);
+                }
+            }*/
 
             $voltar = "inscricao/{$request->codigoInscricao}/pessoal";
+        }
+
+        if($user && $pessoal && $documento && $inscricaoPessoal && $inscricaoDocumentos) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
         }
 
         request()->session()->flash('alert-success', 'Dados pessoais cadastrado com sucesso');    
@@ -154,19 +177,111 @@ class DadosPessoaisController extends Controller
             $voltar = 'pessoal';
         }
 
+        $pessoal = DadosPessoais::where('codigoPessoal', $id)->first();
+        $paises  = Utils::listarPais();
+        $estados = Utils::listarEstado(1);
+        $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
+
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                                    ->where('arquivos.codigoUsuario', Auth::user()->id)
+                                    ->where('arquivos.codigoTipoDocumento', '<=', 4)->get();
+
         return view('pessoal.edit',
         [
             'codigoInscricao'   => $inscricao,
             'link_voltar'       => $voltar,
+            'pessoais'          => $pessoal,
             'sexos'             => Utils::obterDadosSysUtils('sexo'),
             'racas'             => Utils::obterDadosSysUtils('raça'),
             'estados_civil'     => Utils::obterDadosSysUtils('civil'),
+            'especiais'         => Utils::obterDadosSysUtils('especial'),            
+            'paises'            => $paises,
+            'estados'           => $estados,
+            'arquivos'          => $arquivos,
+            'arquivo_inscricao' => '',
         ]);
     }
 
     public function update(Request $request, DadosPessoais $dadosPessoais)
     {
-        dd($request);
+        $temp = '';
+        $voltar = '/pessoal';
+        $inscricaoPessoal    = true;
+        $inscricaoDocumentos = true;
+
+        \DB::beginTransaction();
+
+        /* Atualiza os dados do Usuário */
+        $user = User::find(Auth::user()->id);
+        $user->name  = $request->name;
+        $user->email = $request->email;
+        
+        if(Auth::user()->cpf == Auth::user()->codpes)
+        {
+            $user->cpf = $request->cpf;
+        }
+        
+        $user->save();
+
+        /* Atualiza os dados pessoais */
+        if($request->especialPessoal == 'S')
+        {
+            $request->tipoEspecialPessoal = Utils::obterTipoEspecial($request->tipoEspecialPessoal);
+        }
+        
+        $pessoal = DadosPessoais::find($request->codigoPessoal);
+        $pessoal->codigoUsuario         = Auth::user()->id;
+        $pessoal->dataNascimentoPessoal = $request->dataNascimentoPessoal;
+        $pessoal->sexoPessoal           = $request->sexoPessoal;
+        $pessoal->estadoCivilPessoal    = $request->estadoCivilPessoal;
+        $pessoal->naturalidadePessoal   = $request->naturalidadePessoal;
+        $pessoal->estadoPessoal         = $request->estadoPessoal;
+        $pessoal->paisPessoal           = $request->paisPessoal;
+        $pessoal->dependentePessoal     = $request->dependentePessoal;
+        $pessoal->racaPessoal           = $request->racaPessoal;
+        $pessoal->especialPessoal       = $request->especialPessoal;
+        $pessoal->tipoEspecialPessoal   = $request->tipoEspecialPessoal;
+        $pessoal->codigoPessoaAlteracao = Auth::user()->codpes;
+        $pessoal->save();
+
+        $documento = Documento::find($request->codigoDocumento);
+        $documento->codigoUsuario         = Auth::user()->id;
+        $documento->numeroRG              = $request->rg;
+        $documento->ufEmissorRG           = $request->ufEmissorRG;
+        $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
+        $documento->dataEmissaoRG         = $request->dataEmissaoRG;
+        $documento->codigoPessoaAlteracao = Auth::user()->codpes;
+        $documento->save();
+
+        if(!empty($request->codigoInscricao))
+        {
+            $inscricaoPessoal = InscricoesPessoais::find($request->codigoInscricaoPessoal);
+            $inscricaoPessoal->codigoInscricao       = $request->codigoInscricao;
+            $inscricaoPessoal->codigoPessoal         = $request->codigoPessoal;
+            $inscricaoPessoal->codigoPessoaAlteracao = Auth::user()->codpes;
+            $inscricaoPessoal->save();
+
+            $inscricaoDocumento = InscricoesDocumentos::find($request->codigoInscricaoDocumento);
+            $inscricaoDocumento->codigoInscricao       = $request->codigoInscricao;
+            $inscricaoDocumento->codigoDocumento       = $request->codigoDocumento;
+            $inscricaoDocumento->codigoPessoaAlteracao = Auth::user()->codpes;
+            $inscricaoDocumento->save();
+
+            $voltar = "inscricao/{$request->codigoInscricao}/pessoal";
+        }
+
+        if($user && $pessoal && $documento && $inscricaoPessoal && $inscricaoDocumentos) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Dados pessoais cadastrado com sucesso');    
+        
+        return redirect($voltar);
     }
 
     public function anexo($id = '')
@@ -176,7 +291,7 @@ class DadosPessoaisController extends Controller
         if (!empty($id))
         {
             $inscricao = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $id)->first();
-            $voltar = "pessoal/novo/{$inscricao->codigoEdital}";
+            $voltar = "/inscricao/{$id}/pessoal";
         }
         else
         {
@@ -206,7 +321,18 @@ class DadosPessoaisController extends Controller
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
+        $inscricaoDocumentos = InscricoesArquivos::create([
+            'codigoInscricao'       => $request->codigoInscricao,
+            'codigoArquivo'         => $arquivo->codigoArquivo,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
         request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
         return redirect($request->linkVoltar);
+    }
+
+    public function inscricao(Request $request)
+    {
+        dd($request);
     }
 }

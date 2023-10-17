@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use Illuminate\Support\Facades\Password;
+use App\Models\Edital;
+use App\Models\Nivel;
+use App\Models\TipoDocumento;
+use App\Models\Utils;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -47,6 +52,20 @@ class UserController extends Controller
                     ? back()->with('status', __($status))
                     : back()->withInput($usuarios->only('email'))
                             ->withErrors(['email' => __($status)]);
+    }
+
+    public function create()    
+    {
+        $cursos = Utils::listarCurso();
+        $niveis = Nivel::all();
+        $tipos  = TipoDocumento::all();
+        
+        return view('admin.user.create',
+        [
+            'cursos' => $cursos,
+            'niveis' => $niveis,
+            'tipos'  => $tipos
+        ]);
     }
 
     /**

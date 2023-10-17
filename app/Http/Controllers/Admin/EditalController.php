@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\EditalRequest;
 use App\Models\Edital;
+use App\Models\EditalTipoDocumento;
+use App\Models\Nivel;
+use App\Models\TipoDocumento;
 use App\Models\Utils;
 
 class EditalController extends Controller
 {
     public function index()
     {              
-        if (!Gate::allows('gerente'))
+        if (!in_array('Servidorusp', session('vinculos')) && (session('level') != 'admin' || session('level') != 'manager'))
         {
             return redirect("/");
         }
@@ -30,28 +33,46 @@ class EditalController extends Controller
 
     public function create()    
     {
+        if (!in_array('Servidorusp', session('vinculos')) && (session('level') != 'admin' || session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
         $cursos = Utils::listarCurso();
+        $niveis = Nivel::all();
+        $tipos  = TipoDocumento::all();
         
         return view('admin.edital.create',
         [
-            'cursos' => $cursos
+            'cursos' => $cursos,
+            'niveis' => $niveis,
+            'tipos'  => $tipos
         ]);
     }
 
     public function store(EditalRequest $request)
-    {
+    {    
         $validated = $request->validated();
 
-        Edital::create([
+        $edital = Edital::create([
             'codigoCurso'           => $request->codigoCurso,
             'codigoUsuario'         => Auth::user()->id,
-            'nivelEdital'           => $request->nivelEdital,
+            'codigoNivel'           => $request->codigoNivel,
             'linkEdital'            => $request->linkEdital,
             'dataInicioEdital'      => $request->dataInicioEdital,
             'dataFinalEdital'       => $request->dataFinalEdital,
             'dataDoeEdital'         => $request->dataDoeEdital,
             'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);        
+        ]);
+
+        foreach($request->codigoTipoDocumento as $tipo)
+        {
+            EditalTipoDocumento::create([
+                'codigoEdital'          => $edital->codigoEdital,
+                'codigoTipoDocumento'   => $tipo,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+        }
 
         request()->session()->flash('alert-success','Edital criado com sucesso');
         return redirect("/admin/edital");

@@ -161,6 +161,12 @@
             var arquivo
           }           
         });
+
+        $("#formEnviar").on("submit", function()
+        {
+          $('#finalizarModal').modal('hide');
+          $('#loaderModal').modal('show')
+        })
     })  
 
     tinymce.init({

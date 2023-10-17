@@ -14,9 +14,11 @@ class CreateInscricoesPessoais extends Migration
     public function up()
     {
         Schema::create('inscricoes_pessoais', function (Blueprint $table) {
+            $table->id('codigoInscricaoPessoal');
             $table->unsignedBigInteger('codigoInscricao');
-            $table->unsignedBigInteger('codigoPessoal');
+            $table->unsignedBigInteger('codigoPessoal');            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoInscricao')->references('codigoInscricao')->on('inscricoes');
             $table->foreign('codigoPessoal')->references('codigoPessoal')->on('pessoais');

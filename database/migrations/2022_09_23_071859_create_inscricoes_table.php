@@ -17,8 +17,9 @@ class CreateInscricoesTable extends Migration
             $table->id('codigoInscricao');
             $table->unsignedBigInteger('codigoEdital');
             $table->unsignedBigInteger('codigoUsuario');
-            $table->char('situacaoInscricao', 1)->default('N');            
+            $table->char('statusInscricao', 1)->default('N');              
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoEdital')->references('codigoEdital')->on('editais');
             $table->foreign('codigoUsuario')->references('id')->on('users');

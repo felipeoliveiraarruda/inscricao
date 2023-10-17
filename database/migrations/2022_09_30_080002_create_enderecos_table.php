@@ -22,8 +22,9 @@ class CreateEnderecosTable extends Migration
             $table->string('complementoEndereco')->nullable();            
             $table->string('bairroEndereco')->nullable();
             $table->string('localidadeEndereco')->nullable();
-            $table->char('ufEndereco', 2)->nullable();
+            $table->char('ufEndereco', 2)->nullable();            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoUsuario')->references('id')->on('users');
         });

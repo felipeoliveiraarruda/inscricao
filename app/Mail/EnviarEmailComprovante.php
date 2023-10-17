@@ -19,7 +19,7 @@ class EnviarEmailComprovante extends Mailable
     protected $codigoInscricao;
     protected $arquivo;
 
-    public function __construct($codigoInscricao, $arquivo)
+    public function __construct($codigoPae)
     {
         $this->codigoInscricao = $codigoInscricao;
         $this->arquivo         = $arquivo;

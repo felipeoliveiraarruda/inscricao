@@ -14,9 +14,11 @@ class CreateInscricoesEnderecosTable extends Migration
     public function up()
     {
         Schema::create('inscricoes_enderecos', function (Blueprint $table) {
+            $table->id('codigoInscricaoEndereco');
             $table->unsignedBigInteger('codigoInscricao');
-            $table->unsignedBigInteger('codigoEndereco');
+            $table->unsignedBigInteger('codigoEndereco');            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoInscricao')->references('codigoInscricao')->on('inscricoes');
             $table->foreign('codigoEndereco')->references('codigoEndereco')->on('enderecos');

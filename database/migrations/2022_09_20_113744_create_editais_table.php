@@ -20,8 +20,9 @@ class CreateEditaisTable extends Migration
             $table->string('linkEdital');
             $table->timestamp('dataInicioEdital');
             $table->timestamp('dataFinalEdital');
-            $table->timestamp('dataDoeEdital');
+            $table->timestamp('dataDoeEdital')->nullable();            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
         });
     }

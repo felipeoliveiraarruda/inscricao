@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use App\Models\Views\ViewInscricaoTotal;
 
 class Utils extends Model
 {
@@ -177,5 +178,48 @@ class Utils extends Model
         ]);
 
         return $response->json();
+    }
+
+    public static function setSession($id)
+    {
+        $level = User::obterLevel($id);
+        session(['level' => $level]);
+
+        $vinculos = User::obterVinculos($id);
+        session(['vinculos' => $vinculos]);
+    }
+
+    public static function obterTotalInscricao($user_id, $codigoInscricao, $criterio = '*')
+    {
+        $total = ViewInscricaoTotal::select($criterio)->where('codigoUsuario', $user_id)->where('codigoInscricao', $codigoInscricao)->first();
+        return $total;
+    }   
+    
+    public static function obterTotalArquivos($codigoUsuario, $codigoEdital = '', $criterio = '')
+    {
+        $total = ViewInscricaoTotal::select($criterio)->where('codigoUsuario', $codigoUsuario)->where('codigoEdital', $codigoEdital)->first();
+        return $total;
+    } 
+
+    public static function obterTipoEspecial($tipoEspecial)
+    {
+        $i = 0;
+        $tipos = '';
+
+        foreach($tipoEspecial as $tipo)
+        {
+            if ($i < count($tipoEspecial) - 1)
+            {
+                $tipos .= "{$tipo}|";
+            }
+            else
+            {
+                $tipos .= "{$tipo}";
+            }
+            
+            $i++;
+        }
+
+        return $tipos;
     }
 }

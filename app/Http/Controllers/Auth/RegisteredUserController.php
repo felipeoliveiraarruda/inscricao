@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Spatie\Permission\Models\Permission;
 
 class RegisteredUserController extends Controller
 {
@@ -53,6 +54,11 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'user')->first();
+        $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'Outros')->first();
+       
+        $user->syncPermissions($permissions);
 
         Auth::login($user);
 

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
+use App\Models\User;
 use Mail;
 use App\Mail\InscritosMail;
 use App\Mail\ClassificadosMail;
@@ -17,7 +18,7 @@ use App\Mail\ApresentacaoMail;
 class AdminController extends Controller
 {
     public function index()
-    {
+    {   
         if (Gate::check('admin'))
         {
             $editais = Edital::all();
@@ -87,10 +88,10 @@ class AdminController extends Controller
         else 
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-            ->where('editais.codigoEdital', $request->codigoEdital)
-            ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
-            ->get();
+                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                ->where('editais.codigoEdital', $request->codigoEdital)
+                                ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
+                                ->get();
         }
         
         foreach($inscritos as $inscrito)

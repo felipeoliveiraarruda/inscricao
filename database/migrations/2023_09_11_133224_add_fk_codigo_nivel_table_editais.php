@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveEmailUniqueTableUsers extends Migration
+class AddFkCodigoNivelTableEditais extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class RemoveEmailUniqueTableUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['email']);
-        });
+        Schema::table('editais', function (Blueprint $table) {
+            $table->foreign('codigoNivel')->references('codigoNivel')->on('niveis');
+        });        
     }
 
     /**
@@ -25,8 +25,8 @@ class RemoveEmailUniqueTableUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unique(['email']);
-        });
+        Schema::table('editais', function (Blueprint $table) {
+            $table->dropForeign('posts_user_id_foreign');
+        }); 
     }
 }

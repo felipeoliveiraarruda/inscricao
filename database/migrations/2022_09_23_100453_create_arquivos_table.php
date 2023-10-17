@@ -17,8 +17,9 @@ class CreateArquivosTable extends Migration
             $table->id('codigoArquivo');
             $table->unsignedBigInteger('codigoUsuario');
             $table->unsignedBigInteger('codigoTipoDocumento');
-            $table->string('linkArquivo');
+            $table->string('linkArquivo');            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoUsuario')->references('id')->on('users');
         });

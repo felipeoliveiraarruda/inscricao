@@ -4,10 +4,10 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <br/>        
             <div class="card bg-default">
-                <h5 class="card-header">Inscrições Abertas</h5>
+                <h5 class="card-header">Editais</h5>
                 
                 <div class="card-body">
                     <table class="table">
@@ -20,7 +20,10 @@
                                         $curso = $utils->obterCurso($edital->codigoCurso);
                                     @endphp       
                                     <tr>
-                                        <td>{{ $utils->obterNivelEdital($edital->nivelEdital) }} - {{ $curso['nomcur'] }}</td>
+                                        <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
+                                        <td>
+                                            <a href="{{ $edital->linkEdital }}" target="_new">Edital</a>
+                                        </td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
                                     </tr>
                                 @endforeach

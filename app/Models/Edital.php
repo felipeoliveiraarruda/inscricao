@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
@@ -12,7 +13,7 @@ use App\Models\Utils;
 class Edital extends Model
 {
     use \Spatie\Permission\Traits\HasRoles;
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $primaryKey = 'codigoEdital';
     protected $table      = 'editais';
@@ -21,6 +22,7 @@ class Edital extends Model
     protected $fillable = [
         'codigoCurso',
         'codigoUsuario',
+        'codigoNivel',
         'nivelEdital',
         'linkEdital',
         'dataInicioEdital',
@@ -38,6 +40,11 @@ class Edital extends Model
     public function inscricoes()
     {
         return $this->hasMany(\App\Models\Inscricao::class);
+    }
+
+    public function niveis()
+    {
+        return $this->hasMany(\App\Models\Niveis::class);
     }
 
     public static function obterNumeroEdital($codigoEdital, $curso = false)
@@ -64,7 +71,21 @@ class Edital extends Model
 
     public static function obterNivelEdital($codigoEdital)
     {
-        $nivel = Edital::select('nivelEdital')->where('codigoEdital', $codigoEdital)->first();        
-        return $nivel->nivelEdital;
+        $nivel = Edital::select('siglaNivel')
+                       ->join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                       ->where('codigoEdital', $codigoEdital)->first();        
+        return $nivel->siglaNivel;
+    }
+
+    public static function obterSemestreAno($codigoEdital)
+    {
+        $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS Semestre'))
+                       ->where('codigoEdital', $codigoEdital)->first();
+        return "{$edital->ano}{$edital->Semestre}";
+    }
+
+    public static function obterEdital($codigoEdital)
+    {
+        
     }
 }

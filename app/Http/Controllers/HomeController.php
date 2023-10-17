@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
-use App\Models\Teste\Arquivo;
-use App\Models\Teste\InscricoesArquivos;
 use App\Models\TipoDocumento;
 use Carbon\Carbon;
 use Mail;
@@ -17,11 +15,13 @@ use App\Mail\ConfirmacaoMail;
 class HomeController extends Controller
 {
     public function index()
-    {        
-        $editais = Edital::where('dataFinalEdital', '>',  Carbon::now())->get();
+    {
 
         if (Auth::guest())
         {
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                             ->where('dataFinalEdital', '>',  Carbon::now())->get();
+
             return view('index', 
             [
                 'editais' => $editais,
@@ -29,10 +29,30 @@ class HomeController extends Controller
             ]);
         }
         else
-        {
-            if (Gate::check('admin') || Gate::check('gerente'))
-            {                
-                return redirect('admin');                
+        {    
+            if (empty(session('level')))
+            {
+                Utils::setSession(Auth::user()->id);
+            }
+            
+            if (in_array('Servidorusp', session('vinculos')) && (session('level') == 'admin' || session('level') == 'manager'))
+            {
+                if (session('level') == 'admin')
+                {
+                    return redirect('admin'); 
+                }
+                else if (session('level') == 'manager')
+                {
+                    $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                                     ->where('codigoUsuario', '=',  Auth::user()->id)
+                                     ->where('dataFinalEdital', '>',  Carbon::now())->get();
+
+                    return view('admin', 
+                    [
+                        'editais' => $editais,
+                        'utils'   => new Utils,
+                    ]);
+                }
             }
             else
             {

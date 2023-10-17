@@ -19,6 +19,7 @@ class CreateSysUtils extends Migration
             $table->string('dadosRaca')->nullable();
             $table->string('dadosEstadoCivil')->nullable();
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
         });
     }

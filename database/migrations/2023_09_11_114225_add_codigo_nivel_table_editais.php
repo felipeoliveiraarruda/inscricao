@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDataDoeTableEditais extends Migration
+class AddCodigoNivelTableEditais extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class AddDataDoeTableEditais extends Migration
     public function up()
     {
         Schema::table('editais', function (Blueprint $table) {
-            $table->timestamp('dataDoeEdital')
-                  ->after('dataFinalEdital');  
-        });           
+            $table->unsignedBigInteger('codigoNivel')
+                  ->after('codigoCurso');
+        });
     }
 
     /**
@@ -27,7 +27,7 @@ class AddDataDoeTableEditais extends Migration
     public function down()
     {
         Schema::table('editais', function (Blueprint $table) {
-            $table->dropColumn('dataDoeEdital');
-        });
+            $table->dropColumn('codigoNivel');
+        }); 
     }
 }

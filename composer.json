@@ -12,17 +12,17 @@
         "laravel/breeze": "1.9.2",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
-        "laravel/telescope": "^4.13",
         "laravel/tinker": "^2.5",
         "laravellegends/pt-br-validator": "^9.1",
+        "uspdev/laravel-replicado": "^1.0",
         "uspdev/laravel-usp-theme": "^2.5",
-        "uspdev/senhaunica-socialite": "^4.3"
+        "uspdev/senhaunica-socialite": "^4.3.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel-lang/lang": "^12.0",
-        "laravel/sail": "^1.22",
+        "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"

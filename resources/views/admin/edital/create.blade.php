@@ -25,44 +25,13 @@
             <h4>Edital</h4>
             <hr/>
 
-            <form class="needs-validation" novalidate method="POST" action="/admin/edital/salvar">
+            <!-- Validation Errors -->
+            <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                              
+            <form class="needs-validation" novalidate method="POST" action="/admin/edital/store">
                 @csrf
-
-                <div class="form-group">
-                    <label for="codigoCurso">Curso<span class="text-danger">*</span></label>
-                    <select class="form-control" id="codigoCurso" name="codigoCurso" required>
-                        <option value="">Selecione o Curso</option>
-                        @foreach ($cursos as $curso)
-                            <option value="{{ $curso['codcur'] }}">{{ $curso['nomcur'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="nivelEdital">Nível<span class="text-danger">*</span></label>
-                    <select class="form-control" id="nivelEdital" name="nivelEdital" required>
-                        <option value="">Selecione o Nível</option>
-                        <option value="AE">Aluno Especial</option>
-                        <option value="DD">Doutorado Direto</option>
-                        <option value="DF">Doutorado Fluxo Contínuo</option>
-                        <option value="ME">Mestrado</option>
-                    </select>
-                </div>   
                 
-                <div class="form-group">
-                    <label for="linkEdital">Link<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="linkEdital" name="linkEdital" maxlength="255" required />
-                </div>
-                
-                <div class="form-group">
-                    <label for="dataInicioEdital">Início<span class="text-danger">*</span></label>
-                    <input type="datetime-local" step="1" class="form-control" id="dataInicioEdital" name="dataInicioEdital" value="" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="dataFinalEdital">Final<span class="text-danger">*</span></label>
-                    <input type="datetime-local" step="1" class="form-control" id="dataFinalEdital" name="dataFinalEdital" value="" required />
-                </div>                
+                @include('admin.edital.partials.form')  
 
                 <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button><br/> 
             </form>                

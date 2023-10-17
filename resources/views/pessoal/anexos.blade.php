@@ -37,7 +37,8 @@
                             <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
                         </div>
 
-                        <input type="hidden" name="linkVoltar" value="{{ $link_voltar }}">
+                        <input type="hidden" name="linkVoltar"      value="{{ $link_voltar }}">
+                        <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
 
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                     </form>

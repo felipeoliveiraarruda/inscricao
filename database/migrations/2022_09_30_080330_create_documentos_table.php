@@ -19,8 +19,9 @@ class CreateDocumentosTable extends Migration
             $table->string('numeroRG', 20)->nullable();
             $table->char('ufEmissorRG', 2)->nullable();
             $table->string('orgaoEmissorRG', 10)->nullable();
-            $table->date('dataEmissaoRG')->nullable();
+            $table->date('dataEmissaoRG')->nullable();            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoUsuario')->references('id')->on('users');
         });

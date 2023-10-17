@@ -14,9 +14,11 @@ class CreateInscricoesArquivosTable extends Migration
     public function up()
     {
         Schema::create('inscricoes_arquivos', function (Blueprint $table) {
+            $table->id('codigoInscricaoArquivo');
             $table->unsignedBigInteger('codigoInscricao');
-            $table->unsignedBigInteger('codigoArquivo');
+            $table->unsignedBigInteger('codigoArquivo');            
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('codigoPessoaAlteracao');
             $table->foreign('codigoInscricao')->references('codigoInscricao')->on('inscricoes');
             $table->foreign('codigoArquivo')->references('codigoArquivo')->on('arquivos');
