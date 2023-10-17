@@ -55,6 +55,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        /* Monta as permissões do usuário */
         $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'user')->first();
         $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'Outros')->first();
        

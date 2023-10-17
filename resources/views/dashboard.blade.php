@@ -4,11 +4,11 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-3">
+        <!--<div class="col-md-3">
             @include('admin.menu.list')  
-        </div>
+        </div>-->
 
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="card bg-default">
                 <h5 class="card-header">Home</h5>
                 
@@ -60,7 +60,10 @@
                                                         @elseif ($status == 'N')
                                                             <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
                                                         @elseif ($status == 'C')
-                                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
+                                                            <td>
+                                                                <a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a>
+                                                                <a href="inscricao/{{ $edital->codigoEdital }}/pae/comprovante" role="button" aria-pressed="true" target="_new" class="btn btn-info">Comprovante de Inscrição</a>
+                                                            </td>
                                                         @endif
                                                     @else
                                                         @if ($status == 'P')

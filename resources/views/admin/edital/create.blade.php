@@ -28,7 +28,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                                               
-            <form class="needs-validation" novalidate method="POST" action="/admin/edital/store">
+            <form class="needs-validation" novalidate method="POST" action="/admin/edital/salvar">
                 @csrf
                 
                 @include('admin.edital.partials.form')  

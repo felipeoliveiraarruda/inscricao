@@ -24,12 +24,12 @@
                         @csrf
                         <div class="form-group">                            
                             <label for="email">{{ __('Email') }}</label>
-                            <input type="email" class="form-control" name="email" value="dev.ci.eel@usp.br" required autofocus>
+                            <input type="email" class="form-control" name="email" value="" required autofocus>
                         </div>
 
                         <div class="form-group">                            
                             <label for="email">{{ __('Password') }}</label>
-                            <input type="password" class="form-control" name="password" value="dev.ci.eel#23" required>
+                            <input type="password" class="form-control" name="password" value="" required>
                         </div>
                                                                     
                         <div class="flex items-center text-right mt-4">

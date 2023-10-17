@@ -83,9 +83,4 @@ class Edital extends Model
                        ->where('codigoEdital', $codigoEdital)->first();
         return "{$edital->ano}{$edital->Semestre}";
     }
-
-    public static function obterEdital($codigoEdital)
-    {
-        
-    }
 }

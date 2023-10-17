@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="/admin/edital/create" class="list-group-item list-group-item-action">Novo Edital</a>
+                <a href="/admin/edital/novo" class="list-group-item list-group-item-action">Novo Edital</a>
             </div>
         </div>      
         

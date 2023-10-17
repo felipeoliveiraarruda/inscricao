@@ -16,12 +16,11 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->where('dataFinalEdital', '>',  Carbon::now())->get();
 
         if (Auth::guest())
         {
-            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                             ->where('dataFinalEdital', '>',  Carbon::now())->get();
-
             return view('index', 
             [
                 'editais' => $editais,
@@ -37,22 +36,7 @@ class HomeController extends Controller
             
             if (in_array('Servidorusp', session('vinculos')) && (session('level') == 'admin' || session('level') == 'manager'))
             {
-                if (session('level') == 'admin')
-                {
-                    return redirect('admin'); 
-                }
-                else if (session('level') == 'manager')
-                {
-                    $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                                     ->where('codigoUsuario', '=',  Auth::user()->id)
-                                     ->where('dataFinalEdital', '>',  Carbon::now())->get();
-
-                    return view('admin', 
-                    [
-                        'editais' => $editais,
-                        'utils'   => new Utils,
-                    ]);
-                }
+                return redirect('admin');                
             }
             else
             {

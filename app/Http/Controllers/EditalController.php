@@ -48,23 +48,6 @@ class EditalController extends Controller
         return redirect("/admin/edital");
     }
 
-    public function edit($codigoEdital)
-    {
-        $validated = $request->validated();
-
-        Edital::create([
-            'codigoCurso'           => $request->codigoCurso,
-            'nivelEdital'           => $request->nivelEdital,
-            'linkEdital'            => $request->linkEdital,
-            'dataInicioEdital'      => $request->dataInicioEdital,
-            'dataFinalEdital'       => $request->dataFinalEdital,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);        
-
-        request()->session()->flash('alert-success','Edital criado com sucesso');
-        return redirect("/admin/edital");
-    }
-
     public function update(EditalRequest $request, Edital $edital)
     {
         //
