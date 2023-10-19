@@ -20,4 +20,13 @@ class InscricoesPessoais extends Model
         'codigoPessoal',        
         'codigoPessoaAlteracao'
     ];
+
+    public function obterTotal($codigoInscricao)
+    {
+        $total = InscricoesPessoais::join('inscricoes', 'inscricoes_pessoais.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                   ->join('pessoais', 'inscricoes_pessoais.codigoPessoal', '=', 'pessoais.codigoPessoal')
+                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                   ->count();
+        return $total;
+    }
 }

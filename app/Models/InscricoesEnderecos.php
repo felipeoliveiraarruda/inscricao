@@ -21,4 +21,13 @@ class InscricoesEnderecos extends Model
         'codigoEndereco',        
         'codigoPessoaAlteracao'
     ];
+
+    public function obterTotal($codigoInscricao)
+    {
+        $total = InscricoesEnderecos::join('inscricoes', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                    ->join('enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->count();
+        return $total;
+    }
 }

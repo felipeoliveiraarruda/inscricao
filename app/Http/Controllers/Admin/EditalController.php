@@ -16,13 +16,22 @@ use App\Models\Utils;
 class EditalController extends Controller
 {
     public function index()
-    {              
-        if (!in_array('Servidorusp', session('vinculos')) && (session('level') != 'admin' || session('level') != 'manager'))
+    {                
+        /*if ((session('level') != "admin") || (session('level') != "manager"))
         {
             return redirect("/");
-        }
+        }*/
 
-        $editais = Edital::all();
+        if (session('level') == "admin")
+        {
+            $editais = Edital::all();
+        }
+        
+        if (session('level') == "manager")
+        {
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                             ->where('codigoUsuario', '=',  Auth::user()->id)->get();
+        }
         
         return view('admin.edital.index',
         [
@@ -33,10 +42,10 @@ class EditalController extends Controller
 
     public function create()    
     {
-        if (!in_array('Servidorusp', session('vinculos')) && (session('level') != 'admin' || session('level') != 'manager'))
+        /*if ((session('level') != 'admin' || session('level') != 'manager'))
         {
             return redirect("/");
-        }
+        }*/
 
         $cursos = Utils::listarCurso();
         $niveis = Nivel::all();

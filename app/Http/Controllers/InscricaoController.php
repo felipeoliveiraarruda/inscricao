@@ -43,16 +43,17 @@ class InscricaoController extends Controller
 
     public function create($codigoEdital)
     {        
-        $inscricao = Utils::obterTotalInscricao(Auth::user()->id, $codigoInscricao);
+        $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoEdital);
+
+        if (empty(session('total')))
+        {
+            Utils::obterTotalInscricao($inscricao->codigoInscricao);
+        }
 
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
-            'status'          => $inscricao->statusInscricao,
-            'pessoal'         => $inscricao->pessoal,
-            'arquivo'         => $inscricao->arquivo,
-            'endereco'        => $inscricao->endereco,
-            'total'           => 0,
+            'status'          => $inscricao->statusInscricao,            
         ]);
     }
 
@@ -158,11 +159,8 @@ class InscricaoController extends Controller
     }
 
     public function endereco($codigoInscricao)
-    {        
-        $arquivos = '';
-
-        $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoInscricao);
-        $pessoais  = User::obterDadosPessoais(Auth::user()->id, $codigoInscricao);
+    { 
+        $inscricao = Inscricao::obterEnderecoInscricao(Auth::user()->id, $codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
     
@@ -171,10 +169,27 @@ class InscricaoController extends Controller
             'codigoInscricao'   => $codigoInscricao,
             'codigoEdital'      => $inscricao->codigoEdital,
             'link_voltar'       => $voltar,
-            'arquivos'          => $arquivos,
-            'pessoais'          => $pessoais,
+            'enderecos'         => $inscricao,
         ]); 
-    }    
+    }  
+    
+    public function endereco_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterEnderecoInscricao(Auth::user()->id, $codigoInscricao);
+        
+        $estados = Utils::listarEstado(1);
+
+        return view('inscricao.endereco',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'status'            => $inscricao->statusInscricao,                        
+            'enderecos'         => $inscricao,
+            'estados'           => $estados,
+        ]); 
+    }
+
+
 
     /*public function index()
     {

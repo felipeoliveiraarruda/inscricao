@@ -21,4 +21,13 @@ class InscricoesDocumentos extends Model
         'codigoDocumento',        
         'codigoPessoaAlteracao'
     ];
+
+    public function obterTotal($codigoInscricao)
+    {
+        $total = InscricoesDocumentos::join('inscricoes', 'inscricoes_documentos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                     ->join('documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')
+                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                     ->count();
+        return $total;
+    }
 }

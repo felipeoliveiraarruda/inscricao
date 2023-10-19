@@ -21,4 +21,13 @@ class InscricoesArquivos extends Model
         'codigoArquivo',        
         'codigoPessoaAlteracao'
     ];
+
+    public function obterTotal($codigoInscricao)
+    {
+        $total = InscricoesArquivos::join('inscricoes', 'inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                   ->join('arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                   ->count();
+        return $total;
+    }
 }

@@ -33,7 +33,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/pessoal/create',  [InscricaoController::class, 'pessoal_create']);
         
         /* Endereço Inscrição */
-        Route::get('{codigoInscricao}/endereco/',   [InscricaoController::class, 'endereco']);
+        Route::get('{codigoInscricao}/endereco/',       [InscricaoController::class, 'endereco']);
+        Route::get('{codigoInscricao}/endereco/create', [InscricaoController::class, 'endereco_create']);
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
@@ -53,6 +54,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoPae}/pae/documentacao/{codigoTipoDocumento}/edit',       [DocumentacaoController::class, 'edit']);
         Route::patch('{codigoPae}/pae/{codigoTipoDocumento}/documentacao',          [DocumentacaoController::class, 'update']);
         Route::get('{codigoPae}/pae/documentacao/{codigoTipoDocumento}/destroy',    [DocumentacaoController::class, 'destroy']);
+
+        /* PAE - Desempenho Academico */
 
         /* PAE - Desempenho Academico
         Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);

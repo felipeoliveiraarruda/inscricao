@@ -66,11 +66,11 @@ class Inscricao extends Model
         }
     }
 
-    public static function obterInscricao($user_id, $codigoInscricao)
+    public static function obterInscricao($user_id, $codigoEdital)
     {
         $inscricao = Inscricao::join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                               ->where('inscricoes.codigoUsuario', $user_id)
-                              ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
                               ->first();
 
         return $inscricao;                              
@@ -99,5 +99,17 @@ class Inscricao extends Model
                        ->where('inscricoes.codigoEdital', $codigoEdital)
                        ->first();                              
         return $pae;
+    }
+
+    public static function obterEnderecoInscricao($user_id, $codigoInscricao)
+    {
+        $endereco = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco'))
+                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                        ->leftjoin('enderecos', 'users.id', '=', 'enderecos.codigoUsuario')                                
+                        ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
+                        ->where('users.id', $user_id)
+                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                        ->first();                              
+        return $endereco;                                 
     }
 }

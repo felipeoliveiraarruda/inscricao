@@ -9,7 +9,10 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
-use App\Models\Views\ViewInscricaoTotal;
+use App\Models\InscricoesPessoais;
+use App\Models\InscricoesDocumentos;
+use App\Models\InscricoesEnderecos;
+use App\Models\InscricoesArquivos;
 
 class Utils extends Model
 {
@@ -78,8 +81,7 @@ class Utils extends Model
                 break;
             case 'ME':
                 return 'Mestrado';
-                break;
-                                                
+                break;                             
         }
     }
 
@@ -189,10 +191,16 @@ class Utils extends Model
         session(['vinculos' => $vinculos]);
     }
 
-    public static function obterTotalInscricao($user_id, $codigoInscricao, $criterio = '*')
+    public static function obterTotalInscricao($codigoInscricao)
     {
-        $total = ViewInscricaoTotal::select($criterio)->where('codigoUsuario', $user_id)->where('codigoInscricao', $codigoInscricao)->first();
-        return $total;
+        $total = array();
+
+        $total['pessoal']   = InscricoesPessoais::obterTotal($codigoInscricao);
+        $total['documento'] = InscricoesDocumentos::obterTotal($codigoInscricao);
+        $total['endereco']  = InscricoesEnderecos::obterTotal($codigoInscricao);
+        $total['arquivo']   = InscricoesArquivos::obterTotal($codigoInscricao);
+
+        session(['total' => $total]);
     }   
     
     public static function obterTotalArquivos($codigoUsuario, $codigoEdital = '', $criterio = '')

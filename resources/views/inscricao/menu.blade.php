@@ -1,11 +1,22 @@
 <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">Dados Pessoais</a>
-    <a href="#" class="list-group-item list-group-item-action">Endereço</a>
-    <a href="#" class="list-group-item list-group-item-action">Pessoa Notificada em Caso de Emergencia</a>
-    <a href="#" class="list-group-item list-group-item-action">Resumo Escolar</a>
-    <a href="#" class="list-group-item list-group-item-action">Idioma</a>
-    <a href="#" class="list-group-item list-group-item-action">Experiencia Profissional</a>
-    <a href="#" class="list-group-item list-group-item-action">Experiencia Em Ensino</a>
-    <a href="#" class="list-group-item list-group-item-action">Disciplinas</a>
-    <a href="#" class="list-group-item list-group-item-action">Anexos</a>
+    <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">
+        Dados Pessoais 
+        <i class="fa @if (Session::get('total')['pessoal'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a>
+    <a href="inscricao/{{ $codigoInscricao }}/endereco" class="list-group-item list-group-item-action">
+        Endereço
+        <i class="fa @if (Session::get('total')['endereco'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a>
+    
+    <!--<a href="#" class="list-group-item list-group-item-action">
+        Pessoa Notificada em Caso de Emergencia
+        <i class="fa fa-exclamation-triangle text-warning float-right"></i>
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">Resumo Escolar<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
+    <a href="#" class="list-group-item list-group-item-action">Idioma<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
+    <a href="#" class="list-group-item list-group-item-action">Experiencia Profissional<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
+    <a href="#" class="list-group-item list-group-item-action">Experiencia Em Ensino<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
+    <a href="#" class="list-group-item list-group-item-action">
+        Anexos
+    </a>-->
 </div>

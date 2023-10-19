@@ -83,7 +83,7 @@ class DadosPessoaisController extends Controller
         $user->save();
 
         /* Cadastra os dados pessoais */
-        $pais = Utils::obterPais($request->paisPessoal);
+        //$pais = Utils::obterPais($request->paisPessoal);
 
         if($request->especialPessoal == 'S')
         {
@@ -97,7 +97,7 @@ class DadosPessoaisController extends Controller
             'estadoCivilPessoal'    => $request->estadoCivilPessoal,
             'naturalidadePessoal'   => $request->naturalidadePessoal,
             'estadoPessoal'         => $request->estadoPessoal,
-            'paisPessoal'           => $pais['nompas'],
+            'paisPessoal'           => $request->paisPessoal,
             'dependentePessoal'     => $request->dependentePessoal,
             'racaPessoal'           => $request->racaPessoal,
             'especialPessoal'       => $request->especialPessoal,

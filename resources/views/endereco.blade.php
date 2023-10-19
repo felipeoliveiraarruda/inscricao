@@ -4,27 +4,20 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <br/>        
+        <div class="col-md-3">
+            @include('inscricao.menu')  
+        </div>
+        <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Inscrição</h5>
-                
+                <h5 class="card-header">Endereço
+                    @if (empty($enderecos->codigoEndereco))
+                        <a href="inscricao/{{ $codigoInscricao }}/endereco/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                    @endif
+                </h5>
+
                 <div class="card-body">                    
-                    <div class="row justify-content-center">
-                        <div class="col-md-3 text-center">
-                            <button type="button" class="btn @if (count($enderecos) == 1) btn-success @else btn-secondary @endif btn-block">Endereço</button>
-                            <button type="button" class="btn @if ($cpf == 1) btn-success @else btn-secondary @endif btn-block">CPF</button>
-                            <button type="button" class="btn @if ($rg == 1) btn-success @else btn-secondary @endif btn-block">RG / Passaporte / RNM</button>
-                            <button type="button" class="btn @if ($historico >= 1) btn-success @else btn-secondary @endif btn-block">Histórico Escolar</button>
-                            <button type="button" class="btn @if ($diploma >= 1) btn-success @else btn-secondary @endif btn-block">Diploma / Declaração de Conclusão</button>
-                            <button type="button" class="btn @if ($curriculo == 1) btn-success @else btn-secondary @endif btn-block">Currículo Vitae / Currículo Lattes</button>
-                            <button type="button" class="btn @if ($projeto == 1) btn-success @else btn-secondary @endif btn-block">Pré-projeto</button>
-                            <button type="button" class="btn @if ($taxa == 1) btn-success @else btn-secondary @endif btn-block">Comprovante da Taxa de Inscrição</button>                    
-                            
-                            <a href="inscricao/{{ $codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
-                        </div>
-        
-                        <div class="col-md-9">
+                    <div class="row justify-content-center">        
+                        <div class="col-md-12">
                             <div class="flash-message">
                                 @foreach (['danger', 'warning', 'success', 'info'] as $msg)
                                     @if(Session::has('alert-' . $msg))
@@ -43,19 +36,10 @@
                                     @endif
                                 @endforeach
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <h4>Endereço</h4>
-                                </div>
-                                <div class="col-md-3 text-right">
-                                    @if (count($enderecos) == 0)
-                                        <a href="inscricao/endereco/novo/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-info btn-sm">Novo</a>
-                                    @endif
-                                </div>
-                                                                
-                                <div class="col-md-12" >                                    
-                                    <p></p>
+                            
+                            <div class="row">                             
+                                <div class="col-sm-12"> 
+                                    @if (!empty($enderecos->codigoEndereco))
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -65,6 +49,8 @@
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
+                                    
+    
                                         @foreach ($enderecos as $endereco)
                                         <tr>
                                             <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
@@ -80,8 +66,9 @@
                                             </td>
                                         </tr>
                                         @endforeach
-                                    </table> 
-                                </div>                                
+                                    @endif
+                                    </table>
+                                </div>                                 
                             </div>                                                        
                         </div>
                     </div>
@@ -90,5 +77,4 @@
         </div>
     </div>
 </main>
-
 @endsection

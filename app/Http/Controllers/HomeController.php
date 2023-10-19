@@ -34,7 +34,7 @@ class HomeController extends Controller
                 Utils::setSession(Auth::user()->id);
             }
             
-            if (in_array('Servidorusp', session('vinculos')) && (session('level') == 'admin' || session('level') == 'manager'))
+            if ((session('level') == 'admin' || session('level') == 'manager'))
             {
                 return redirect('admin');                
             }
