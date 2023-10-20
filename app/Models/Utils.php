@@ -192,13 +192,14 @@ class Utils extends Model
     }
 
     public static function obterTotalInscricao($codigoInscricao)
-    {
+    {        
         $total = array();
 
-        $total['pessoal']   = InscricoesPessoais::obterTotal($codigoInscricao);
-        $total['documento'] = InscricoesDocumentos::obterTotal($codigoInscricao);
-        $total['endereco']  = InscricoesEnderecos::obterTotal($codigoInscricao);
-        $total['arquivo']   = InscricoesArquivos::obterTotal($codigoInscricao);
+        $total['pessoal']       = InscricoesPessoais::obterTotal($codigoInscricao);
+        $total['documento']     = InscricoesDocumentos::obterTotal($codigoInscricao);
+        $total['endereco']      = InscricoesEnderecos::obterTotal($codigoInscricao);
+        $total['arquivo']       = InscricoesArquivos::obterTotal($codigoInscricao);
+        $total['emergencia']    = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
 
         session(['total' => $total]);
     }   

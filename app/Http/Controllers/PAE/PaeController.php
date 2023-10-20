@@ -18,7 +18,9 @@ use App\Models\Inscricao;
 use App\Models\InscricoesArquivos;
 use App\Models\Arquivo;
 use App\Models\TipoDocumento;
+use Uspdev\Replicado\Pessoa;
 use Uspdev\Replicado\Posgraduacao;
+use Uspdev\Replicado\Estrutura;
 use Illuminate\Routing\UrlGenerator;
 use Mail;
 use App\Mail\PAE\EnviarPaeMail;
@@ -28,7 +30,7 @@ class PaeController extends Controller
 {
     public function index($codigoEdital)
     {
-        if (!in_array('Alunoposusp', session('vinculos')) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
         {
             return redirect("/");
         }
@@ -54,7 +56,7 @@ class PaeController extends Controller
 
     public function create($codigoEdital)
     {
-        if (!in_array('Alunoposusp', session('vinculos')) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
         {
             return redirect("/");
         }
@@ -86,8 +88,13 @@ class PaeController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]); 
 
+            $vinculo  = Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
+            $programa = Posgraduacao::programas(NULL, NULL, $vinculo['codare']);
+           
             $pae = Pae::create([
                 'codigoInscricao'       => $inscricao->codigoInscricao,
+                'codigoCurso'           => $programa[0]['codcur'],
+                'codigoArea'            => $vinculo['codare'],
                 'participacaoPae'       => $request->participacaoPae[0],
                 'remuneracaoPae'        => $request->remuneracaoPae[0],
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
@@ -100,7 +107,7 @@ class PaeController extends Controller
 
     public function finalizar($codigoEdital)
     {
-        if (!in_array('Alunoposusp', session('vinculos')) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
         {
             return redirect("/");
         }

@@ -103,7 +103,7 @@ class Inscricao extends Model
 
     public static function obterEnderecoInscricao($user_id, $codigoInscricao)
     {
-        $endereco = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco'))
+        $endereco = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco, inscricoes_enderecos.codigoInscricaoEndereco'))
                         ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                         ->leftjoin('enderecos', 'users.id', '=', 'enderecos.codigoUsuario')                                
                         ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
@@ -111,5 +111,18 @@ class Inscricao extends Model
                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
                         ->first();                              
         return $endereco;                                 
+    }
+
+    public static function obterEmergenciaInscricao($user_id, $codigoInscricao)
+    {
+        $emergencia = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco'))
+                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                          ->leftjoin('emergencias', 'users.id', '=', 'emergencias.codigoUsuario')                                
+                          ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEmergencia', '=', 'emergencias.codigoEmergencia')
+                          ->leftjoin('enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')   
+                          ->where('users.id', $user_id)
+                          ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                          ->first();                                               
+        return $emergencia;                                 
     }
 }

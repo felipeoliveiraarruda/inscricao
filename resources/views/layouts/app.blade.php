@@ -157,8 +157,6 @@
           {
             $("#exibirTipoDocumentoPessoal").hide();
             $("#exibirArquivoDocumentoPessoal").hide();
-
-            var arquivo
           }           
         });
 
@@ -166,7 +164,19 @@
         {
           $('#finalizarModal').modal('hide');
           $('#loaderModal').modal('show')
-        })
+        });
+
+        $("#mesmoEndereco").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            $("#mostrarEnderecoEmergencia").hide();
+          }
+          else
+          {
+            $("#mostrarEnderecoEmergencia").show();
+          }
+        });
     })  
 
     tinymce.init({

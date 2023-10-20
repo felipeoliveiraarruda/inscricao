@@ -25,6 +25,11 @@ class DocumentacaoController extends Controller
      */
     public function index($codigoEdital)
     {
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
+        {
+            return redirect("/");
+        }
+
         $inscricao = Inscricao::obterInscricaoPae(Auth::user()->id, $codigoEdital);
         $total     = Arquivo::verificaArquivosPae($inscricao->codigoPae);
 
@@ -48,7 +53,7 @@ class DocumentacaoController extends Controller
      */
     public function create($codigoEdital)
     {
-        if (!in_array('Alunoposusp', session('vinculos')) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
         {
             return redirect("/");
         }
@@ -104,7 +109,7 @@ class DocumentacaoController extends Controller
      */
     public function edit($codigoEdital, $codigoTipoDocumento)
     {
-        if (!in_array('Alunoposusp', session('vinculos')) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
         {
             return redirect("/");
         }

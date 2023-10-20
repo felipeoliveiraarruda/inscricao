@@ -45,6 +45,19 @@ class InscricaoController extends Controller
     {        
         $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoEdital);
 
+        if (empty($inscricao))
+        {            
+            $numero = Inscricao::gerarNumeroInscricao($codigoEdital);
+            $nivel  = Edital::obterNivelEdital($codigoEdital);
+
+            $inscricao = Inscricao::create([
+                'codigoEdital'          => $codigoEdital,
+                'codigoUsuario'         => Auth::user()->id,
+                'numeroInscricao'       => "{$nivel}{$numero}",
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]); 
+        }
+
         if (empty(session('total')))
         {
             Utils::obterTotalInscricao($inscricao->codigoInscricao);
@@ -98,7 +111,7 @@ class InscricaoController extends Controller
 
         $inscricao = Inscricao::obterDadosPessoaisInscricao(Auth::user()->id, $codigoInscricao);
         $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4), $codigoInscricao);
-
+        Utils::obterTotalInscricao($codigoInscricao);
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
     
         return view('pessoal',
@@ -151,7 +164,7 @@ class InscricaoController extends Controller
                 ]);
             }
 
-            $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
+            $voltar = "inscricao/{$request->codigoInscricao}/pessoal";
         }
         
         request()->session()->flash('alert-success', 'Documento(s) anexado(s) com sucesso');    
@@ -159,8 +172,9 @@ class InscricaoController extends Controller
     }
 
     public function endereco($codigoInscricao)
-    { 
+    {         
         $inscricao = Inscricao::obterEnderecoInscricao(Auth::user()->id, $codigoInscricao);
+        Utils::obterTotalInscricao($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
     
@@ -188,6 +202,38 @@ class InscricaoController extends Controller
             'estados'           => $estados,
         ]); 
     }
+
+    public function emergencia($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterEmergenciaInscricao(Auth::user()->id, $codigoInscricao);
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/emergencia";
+    
+        return view('emergencia',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'emergencia'        => $inscricao,
+        ]); 
+    } 
+    
+    public function emergencia_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterEmergenciaInscricao(Auth::user()->id, $codigoInscricao);
+        $endereco  = Inscricao::obterEnderecoInscricao(Auth::user()->id, $codigoInscricao);
+
+        return view('inscricao.emergencia',
+        [
+            'codigoInscricao'           => $codigoInscricao, 
+            'codigoEdital'              => $inscricao->codigoEdital,
+            'codigoInscricaoEndereco'   => $endereco->codigoInscricaoEndereco,
+            'status'                    => $inscricao->statusInscricao,                        
+            'emergencia'                => $inscricao,
+        ]); 
+    }    
+
 
 
 

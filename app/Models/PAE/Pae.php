@@ -18,6 +18,8 @@ class Pae extends Model
 
     protected $fillable = [
         'codigoInscricao',
+        'codigoCurso',
+        'codigoArea',
         'partipacaoPae',
         'remuneracaoPae',
         'resultadoPae',
@@ -35,5 +37,14 @@ class Pae extends Model
     public function desempenho_academico()
     {
         return $this->belongsTo(\App\Models\PAE\DesempenhoAcademico::class);
+    }
+
+    public function listarPae($codigoCurso, )
+    {
+        $pae = Pae::join('analise_curriculo', 'analise_curriculo_arquivos.codigoAnaliseCurriculo', '=', 'analise_curriculo.codigoAnaliseCurriculo')
+                  ->join('arquivos', 'analise_curriculo_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                  ->join('pae', 'pae.codigoPae', '=', 'analise_curriculo.codigoPae')
+                  ->where('pae.codigoPae', $codigoPae)
+                  ->get();
     }
 }

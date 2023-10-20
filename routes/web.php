@@ -6,9 +6,11 @@ use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\ArquivoController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\DadosPessoaisController;
+use App\Http\Controllers\EmergenciaController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
+use App\Http\Controllers\PAE\DesempenhoController;
 
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
@@ -36,6 +38,10 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/endereco/',       [InscricaoController::class, 'endereco']);
         Route::get('{codigoInscricao}/endereco/create', [InscricaoController::class, 'endereco_create']);
 
+        /* Endereço Inscrição */
+        Route::get('{codigoInscricao}/emergencia/',       [InscricaoController::class, 'emergencia']);
+        Route::get('{codigoInscricao}/emergencia/create', [InscricaoController::class, 'emergencia_create']);
+
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
 
@@ -56,6 +62,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoPae}/pae/documentacao/{codigoTipoDocumento}/destroy',    [DocumentacaoController::class, 'destroy']);
 
         /* PAE - Desempenho Academico */
+        Route::get('{codigoEdital}/pae/desempenho/',  [DesempenhoController::class, 'index']);
 
         /* PAE - Desempenho Academico
         Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);
@@ -78,8 +85,13 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::get('pessoal/anexo/{codigoInscricao?}',  [DadosPessoaisController::class, 'anexo'])->name('anexo');
     Route::post('pessoal/anexo/salvar',             [DadosPessoaisController::class, 'anexo_salvar']);
     
-    /* Endereço */
-    Route::get('endereco/', [EnderecoController::class, 'index']);
+    /* Endereço */    
+    Route::post('endereco/',                    [EnderecoController::class, 'store']);
+    Route::patch('endereco/{codigoEndereco}',   [EnderecoController::class, 'update']);
+
+    /* Emergencia */
+    Route::post('emergencia/',                      [EmergenciaController::class, 'store']);
+    Route::patch('emergencia/{codigoEmergencia}',   [EmergenciaController::class, 'update']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

@@ -26,7 +26,7 @@ class InscricoesPessoais extends Model
         $total = InscricoesPessoais::join('inscricoes', 'inscricoes_pessoais.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                    ->join('pessoais', 'inscricoes_pessoais.codigoPessoal', '=', 'pessoais.codigoPessoal')
                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                   ->count();
+                                   ->count();                               
         return $total;
     }
 }

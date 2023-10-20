@@ -28,6 +28,7 @@ class InscricoesArquivos extends Model
                                    ->join('arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                    ->count();
+
         return $total;
     }
 }

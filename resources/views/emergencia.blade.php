@@ -9,14 +9,14 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Endereço
-                    @if (empty($enderecos->codigoEndereco))
-                        <a href="inscricao/{{ $codigoInscricao }}/endereco/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência
+                    @if (empty($emergencia->codigoEmergencia))
+                        <a href="inscricao/{{ $codigoInscricao }}/emergencia/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
                     @endif
                 </h5>
 
                 <div class="card-body">                    
-                    <div class="row justify-content-center">        
+                    <div class="row justify-content-center">
                         <div class="col-md-12">
                             <div class="flash-message">
                                 @foreach (['danger', 'warning', 'success', 'info'] as $msg)
@@ -39,7 +39,25 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($enderecos->codigoEndereco))
+                                    @if (!empty($emergencia->codigoEmergencia))
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Nome</th>
+                                                <th scope="col">Telefone</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>                                
+                                        <tr>
+                                            <td>{{ $emergencia->nomePessoaEmergencia }}</td>
+                                            <td>{{ $emergencia->telefonePessoaEmergencia }}</td>
+                                            <td>
+                                                <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" target="_new" title="Editar">
+                                                    <i class="far fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -50,17 +68,13 @@
                                             </tr>
                                         </thead>                                
                                         <tr>
-                                            <td>{{ $enderecos->logradouroEndereco }}, {{ $enderecos->numeroEndereco }} {{ $enderecos->bairroEndereco }}</td>
-                                            <td>{{ $enderecos->localidadeEndereco }}/{{ $enderecos->ufEndereco }}</td>
-                                            <td>{{ $enderecos->cepEndereco }}</td>
-                                            <td>
-                                                <a href="inscricao/{{ $codigoInscricao }}/endereco/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" target="_new" title="Editar">
-                                                    <i class="far fa-eye"></i>
-                                                </a>
-                                            </td>
+                                            <td>{{ $emergencia->logradouroEndereco }}, {{ $emergencia->numeroEndereco }} {{ $emergencia->bairroEndereco }}</td>
+                                            <td>{{ $emergencia->localidadeEndereco }}/{{ $emergencia->ufEndereco }}</td>
+                                            <td>{{ $emergencia->cepEndereco }}</td>
                                         </tr>
+                                    </table>                                    
                                     @endif
-                                    </table>
+                                    
                                 </div>                                 
                             </div>                                                        
                         </div>

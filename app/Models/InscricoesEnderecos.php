@@ -18,7 +18,8 @@ class InscricoesEnderecos extends Model
 
     protected $fillable = [
         'codigoInscricao',
-        'codigoEndereco',        
+        'codigoEndereco', 
+        'codigoEmergencia',       
         'codigoPessoaAlteracao'
     ];
 
@@ -27,6 +28,16 @@ class InscricoesEnderecos extends Model
         $total = InscricoesEnderecos::join('inscricoes', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                     ->join('enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->count();
+        return $total;
+    }
+
+    public function obterTotalEmergencia($codigoInscricao)
+    {
+        $total = InscricoesEnderecos::join('inscricoes', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                    ->join('enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->whereNotNull('inscricoes_enderecos.codigoEmergencia')
                                     ->count();
         return $total;
     }

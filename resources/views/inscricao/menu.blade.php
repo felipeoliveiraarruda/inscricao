@@ -7,11 +7,12 @@
         Endereço
         <i class="fa @if (Session::get('total')['endereco'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
-    
-    <!--<a href="#" class="list-group-item list-group-item-action">
-        Pessoa Notificada em Caso de Emergencia
-        <i class="fa fa-exclamation-triangle text-warning float-right"></i>
+    <a href="inscricao/{{ $codigoInscricao }}/emergencia" class="list-group-item list-group-item-action">
+        Pessoa a ser notificada em caso de Emergência
+        <i class="fa @if (Session::get('total')['emergencia'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
+    
+    <!--
     <a href="#" class="list-group-item list-group-item-action">Resumo Escolar<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
     <a href="#" class="list-group-item list-group-item-action">Idioma<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
     <a href="#" class="list-group-item list-group-item-action">Experiencia Profissional<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
