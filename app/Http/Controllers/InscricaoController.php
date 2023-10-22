@@ -14,6 +14,7 @@ use App\Models\Endereco;
 use App\Models\DadosPessoais;
 use App\Models\TipoDocumento;
 use App\Models\User;
+use App\Models\TipoEntidade;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
@@ -263,8 +264,7 @@ class InscricaoController extends Controller
            // 'escolar'           => $escolar,
         ]); 
     } 
-    
-    
+
     public function idioma($codigoInscricao)
     {         
         $inscricao = Inscricao::obterIdiomaInscricao(Auth::user()->id, $codigoInscricao);
@@ -291,8 +291,67 @@ class InscricaoController extends Controller
             'codigoEdital'      => $inscricao[0]->codigoEdital,
             'idiomas'           => Utils::obterDadosSysUtils('idioma'),
         ]); 
-    }  
+    } 
+    
+    public function profissional($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $inscricao = Inscricao::obterProfissionalInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
 
+        $voltar = "inscricao/{$codigoEdital}/profissional";
+    
+        return view('profissional',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            'profissionais'     => $inscricao,
+        ]); 
+    } 
+    
+    public function profissional_create($codigoInscricao)
+    {
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        return view('inscricao.profissional',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $codigoEdital,
+        ]); 
+    } 
+
+    public function ensino($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $inscricao = Inscricao::obterEnsinoInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$codigoEdital}/ensino";
+    
+        return view('ensino',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            'ensinos'           => $inscricao,
+        ]); 
+    } 
+    
+    public function ensino_create($codigoInscricao)
+    {
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $tipos        = TipoEntidade::whereIn('codigoTipoEntidade', [2,3])->get();
+
+        return view('inscricao.ensino',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $codigoEdital,
+            'tipos'             => $tipos, 
+        ]); 
+    } 
 
 
 

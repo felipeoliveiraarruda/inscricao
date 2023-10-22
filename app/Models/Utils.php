@@ -15,6 +15,7 @@ use App\Models\InscricoesEnderecos;
 use App\Models\InscricoesArquivos;
 use App\Models\InscricoesResumoEscolar;
 use App\Models\InscricoesIdiomas;
+use App\Models\InscricoesExperiencias;
 
 class Utils extends Model
 {
@@ -83,7 +84,10 @@ class Utils extends Model
                 break;
             case 'ME':
                 return 'Mestrado';
-                break;                             
+                break; 
+            case 'PA':
+                return 'PAE';
+                break;                                              
         }
     }
 
@@ -209,6 +213,8 @@ class Utils extends Model
         $total['emergencia']    = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
         $total['escolar']       = InscricoesResumoEscolar::obterTotal($codigoInscricao);
         $total['idioma']        = InscricoesIdiomas::obterTotal($codigoInscricao);
+        $total['profissional']  = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
+        $total['ensino']        = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
 
         session(['total' => $total]);
     }   

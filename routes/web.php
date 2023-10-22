@@ -9,6 +9,7 @@ use App\Http\Controllers\DadosPessoaisController;
 use App\Http\Controllers\EmergenciaController;
 use App\Http\Controllers\ResumoEscolarController;
 use App\Http\Controllers\IdiomaController;
+use App\Http\Controllers\ExperienciaController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
@@ -51,6 +52,14 @@ Route::middleware(['auth','verified'])->group(function ()
         /* Idioma Inscrição */
         Route::get('{codigoInscricao}/idioma/',       [InscricaoController::class, 'idioma']);
         Route::get('{codigoInscricao}/idioma/create', [InscricaoController::class, 'idioma_create']);
+
+        /* Experiencia Profissional Inscricao */
+        Route::get('{codigoInscricao}/profissional/',       [InscricaoController::class, 'profissional']);
+        Route::get('{codigoInscricao}/profissional/create', [InscricaoController::class, 'profissional_create']);
+
+        /* Experiencia Em Ensino Inscricao */
+        Route::get('{codigoInscricao}/ensino/',       [InscricaoController::class, 'ensino']);
+        Route::get('{codigoInscricao}/ensino/create', [InscricaoController::class, 'ensino_create']);
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
@@ -110,6 +119,10 @@ Route::middleware(['auth','verified'])->group(function ()
     /* Idiomas */
     Route::post('idioma/',                  [IdiomaController::class, 'store']);
     Route::patch('idioma/{codigoIdioma}',   [IdiomaController::class, 'update']);
+
+    /* Experiencia (Ensino e Profissional) */
+    Route::post('experiencia/',                     [ExperienciaController::class, 'store']);
+    Route::patch('experiencia/{codigoExperiencia}', [ExperienciaController::class, 'update']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

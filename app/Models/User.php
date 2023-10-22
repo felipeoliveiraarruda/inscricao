@@ -105,6 +105,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(\App\Models\Idioma::class);
     }
 
+    public function experiencias()
+    {
+        return $this->hasMany(\App\Models\Experiencia::class);
+    }
+
     public function obterLevel($id)
     {
         $user = User::with('permissions', 'roles')->find($id);

@@ -172,5 +172,39 @@ class Inscricao extends Model
                       ->where('inscricoes.codigoInscricao', $codigoInscricao)
                       ->get();                                               
         return $idioma;                                 
-    }    
+    }
+    
+    public static function obterProfissionalInscricao($user_id, $codigoInscricao)
+    {
+        $profissional = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))
+                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                            
+                            ->leftJoin('experiencias', function($join)
+                            {
+                                $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
+                            })                          
+                            ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
+                            ->where('users.id', $user_id)
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->get();
+
+        return $profissional;                                 
+    }
+    
+    public static function obterEnsinoInscricao($user_id, $codigoInscricao)
+    {
+        $ensino = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia, tipo_entidade.*'))
+                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                            
+                        ->leftJoin('experiencias', function($join)
+                        {
+                            $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                            $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
+                        })                          
+                        ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
+                        ->join('tipo_entidade', 'tipo_entidade.codigoTipoEntidade', '=', 'experiencias.codigoTipoEntidade')
+                        ->where('users.id', $user_id)
+                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                        ->get();                                               
+        return $ensino;                                 
+    }     
 }
