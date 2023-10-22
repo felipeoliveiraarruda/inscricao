@@ -26,7 +26,7 @@ class AddFkCodigoNivelTableEditais extends Migration
     public function down()
     {
         Schema::table('editais', function (Blueprint $table) {
-            $table->dropForeign('posts_user_id_foreign');
+            $table->dropForeign('codigoNivel');
         }); 
     }
 }

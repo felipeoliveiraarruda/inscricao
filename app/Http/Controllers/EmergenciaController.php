@@ -13,7 +13,6 @@ use App\Models\Endereco;
 use App\Models\InscricoesEnderecos;
 use Carbon\Carbon;
 
-
 class EmergenciaController extends Controller
 {
     /**

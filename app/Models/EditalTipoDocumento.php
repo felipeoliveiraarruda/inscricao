@@ -13,6 +13,7 @@ class EditalTipoDocumento extends Model
     use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
+    protected $primaryKey = 'codigoEditalTipoDocumento';
     protected $table = 'editais_tipo_documentos';
 
     protected $fillable = [

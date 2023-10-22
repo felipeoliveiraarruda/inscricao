@@ -232,7 +232,37 @@ class InscricaoController extends Controller
             'status'                    => $inscricao->statusInscricao,                        
             'emergencia'                => $inscricao,
         ]); 
-    }    
+    }   
+    
+    public function escolar($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $escolares    = Inscricao::obterEscolarInscricao(Auth::user()->id, $codigoInscricao);
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$codigoEdital}/escolar";
+    
+        return view('escolar',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            'escolares'         => $escolares,
+        ]); 
+    } 
+    
+    public function escolar_create($codigoInscricao)
+    {
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+       // $escolar      = Inscricao::obterEscolarInscricao(Auth::user()->id, $codigoInscricao);
+
+        return view('inscricao.escolar',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $codigoEdital,
+           // 'escolar'           => $escolar,
+        ]); 
+    }   
 
 
 

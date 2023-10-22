@@ -76,6 +76,15 @@ class Inscricao extends Model
         return $inscricao;                              
     }
 
+    public static function obterEditalInscricao($codigoInscricao)
+    {
+        $inscricao = Inscricao::select('inscricoes.codigoEdital')                            
+                              ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                              ->first();
+
+        return $inscricao->codigoEdital;                              
+    }
+
     public static function obterDadosPessoaisInscricao($user_id, $codigoInscricao)
     {
         $pessoal = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
@@ -124,5 +133,32 @@ class Inscricao extends Model
                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
                           ->first();                                               
         return $emergencia;                                 
+    }
+    
+    public static function obterEscolarInscricao($user_id, $codigoInscricao, $codigoResumoEscolar = '')
+    {
+        if(empty($codigoResumoEscolar))
+        {
+            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricoesResumoEscolar'))
+                           ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                           ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
+                           ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
+                           ->where('users.id', $user_id)
+                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                           ->get();
+        }
+        else
+        {
+            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricoesResumoEscolar'))
+                           ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                           ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
+                           ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
+                           ->where('users.id', $user_id)
+                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                           ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
+                           ->first();
+        }
+
+        return $escolar;                                 
     }
 }

@@ -8,24 +8,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Utils;
 
-class Emergencia extends Model
+class ResumoEscolar extends Model
 {
     use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $primaryKey = 'codigoEmergencia';
-    protected $table      = 'emergencias';
-        
+    protected $primaryKey = 'codigoResumoEscolar';
+    protected $table      = 'resumo_escolar';
+    
     protected $fillable = [
         'codigoUsuario',
-        'nomePessoaEmergencia',
-        'telefonePessoaEmergencia',
+        'escolaResumoEscolar',
+        'especialidadeResumoEscolar',
+        'inicioResumoEscolar',
+        'finalResumoEscolar',
         'codigoPessoaAlteracao',
+    ];
+
+    protected $casts = [
+        'inicioResumoEscolar' => 'date:d/m/Y',
+        'finalResumoEscolar' => 'date:d/m/Y',
     ];
 
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
-    }    
+    }
 }

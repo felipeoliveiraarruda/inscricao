@@ -7,6 +7,7 @@ use App\Http\Controllers\ArquivoController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\DadosPessoaisController;
 use App\Http\Controllers\EmergenciaController;
+use App\Http\Controllers\ResumoEscolarController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
@@ -41,6 +42,10 @@ Route::middleware(['auth','verified'])->group(function ()
         /* Endereço Inscrição */
         Route::get('{codigoInscricao}/emergencia/',       [InscricaoController::class, 'emergencia']);
         Route::get('{codigoInscricao}/emergencia/create', [InscricaoController::class, 'emergencia_create']);
+
+        /* Resumo Escolar Inscrição */
+        Route::get('{codigoInscricao}/escolar/',       [InscricaoController::class, 'escolar']);
+        Route::get('{codigoInscricao}/escolar/create', [InscricaoController::class, 'escolar_create']);
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
@@ -92,6 +97,10 @@ Route::middleware(['auth','verified'])->group(function ()
     /* Emergencia */
     Route::post('emergencia/',                      [EmergenciaController::class, 'store']);
     Route::patch('emergencia/{codigoEmergencia}',   [EmergenciaController::class, 'update']);
+
+    /* Resumo Escolar */
+    Route::post('escolar/',                         [ResumoEscolarController::class, 'store']);
+    Route::patch('escolar/{codigoResumoEscolar}',   [ResumoEscolarController::class, 'update']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

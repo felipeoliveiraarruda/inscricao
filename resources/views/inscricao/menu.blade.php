@@ -11,6 +11,9 @@
         Pessoa a ser notificada em caso de Emergência
         <i class="fa @if (Session::get('total')['emergencia'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
+    <a href="inscricao/{{ $codigoInscricao }}/escolar" class="list-group-item list-group-item-action">Resumo Escolar
+        <i class="fa @if (Session::get('total')['escolar'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a>
     
     <!--
     <a href="#" class="list-group-item list-group-item-action">Resumo Escolar<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>

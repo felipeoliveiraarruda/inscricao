@@ -90,6 +90,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(\App\Models\Documento::class);
     }
 
+    public function emergencias()
+    {
+        return $this->hasMany(\App\Models\Emergencia::class);
+    }
+
+    public function resumo_escolar()
+    {
+        return $this->hasMany(\App\Models\ResumoEscolar::class);
+    }
+
+    public function idiomas()
+    {
+        return $this->hasMany(\App\Models\Idioma::class);
+    }
+
     public function obterLevel($id)
     {
         $user = User::with('permissions', 'roles')->find($id);

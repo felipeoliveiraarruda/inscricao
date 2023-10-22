@@ -17,7 +17,7 @@ class Edital extends Model
 
     protected $primaryKey = 'codigoEdital';
     protected $table      = 'editais';
-    protected $dates      = ['dataInicioEdital', 'dataFinalEdital, dataDoeEdital'];
+    protected $dates      = ['dataInicioEdital', 'dataFinalEdital', 'dataDoeEdital'];
     
     protected $fillable = [
         'codigoCurso',

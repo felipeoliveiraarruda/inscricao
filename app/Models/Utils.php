@@ -13,6 +13,7 @@ use App\Models\InscricoesPessoais;
 use App\Models\InscricoesDocumentos;
 use App\Models\InscricoesEnderecos;
 use App\Models\InscricoesArquivos;
+use App\Models\InscricoesResumoEscolar;
 
 class Utils extends Model
 {
@@ -200,6 +201,7 @@ class Utils extends Model
         $total['endereco']      = InscricoesEnderecos::obterTotal($codigoInscricao);
         $total['arquivo']       = InscricoesArquivos::obterTotal($codigoInscricao);
         $total['emergencia']    = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
+        $total['escolar']       = InscricoesResumoEscolar::obterTotal($codigoInscricao);
 
         session(['total' => $total]);
     }   

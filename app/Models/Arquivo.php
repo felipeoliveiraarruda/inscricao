@@ -116,4 +116,22 @@ class Arquivo extends Model
 
         return false;
     }
+
+    public static function obterArquivosHistorico($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                           ->where('codigoInscricao',       $codigoInscricao)
+                           ->where('codigoTipoDocumento', '5')
+                           ->first();
+        return $arquivos;           
+    }
+
+    public static function obterArquivosDiploma($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                           ->where('codigoInscricao',       $codigoInscricao)
+                           ->whereIn('codigoTipoDocumento', array('6,7'))
+                           ->first();
+        return $arquivos;           
+    }
 }
