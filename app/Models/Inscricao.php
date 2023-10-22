@@ -161,4 +161,16 @@ class Inscricao extends Model
 
         return $escolar;                                 
     }
+
+    public static function obterIdiomaInscricao($user_id, $codigoInscricao)
+    {
+        $idioma = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
+                      ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                      ->leftjoin('idiomas', 'users.id', '=', 'idiomas.codigoUsuario')                                
+                      ->leftJoin('inscricoes_idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
+                      ->where('users.id', $user_id)
+                      ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                      ->get();                                               
+        return $idioma;                                 
+    }    
 }

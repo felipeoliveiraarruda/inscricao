@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Idioma;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Idioma;
+use App\Models\Utils;
+use App\Models\InscricoesIdiomas;
 
 class IdiomaController extends Controller
 {
@@ -35,7 +38,44 @@ class IdiomaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $temp = '';
+        $voltar = '/endereco';
+        $inscricaoIdioma = true;
+        
+        \DB::beginTransaction();
+
+        $idioma = Idioma::create([
+            'codigoUsuario'         => Auth::user()->id,
+            'descricaoIdioma'       => $request->descricaoIdioma,
+            'leituraIdioma'         => $request->leituraIdioma,
+            'redacaoIdioma'         => $request->redacaoIdioma,
+            'conversacaoIdioma'     => $request->conversacaoIdioma,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+        
+        if(!empty($request->codigoInscricao))
+        {
+            $inscricaoIdioma = InscricoesIdiomas::create([
+                'codigoInscricao'       => $request->codigoInscricao,
+                'codigoIdioma'          => $idioma->codigoIdioma,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+
+            $voltar = "inscricao/{$request->codigoInscricao}/idioma";
+        }
+
+        if($idioma && $inscricaoIdioma) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Conhecimento de Idioma cadastrado com sucesso.');
+        
+        return redirect($voltar);        
     }
 
     /**

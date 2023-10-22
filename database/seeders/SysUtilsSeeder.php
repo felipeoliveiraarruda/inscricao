@@ -20,9 +20,10 @@ class SysUtilsSeeder extends Seeder
             [
                 [
                     'dadosSexo'                 => 'Masculino|Feminino',
-                    'dadosRaca'                 => 'Não dispõe da informação|Branca|Negra|Parda|Amarela|Indígena|Não declarado',
-                    'dadosEstadoCivil'          => 'Casado(a)|Solteiro(a)|Solteiro(a)|Viúvo(a)|Separado(a) Judicialmente|Disquitado(a)|Divorciado|União Estável|Unio Homoafetiva',
+                    'dadosRaca'                 => 'NÃ£o dispÃµe da informaÃ§Ã£o|Branca|Negra|Parda|Amarela|IndÃ­gena|NÃ£o declarado',
+                    'dadosEstadoCivil'          => 'Casado(a)|Solteiro(a)|Solteiro(a)|ViÃºvo(a)|Separado(a) Judicialmente|Disquitado(a)|Divorciado|UniÃ£o EstÃ¡vel|UniÃ£o Homoafetiva',
                     'dadosNecessidadeEspecial'  => 'Auditiva|Motora|Reabilitada|Visual',
+                    'dadosIdioma'               => 'Pouco|Razoavelmente|Bem',
                     'created_at'                => Carbon::now(),
                     'updated_at'                => Carbon::now(),                    
                     'codigoPessoaAlteracao'     => 5840128,

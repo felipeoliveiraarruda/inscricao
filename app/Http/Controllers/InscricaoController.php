@@ -262,7 +262,36 @@ class InscricaoController extends Controller
             'codigoEdital'      => $codigoEdital,
            // 'escolar'           => $escolar,
         ]); 
-    }   
+    } 
+    
+    
+    public function idioma($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterIdiomaInscricao(Auth::user()->id, $codigoInscricao);
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao[0]->codigoEdital}/idioma";
+    
+        return view('idioma',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao[0]->codigoEdital,
+            'link_voltar'       => $voltar,
+            'idiomas'           => $inscricao,
+        ]); 
+    } 
+    
+    public function idioma_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterIdiomaInscricao(Auth::user()->id, $codigoInscricao);
+
+        return view('inscricao.idioma',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $inscricao[0]->codigoEdital,
+            'idiomas'           => Utils::obterDadosSysUtils('idioma'),
+        ]); 
+    }  
 
 
 

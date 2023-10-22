@@ -14,6 +14,7 @@ use App\Models\InscricoesDocumentos;
 use App\Models\InscricoesEnderecos;
 use App\Models\InscricoesArquivos;
 use App\Models\InscricoesResumoEscolar;
+use App\Models\InscricoesIdiomas;
 
 class Utils extends Model
 {
@@ -121,6 +122,11 @@ class Utils extends Model
             $coluna = 'dadosNecessidadeEspecial';
         }
 
+        if ($tipo == 'idioma')
+        {
+            $coluna = 'dadosIdioma';
+        }
+
         $dados = DB::table('sys_utils')->select($coluna)->first();
         return Str::of($dados->$coluna)->explode('|');
     }
@@ -202,6 +208,7 @@ class Utils extends Model
         $total['arquivo']       = InscricoesArquivos::obterTotal($codigoInscricao);
         $total['emergencia']    = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
         $total['escolar']       = InscricoesResumoEscolar::obterTotal($codigoInscricao);
+        $total['idioma']        = InscricoesIdiomas::obterTotal($codigoInscricao);
 
         session(['total' => $total]);
     }   

@@ -24,10 +24,10 @@ class InscricoesIdiomas extends Model
 
     public function obterTotal($codigoInscricao)
     {
-        $total = InscricoesDocumentos::join('inscricoes', 'inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
-                                     ->join('idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
-                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                     ->count();
+        $total = InscricoesIdiomas::join('inscricoes', 'inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                  ->join('idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
+                                  ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                  ->count();
         return $total;
     }
 }
