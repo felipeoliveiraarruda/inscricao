@@ -177,6 +177,34 @@
             $("#mostrarEnderecoEmergencia").show();
           }
         });
+
+        $("#dadosBolsa").hide();
+
+        $("#inlineBolsaSim").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            $("#solicitarBolsa").hide();
+            $("#dadosBolsa").show();
+
+            $("#orgaoRecursoFinanceiro").prop('required',true);
+            $("#inicioRecursoFinanceiro").prop('required',true);
+            $("#finalRecursoFinanceiro").prop('required',true);
+          }
+        });
+
+        $("#inlineBolsaNao").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            $("#solicitarBolsa").show();
+            $("#dadosBolsa").hide();
+
+            $("#orgaoRecursoFinanceiro").prop('required',false);
+            $("#inicioRecursoFinanceiro").prop('required',false);
+            $("#finalRecursoFinanceiro").prop('required',false);
+          }
+        });
     })  
 
     tinymce.init({

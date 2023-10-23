@@ -353,6 +353,35 @@ class InscricaoController extends Controller
         ]); 
     } 
 
+    public function financeiro($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterFinanceiroInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/financeiro";
+    
+        return view('financeiro',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'financeiros'       => $inscricao,
+        ]); 
+    } 
+    
+    public function financeiro_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterFinanceiroInscricao(Auth::user()->id, $codigoInscricao);
+
+        return view('inscricao.financeiro',
+        [
+            'codigoInscricao'   => $codigoInscricao, 
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'financeiros'       => $inscricao, 
+        ]); 
+    } 
+
 
 
     /*public function index()

@@ -206,5 +206,17 @@ class Inscricao extends Model
                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
                         ->get();                                               
         return $ensino;                                 
-    }     
+    }   
+    
+    public static function obterFinanceiroInscricao($user_id, $codigoInscricao)
+    {
+        $financeiro = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))
+                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->leftjoin('recursos_financeiros', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                                
+                            ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoRecursoFinanceiro', '=', 'recursos_financeiros.codigoRecursoFinanceiro')
+                            ->where('users.id', $user_id)
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->first();                                              
+        return $financeiro;                                 
+    }    
 }

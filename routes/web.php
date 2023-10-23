@@ -10,6 +10,7 @@ use App\Http\Controllers\EmergenciaController;
 use App\Http\Controllers\ResumoEscolarController;
 use App\Http\Controllers\IdiomaController;
 use App\Http\Controllers\ExperienciaController;
+use App\Http\Controllers\RecursoFinanceiroController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
@@ -60,6 +61,11 @@ Route::middleware(['auth','verified'])->group(function ()
         /* Experiencia Em Ensino Inscricao */
         Route::get('{codigoInscricao}/ensino/',       [InscricaoController::class, 'ensino']);
         Route::get('{codigoInscricao}/ensino/create', [InscricaoController::class, 'ensino_create']);
+
+         /* Recursos Financeiros Inscricao */
+         Route::get('{codigoInscricao}/financeiro/',       [InscricaoController::class, 'financeiro']);
+         Route::get('{codigoInscricao}/financeiro/create', [InscricaoController::class, 'financeiro_create']);
+ 
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
@@ -123,6 +129,10 @@ Route::middleware(['auth','verified'])->group(function ()
     /* Experiencia (Ensino e Profissional) */
     Route::post('experiencia/',                     [ExperienciaController::class, 'store']);
     Route::patch('experiencia/{codigoExperiencia}', [ExperienciaController::class, 'update']);
+
+    /* Recursos Financeiros */
+    Route::post('financeiro/',                          [RecursoFinanceiroController::class, 'store']);
+    Route::patch('financeiro/{codigoRecursoFianceiro}', [RecursoFinanceiroController::class, 'update']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

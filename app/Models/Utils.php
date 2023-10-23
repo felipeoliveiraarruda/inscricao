@@ -16,6 +16,7 @@ use App\Models\InscricoesArquivos;
 use App\Models\InscricoesResumoEscolar;
 use App\Models\InscricoesIdiomas;
 use App\Models\InscricoesExperiencias;
+use App\Models\InscricoesRecursosFinanceiros;
 
 class Utils extends Model
 {
@@ -215,6 +216,7 @@ class Utils extends Model
         $total['idioma']        = InscricoesIdiomas::obterTotal($codigoInscricao);
         $total['profissional']  = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
         $total['ensino']        = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
+        $total['financeiro']    = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
 
         session(['total' => $total]);
     }   
