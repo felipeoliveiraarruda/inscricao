@@ -222,6 +222,32 @@ class PaeController extends Controller
         $pdf->Output();
     }
 
+    public function visualizar($codigoEdital, $codigoUsuario)
+    {
+        if ((session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
+        $inscricao   = Inscricao::obterInscricaoPae($codigoUsuario, $codigoEdital);
+        $anosemestre = Edital::obterSemestreAno($codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $arquivos    = Arquivo::listarArquivosPae($inscricao->codigoPae);
+        $total       = Arquivo::verificaArquivosPae($inscricao->codigoPae);
+       
+        return view('pae.visualizar',
+        [
+            'utils'        => new Utils,
+            'inscricao'    => $inscricao,
+            'anosemestre'  => $anosemestre,
+            'user'         => Auth::user(),
+            'vinculo'      => $vinculo,
+            'codigoEdital' => $codigoEdital,            
+            'arquivos'     => $arquivos,
+            'total'        => $total,
+        ]);
+    }
+
 
 
    /* public function desempenho($codigoEdital)

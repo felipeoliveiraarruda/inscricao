@@ -178,4 +178,28 @@ class DocumentacaoController extends Controller
         request()->session()->flash('alert-success', 'Documentação excluída com sucesso.');    
         return redirect("inscricao/{$codigoEdital}/pae");  
     }
+
+
+    public function visualizar($codigoEdital, $codigoUsuario)
+    {
+        if ((session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
+        $inscricao = Inscricao::obterInscricaoPae($codigoUsuario, $codigoEdital);
+        $total     = Arquivo::verificaArquivosPae($inscricao->codigoPae);
+
+        $arquivos  = Arquivo::listarArquivosPae($inscricao->codigoPae);
+       
+        return view('pae.documentacao.visualizar',
+        [
+            'utils'     => new Utils,
+            'codigoPae' => $inscricao->codigoPae,
+            'inscricao' => $inscricao,
+            'arquivos'  => $arquivos,
+            'total'        => $total,
+            'temp'      => '',
+        ]);
+    }
 }

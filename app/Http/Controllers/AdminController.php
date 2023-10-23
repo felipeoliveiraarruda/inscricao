@@ -19,13 +19,13 @@ class AdminController extends Controller
 {
     public function index()
     {   
-        if (Gate::check('admin'))
+        if ((session('level') == 'admin'))
         {
-            $editais = Edital::all();
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
         }
-        else
+        else if ((session('level') == 'manager'))
         {
-            $editais = Edital::where('codigoUsuario', Auth::user()->id)->get();
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoUsuario', Auth::user()->id)->get();
         }
         
         return view('admin.index',

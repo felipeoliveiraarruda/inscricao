@@ -57,20 +57,24 @@
                             </tr>
                         </thead>                        
                         <tbody>
-                            @foreach($inscritos as $inscrito)
+                            @foreach($inscritos as $inscrito)                     
                                 <tr>
                                     <td>{{ $inscrito->numeroInscricao }}</td>
                                     <td>{{ $inscrito->name }}</td>
                                     <td>{{ $inscrito->email }}</td>
-                                    @if ($inscrito->situacaoInscricao == 'N')
+                                    @if ($inscrito->statusInscricao == 'N')
                                         <th scope="col" class="text-info">Aberta</th>
-                                    @elseif ($inscrito->situacaoInscricao == 'P')
+                                    @elseif ($inscrito->statusInscricao == 'P')
                                         <th  scope="col" class="text-danger">Pendente</th>
                                     @else
                                         <th scope="col" class="text-success">Confirmada</th>
                                     @endif
                                     <td>
+                                        @if ($inscrito->codigoNivel == 5)
+                                        <a href="inscricao/{{ $inscrito->codigoEdital }}/pae/{{ $inscrito->id }}/visualizar" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
+                                        @else
                                         <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach                        

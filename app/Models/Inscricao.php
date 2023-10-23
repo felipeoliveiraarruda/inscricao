@@ -102,7 +102,7 @@ class Inscricao extends Model
 
     public static function obterInscricaoPae($user_id, $codigoEdital)
     {
-        $pae = User::select(\DB::raw('inscricoes.*, pae.* '))
+        $pae = User::select(\DB::raw('inscricoes.*, pae.*, users.* '))
                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                        ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')        
                        ->where('users.id', $user_id)
