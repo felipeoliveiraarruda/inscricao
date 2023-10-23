@@ -25,14 +25,11 @@
     </a>         
     <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">7.Recursos Financeiros
         <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-    </a>  
-
-    <!--
-    <a href="#" class="list-group-item list-group-item-action">Resumo Escolar<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
-    <a href="#" class="list-group-item list-group-item-action">Idioma<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
-    <a href="#" class="list-group-item list-group-item-action">Experiencia Profissional<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
-    <a href="#" class="list-group-item list-group-item-action">Experiencia Em Ensino<i class="fa fa-exclamation-triangle text-warning float-right"></i></a>
-    <a href="#" class="list-group-item list-group-item-action">
-        Anexos
-    </a>-->
+    </a>
+    <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">8.Expectativas
+        <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a> 
+    <a href="inscricao/{{ $codigoInscricao }}/curriculo" class="list-group-item list-group-item-action">9.Currículo
+        <i class="fa @if (Session::get('total')['curriculo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a>
 </div>

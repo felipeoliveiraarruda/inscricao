@@ -31,8 +31,9 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::group(['prefix' => 'inscricao'], function()
     { 
         /* Inscrição no Edital */
-        Route::get('{codigoInscricao}',     [InscricaoController::class, 'create']);
-        Route::get('{codigoEdital}/store',  [InscricaoController::class, 'store']);
+        Route::get('{codigoInscricao}',             [InscricaoController::class, 'create']);
+        Route::get('{codigoEdital}/store',          [InscricaoController::class, 'store']);
+        Route::get('comprovante/{codigoInscricao}', [InscricaoController::class, 'comprovante']);
 
         /* Dados Pessoais Inscrição */
         Route::get('{codigoInscricao}/pessoal',         [InscricaoController::class, 'pessoal']);
@@ -62,10 +63,19 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/ensino/',       [InscricaoController::class, 'ensino']);
         Route::get('{codigoInscricao}/ensino/create', [InscricaoController::class, 'ensino_create']);
 
-         /* Recursos Financeiros Inscricao */
-         Route::get('{codigoInscricao}/financeiro/',       [InscricaoController::class, 'financeiro']);
-         Route::get('{codigoInscricao}/financeiro/create', [InscricaoController::class, 'financeiro_create']);
- 
+        /* Recursos Financeiros Inscricao */
+        Route::get('{codigoInscricao}/financeiro/',       [InscricaoController::class, 'financeiro']);
+        Route::get('{codigoInscricao}/financeiro/create', [InscricaoController::class, 'financeiro_create']);
+
+        /* Expectativas Inscricao */
+        Route::get('{codigoInscricao}/expectativas/',       [InscricaoController::class, 'expectativas']);
+        Route::get('{codigoInscricao}/expectativas/create', [InscricaoController::class, 'expectativas_create']);
+        Route::post('{codigoInscricao}/expectativas/store', [InscricaoController::class, 'expectativas_store']);
+
+        /* Curriculo Inscricao */
+        Route::get('{codigoInscricao}/curriculo/',       [InscricaoController::class, 'curriculo']);
+        Route::get('{codigoInscricao}/curriculo/create', [InscricaoController::class, 'curriculo_create']);
+        Route::post('{codigoInscricao}/curriculo/store', [InscricaoController::class, 'curriculo_store']);
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);

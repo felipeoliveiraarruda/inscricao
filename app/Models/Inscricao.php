@@ -21,6 +21,7 @@ class Inscricao extends Model
         'codigoUsuario',    
         'numeroInscricao',    
         'statusInscricao',
+        'expectativasInscricao',
         'codigoPessoaAlteracao'
     ];
 
@@ -219,4 +220,28 @@ class Inscricao extends Model
                             ->first();                                              
         return $financeiro;                                 
     }    
+
+    public static function obterExpectativaInscricao($user_id, $codigoInscricao)
+    {
+        $expectativas = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao'))
+                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                          ->where('users.id', $user_id)
+                          ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                          ->first(); 
+
+        return $expectativas;                                 
+    } 
+    
+    public static function obterCurriculoInscricao($user_id, $codigoInscricao)
+    {
+        $curriculo = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                         ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                         ->leftjoin('arquivos', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                         ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                         ->where('users.id', $user_id)
+                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                         ->whereIn('arquivos.codigoTipoDocumento', [8,9])
+                         ->first(); 
+        return $curriculo;                                 
+    }   
 }

@@ -15,6 +15,7 @@ use App\Models\DadosPessoais;
 use App\Models\TipoDocumento;
 use App\Models\User;
 use App\Models\TipoEntidade;
+use App\Models\Comprovante;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
@@ -59,15 +60,14 @@ class InscricaoController extends Controller
             ]); 
         }
 
-        if (empty(session('total')))
-        {
-            Utils::obterTotalInscricao($inscricao->codigoInscricao);
-        }
+        Utils::obterTotalInscricao($inscricao->codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
 
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
-            'status'          => $inscricao->statusInscricao,            
+            'status'          => $inscricao->statusInscricao, 
+            'total'           => $total,           
         ]);
     }
 
@@ -111,7 +111,7 @@ class InscricaoController extends Controller
         $arquivos = '';
 
         $inscricao = Inscricao::obterDadosPessoaisInscricao(Auth::user()->id, $codigoInscricao);
-        $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4), $codigoInscricao);
+        $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 26), $codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
     
@@ -382,6 +382,119 @@ class InscricaoController extends Controller
         ]); 
     } 
 
+    public function expectativas($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterExpectativaInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
+    
+        return view('expectativas',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'expectativas'      => $inscricao,
+        ]); 
+    } 
+
+    public function expectativas_create($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterExpectativaInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
+    
+        return view('inscricao.expectativas',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'expectativas'      => $inscricao,
+        ]); 
+    } 
+    
+    public function expectativas_store(Request $request)
+    { 
+        $inscricao = Inscricao::find($request->codigoInscricao);
+        $inscricao->expectativasInscricao = $request->expectativasInscricao;
+        $inscricao->save();
+
+        request()->session()->flash('alert-success', 'Expectativa cadastrada com sucesso.');
+        
+        $voltar = "inscricao/{$request->codigoInscricao}/expectativas";
+
+        return redirect($voltar); 
+    }
+
+
+    public function curriculo($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $inscricao = Inscricao::obterCurriculoInscricao(Auth::user()->id, $codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$codigoEdital}/curriculo";
+    
+        return view('curriculo',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            'curriculo'      => $inscricao,
+        ]); 
+    } 
+
+    public function curriculo_create($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterExpectativaInscricao(Auth::user()->id, $codigoInscricao);
+        $tipos     = TipoDocumento::whereIn('codigoTipoDocumento', [8,9])->get();
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+
+        $voltar = "inscricao/{$inscricao->codigoEdital}/curriculo";
+    
+        return view('inscricao.curriculo',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $inscricao->codigoEdital,
+            'link_voltar'       => $voltar,
+            'curriculo'         => $inscricao,
+            'tipos'             => $tipos,
+        ]); 
+    } 
+    
+    public function curriculo_store(Request $request)
+    { 
+        $path = $request->file('arquivo')->store('arquivos', 'public');
+
+        $arquivo = Arquivo::create([
+            'codigoUsuario'         => Auth::user()->id,
+            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
+            'linkArquivo'           => $path,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        $inscricaoDocumentos = InscricoesArquivos::create([
+            'codigoInscricao'       => $request->codigoInscricao,
+            'codigoArquivo'         => $arquivo->codigoArquivo,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        request()->session()->flash('alert-success', 'Currículo cadastrado com sucesso');    
+        $voltar = "inscricao/{$request->codigoInscricao}/curriculo";
+
+        return redirect($voltar); 
+    }
+
+    public static function comprovante($codigoInscricao)
+    {
+        $comprovante = new Comprovante('');
+        $comprovante->gerarComprovante($codigoInscricao);
+    }
 
 
     /*public function index()

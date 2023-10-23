@@ -16,6 +16,7 @@
   <script type="text/javascript" src="{{ asset('js/mascara.js') }}"></script>
   <script src="https://cdn.tiny.cloud/1/6gp4wemfll2rht9wyhq9idfb5v2h2e2sv8fd9yqkp9nh5337/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
   
+  
   <script>
     // Exemplo de JavaScript inicial para desativar envios de formulario, se houver campos invalidos.
     (function() 
@@ -207,12 +208,12 @@
         });
     })  
 
-    tinymce.init({
+    /*tinymce.init({
       selector: 'textarea',
       plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tableofcontents footnotes mergetags autocorrect',
       toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright lineheight alignjustify | link image table mergetags | checklist numlist bullist indent outdent | removeformat',
       /*tinycomments_mode: 'embedded',
-      tinycomments_author: 'Author name',    */
-    });
+      tinycomments_author: 'Author name',   
+    }); */
   </script>
 @endsection

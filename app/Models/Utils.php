@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
+use App\Models\Inscricao;
 use App\Models\InscricoesPessoais;
 use App\Models\InscricoesDocumentos;
 use App\Models\InscricoesEnderecos;
@@ -17,6 +19,7 @@ use App\Models\InscricoesResumoEscolar;
 use App\Models\InscricoesIdiomas;
 use App\Models\InscricoesExperiencias;
 use App\Models\InscricoesRecursosFinanceiros;
+use App\Models\Arquivo;
 
 class Utils extends Model
 {
@@ -206,6 +209,8 @@ class Utils extends Model
     public static function obterTotalInscricao($codigoInscricao)
     {        
         $total = array();
+        $expectativas = Inscricao::obterExpectativaInscricao(Auth::user()->id, $codigoInscricao);
+        $curriculo    = Inscricao::obterCurriculoInscricao(Auth::user()->id, $codigoInscricao);;
 
         $total['pessoal']       = InscricoesPessoais::obterTotal($codigoInscricao);
         $total['documento']     = InscricoesDocumentos::obterTotal($codigoInscricao);
@@ -217,15 +222,28 @@ class Utils extends Model
         $total['profissional']  = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
         $total['ensino']        = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
         $total['financeiro']    = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
+        $total['expectativas']  = (empty($expectativas->expectativasInscricao) ? 0 : 1);
+        $total['curriculo']   =   (empty($curriculo->codigoArquivo) ? 0 : 1);
 
         session(['total' => $total]);
     }   
     
-    public static function obterTotalArquivos($codigoUsuario, $codigoEdital = '', $criterio = '')
+    /*public static function obterTotalArquivos($codigoUsuario, $codigoEdital = '', $criterio = '')
     {
         $total = ViewInscricaoTotal::select($criterio)->where('codigoUsuario', $codigoUsuario)->where('codigoEdital', $codigoEdital)->first();
         return $total;
-    } 
+    } */
+
+    public static function obterTotalArquivos($codigoInscricao)
+    {
+        $foto      = Arquivo::verificarArquivo($codigoInscricao, [26]);
+        $documento = Arquivo::verificarArquivo($codigoInscricao, [1,2]);
+        $historico = Arquivo::verificarArquivo($codigoInscricao, [5]);
+        $curriculo = Arquivo::verificarArquivo($codigoInscricao, [8,9]);
+        $diploma   = Arquivo::verificarArquivo($codigoInscricao, [6]);
+
+        return $foto + $documento + $historico + $curriculo + $diploma;
+    }
 
     public static function obterTipoEspecial($tipoEspecial)
     {
