@@ -77,6 +77,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/curriculo/create', [InscricaoController::class, 'curriculo_create']);
         Route::post('{codigoInscricao}/curriculo/store', [InscricaoController::class, 'curriculo_store']);
 
+        /* Curriculo Inscricao */
+        Route::get('{codigoInscricao}/pre-projeto/',       [InscricaoController::class, 'projeto']);
+        Route::get('{codigoInscricao}/pre-projeto/create', [InscricaoController::class, 'projeto_create']);
+        Route::post('{codigoInscricao}/pre-projeto/store', [InscricaoController::class, 'projeto_store']);
+
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
 

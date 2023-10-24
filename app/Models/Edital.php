@@ -71,9 +71,9 @@ class Edital extends Model
 
     public static function obterNivelEdital($codigoEdital)
     {
-        $nivel = Edital::select('siglaNivel')
+        $nivel = Edital::select('niveis.siglaNivel')
                        ->join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                       ->where('codigoEdital', $codigoEdital)->first();        
+                       ->where('editais.codigoEdital', $codigoEdital)->first();
         return $nivel->siglaNivel;
     }
 

@@ -140,7 +140,7 @@ class Inscricao extends Model
     {
         if(empty($codigoResumoEscolar))
         {
-            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricoesResumoEscolar'))
+            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                            ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
                            ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
@@ -150,7 +150,7 @@ class Inscricao extends Model
         }
         else
         {
-            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricoesResumoEscolar'))
+            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                            ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
                            ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
@@ -243,5 +243,18 @@ class Inscricao extends Model
                          ->whereIn('arquivos.codigoTipoDocumento', [8,9])
                          ->first(); 
         return $curriculo;                                 
+    }
+
+    public static function obterProjetoInscricao($user_id, $codigoInscricao)
+    {
+        $projeto = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                         ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                         ->leftjoin('arquivos', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                         ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                         ->where('users.id', $user_id)
+                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                         ->whereIn('arquivos.codigoTipoDocumento', [10])
+                         ->first(); 
+        return $projeto;                                 
     }   
 }

@@ -32,4 +32,10 @@
     <a href="inscricao/{{ $codigoInscricao }}/curriculo" class="list-group-item list-group-item-action">9.Currículo
         <i class="fa @if (Session::get('total')['curriculo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
+
+    @if (Session::get('nivel') == 2)
+    <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">10.Pré-projeto
+        <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+    </a>
+    @endif
 </div>

@@ -9,9 +9,9 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Currículo
-                    @if (empty($curriculo->codigoArquivo))
-                        <a href="inscricao/{{ $codigoInscricao }}/curriculo/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                <h5 class="card-header">Pré-projeto
+                    @if (empty($projeto->codigoArquivo))
+                        <a href="inscricao/{{ $codigoInscricao }}/pre-projeto/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
                     @endif
                 </h5>
 
@@ -39,11 +39,12 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($projeto->codigoArquivo))                                        
+                                    @if (!empty($projeto->codigoArquivo))
+                                        
                                         <a href="{{ asset('storage/'.$projeto->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
                                             <i class="far fa-eye"></i> Visualizar
                                         </a>
-                                    @endif                                       
+                                    @endif                                    
                                 </div>                                 
                             </div>                                                        
                         </div>

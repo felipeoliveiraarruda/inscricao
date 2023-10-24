@@ -21,7 +21,19 @@ class AdminController extends Controller
     {   
         if ((session('level') == 'manager'))
         {
-            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoUsuario', Auth::user()->id)->get();
+            if (Auth::user()->id == 4)
+            {
+                $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                                 ->where('codigoUsuario', Auth::user()->id)
+                                 ->get();
+            }
+            else
+            {
+                $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                                 ->where('codigoUsuario', Auth::user()->id)
+                                 ->orWhere('codigoUsuario', 4)
+                                 ->get();
+            }
         }
         else
         {

@@ -110,17 +110,7 @@
                                                     </table>  
                                                 </div>                
                                             @endif
-                                            @if (empty($arquivo->codigoInscricaoArquivo))
-                                            <!-- Validation Errors -->
-                                            <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                            
-                                            <form class="needs-validation" novalidate method="POST" action="inscricao/anexar">
-                                                @csrf
-                                                <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
-                                                <input type="hidden" name="codigoArquivoInscricao" value="{{ $arquivo_inscricao }}">
-                                                <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Anexar documentos a inscrição</button>
-                                            </form>
-                                            @endif
+
                                         </div>
                                     </div>                                    
                                     @endif
