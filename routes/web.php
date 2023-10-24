@@ -97,23 +97,6 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::patch('{codigoPae}/pae/{codigoTipoDocumento}/documentacao',          [DocumentacaoController::class, 'update']);
         Route::get('{codigoPae}/pae/documentacao/{codigoTipoDocumento}/destroy',    [DocumentacaoController::class, 'destroy']);
         Route::get('{codigoEdital}/pae/{codigoUsuadio}/documentacao/visualizar',    [DocumentacaoController::class, 'visualizar']);
-
-        /* PAE - Desempenho Academico */
-        Route::get('{codigoEdital}/pae/desempenho/',  [DesempenhoController::class, 'index']);
-
-        /* PAE - Desempenho Academico
-        Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);
-        Route::post('{codigoPae}/pae/desempenho',                        [PaeController::class, 'desempenho_store']);
-        Route::get('{codigoEdital}/pae/desempenho/{codigoPae}/edit',     [PaeController::class, 'desempenho_edit']);
-        Route::patch('{codigoPae}/pae/desempenho',                       [PaeController::class, 'desempenho_update']);
-        Route::get('pae/desempenho/{codigoDesempenhoAcademico}/destroy', [PaeController::class, 'desempenho_destroy']); */
-
-        /* PAE - Analise 
-        Route::get('{codigoEdital}/pae/analise/create',            [PaeController::class, 'analise']);
-        Route::post('{codigoPae}/pae/analise',                     [PaeController::class, 'analise_store']);
-        Route::get('{codigoEdital}/pae/analise/{codigoPae}/edit',  [PaeController::class, 'analise_edit']);
-        Route::patch('{codigoPae}/pae/analise',                    [PaeController::class, 'analise_update']);
-        Route::get('pae/analise/{codigoAnaliseCurriculo}/destroy', [PaeController::class, 'analise_destroy']);*/
     });
 
     /* Dados Pessoais */

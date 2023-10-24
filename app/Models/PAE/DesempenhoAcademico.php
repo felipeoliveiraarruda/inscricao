@@ -56,4 +56,14 @@ class DesempenhoAcademico extends Model
 
         return $desempenho;
     }
+
+    public static function obterTotalDesempenho($codigoPae)
+    {
+        $desempenho = DesempenhoAcademico::join('pae', 'desempenho_academico.codigoPae', '=', 'pae.codigoPae')
+                                         ->join('conceito', 'conceito.codigoConceito', '=', 'desempenho_academico.codigoConceito')
+                                         ->where('pae.codigoPae', $codigoPae)
+                                         ->count();                                         
+
+        return $desempenho;
+    }
 }

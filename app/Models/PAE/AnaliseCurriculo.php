@@ -60,4 +60,14 @@ class AnaliseCurriculo extends Model
 
         return $analise;
     }
+
+    public static function obterTotalAnalise($codigoPae)
+    {
+        $analise = AnaliseCurriculo::join('pae', 'analise_curriculo.codigoPae', '=', 'pae.codigoPae')
+                                   ->join('tipo_analise', 'tipo_analise.codigoTipoAnalise', '=', 'analise_curriculo.codigoTipoAnalise')
+                                   ->where('pae.codigoPae', $codigoPae)
+                                   ->count();                                         
+
+        return $analise;
+    }
 }

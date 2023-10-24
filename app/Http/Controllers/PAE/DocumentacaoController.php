@@ -189,7 +189,6 @@ class DocumentacaoController extends Controller
 
         $inscricao = Inscricao::obterInscricaoPae($codigoUsuario, $codigoEdital);
         $total     = Arquivo::verificaArquivosPae($inscricao->codigoPae);
-
         $arquivos  = Arquivo::listarArquivosPae($inscricao->codigoPae);
        
         return view('pae.documentacao.visualizar',

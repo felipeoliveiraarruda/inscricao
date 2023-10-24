@@ -71,7 +71,9 @@
                                     @endif
                                     <td>
                                         @if ($inscrito->codigoNivel == 5)
-                                        <a href="inscricao/{{ $inscrito->codigoEdital }}/pae/{{ $inscrito->id }}/visualizar" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
+                                            <a href="inscricao/{{ $inscrito->codigoEdital }}/pae/{{ $inscrito->id }}/visualizar" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar"><i class="fas fa-eye"></i></a>
+                                            <a href="admin/{{ $inscrito->codigoPae }}/pae/desempenho" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Desempenho Acadêmico"><i class="fas fa-user-graduate"></i></a>
+                                            <a href="admin/{{ $inscrito->codigoPae }}/pae/analise" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Análise de Currículo"><i class="fas fa-chart-line"></i></a>
                                         @else
                                         <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
                                         @endif

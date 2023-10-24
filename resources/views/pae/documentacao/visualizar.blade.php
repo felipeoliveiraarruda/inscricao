@@ -35,7 +35,9 @@
                                             @endphp
 
                                             @foreach($temp as $documento)
-                                                <a href="{{ asset('storage/'.$documento->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" title="Visualizar">
+
+                                                <a href="{{ asset('storage/'.$documento->linkArquivo) }}" role="button" 
+                                                    aria-pressed="true" class="btn btn-info btn-sm" target="_new" title="Visualizar">
                                                     <i class="far fa-eye"></i>Anexo {{ $i }}
                                                 </a>
                                                 @php

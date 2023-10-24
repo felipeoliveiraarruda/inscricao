@@ -5,17 +5,11 @@
             <th scope="col">Quantidade</th>
         </tr>
     </thead> 
-    @foreach($conceitos as $conceito)
-        @if ($conceito->codigoDesempenhoAcademico)
-            <tr>
-                <td>{{ $conceito->descricaoConceito }}</td>
-                <td>
-                    <input type="number" class="form-control" id="quantidadeDesempenhoAcademico" name="quantidadeDesempenhoAcademico[{{ $conceito->codigoDesempenhoAcademico }}]" value="{{ old('quantidadeDesempenhoAcademico') ?? $conceito->quantidadeDesempenhoAcademico ??  '' }}">
-                    <input type="hidden" name="codigoDesempenhoAcademico[{{ $conceito->codigoDesempenhoAcademico }}]" value="{{ $conceito->codigoDesempenhoAcademico }}">
-                </td> 
-            </tr>
-        @else
-            @if(App\Models\PAE\DesempenhoAcademico::obterDesempenho($codigoPae, $conceito->codigoConceito) == '')                
+    @foreach($conceitos as $conceito)  
+        @php
+            $dados = App\Models\PAE\DesempenhoAcademico::obterDesempenho($codigoPae, $conceito->codigoConceito)
+        @endphp
+        @if($dados == '')
             <tr>
                 <td>{{ $conceito->descricaoConceito }}</td>
                 <td>
@@ -23,7 +17,14 @@
                     <input type="hidden" name="codigoConceito[{{ $conceito->codigoConceito }}]" value="{{ $conceito->codigoConceito }}">
                 </td>
             </tr>
-            @endif
+        @else
+            <tr>
+                <td>{{ $conceito->descricaoConceito }}</td>
+                <td>
+                    <input type="number" class="form-control" id="quantidadeDesempenhoAcademico" name="quantidadeDesempenhoAcademico[{{ $dados->codigoDesempenhoAcademico }}]" value="{{ old('quantidadeDesempenhoAcademico') ?? $dados->quantidadeDesempenhoAcademico ??  '' }}">
+                    <input type="hidden" name="codigoDesempenhoAcademico[{{ $dados->codigoDesempenhoAcademico }}]" value="{{ $dados->codigoDesempenhoAcademico }}">
+                </td> 
+            </tr>
         @endif
     @endforeach
 </table>

@@ -206,6 +206,8 @@
             $("#finalRecursoFinanceiro").prop('required',false);
           }
         });
+
+        $('[data-toggle="tooltip"]').tooltip();
     })  
 
     /*tinymce.init({

@@ -19,13 +19,13 @@ class AdminController extends Controller
 {
     public function index()
     {   
-        if ((session('level') == 'admin'))
-        {
-            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
-        }
-        else if ((session('level') == 'manager'))
+        if ((session('level') == 'manager'))
         {
             $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoUsuario', Auth::user()->id)->get();
+        }
+        else
+        {
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
         }
         
         return view('admin.index',
@@ -41,6 +41,7 @@ class AdminController extends Controller
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                               ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
                                ->where('editais.codigoEdital', $id)
                                ->where('users.name', 'LIKE', "%{$request->search}%")
                                ->orWhere('users.email', 'LIKE', "%{$request->search}%")
@@ -50,6 +51,7 @@ class AdminController extends Controller
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                               ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
                                ->where('editais.codigoEdital', $id)->paginate(10);
         }
 

@@ -9,27 +9,37 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Utils;
 use App\Models\Inscricao;
-use App\Models\Conceito;
+use App\Models\Edital;
+use App\Models\PAE\Conceito;
+use App\Models\PAE\Pae;
+use App\Models\PAE\DesempenhoAcademico;
+use Uspdev\Replicado\Pessoa;
+use Uspdev\Replicado\Posgraduacao;
 
 class DesempenhoController extends Controller
 {
-    public function index($codigoEdital)
+    public function index($codigoPae)
     {
-        if ((session('level') != 'admin') || (session('level') != 'manager'))
+        if ((session('level') != 'admin') && (session('level') != 'manager'))
         {
             return redirect("/");
         }
 
-        $inscricao = Inscricao::obterInscricaoPae(Auth::user()->id, $codigoEdital);
-        $conceitos = Conceito::where('statusConceito', '=', 'S')->get();
+        $inscricao   = Pae::obterPae($codigoPae);
+        $conceitos   = Conceito::where('statusConceito', '=', 'S')->get();
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $total       = DesempenhoAcademico::obterTotalDesempenho($codigoPae);
 
-        return view('pae.desempenho.index',
+        return view('admin.pae.desempenho',
         [
             'utils'        => new Utils,
             'conceitos'    => $conceitos,
-            'codigoPae'    => $inscricao->codigoPae,
-            'codigoEdital' => $codigoEdital,
-            'editar'       => false,
+            'codigoPae'    => $codigoPae,
+            'codigoEdital' => $inscricao->codigoEdital,
+            'editar'       => ($total == 0 ? false : true),
+            'inscricao'    => $inscricao,
+            'vinculo'      => $vinculo,
         ]);
     }
 
@@ -51,7 +61,21 @@ class DesempenhoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        foreach($request->codigoConceito as $conceito)
+        {
+            if ($request->quantidadeDesempenhoAcademico[$conceito] != "")
+            {
+                $desempenho = DesempenhoAcademico::create([
+                    'codigoPae'                     => $request->codigoPae,
+                    'codigoConceito'                => $conceito,
+                    'quantidadeDesempenhoAcademico' => $request->quantidadeDesempenhoAcademico[$conceito],
+                    'codigoPessoaAlteracao'         => Auth::user()->codpes,
+                ]); 
+            }
+        }
+
+        request()->session()->flash('alert-success', 'Desempenho Acadêmico cadastrado com sucesso.');    
+        return redirect("admin/listar-inscritos/{$request->codigoEdital}");
     }
 
     /**
@@ -83,9 +107,33 @@ class DesempenhoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        foreach($request->codigoDesempenhoAcademico as $temp)
+        {
+            $desempenho = DesempenhoAcademico::find($temp);
+            $desempenho->quantidadeDesempenhoAcademico = $request->quantidadeDesempenhoAcademico[$temp];
+            $desempenho->save();
+        }
+
+        if (isset($request->codigoConceito))
+        {
+            foreach($request->codigoConceito as $conceito)
+            {
+                if ($request->quantidadeDesempenhoAcademico[$conceito] != "")
+                {
+                    $desempenho = DesempenhoAcademico::create([
+                        'codigoPae'                     => $request->codigoPae,
+                        'codigoConceito'                => $conceito,
+                        'quantidadeDesempenhoAcademico' => $request->quantidadeDesempenhoAcademico[$conceito],
+                        'codigoPessoaAlteracao'         => Auth::user()->codpes,
+                    ]); 
+                }
+            }
+        }
+
+        request()->session()->flash('alert-success', 'Desempenho Acadêmico atualizado com sucesso.');    
+        return redirect("admin/listar-inscritos/{$request->codigoEdital}");
     }
 
     /**

@@ -39,12 +39,21 @@ class Pae extends Model
         return $this->belongsTo(\App\Models\PAE\DesempenhoAcademico::class);
     }
 
-    public function listarPae($codigoCurso, )
+    public function listarPae($codigoPae)
     {
         $pae = Pae::join('analise_curriculo', 'analise_curriculo_arquivos.codigoAnaliseCurriculo', '=', 'analise_curriculo.codigoAnaliseCurriculo')
                   ->join('arquivos', 'analise_curriculo_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
                   ->join('pae', 'pae.codigoPae', '=', 'analise_curriculo.codigoPae')
                   ->where('pae.codigoPae', $codigoPae)
                   ->get();
+    }
+
+    public function obterPae($codigoPae)
+    {
+        $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                  ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                  ->where('pae.codigoPae', $codigoPae)
+                  ->first();
+        return $pae;
     }
 }

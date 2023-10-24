@@ -134,4 +134,18 @@ class Arquivo extends Model
                            ->first();
         return $arquivos;           
     }
+
+    public static function listarArquivosAnalisePae($codigoPae)    
+    {
+       $analise = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
+                         ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                         ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                         ->where('pae.codigoPae', $codigoPae)
+                         ->whereIn('arquivos.codigoTipoDocumento', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25])
+                         ->get();         
+
+        return $analise;
+    }
+
 }
