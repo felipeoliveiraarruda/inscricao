@@ -16,25 +16,27 @@ class EnviarPaeMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $codigoEdital;
+    protected $codigoUsuario;
 
-    public function __construct($codigoEdital)
+    public function __construct($codigoEdital, $codigoUsuario)
     {
         $this->codigoEdital = $codigoEdital;
+        $this->codigoUsuario = $codigoUsuario;
     }
 
     public function build()
     {
-        $inscricao   = Inscricao::obterInscricaoPae(Auth::user()->id, $this->codigoEdital);
+        $inscricao   = Inscricao::obterInscricaoPae($this->codigoUsuario, $this->codigoEdital);
         $anosemestre = Edital::obterSemestreAno($this->codigoEdital);
 
-        return $this->cc('pae@eel.usp.br')
-                    ->replyTo('pae@eel.usp.br')
+        return $this->replyTo('pae@eel.usp.br')
                     ->subject("[PAE] Processo Seletivo - $anosemestre")
                     ->view('emails.pae.enviar')
                     ->with([
-                        'nome'        => Auth::user()->name,
-                        'inscricao'   => $inscricao->numeroInscricao,
-                        'anosemestre' => $anosemestre
+                        'nome'         => Auth::user()->name,
+                        'inscricao'    => $inscricao->numeroInscricao,
+                        'anosemestre'  => $anosemestre,
+                        'codigoEdital' => $this->codigoEdital,
                     ]);
     }
 }

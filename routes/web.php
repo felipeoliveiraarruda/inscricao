@@ -86,14 +86,14 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
 
         /* PAE */
-        Route::get('{codigoEdital}/pae',                    [PaeController::class, 'index']);
-        Route::get('{codigoEdital}/pae/create',             [PaeController::class, 'create']);
-        Route::post('{codigoEdital}/pae',                   [PaeController::class, 'store']);
+        Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);
+        Route::get('{codigoEdital}/pae/create',                         [PaeController::class, 'create']);
+        Route::post('{codigoEdital}/pae',                               [PaeController::class, 'store']);
         Route::get('{codigoInscricao}/pae/{codigoEdital}/visualizar',   [PaeController::class, 'visualizar']);
         Route::get('{codigoEdital}/pae/finalizar',                      [PaeController::class, 'finalizar']);
-        Route::post('{codigoEdital}/pae/finalizar/store',   [PaeController::class, 'finalizar_store']);
-        Route::get('{codigoEdital}/pae/comprovante',        [PaeController::class, 'comprovante']);
-
+        Route::post('{codigoEdital}/pae/finalizar/store',               [PaeController::class, 'finalizar_store']);
+        Route::get('{codigoEdital}/pae/comprovante',                    [PaeController::class, 'comprovante']);
+        Route::get('{codigoEdital}/pae/reenviar',                       [PaeController::class, 'reenviar']);
         /* PAE - Documentacao */
         Route::get('{codigoEdital}/pae/documentacao/',                              [DocumentacaoController::class, 'index']);
         Route::get('{codigoEdital}/pae/documentacao/create',                        [DocumentacaoController::class, 'create']);

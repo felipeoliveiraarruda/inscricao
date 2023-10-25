@@ -40,7 +40,7 @@ class TipoDocumento extends Model
 
     public static function listarTipoDocumentosPessoal()
     {
-        $tipos = TipoDocumento::whereIn('codigoTipoDocumento', [1,2,3,4,26])->get();
+        $tipos = TipoDocumento::whereIn('codigoTipoDocumento', [1,2,3,4,27])->get();
 
         return $tipos;                  
     }

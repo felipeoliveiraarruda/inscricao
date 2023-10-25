@@ -6,7 +6,6 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="list-group">
-                <a href="inscricao/{{$inscricao->codigoEdital}}/pae/desempenho" class="list-group-item list-group-item-action ">Desempenho Acadêmico</a>
                 <a href="admin/listar-inscritos/{{$inscricao->codigoEdital}}" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>

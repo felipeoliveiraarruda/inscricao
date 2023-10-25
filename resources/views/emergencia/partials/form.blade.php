@@ -11,7 +11,7 @@
     </div>
 </div> 
 
-@if (empty($codigoInscricaoEndereco) || empty($codigoEmergencia))
+@if (empty($codigoInscricaoEndereco))
 <div class="form-group">  
     <div class="form-row">
         <div class="col-2">  
@@ -97,5 +97,5 @@
 @endif
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
-<input type="hidden" name="codigoInscricaoEndereco" value="{{ $emergencia->codigoInscricaoEndereco}}">
+<input type="hidden" name="codigoInscricaoEndereco" value="{{ $codigoInscricaoEndereco}}">
 <input type="hidden" name="codigoEndereco" value="{{ $emergencia->codigoEndereco }}">

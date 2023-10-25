@@ -141,7 +141,7 @@ class PaeController extends Controller
         $temp->codigoPessoaAlteracao = Auth::user()->codpes;
         $temp->save();
 
-        Mail::to(Auth::user()->email)->send(new EnviarPaeMail($request->codigoEdital));
+        Mail::to(Auth::user()->email)->cc('pae@eel.usp.br')->send(new EnviarPaeMail($request->codigoEdital));
         
         if (Mail::failures()) 
         {
@@ -153,6 +153,46 @@ class PaeController extends Controller
         } 
 
         return redirect("dashboard");
+    }
+
+    public function reenviar($codigoEdital)
+    {
+        $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                           ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                           ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                           ->where('editais.codigoEdital', $codigoEdital)
+                           ->where('inscricoes.statusInscricao','C')->get();
+                                            
+        foreach($inscritos as $inscricao)                           
+        {
+            $pdf = new Fpdf();
+
+            $pdf->AddPage();
+            $pdf->SetFillColor(190,190,190);
+            $pdf->Image(asset('images/cabecalho/pae.png'), 10, 10, 190);
+            $pdf->Ln(40);
+    
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(190, 8, utf8_decode("COMPROVANTE DE INSCRIÇÃO Nº {$inscricao->numeroInscricao}"), 1, 0, 'C', true);
+            $pdf->Ln();        
+            $pdf->Cell(190, 2, '', 0,  0, 'C', false);
+            $pdf->Ln();   
+            $pdf->Output('F', public_path("pae/comprovante/{$inscricao->numeroInscricao}.pdf"));
+
+            exit;
+
+            Mail::to('pae@eel.usp.br')->send(new EnviarPaeMail($codigoEdital, $inscricao->id));
+
+            if (Mail::failures()) 
+            {
+                echo 'Erro';
+                exit;
+            }
+            else
+            {
+                echo "Inscrição {$inscricao->numeroInscricao} enviada com sucesso.<br/>";
+            }
+        }
     }
     
     public function comprovante($codigoEdital)

@@ -113,7 +113,7 @@ class InscricaoController extends Controller
         $arquivos = '';
 
         $inscricao = Inscricao::obterDadosPessoaisInscricao(Auth::user()->id, $codigoInscricao);
-        $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 26), $codigoInscricao);
+        $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 27), $codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
     
