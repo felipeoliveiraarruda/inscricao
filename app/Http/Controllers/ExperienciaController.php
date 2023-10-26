@@ -45,21 +45,36 @@ class ExperienciaController extends Controller
     {
         $temp = '';
         
-        $voltar = ($request->codigoTipoExperiencia == 2 ? '/profissional' : '/ensino');
+        $voltar             = ($request->codigoTipoExperiencia == 2 ? '/profissional' : '/ensino');
         $inscricaoExperiencia = true;
         
         \DB::beginTransaction();
 
-        $profissional = Experiencia::create([
-            'codigoUsuario'         => Auth::user()->id,
-            'codigoTipoExperiencia' => $request->codigoTipoExperiencia,            
-            'codigoTipoEntidade'    => $request->codigoTipoEntidade,
-            'entidadeExperiencia'   => $request->entidadeExperiencia,
-            'posicaoExperiencia'    => $request->posicaoExperiencia,
-            'inicioExperiencia'     => $request->inicioExperiencia,
-            'finalExperiencia'      => $request->finalExperiencia,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);
+        if ($request->codigoTipoExperiencia == 2)
+        {   
+            $profissional = Experiencia::create([
+                'codigoUsuario'         => Auth::user()->id,
+                'codigoTipoExperiencia' => $request->codigoTipoExperiencia,            
+                'entidadeExperiencia'   => $request->entidadeExperiencia,
+                'posicaoExperiencia'    => $request->posicaoExperiencia,
+                'inicioExperiencia'     => $request->inicioExperiencia,
+                'finalExperiencia'      => $request->finalExperiencia,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+        }
+        else
+        {
+            $profissional = Experiencia::create([
+                'codigoUsuario'         => Auth::user()->id,
+                'codigoTipoExperiencia' => $request->codigoTipoExperiencia,            
+                'codigoTipoEntidade'    => $request->codigoTipoEntidade,
+                'entidadeExperiencia'   => $request->entidadeExperiencia,
+                'posicaoExperiencia'    => $request->posicaoExperiencia,
+                'inicioExperiencia'     => $request->inicioExperiencia,
+                'finalExperiencia'      => $request->finalExperiencia,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+        }
 
         if(!empty($request->codigoInscricao))
         {

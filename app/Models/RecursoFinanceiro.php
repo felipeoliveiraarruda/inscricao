@@ -23,6 +23,7 @@ class RecursoFinanceiro extends Model
         'bolsaRecursoFinanceiro',
         'solicitarRecursoFinanceiro',
         'orgaoRecursoFinanceiro',
+        'tipoBolsaFinanceiro',
         'inicioRecursoFinanceiro',
         'finalRecursoFinanceiro',
         'codigoPessoaAlteracao',

@@ -50,14 +50,16 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Órgão Financiador</th>
+                                                        <th scope="col">Tipo de Bolsa</th>
                                                         <th scope="col">Início</th>
                                                         <th scope="col">Final</th>
                                                     </tr>
                                                 </thead>                             
                                                 <tr>
                                                     <td>{{ $financeiros->orgaoRecursoFinanceiro }}</td>
-                                                    <td>{{ $financeiros->inicioRecursoFinanceiro }}</td>
-                                                    <td>{{ $financeiros->finalRecursoFinanceiro }}</td>
+                                                    <td>{{ $financeiros->tipoBolsaFinanceiro }}</td>
+                                                    <td>{{ $financeiros->inicioRecursoFinanceiro->format('d/m/Y') }}</td>
+                                                    <td>{{ $financeiros->finalRecursoFinanceiro->format('d/m/Y') }}</td>
                                                 </tr>                                                
                                             </table>
                                         @endif

@@ -164,7 +164,12 @@
         $("#formEnviar").on("submit", function()
         {
           $('#finalizarModal').modal('hide');
-          $('#loaderModal').modal('show')
+          $('#loaderModal').modal('show');
+        });
+
+        $("#validarInscricao").click(function()
+        {
+          $('#loaderModal').modal('show');
         });
 
         $("#mesmoEndereco").click(function() 
@@ -189,6 +194,7 @@
             $("#dadosBolsa").show();
 
             $("#orgaoRecursoFinanceiro").prop('required',true);
+            $("#tipoBolsaFinanceiro").prop('required',true);
             $("#inicioRecursoFinanceiro").prop('required',true);
             $("#finalRecursoFinanceiro").prop('required',true);
           }
@@ -202,6 +208,7 @@
             $("#dadosBolsa").hide();
 
             $("#orgaoRecursoFinanceiro").prop('required',false);
+            $("#tipoBolsaFinanceiro").prop('required',false);
             $("#inicioRecursoFinanceiro").prop('required',false);
             $("#finalRecursoFinanceiro").prop('required',false);
           }

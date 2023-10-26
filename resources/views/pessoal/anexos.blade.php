@@ -34,7 +34,7 @@
                         </div>                           
                         
                         <div class="form-group">
-                            <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
+                            <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="image/jpeg,image/png,application/pdf">
                         </div>
 
                         <input type="hidden" name="linkVoltar"      value="{{ $link_voltar }}">

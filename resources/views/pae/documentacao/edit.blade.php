@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <label for="arquivo" class="font-weight-bold">Anexo</label>
                             <div class="form-group">
-                                <input type="file" class="form-control-file" id="arquivo" name="arquivo[{{ $arquivo->codigoArquivo }}]" data-show-upload="false" data-show-caption="true">
+                                <input type="file" class="form-control-file" id="arquivo" name="arquivo[{{ $arquivo->codigoArquivo }}]" data-show-upload="false" data-show-caption="true" accept="application/pdf">
                             </div>
                         </div>
 

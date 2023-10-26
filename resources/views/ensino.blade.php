@@ -54,8 +54,8 @@
                                             <td>{{ $ensino->entidadeExperiencia }}</td>
                                             <td>{{ $ensino->tipoEntidade }}</td>
                                             <td>{{ $ensino->posicaoExperiencia }}</td>
-                                            <td>{{ $ensino->inicioExperiencia }}</td>
-                                            <td>{{ $ensino->finalExperiencia }}</td>
+                                            <td>{{ $ensino->inicioExperiencia->format('d/m/Y') }}</td>
+                                            <td>{{ $ensino->finalExperiencia->format('d/m/Y') }}</td>
                                             <td></td>
                                         </tr>
                                         @endforeach

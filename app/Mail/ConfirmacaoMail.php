@@ -25,17 +25,20 @@ class ConfirmacaoMail extends Mailable
 
     public function build()
     {
-        $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->find($this->codigoInscricao);
-        $edital    = Edital::obterNumeroEdital($inscricao->codigoEdital, true);
+        $inscricao   = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->find($this->codigoInscricao);
+        $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
+        $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital, true);
 
-        return $this->subject("[INSCRIÇÃO EEL/USP] - CONFIRMAÇÃO DE INSCRIÇÃO {$edital['sigla']} - {$edital['edital']}")
-                    ->replyTo('ppgpe@eel.usp.br', 'PPGPE EEL/USP')
+
+        return $this->subject("[INSCRIÇÃO EEL/USP] - CONFIRMAÇÃO DE INSCRIÇÃO {$sigla} - {$anosemestre}")
+                    ->replyTo($edital->email, "{$sigla} EEL/USP")
                     ->view('emails.confirmacao')
                     ->with([
                         'nome'      => $inscricao->name,
                         'inscricao' => $inscricao->numeroInscricao,
-                        'edital'    => $edital['edital'],
-                        'sigla'     => $edital['sigla']
+                        'edital'    => $anosemestre,
+                        'sigla'     => $sigla
                     ]);
     }
 }

@@ -49,6 +49,7 @@ class RecursoFinanceiroController extends Controller
             'bolsaRecursoFinanceiro'        => $request->inlineBolsa,
             'solicitarRecursoFinanceiro'    => $request->inlineSolicitar,
             'orgaoRecursoFinanceiro'        => $request->orgaoRecursoFinanceiro,
+            'tipoBolsaFinanceiro'           => $request->tipoBolsaFinanceiro,
             'inicioRecursoFinanceiro'       => $request->inicioRecursoFinanceiro,
             'finalRecursoFinanceiro'        => $request->finalRecursoFinanceiro,
             'codigoPessoaAlteracao'         => Auth::user()->codpes,

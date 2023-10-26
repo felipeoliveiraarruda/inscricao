@@ -33,6 +33,11 @@
     </div>
 
     <div class="form-group">  
+        <label for="tipoBolsaFinanceiro" class="font-weight-bold">Tipo de Bolsa<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="tipoBolsaFinanceiro" name="tipoBolsaFinanceiro" value="{{ old('tipoBolsaFinanceiro') ?? $financeiro->tipoBolsaFinanceiro ?? '' }}" maxlength="255" />
+    </div>
+
+    <div class="form-group">  
         <div class="form-row">
             <div class="col">
                 <label for="inicioRecursoFinanceiro" class="font-weight-bold">Início<span class="text-danger">*</span></label>

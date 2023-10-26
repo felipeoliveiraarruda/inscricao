@@ -39,8 +39,8 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($projeto->codigoArquivo))                                        
-                                        <a href="{{ asset('storage/'.$projeto->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                    @if (!empty($curriculo->codigoArquivo))                                        
+                                        <a href="{{ asset('storage/'.$curriculo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
                                             <i class="far fa-eye"></i> Visualizar
                                         </a>
                                     @endif                                       

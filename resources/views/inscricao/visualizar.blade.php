@@ -9,17 +9,55 @@
                 <h6 class="card-header">Documentos</h6>
 
                 <div class="card-body">
+                    @if ($inscricao->statusInscricao == 'P')
+                        <a href="inscricao/validar/{{ $codigoInscricao }}" id="validarInscricao" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
+                    @endif
+
+                    <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-block">Ficha de Inscrição</a>
+
                     @foreach($arquivos as $arquivo)
                         <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-block">{{ $arquivo->tipoDocumento }}</a>
                     @endforeach
 
-                    @if ($inscricao->situacaoInscricao == 'P')
-                        <a href="inscricao/validar/{{ $inscricao->codigoInscricao }}" target="_new" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
-                    @endif
-
-                    <a href="admin/classificados/{{ $inscricao->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
+                    <a href="admin/listar-inscritos/{{ $inscricao->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Voltar</a>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="loaderModal" tabindex="-1" aria-labelledby="loaderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">		
+                        <div class="modal-body text-justify">
+                            <div id="loader">
+                                <div class="spinner-grow text-primary" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-secondary" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-danger" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-warning" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-info" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-light" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                                <div class="spinner-grow text-dark" role="status">
+                                    <span class="sr-only"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
             
         </div>        
         <div class="col-md-9">
@@ -62,14 +100,12 @@
                                 <th scope="row">Cidade/UF</th>
                                 <th scope="row">CEP</th>
                             </tr>
-                            @foreach($enderecos as $endereco)
                             <tr>
                                 <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->complementoEndereco }}</td>
                                 <td>{{ $endereco->bairroEndereco }}</td>
                                 <td>{{ $endereco->localidadeEndereco }}/{{ $endereco->ufEndereco }}</td>
                                 <td>{{ $endereco->cepEndereco }}</td>
-                            </tr>                            
-                            @endforeach
+                            </tr>
                         </tbody>
                     </table>                    
                 </div>

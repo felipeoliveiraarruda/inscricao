@@ -37,7 +37,7 @@
                         <div class="form-group">
                             <label for="codigoTipoDocumento" class="font-weight-bold">Anexos <span class="text-danger">*</span></label>
                             <div class="form-group">
-                                <input type="file" class="form-control-file" id="arquivo" name="arquivo[]" required data-show-upload="false" data-show-caption="true" multiple>
+                                <input type="file" class="form-control-file" id="arquivo" name="arquivo[]" required data-show-upload="false" data-show-caption="true" multiple accept="application/pdf">
                             </div>
                            <small id="arquivoHelp" class="form-text text-muted">Selecione a quantidade de documentos que deseja anexar a inscrição.<br/> O(s) arquivo(s) deverá(am) estar no formato PDF.</small>
                         </div>

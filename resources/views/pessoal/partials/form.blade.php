@@ -8,9 +8,13 @@
             <label for="email" class="font-weight-bold">{{ __('Email') }}<span class="text-danger">*</span></label>
             <input type="email" class="form-control" id="email" name="email" value="{{ old('email') ?? Auth::user()->email }}" required>
         </div>   
+        <div class="col">                            
+            <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('telefone') }}" required>
+        </div>
         <div class="col">
             <label for="dataNascimentoPessoal" class="font-weight-bold">{{ __('Data de Nascimento') }}<span class="text-danger">*</span></label>
-            <input type="date" class="form-control" id="dataNascimentoPessoal" name="dataNascimentoPessoal" value="{{ old('dataNascimentoPessoal') ?? $pessoais->dataNascimentoPessoal ?? '' }}" required>
+            <input type="date" class="form-control" id="dataNascimentoPessoal" name="dataNascimentoPessoal" value="{{ old('dataNascimentoPessoal') ?? $pessoais->dataNascimentoPessoal->format('Y-m-d') ?? '' }}" required>
         </div>          
     </div>
 </div> 

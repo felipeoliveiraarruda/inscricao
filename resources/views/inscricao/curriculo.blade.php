@@ -35,7 +35,7 @@
                         </div>                           
                         
                         <div class="form-group">
-                            <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
+                            <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="application/pdf">
                         </div>
 
                         <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        

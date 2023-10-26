@@ -64,7 +64,6 @@
                                                 <th scope="col">Logradrouro</th>
                                                 <th scope="col">Cidade/Uf</th>
                                                 <th scope="col">CEP</th>
-                                                <th scope="col"></th>
                                             </tr>
                                         </thead>                                
                                         <tr>

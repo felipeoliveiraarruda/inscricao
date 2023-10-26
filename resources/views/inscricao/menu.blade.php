@@ -38,4 +38,8 @@
         <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
     @endif
+
+    @if(!empty($codigoEdital))
+     <a href="inscricao/{{ $codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
+    @endif
 </div>

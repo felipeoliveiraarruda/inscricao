@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Edital;
 use App\Models\Inscricao;
 use App\Models\Utils;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -28,12 +29,14 @@ class EnviarPaeMail extends Mailable
     {
         $inscricao   = Inscricao::obterInscricaoPae($this->codigoUsuario, $this->codigoEdital);
         $anosemestre = Edital::obterSemestreAno($this->codigoEdital);
+        $user        = User::find($this->codigoUsuario);
 
         return $this->replyTo('pae@eel.usp.br')
                     ->subject("[PAE] Processo Seletivo - $anosemestre")
                     ->view('emails.pae.enviar')
+                    ->attach(storage_path("app/public/pae/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"))
                     ->with([
-                        'nome'         => Auth::user()->name,
+                        'nome'         => $user->name,
                         'inscricao'    => $inscricao->numeroInscricao,
                         'anosemestre'  => $anosemestre,
                         'codigoEdital' => $this->codigoEdital,

@@ -52,11 +52,10 @@ class Inscricao extends Model
         return $total;
     }
 
-    public static function obterStatusInscricao($codigoEdital, $user_id)
+    public static function obterStatusInscricao($codigoInscricao)
     {
-        $inscricao = Inscricao::select('statusInscricao')->where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->first();
-        //return 
-
+        $inscricao = Inscricao::select('statusInscricao')->where('codigoInscricao', $codigoInscricao)->first();
+    
         if (empty($inscricao))
         {
             return '';
@@ -86,17 +85,16 @@ class Inscricao extends Model
         return $inscricao->codigoEdital;                              
     }
 
-    public static function obterDadosPessoaisInscricao($user_id, $codigoInscricao)
-    {
-        $pessoal = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
-                                ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                                ->leftjoin('pessoais', 'users.id', '=', 'pessoais.codigoUsuario')
+    public static function obterDadosPessoaisInscricao($codigoInscricao)
+    {        
+        $pessoal = DadosPessoais::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.numeroInscricao, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
+                                ->leftjoin('users', 'users.id', '=', 'pessoais.codigoUsuario')
                                 ->leftJoin('documentos', 'users.id', '=', 'documentos.codigoUsuario')
                                 ->leftJoin('inscricoes_pessoais', 'inscricoes_pessoais.codigoPessoal', '=', 'pessoais.codigoPessoal')
-                                ->leftJoin('inscricoes_documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')
-                                ->where('users.id', $user_id)
+                                ->leftJoin('inscricoes_documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')    
+                                ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                ->first();                              
+                                ->first();                 
         return $pessoal;                                 
     }
 
@@ -111,150 +109,152 @@ class Inscricao extends Model
         return $pae;
     }
 
-    public static function obterEnderecoInscricao($user_id, $codigoInscricao)
+    public static function obterEnderecoInscricao($codigoInscricao)
     {
-        $endereco = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco, inscricoes_enderecos.codigoInscricaoEndereco'))
-                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                        ->leftjoin('enderecos', 'users.id', '=', 'enderecos.codigoUsuario')                                
-                        ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
-                        ->where('users.id', $user_id)
-                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                        ->first();                              
+        $endereco = Endereco::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco, inscricoes_enderecos.codigoInscricaoEndereco'))
+                            ->leftjoin('users', 'users.id', '=', 'enderecos.codigoUsuario')                           
+                            ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
+                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->first();                         
         return $endereco;                                 
     }
 
-    public static function obterEmergenciaInscricao($user_id, $codigoInscricao)
+    public static function obterEmergenciaInscricao($codigoInscricao)
     {
-        $emergencia = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco'))
-                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                          ->leftjoin('emergencias', 'users.id', '=', 'emergencias.codigoUsuario')                                
+        $emergencia = Emergencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco'))
+                          ->leftjoin('users', 'users.id', '=', 'emergencias.codigoUsuario')                                
                           ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEmergencia', '=', 'emergencias.codigoEmergencia')
                           ->leftjoin('enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')   
-                          ->where('users.id', $user_id)
+                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
                           ->first();                                               
         return $emergencia;                                 
     }
     
-    public static function obterEscolarInscricao($user_id, $codigoInscricao, $codigoResumoEscolar = '')
+    public static function obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar = '')
     {
         if(empty($codigoResumoEscolar))
         {
-            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
-                           ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                           ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
+            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
+                           ->leftjoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
                            ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
-                           ->where('users.id', $user_id)
+                           ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
                            ->get();
         }
         else
         {
-            $escolar = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
-                           ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                           ->leftjoin('resumo_escolar', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
-                           ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
-                           ->where('users.id', $user_id)
-                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                           ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
-                           ->first();
+            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
+                                    ->leftjoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
+                                    ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
+                                    ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
+                                    ->first();
         }
 
         return $escolar;                                 
     }
 
-    public static function obterIdiomaInscricao($user_id, $codigoInscricao)
+    public static function obterIdiomaInscricao($codigoInscricao)
     {
-        $idioma = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
-                      ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                      ->leftjoin('idiomas', 'users.id', '=', 'idiomas.codigoUsuario')                                
-                      ->leftJoin('inscricoes_idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
-                      ->where('users.id', $user_id)
-                      ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                      ->get();                                               
+        $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
+                        ->leftjoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                                
+                        ->leftJoin('inscricoes_idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
+                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                        ->get();                                               
         return $idioma;                                 
     }
     
-    public static function obterProfissionalInscricao($user_id, $codigoInscricao)
+    public static function obterProfissionalInscricao($codigoInscricao)
     {
-        $profissional = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))
-                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                            
-                            ->leftJoin('experiencias', function($join)
-                            {
-                                $join->on('users.id', '=', 'experiencias.codigoUsuario');
-                                $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
-                            })                          
-                            ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
-                            ->where('users.id', $user_id)
-                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                            ->get();
+        $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
+                                   ->leftJoin('users', function($join)
+                                   {
+                                       $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                       $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
+                                   })                          
+                                   ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
+                                   ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')    
+                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                   ->get();
 
         return $profissional;                                 
     }
     
-    public static function obterEnsinoInscricao($user_id, $codigoInscricao)
+    public static function obterEnsinoInscricao($codigoInscricao)
     {
-        $ensino = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia, tipo_entidade.*'))
-                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                            
-                        ->leftJoin('experiencias', function($join)
-                        {
-                            $join->on('users.id', '=', 'experiencias.codigoUsuario');
-                            $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
-                        })                          
-                        ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
-                        ->join('tipo_entidade', 'tipo_entidade.codigoTipoEntidade', '=', 'experiencias.codigoTipoEntidade')
-                        ->where('users.id', $user_id)
-                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                        ->get();                                               
+        $ensino = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia, tipo_entidade.*'))
+                            ->leftJoin('users', function($join)
+                            {
+                                $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
+                            })                          
+                            ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
+                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')  
+                            ->join('tipo_entidade', 'tipo_entidade.codigoTipoEntidade', '=', 'experiencias.codigoTipoEntidade')  
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->get();                                             
         return $ensino;                                 
     }   
     
-    public static function obterFinanceiroInscricao($user_id, $codigoInscricao)
+    public static function obterFinanceiroInscricao($codigoInscricao)
     {
-        $financeiro = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))
-                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                            ->leftjoin('recursos_financeiros', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                                
-                            ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoRecursoFinanceiro', '=', 'recursos_financeiros.codigoRecursoFinanceiro')
-                            ->where('users.id', $user_id)
-                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                            ->first();                                              
+        $financeiro = RecursoFinanceiro::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))
+                                       ->leftjoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                                
+                                       ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoRecursoFinanceiro', '=', 'recursos_financeiros.codigoRecursoFinanceiro')
+                                       ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                       ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                       ->first();                                              
         return $financeiro;                                 
     }    
 
-    public static function obterExpectativaInscricao($user_id, $codigoInscricao)
+    public static function obterExpectativaInscricao($codigoInscricao)
     {
-        $expectativas = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao'))
-                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                          ->where('users.id', $user_id)
-                          ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                          ->first(); 
+        $expectativas = Inscricao::select('inscricoes.codigoEdital', 'inscricoes.statusInscricao', 'inscricoes.expectativasInscricao')
+                                 ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                 ->first(); 
 
         return $expectativas;                                 
     } 
     
-    public static function obterCurriculoInscricao($user_id, $codigoInscricao)
+    public static function obterCurriculoInscricao($codigoInscricao)
     {
-        $curriculo = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
-                         ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                         ->leftjoin('arquivos', 'users.id', '=', 'arquivos.codigoUsuario')                                
-                         ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
-                         ->where('users.id', $user_id)
-                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                         ->whereIn('arquivos.codigoTipoDocumento', [8,9])
-                         ->first(); 
+        $curriculo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                            ->leftjoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                            ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                            ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', [8,9])
+                            ->first(); 
         return $curriculo;                                 
     }
 
-    public static function obterProjetoInscricao($user_id, $codigoInscricao)
+    public static function obterProjetoInscricao($codigoInscricao)
     {
-        $projeto = User::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
-                         ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                         ->leftjoin('arquivos', 'users.id', '=', 'arquivos.codigoUsuario')                                
-                         ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
-                         ->where('users.id', $user_id)
-                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                         ->whereIn('arquivos.codigoTipoDocumento', [10])
-                         ->first(); 
+        $projeto = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                          ->leftjoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                          ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                          ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                          ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                          ->whereIn('arquivos.codigoTipoDocumento', [10])
+                          ->first(); 
         return $projeto;                                 
-    }   
+    } 
+    
+    public static function obterFotoInscricao($codigoInscricao)
+    {        
+        $foto = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                                   ->leftjoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                                   ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                                   ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                   ->whereIn('arquivos.codigoTipoDocumento', [27])
+                                   ->first(); 
+        return $foto;                                   
+    }
 }

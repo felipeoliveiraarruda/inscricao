@@ -57,8 +57,8 @@
                                         <tr>
                                             <td>{{ $escolar->escolaResumoEscolar }}</td>
                                             <td>{{ $escolar->especialidadeResumoEscolar }}</td>
-                                            <td>{{ $escolar->inicioResumoEscolar }}</td>
-                                            <td>{{ $escolar->finalResumoEscolar }}</td>
+                                            <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
+                                            <td>{{ $escolar->finalResumoEscolar->format('d/m/Y') }}</td>
                                             <td>
                                                 <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" title="Histórico">
                                                     <i class="fas fa-user-graduate"></i>

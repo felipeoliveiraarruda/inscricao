@@ -54,7 +54,7 @@ class Utils extends Model
         return $temp[0];
     }
 
-    public static function obterSiglCurso($codcur)
+    public static function obterSiglaCurso($codcur)
     {
         switch ($codcur) 
         {
@@ -197,6 +197,21 @@ class Utils extends Model
         return $response->json();
     }
 
+    public static function obterLocalidade($codloc)
+    {
+        $link = env('URL_API_EEL')."/comum/localidade/obter";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codloc' => $codloc
+        ]);
+
+        return $response[0];
+    }
+
     public static function setSession($id)
     {
         $level = User::obterLevel($id);
@@ -209,7 +224,7 @@ class Utils extends Model
     public static function obterTotalInscricao($codigoInscricao)
     {        
         $total = array();
-        $expectativas = Inscricao::obterExpectativaInscricao(Auth::user()->id, $codigoInscricao);
+        $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
         $curriculo    = Inscricao::obterCurriculoInscricao(Auth::user()->id, $codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
 

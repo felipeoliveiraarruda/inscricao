@@ -57,7 +57,7 @@ class Edital extends Model
         if ($curso)
         {
             $retorno = array();
-            $sigla = Utils::obterSiglCurso($edital->codigoCurso);
+            $sigla = Utils::obterSiglaCurso($edital->codigoCurso);
             $retorno['sigla']  = $sigla;
             $retorno['edital'] = "{$semestre}/{$ano}";
 
@@ -77,10 +77,18 @@ class Edital extends Model
         return $nivel->siglaNivel;
     }
 
-    public static function obterSemestreAno($codigoEdital)
+    public static function obterSemestreAno($codigoEdital, $curso = false)
     {
-        $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS Semestre'))
+        $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
                        ->where('codigoEdital', $codigoEdital)->first();
-        return "{$edital->ano}{$edital->Semestre}";
+
+        if ($curso)
+        {
+            return "{$edital->semestre}/{$edital->ano}";
+        }
+        else
+        {
+            return "{$edital->ano}{$edital->semestre}";
+        }
     }
 }

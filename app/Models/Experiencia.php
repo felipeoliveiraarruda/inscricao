@@ -29,6 +29,11 @@ class Experiencia extends Model
         'codigoPessoaAlteracao',
     ];
 
+    protected $casts = [
+        'inicioExperiencia' => 'date:d/m/Y',
+        'finalExperiencia' => 'date:d/m/Y',
+    ];
+
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);

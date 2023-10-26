@@ -27,7 +27,7 @@
         <div class="col">
             <label for="codigoTipoDocumento" class="font-weight-bold">Histórico Escolar <span class="text-danger">*</span></label>
             <div class="form-group">
-                <input type="file" class="form-control-file" id="historicoEscolar" name="historicoEscolar" required data-show-upload="false" data-show-caption="true">
+                <input type="file" class="form-control-file" id="historicoEscolar" name="historicoEscolar" required data-show-upload="false" data-show-caption="true" accept="image/jpeg,image/png,application/pdf">
             </div>
            <small id="arquivoHelp" class="form-text text-muted">Cópia digital do Histórico Escolar da Graduação conforme item 3.1.7 do edital no formato PDF</small>
         </div>
@@ -45,7 +45,7 @@
                     <label class="form-check-label" for="inlineRadio2">Certificado de Conclusão</label>
                 </div>
 
-                <input type="file" class="form-control-file mt-2" id="diplomaEscolar" name="diplomaEscolar" data-show-upload="false" data-show-caption="true">
+                <input type="file" class="form-control-file mt-2" id="diplomaEscolar" name="diplomaEscolar" data-show-upload="false" data-show-caption="true" accept="application/pdf">
             </div>
             <small id="arquivoHelp" class="form-text text-muted">Cópia digital (frente/verso) do Diploma ou Declaração de Conclusão do curso de graduação, contendo a data de colação de grau, conforme item 3.1.7 do edital no formato PDF</small>
         </div>

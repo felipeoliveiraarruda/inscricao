@@ -51,7 +51,8 @@ class AdminController extends Controller
     {  
         if(isset($request->search)) 
         {
-            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+            $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                               ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
                                ->where('editais.codigoEdital', $id)
@@ -61,19 +62,16 @@ class AdminController extends Controller
         } 
         else 
         {
-            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+            $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                               ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
                                ->where('editais.codigoEdital', $id)->paginate(10);
         }
 
-        $editais = Edital::where('codigoEdital', $id)->get();
-        
-        foreach($editais as $edital)
-        {
-            $curso = Utils::obterCurso($edital->codigoCurso);
-        }
-        
+        $editais = Edital::where('codigoEdital', $id)->first();
+        $curso = Utils::obterCurso($editais->codigoCurso);
+                
         return view('admin.listar',
         [
             'id'        => $id,
