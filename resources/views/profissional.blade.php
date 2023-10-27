@@ -10,7 +10,9 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Experiência Profissional
+                    @if ($status == 'N')
                     <a href="inscricao/{{ $codigoInscricao }}/profissional/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                    @endif
                 </h5>
 
                 <div class="card-body">                    

@@ -58,8 +58,7 @@ class Arquivo extends Model
         $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                            ->where('codigoInscricao',       $codigoInscricao)
                            ->whereIn('codigoTipoDocumento', $codigoTipoDocumento)
-                           ->count();
-
+                           ->count();                
         return $arquivos;                  
     }
     

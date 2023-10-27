@@ -58,18 +58,20 @@
                                                     <i class="fa fa-check text-success"></i>
                                                 @else
                                                     <i class="fa fa-times text-danger"></i>
-                                                @endif                                                
+                                                @endif
                                             </td>                                            
                                             <td class="text-center">
+                                                @if ($status == 'N')
                                                 <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Editar">
                                                     Atualizar
-                                                </a>                                               
+                                                </a>  
+                                                @endif                                             
                                             </td>
                                         </tr>
                                     </table>
 
                                     <div class="card bg-default">
-                                        <h5 class="card-header">Anexo(s) <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a></h5>
+                                        <h5 class="card-header">Anexo(s) @if ($status == 'N') <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a> @endif</h5>
                                         <div class="card-body">
                                             @if (count($arquivos) == 0)
                                                 <div class="alert alert-warning">Nenhum documento cadastrado</div>                    
@@ -101,9 +103,9 @@
                                                                 <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
                                                                     <i class="far fa-eye"></i>
                                                                 </a>
-                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/editar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Alterar">
+                                                                <!--<a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Alterar">
                                                                     <i class="fa fa-wrench"></i>
-                                                                </a>                                                              
+                                                                </a>-->                                                              
                                                             </td>
                                                         </tr>
                                                     @endforeach                   

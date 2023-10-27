@@ -135,6 +135,9 @@ Route::middleware(['auth','verified'])->group(function ()
     /* Recursos Financeiros */
     Route::post('financeiro/',                          [RecursoFinanceiroController::class, 'store']);
     Route::patch('financeiro/{codigoRecursoFianceiro}', [RecursoFinanceiroController::class, 'update']);
+
+    /* Arquivos */
+    Route::get('arquivo/{$codigoArquivo}/edit/{codigoInscricao?}',  [ArquivoController::class, 'edit']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

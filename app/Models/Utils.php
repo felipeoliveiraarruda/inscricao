@@ -225,7 +225,7 @@ class Utils extends Model
     {        
         $total = array();
         $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-        $curriculo    = Inscricao::obterCurriculoInscricao(Auth::user()->id, $codigoInscricao);
+        $curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
 
         $total['pessoal']       = InscricoesPessoais::obterTotal($codigoInscricao);

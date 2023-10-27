@@ -80,12 +80,12 @@ class ArquivoController extends Controller
         return redirect("/inscricao/{$request->codigoInscricao}/documento");
     }
 
-    public function edit($id, $inscricao = '')
+    public function edit($codigoArquivo, $codigoInscricao = '')
     {
-        if (!empty($inscricao))
+        if (!empty($codigoInscricao))
         {
             //$temp = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $inscricao)->first();
-            $voltar = "pessoal/novo/{$inscricao}";
+            $voltar = "inscricao/{$codigoInscricao}/pessoal";
         }
         else
         {
@@ -94,13 +94,13 @@ class ArquivoController extends Controller
 
         $tipos = TipoDocumento::all();
 
-        $arquivo = Arquivo::find($id);
+        $arquivo = Arquivo::find($codigoArquivo);
 
         return view('arquivo.edit',
         [
             'arquivo'         => $arquivo,
             'tipos'           => $tipos, 
-            'codigoInscricao' => $inscricao,
+            'codigoInscricao' => $codigoInscricao,
             'link_voltar'     => $voltar, 
         ]);
 
