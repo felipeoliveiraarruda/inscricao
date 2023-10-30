@@ -215,6 +215,47 @@
         });
 
         $('[data-toggle="tooltip"]').tooltip();
+
+        $('select[name^="aceitarDocumento"]').change(function() {
+
+          var valor = $(this).val();
+          var indice = valor.split("|");
+
+          var documento     = 'select[name^="tipoDocumentoAnalise['+indice[1]+']"]';
+          var justificativa = 'input[name^="justificativaAnalise['+indice[1]+']"';
+          var pontuacao     = 'input[name^="pontuacaoAnalise['+indice[1]+']"';
+
+          if (indice[0] == 'N')
+          {    
+            $(documento).prop('required', true);
+            $(documento).prop('disabled', false);
+
+            $(justificativa).prop('required', true);
+            $(justificativa).prop('disabled', false);
+
+            $(pontuacao).val('1');
+          }
+          else if (indice[0] == 'S')
+          {
+            $(documento).prop('required', false);
+            $(documento).prop('disabled', true);
+
+            $(justificativa).prop('required', false);
+            $(justificativa).prop('disabled', true);
+
+            $(pontuacao).val('1');
+          }
+          else if (indice[0] == 'R')
+          {
+            $(documento).prop('required', false);
+            $(documento).prop('disabled', true);
+
+            //$(justificativa).prop('required', true);
+            $(justificativa).prop('disabled', false);
+
+            $(pontuacao).val('0');
+          }
+        });
     })  
 
     /*tinymce.init({

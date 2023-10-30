@@ -20,7 +20,7 @@ class DesempenhoController extends Controller
 {
     public function index($codigoPae)
     {
-        if ((session('level') != 'admin') && (session('level') != 'manager'))
+        if ((session('level') != 'manager') && (session('level') != 'admin') )
         {
             return redirect("/");
         }

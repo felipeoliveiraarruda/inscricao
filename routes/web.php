@@ -96,6 +96,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('{codigoEdital}/pae/finalizar/store',               [PaeController::class, 'finalizar_store']);
         Route::get('{codigoEdital}/pae/comprovante',                    [PaeController::class, 'comprovante']);
         Route::get('{codigoEdital}/pae/reenviar',                       [PaeController::class, 'reenviar']);
+        
         /* PAE - Documentacao */
         Route::get('{codigoEdital}/pae/documentacao/',                              [DocumentacaoController::class, 'index']);
         Route::get('{codigoEdital}/pae/documentacao/create',                        [DocumentacaoController::class, 'create']);

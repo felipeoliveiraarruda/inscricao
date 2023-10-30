@@ -24,4 +24,16 @@ class TipoAnalise extends Model
         'statusTipoAnalise',
         'codigoPessoaAlteracao',
     ];
+
+    public function obterTipoAnaliseNome($tipoAnalise)
+    {
+        $tipo = TipoAnalise::where('tipoAnalise', $tipoAnalise)->first();
+        return $tipo;
+    }
+
+    public function obterTipoAnaliseCodigoDocumento($codigoTipoDocumento)
+    {
+        $tipo = TipoAnalise::where('codigoTipoDocumento', $codigoTipoDocumento)->first();
+        return $tipo;
+    }
 }

@@ -26,26 +26,52 @@
                                 <th scope="col">Nome</th>
                                 <th scope="col">Nº USP</th>
                                 <th scope="col">Programa</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tr>
                             <td>{{ $inscricao->name }}</td>
                             <td>{{ $inscricao->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
+                            <td>
+                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
+                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
+                            </td>
                         </tr>
                     </table>
             
-                    <form class="needs-validation" novalidate method="POST" action="admin/{{ $codigoPae }}/pae/analise">
-                        @csrf
-                        
-                        @if ($editar)
-                            @method('patch')
-                        @endif
-                        
-                        @include('pae.partials.form_analise')                        
-                        
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Inserir</button>
-                    </form>
+                    @if (count($arquivos) > 0)
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Item(ns) Cadastrado(s)</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Pontuação</th>
+                                <th scope="col">Nota</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        @foreach($arquivos as $arquivo)
+                            @php            
+                                $total     = \App\Models\Arquivo::listarArquivosPae($codigoPae, $arquivo->codigoTipoDocumento, true);
+                                $avaliacao = \App\Models\PAE\Avaliacao::obterAvaliacao($codigoPae, $arquivo->codigoTipoDocumento);
+                            @endphp
+                        <tbody>
+                            <tr>
+                                <td>{{ $arquivo->tipoDocumento }}</td>
+                                <td>{{ $total }}</td>
+                                <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
+                                <td>{{ $avaliacao->totalAvaliacao ?? '' }}</td>
+                                <td>
+                                    <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
+                                        <i class="fas fa-tasks"></i>
+                                    </a>       
+                                </td>
+                            </tr>
+                        </tbody>
+                        @endforeach
+                    </table>
+                    @endif    
                 </div>
             </div>
         </div>

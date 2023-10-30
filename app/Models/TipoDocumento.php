@@ -50,4 +50,13 @@ class TipoDocumento extends Model
         $tipo = TipoDocumento::select('codigoTipoDocumento')->where('tipoDocumento', '=', $tipoDocumento)->first();
         return $tipo;    
     }
+
+    public static function listarTipoDocumentosAnalisePae()
+    {
+        $tipos = TipoDocumento::whereIn('codigoTipoDocumento', array(12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25))
+                              ->orderBy('tipo_documentos.tipoDocumento', 'asc')
+                              ->get();
+
+        return $tipos;                  
+    }
 }

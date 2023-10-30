@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\Utils;
 use App\Models\Arquivo;
 use App\Models\Inscricao;
 use App\Models\Edital;
+use App\Models\TipoDocumento;
 use App\Models\PAE\Conceito;
 use App\Models\PAE\Pae;
-use App\Models\PAE\TipoAnalise;
 use App\Models\PAE\AnaliseCurriculo;
+use App\Models\PAE\Avaliacao;
+use App\Models\PAE\TipoAnalise;
 use Uspdev\Replicado\Pessoa;
 use Uspdev\Replicado\Posgraduacao;
 
@@ -33,22 +37,25 @@ class AnaliseCurriculoController extends Controller
         }
 
         $inscricao   = Pae::obterPae($codigoPae);
-        $tipos       = TipoAnalise::where('statusTipoAnalise', '=', 'S')->get();
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
         $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
         $total       = AnaliseCurriculo::obterTotalAnalise($codigoPae);
-        $arquivos    = Arquivo::listarArquivosAnalisePae($inscricao->codigoPae);
+        $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
+        $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
+        $arquivos    = Arquivo::listarArquivosAnalisePae($codigoPae, true);
 
         return view('admin.pae.analise',
         [
             'utils'        => new Utils,
-            'tipos'        => $tipos,
             'codigoPae'    => $codigoPae,
             'codigoEdital' => $inscricao->codigoEdital,
             'editar'       => ($total == 0 ? false : true),
             'inscricao'    => $inscricao,
             'vinculo'      => $vinculo,
             'arquivos'     => $arquivos,
+            'ficha'        => $ficha[0],
+            'lattes'       => $lattes[0],
+            'nota'         => 0,
         ]);
     }
 
@@ -70,7 +77,46 @@ class AnaliseCurriculoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pontuacao = 0;
+
+        foreach($request->aceitarDocumento as $aceitarDocumento)
+        {
+            $temp = explode("|", $aceitarDocumento);
+            $statusAnaliseCurriculo = $temp[0];
+            $codigoArquivo          = $temp[1];
+
+            if (isset($request->tipoDocumentoAnalise[$codigoArquivo]))
+            {
+                $arquivo = Arquivo::find($codigoArquivo );
+                $arquivo->codigoTipoDocumento = $request->tipoDocumentoAnalise[$codigoArquivo];
+                $arquivo->save();
+            }
+            
+            $analise = AnaliseCurriculo::create([
+                'codigoPae'                     => $request->codigoPae,
+                'codigoArquivo'                 => $codigoArquivo,
+                'pontuacaoAnaliseCurriculo'     => $request->pontuacaoAnalise[$codigoArquivo],
+                'statusAnaliseCurriculo'        => $statusAnaliseCurriculo,
+                'justificativaAnaliseCurriculo' => (isset($request->justificativaAnalise[$codigoArquivo]) ? $request->justificativaAnalise[$codigoArquivo] : NULL),
+                'codigoPessoaAlteracao'         => Auth::user()->codpes,
+            ]);
+            
+            $pontuacao = $pontuacao + $request->pontuacaoAnalise[$codigoArquivo];
+        }        
+        
+        $tipo  = TipoAnalise::obterTipoAnaliseCodigoDocumento($request->codigoTipoDocumento);
+        $total = (float)Str::replace('[PONTUACAO]', $pontuacao, $tipo->calculoTipoAnalise);
+        
+        $avaliacao = Avaliacao::create([
+            'codigoPae'             => $request->codigoPae,
+            'codigoTipoAnalise'     => $tipo->codigoTipoAnalise,
+            'pontuacaoAvaliacao'    => $pontuacao,
+            'totalAvaliacao'        => $total,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        request()->session()->flash('alert-success', 'Análise cadastrada com sucesso.');    
+        return redirect("admin/{$request->codigoEdital}/pae/analise");
     }
 
     /**
@@ -116,5 +162,37 @@ class AnaliseCurriculoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function analisar($codigoPae, $codigoTipoDocumento)
+    {
+        if ((session('level') != 'admin') && (session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
+        $inscricao   = Pae::obterPae($codigoPae);
+        $tipos       = TipoDocumento::listarTipoDocumentosAnalisePae();
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $total       = AnaliseCurriculo::obterTotalAnalise($codigoPae);
+        $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
+        $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
+        $arquivos    = Arquivo::listarArquivosPae($codigoPae, $codigoTipoDocumento);
+        
+        return view('admin.pae.analisar',
+        [
+            'utils'                 => new Utils,
+            'tipos'                 => $tipos,
+            'codigoPae'             => $codigoPae,
+            'codigoEdital'          => $inscricao->codigoEdital,
+            'codigoTipoDocumento'   => $codigoTipoDocumento,
+            'editar'                => ($total == 0 ? false : true),
+            'inscricao'             => $inscricao,
+            'vinculo'               => $vinculo,
+            'arquivos'              => $arquivos,
+            'ficha'                 => $ficha[0],
+            'lattes'                => $lattes[0],
+        ]);
     }
 }

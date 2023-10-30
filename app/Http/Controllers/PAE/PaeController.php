@@ -31,7 +31,7 @@ class PaeController extends Controller
 {
     public function index($codigoEdital)
     {
-        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'manager') && (session('level') != 'admin') )
         {
             return redirect("/");
         }
@@ -57,7 +57,7 @@ class PaeController extends Controller
 
     public function create($codigoEdital)
     {
-        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'manager') && (session('level') != 'admin') )
         {
             return redirect("/");
         }
@@ -108,7 +108,7 @@ class PaeController extends Controller
 
     public function finalizar($codigoEdital)
     {
-        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'admin'))
+        if ((in_array("Alunopos", session('vinculos')) == false && in_array("Alunoposusp", session('vinculos')) == false) && (session('level') != 'manager') && (session('level') != 'admin') )
         {
             return redirect("/");
         }
@@ -156,7 +156,7 @@ class PaeController extends Controller
         return redirect("dashboard");
     }
 
-    public function reenviar($codigoEdital)
+    /*public function reenviar($codigoEdital)
     {
         $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
@@ -245,7 +245,7 @@ class PaeController extends Controller
                 echo "Inscrição {$inscricao->numeroInscricao} enviada com sucesso.<br/>";
             }
         }
-    }
+    }*/
     
     public function comprovante($codigoEdital)
     {
@@ -316,7 +316,7 @@ class PaeController extends Controller
 
     public function visualizar($codigoEdital, $codigoUsuario)
     {
-        if ((session('level') != 'manager'))
+        if ((session('level') != 'manager') && (session('level') != 'admin'))
         {
             return redirect("/");
         }

@@ -18,27 +18,24 @@ class AnaliseCurriculo extends Model
 
     protected $fillable = [
         'codigoPae',
-        'codigoTipoAnalise',
+        'codigoArquivo',
         'pontuacaoAnaliseCurriculo',
+        'statusAnaliseCurriculo',
+        'justificativaAnaliseCurriculo',
         'codigoPessoaAlteracao',
     ];
-
-    public function analise_curriculo_arquivos()
-    {
-        return $this->belongsTo(\App\Models\PAE\AnaliseCurriculoArquivo::class);
-    }
 
     public function pae()
     {
         return $this->hasMany(\App\Models\PAE\Pae::class);
     }
 
-    public function tipo_analise()
+    public function arquivo()
     {
-        return $this->hasMany(\App\Models\PAE\TipoAnalise::class);
+        return $this->hasMany(\App\Models\Arquivo::class);
     }
 
-    public static function listarAnalise($user_id, $codigoEdital)
+    /*public static function listarAnalise($user_id, $codigoEdital)
     {
         $analise = AnaliseCurriculo::join('pae', 'analise_curriculo.codigoPae', '=', 'pae.codigoPae')
                                    ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
@@ -59,12 +56,11 @@ class AnaliseCurriculo extends Model
                                    ->first();                                         
 
         return $analise;
-    }
+    }*/
 
     public static function obterTotalAnalise($codigoPae)
     {
         $analise = AnaliseCurriculo::join('pae', 'analise_curriculo.codigoPae', '=', 'pae.codigoPae')
-                                   ->join('tipo_analise', 'tipo_analise.codigoTipoAnalise', '=', 'analise_curriculo.codigoTipoAnalise')
                                    ->where('pae.codigoPae', $codigoPae)
                                    ->count();                                         
 

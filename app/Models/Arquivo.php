@@ -134,15 +134,29 @@ class Arquivo extends Model
         return $arquivos;           
     }
 
-    public static function listarArquivosAnalisePae($codigoPae)    
+    public static function listarArquivosAnalisePae($codigoPae, $group = false)    
     {
-       $analise = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
-                         ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                         ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
-                         ->where('pae.codigoPae', $codigoPae)
-                         ->whereIn('arquivos.codigoTipoDocumento', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25])
-                         ->get();         
+       if ($group)
+       {
+            $analise = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
+                            ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                            ->where('pae.codigoPae', $codigoPae)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25))
+                            ->groupBy('arquivos.codigoTipoDocumento')
+                            ->get();  
+       }
+       else
+       {       
+            $analise = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
+                            ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                            ->where('pae.codigoPae', $codigoPae)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25))
+                            ->get(); 
+       }        
 
         return $analise;
     }
