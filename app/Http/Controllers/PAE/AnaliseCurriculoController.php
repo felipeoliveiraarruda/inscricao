@@ -116,7 +116,7 @@ class AnaliseCurriculoController extends Controller
         ]);
 
         request()->session()->flash('alert-success', 'Análise cadastrada com sucesso.');    
-        return redirect("admin/{$request->codigoEdital}/pae/analise");
+        return redirect("admin/{$request->codigoPae}/pae/analise");
     }
 
     /**

@@ -38,6 +38,10 @@ class HomeController extends Controller
             {
                 return redirect('admin');                
             }
+            if ((in_array("Docenteusp", session('vinculos')) == true) && (session('level') == 'manager'))
+            {
+                return redirect('admin');                
+            }
             else
             {
                 return redirect('dashboard');

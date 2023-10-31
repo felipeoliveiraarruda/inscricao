@@ -22,13 +22,15 @@
                 </div>
             </div>
             <br/>
+            @if($docente == false)
             <div class="card bg-default">
                 <h6 class="card-header">E-mail</h6>
 
                 <div class="card-body"> 
                     <a href="admin/enviar-email/{{ $id }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Enviar E-mail</a>
                 </div>
-            </div>            
+            </div>
+            @endif
         </div>
 
         <div class="col-md-9">    
@@ -72,8 +74,14 @@
                                     <td>
                                         @if ($inscrito->codigoNivel == 5)
                                             <a href="inscricao/{{ $inscrito->codigoEdital }}/pae/{{ $inscrito->id }}/visualizar" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar"><i class="fas fa-eye"></i></a>
-                                            <a href="admin/{{ $inscrito->codigoPae }}/pae/desempenho" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Desempenho Acadêmico"><i class="fas fa-user-graduate"></i></a>
-                                            <a href="admin/{{ $inscrito->codigoPae }}/pae/analise" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Análise de Currículo"><i class="fas fa-chart-line"></i></a>
+                                            
+                                            @if ($inscrito->statusInscricao == 'C')
+                                                @if ($docente == false)                                            
+                                                    <a href="admin/{{ $inscrito->codigoPae }}/pae/desempenho" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Desempenho Acadêmico"><i class="fas fa-user-graduate"></i></a>
+                                                @else
+                                                    <a href="admin/{{ $inscrito->codigoPae }}/pae/analise" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Análise de Currículo"><i class="fas fa-chart-line"></i></a>
+                                                @endif
+                                            @endif
                                         @else
                                         <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
                                         @endif

@@ -15,9 +15,20 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
+
                 <h5 class="card-header">PAE - Análise do Currículo Lattes</h5>
                 
                 <div class="card-body">                                            
+                    <div class="flash-message">
+                        @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                            @if(Session::has('alert-' . $msg))
+                                <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                                </p>
+                            @endif
+                        @endforeach
+                    </div>
+
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
                     <table class="table table-striped">
@@ -34,8 +45,8 @@
                             <td>{{ $inscricao->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
                             <td>
-                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
-                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
+                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
+                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
                             </td>
                         </tr>
                     </table>
@@ -63,9 +74,11 @@
                                 <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
                                 <td>{{ $avaliacao->totalAvaliacao ?? '' }}</td>
                                 <td>
+                                    @if ($avaliacao == null)
                                     <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
                                         <i class="fas fa-tasks"></i>
                                     </a>       
+                                    @endif
                                 </td>
                             </tr>
                         </tbody>

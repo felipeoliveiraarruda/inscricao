@@ -39,11 +39,12 @@ class AdminController extends Controller
         {
             $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
         }
-        
+       
         return view('admin.index',
         [
             'editais' => $editais,
-            'utils'   => new Utils,                        
+            'utils'   => new Utils,    
+            'docente' => (in_array("Docenteusp", session('vinculos'))),
         ]);
     }
 
@@ -62,11 +63,24 @@ class AdminController extends Controller
         } 
         else 
         {
-            $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
-                               ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                               ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                               ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
-                               ->where('editais.codigoEdital', $id)->paginate(10);
+            if (in_array("Docenteusp", session('vinculos')))
+            {
+                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                   ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                   ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                   ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                                   ->where('editais.codigoEdital', $id)
+                                   ->where('inscricoes.statusInscricao', 'C')
+                                   ->paginate(10);
+            }
+            else
+            {
+                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                   ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                   ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                   ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                                   ->where('editais.codigoEdital', $id)->paginate(10);
+            }
         }
 
         $editais = Edital::where('codigoEdital', $id)->first();
@@ -77,6 +91,7 @@ class AdminController extends Controller
             'id'        => $id,
             'inscritos' => $inscritos,
             'curso'     => $curso['nomcur'],
+            'docente' => (in_array("Docenteusp", session('vinculos'))),
         ]);
     }
 

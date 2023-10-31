@@ -250,7 +250,7 @@
             $(documento).prop('required', false);
             $(documento).prop('disabled', true);
 
-            //$(justificativa).prop('required', true);
+            $(justificativa).prop('required', false);
             $(justificativa).prop('disabled', false);
 
             $(pontuacao).val('0');

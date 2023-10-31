@@ -3,7 +3,12 @@
         <tr>
             <th scope="col-5">#</th>
             <th scope="col">Status<span class="text-danger">*</span></th>
-            <th scope="col">Pontuação<span class="text-danger">*</span></th>
+
+            @if ($codigoTipoDocumento == 24 || $codigoTipoDocumento == 25)
+                <th scope="col">Quantidade (em meses)<span class="text-danger">*</span></th>
+            @else
+                <th scope="col">Quantidade<span class="text-danger">*</span></th>
+            @endif
             <th scope="col">Tipo</th>
             <th scope="col">Justificativa</th>
         </tr>

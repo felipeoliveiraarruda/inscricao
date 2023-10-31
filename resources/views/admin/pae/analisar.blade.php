@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="list-group">
-                <a href="admin/{{ $codigoEdital }}/pae/analise" class="list-group-item list-group-item-action ">Voltar</a>
+                <a href="admin/{{ $codigoPae }}/pae/analise/" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>
         <div class="col-md-9">
@@ -34,8 +34,8 @@
                             <td>{{ $inscricao->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
                             <td>
-                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
-                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
+                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
+                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
                             </td>
                         </tr>
                     </table>
