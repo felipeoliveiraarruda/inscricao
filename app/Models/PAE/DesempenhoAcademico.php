@@ -21,6 +21,7 @@ class DesempenhoAcademico extends Model
         'codigoPae',
         'codigoConceito',
         'quantidadeDesempenhoAcademico',
+        'totalDesempenhoAcademico',
         'codigoPessoaAlteracao',
     ];
 

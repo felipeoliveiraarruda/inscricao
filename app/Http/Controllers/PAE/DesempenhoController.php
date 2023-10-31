@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Utils;
+use App\Models\Arquivo;
 use App\Models\Inscricao;
 use App\Models\Edital;
 use App\Models\PAE\Conceito;
@@ -30,6 +32,8 @@ class DesempenhoController extends Controller
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
         $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
         $total       = DesempenhoAcademico::obterTotalDesempenho($codigoPae);
+        $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
+        $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
 
         return view('admin.pae.desempenho',
         [
@@ -40,6 +44,9 @@ class DesempenhoController extends Controller
             'editar'       => ($total == 0 ? false : true),
             'inscricao'    => $inscricao,
             'vinculo'      => $vinculo,
+            'ficha'        => $ficha[0],
+            'lattes'       => $lattes[0],
+            'nota'         => 0,            
         ]);
     }
 
@@ -65,16 +72,22 @@ class DesempenhoController extends Controller
         {
             if ($request->quantidadeDesempenhoAcademico[$conceito] != "")
             {
+                $tipo  = Conceito::find($conceito);
+
+                $total = (float)$request->quantidadeDesempenhoAcademico[$conceito] * (float)$tipo->valorConceito;
+                
                 $desempenho = DesempenhoAcademico::create([
                     'codigoPae'                     => $request->codigoPae,
                     'codigoConceito'                => $conceito,
                     'quantidadeDesempenhoAcademico' => $request->quantidadeDesempenhoAcademico[$conceito],
+                    'totalDesempenhoAcademico'      => (float)$total,
                     'codigoPessoaAlteracao'         => Auth::user()->codpes,
                 ]); 
             }
         }
 
-        request()->session()->flash('alert-success', 'Desempenho Acadêmico cadastrado com sucesso.');    
+        request()->session()->flash('alert-success', 'Desempenho Acadêmico cadastrado com sucesso.');   
+
         return redirect("admin/listar-inscritos/{$request->codigoEdital}");
     }
 

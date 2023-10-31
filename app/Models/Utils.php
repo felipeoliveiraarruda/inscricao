@@ -71,7 +71,26 @@ class Utils extends Model
                 return 'PPGPE';
                 break;                                                
         }
-    }    
+    } 
+    
+    public static function obterCodigoCursoPorEmail($email)
+    {
+        switch ($email) 
+        {
+            case 'ppgbi@eel.usp.br':
+                return 97001;
+                break;
+            case 'ppgem-eel@usp.br':
+                return 97002;
+                break;
+            case 'ppgeq@eel.usp.br':
+                return 97003;
+                break;
+            case 'ppgpe@eel.usp.br':
+                return 97004;
+                break;                                                
+        }
+    } 
 
     public static function obterNivelEdital($nivel)
     {
