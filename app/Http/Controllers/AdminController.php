@@ -139,10 +139,10 @@ class AdminController extends Controller
         else 
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-            ->where('editais.codigoEdital', $request->codigoEdital)
-            ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
-            ->get();
+                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                ->where('editais.codigoEdital', $request->codigoEdital)
+                                ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
+                                ->get();
         }
         
         foreach($inscritos as $inscrito)
@@ -160,8 +160,6 @@ class AdminController extends Controller
                 request()->session()->flash('alert-success', "E-mail enviado com sucesso.");
                 return redirect("admin/enviar-email/{$request->codigoEdital}");
             }
-
-            exit;
         }
         
         return redirect("admin/enviar-email/{$request->codigoEdital}");

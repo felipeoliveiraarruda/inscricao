@@ -18,6 +18,7 @@ class TipoAnalise extends Model
 
     protected $fillable = [
         'tipoAnalise',
+        'valorTipoAnalise',
         'calculoTipoAnalise',
         'pontuacaoTipoAnalise',
         'maximoTipoAnalise',

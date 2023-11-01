@@ -105,8 +105,23 @@ class AnaliseCurriculoController extends Controller
         }        
         
         $tipo  = TipoAnalise::obterTipoAnaliseCodigoDocumento($request->codigoTipoDocumento);
-        $total = (float)Str::replace('[PONTUACAO]', $pontuacao, $tipo->calculoTipoAnalise);
-        
+
+        if ($tipo->maximoTipoAnalise > 0)
+        {
+            if ($pontuacao > $tipo->maximoTipoAnalise)
+            {
+                $total = (float)$tipo->maximoTipoAnalise * (float)$tipo->valorTipoAnalise;    
+            }
+            else
+            {
+                $total = (float)$pontuacao * (float)$tipo->valorTipoAnalise;    
+            }
+        }
+        else
+        {
+            $total = (float)$pontuacao * (float)$tipo->valorTipoAnalise;
+        }
+
         $avaliacao = Avaliacao::create([
             'codigoPae'             => $request->codigoPae,
             'codigoTipoAnalise'     => $tipo->codigoTipoAnalise,

@@ -22,9 +22,18 @@
                     <div class="flash-message">
                         @foreach (['danger', 'warning', 'success', 'info'] as $msg)
                             @if(Session::has('alert-' . $msg))
+                                @if ($msg == 'success')
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ Session::get('alert-' . $msg) }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @else
                                 <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
                                     <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
                                 </p>
+                                @endif
                             @endif
                         @endforeach
                     </div>
@@ -71,15 +80,20 @@
                             <tr>
                                 <td>{{ $arquivo->tipoDocumento }}</td>
                                 <td>{{ $total }}</td>
-                                <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
-                                <td>{{ $avaliacao->totalAvaliacao ?? '' }}</td>
-                                <td>
-                                    @if ($avaliacao == null)
-                                    <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
-                                        <i class="fas fa-tasks"></i>
-                                    </a>       
-                                    @endif
-                                </td>
+
+                                @if ($avaliacao == null)
+                                    <td></td>
+                                    <td></td>
+                                    <td>                                    
+                                        <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
+                                            <i class="fas fa-tasks"></i>
+                                        </a>       
+                                    </td>
+                                @else
+                                    <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
+                                    <td>{{ number_format($avaliacao->totalAvaliacao, 2, ',', '') ?? '' }}</td>
+                                    <td></td>
+                                @endif
                             </tr>
                         </tbody>
                         @endforeach

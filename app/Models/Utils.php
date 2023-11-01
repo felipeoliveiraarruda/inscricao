@@ -233,7 +233,7 @@ class Utils extends Model
 
     public static function setSession($id)
     {
-        $level = User::obterLevel($id);
+        $level = User::obterLevel($id);        
         session(['level' => $level]);
 
         $vinculos = User::obterVinculos($id);
