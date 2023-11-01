@@ -126,7 +126,7 @@ class DesempenhoController extends Controller
         {
             $desempenho = DesempenhoAcademico::find($temp);
 
-            $tipo  = Conceito::find($temp->codigoConceito);
+            $tipo  = Conceito::find($desempenho->codigoConceito);
 
             $total = (float)$request->quantidadeDesempenhoAcademico[$temp] * (float)$tipo->valorConceito;
 
