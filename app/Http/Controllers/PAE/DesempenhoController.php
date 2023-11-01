@@ -125,6 +125,12 @@ class DesempenhoController extends Controller
         foreach($request->codigoDesempenhoAcademico as $temp)
         {
             $desempenho = DesempenhoAcademico::find($temp);
+
+            $tipo  = Conceito::find($temp->codigoConceito);
+
+            $total = (float)$request->quantidadeDesempenhoAcademico[$temp] * (float)$tipo->valorConceito;
+
+            $desempenho->totalDesempenhoAcademico      = (float)$total;
             $desempenho->quantidadeDesempenhoAcademico = $request->quantidadeDesempenhoAcademico[$temp];
             $desempenho->save();
         }
@@ -135,10 +141,15 @@ class DesempenhoController extends Controller
             {
                 if ($request->quantidadeDesempenhoAcademico[$conceito] != "")
                 {
+                    $tipo  = Conceito::find($conceito);
+
+                    $total = (float)$request->quantidadeDesempenhoAcademico[$conceito] * (float)$tipo->valorConceito;
+
                     $desempenho = DesempenhoAcademico::create([
                         'codigoPae'                     => $request->codigoPae,
                         'codigoConceito'                => $conceito,
                         'quantidadeDesempenhoAcademico' => $request->quantidadeDesempenhoAcademico[$conceito],
+                        'totalDesempenhoAcademico'      => (float)$total,
                         'codigoPessoaAlteracao'         => Auth::user()->codpes,
                     ]); 
                 }
