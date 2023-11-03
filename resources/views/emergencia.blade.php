@@ -11,7 +11,9 @@
             <div class="card bg-default">
                 <h5 class="card-header">Pessoa a ser notificada em caso de Emergência
                     @if (empty($emergencia->codigoEmergencia))
-                        <a href="inscricao/{{ $codigoInscricao }}/emergencia/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                        <a href="inscricao/{{ $codigoInscricao }}/emergencia/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>                        
+                        </a>
                     @endif
                 </h5>
 
@@ -52,9 +54,11 @@
                                             <td>{{ $emergencia->nomePessoaEmergencia }}</td>
                                             <td>{{ $emergencia->telefonePessoaEmergencia }}</td>
                                             <td>
-                                                <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" target="_new" title="Editar">
-                                                    <i class="far fa-eye"></i>
-                                                </a>
+                                                @if ($status == 'N')
+                                                <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                    <i class="far fa-edit"></i>
+                                                </a>  
+                                                @endif                                                
                                             </td>
                                         </tr>
                                     </table>
@@ -72,8 +76,7 @@
                                             <td>{{ $emergencia->cepEndereco }}</td>
                                         </tr>
                                     </table>                                    
-                                    @endif
-                                    
+                                    @endif                                    
                                 </div>                                 
                             </div>                                                        
                         </div>
