@@ -34,7 +34,7 @@ class DadosPessoais extends Model
     ];
 
     protected $casts = [
-        'dataNascimentoPessoal' => 'date',
+        'dataNascimentoPessoal' => 'date:d/m/Y',
     ];
 
     public function user()

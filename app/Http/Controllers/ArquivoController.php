@@ -51,30 +51,14 @@ class ArquivoController extends Controller
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
-        InscricoesArquivos::create([
-            'codigoInscricao'       => $request->codigoInscricao,
-            'codigoArquivo'         => $arquivo->codigoArquivo,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);
-
-        /*if ($request->codigoTipoDocumento == 12)
+        if (!empty($request->codigoInscricao))
         {
-            Inscricao::where('codigoInscricao', $request->codigoInscricao)->update(['situacaoInscricao' => 'P']);
-            Mail::to('felipeoa@usp.br')->send(new EnviarEmailComprovante($request->codigoInscricao, $path));
-
-            if (Mail::failures()) 
-            {
-                request()->session()->flash('alert-danger', 'Ocorreu um erro no envio do Comprovante de Inscrição.');
-            }    
-            else
-            {
-                request()->session()->flash('alert-success', 'Comprovante de Inscrição enviado com sucesso.');
-            }
+            InscricoesArquivos::create([
+                'codigoInscricao'       => $request->codigoInscricao,
+                'codigoArquivo'         => $arquivo->codigoArquivo,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
         }
-        else
-        {
-            request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
-        }*/
 
         request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
         return redirect("/inscricao/{$request->codigoInscricao}/documento");
@@ -103,24 +87,13 @@ class ArquivoController extends Controller
             'codigoInscricao' => $codigoInscricao,
             'link_voltar'     => $voltar, 
         ]);
-
-        /*return view('pessoal.edit',
-        [
-            'codigoInscricao'   => $inscricao,
-            'link_voltar'       => $voltar,
-            'sexos'             => Utils::obterDadosSysUtils('sexo'),
-            'racas'             => Utils::obterDadosSysUtils('raça'),
-            'estados_civil'     => Utils::obterDadosSysUtils('civil'),
-        ]);*/
     }
 
     public function update(Request $request, $id)
-    { 
-        $temp = explode('/', $request->arquivoAtual);
+    {     
+        $remover = unlink(Storage::path($request->arquivoAtual));
 
-        $remover = unlink(Storage::path('public/'.$request->arquivoAtual));
-
-        $path = $request->file('arquivo')->storeAs('arquivos', $temp[1], 'public');
+        $path = $request->file('arquivo')->store('arquivos', 'public');
 
         $arquivo = Arquivo::find($id);
 
@@ -134,7 +107,7 @@ class ArquivoController extends Controller
 
         if(!empty($request->codigoInscricao))
         {
-            return redirect("pessoal/novo/".$request->codigoInscricao);
+            return redirect("inscricao/{$request->codigoInscricao}/pessoal");
         }
         else
         {
@@ -152,7 +125,41 @@ class ArquivoController extends Controller
         ]);
     }
 
-    public function remover($codigoInscricao, $codigoArquivo)
+    public function destroy($codigoArquivo, $codigoInscricao = '')
+    {
+        $arquivo = Arquivo::find($codigoArquivo);
+                
+        $remover = unlink(Storage::path($arquivo->linkArquivo));
+
+        $arquivo = Arquivo::where(['codigoArquivo' => $codigoArquivo])->delete();  
+
+        if (!empty($codigoInscricao))
+        {
+            $inscricao = InscricoesArquivos::where(['codigoArquivo' => $codigoArquivo])
+                                           ->where(['codigoInscricao' => $codigoInscricao])
+                                           ->delete();
+        }
+
+        if(($remover) && ($inscricao) && ($arquivo))
+        {
+            request()->session()->flash('alert-success', 'Documento removido com sucesso');  
+        }
+        else
+        {
+            request()->session()->flash('alert-danger', 'Ocorreu um erro na remoção do Documento.');
+        }
+        
+        if(!empty($codigoInscricao))
+        {
+            return redirect("inscricao/{$codigoInscricao}/pessoal");
+        }
+        else
+        {
+            return redirect('arquivos');
+        }
+    }
+
+    /*public function remover($codigoInscricao, $codigoArquivo)
     {
         $arquivo = Arquivo::find($codigoArquivo);
                 
@@ -175,32 +182,6 @@ class ArquivoController extends Controller
         }
         
         return redirect("/inscricao/{$codigoInscricao}/documento");
-    }
-
-    public function alterar(Request $request, $codigoArquivo)
-    {
-        /*$arquivo = Arquivo::find($codigoArquivo);
-                
-        $remover = unlink(Storage::path('public/'.$arquivo->linkArquivo));
-
-        $inscricao = InscricoesArquivos::where([
-            'codigoInscricao'   => $codigoInscricao,
-            'codigoArquivo'     => $codigoArquivo,
-        ])->delete();
-
-        $arquivo = Arquivo::where(['codigoArquivo' => $codigoArquivo])->delete();        
-
-        if(($remover) && ($inscricao) && ($arquivo))
-        {
-            request()->session()->flash('alert-success', 'Documento removido com sucesso');  
-        }
-        else
-        {
-            request()->session()->flash('alert-danger', 'Ocorreu um erro na remoção do Documento.');
-        }
-        
-        return redirect("/inscricao/{$codigoInscricao}/documento");*/
-        dd($request);
-    }    
+    } */
 }
 

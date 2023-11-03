@@ -19,6 +19,11 @@ class AdminController extends Controller
 {
     public function index()
     {   
+        if (empty(session('level')))
+        {
+            Utils::setSession(Auth::user()->id);
+        }
+
         if ((session('level') == 'manager'))
         {
             if (Auth::user()->id == 4)

@@ -108,10 +108,10 @@ Route::middleware(['auth','verified'])->group(function ()
     });
 
     /* Dados Pessoais */
-    Route::post('pessoal',                          [DadosPessoaisController::class, 'store']);
-    Route::patch('pessoal/{codigoPessoal}',         [DadosPessoaisController::class, 'update']);
-    Route::get('pessoal/anexo/{codigoInscricao?}',  [DadosPessoaisController::class, 'anexo'])->name('anexo');
-    Route::post('pessoal/anexo/salvar',             [DadosPessoaisController::class, 'anexo_salvar']);
+    Route::post('pessoal',                                                  [DadosPessoaisController::class, 'store']);
+    Route::patch('pessoal/{codigoPessoal}',                                 [DadosPessoaisController::class, 'update']);
+    Route::get('pessoal/anexo/{codigoInscricao?}',                          [DadosPessoaisController::class, 'anexo'])->name('anexo');
+    Route::post('pessoal/anexo/salvar',                                     [DadosPessoaisController::class, 'anexo_salvar']);
     
     /* Endereço */    
     Route::post('endereco/',                    [EnderecoController::class, 'store']);
@@ -134,11 +134,13 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::patch('experiencia/{codigoExperiencia}', [ExperienciaController::class, 'update']);
 
     /* Recursos Financeiros */
-    Route::post('financeiro/',                          [RecursoFinanceiroController::class, 'store']);
-    Route::patch('financeiro/{codigoRecursoFianceiro}', [RecursoFinanceiroController::class, 'update']);
+    Route::post('financeiro/',                           [RecursoFinanceiroController::class, 'store']);
+    Route::patch('financeiro/{codigoRecursoFinanceiro}', [RecursoFinanceiroController::class, 'update']);
 
     /* Arquivos */
-    Route::get('arquivo/{$codigoArquivo}/edit/{codigoInscricao?}',  [ArquivoController::class, 'edit']);
+    Route::get('arquivo/{codigoArquivo}/edit/{codigoInscricao?}',       [ArquivoController::class, 'edit']);
+    Route::patch('arquivo/{codigoArquivo}',                             [ArquivoController::class, 'update']);
+    Route::get('arquivo/{codigoArquivo}/destroy/{codigoInscricao?}',    [ArquivoController::class, 'destroy']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

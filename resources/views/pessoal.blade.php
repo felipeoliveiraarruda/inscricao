@@ -62,8 +62,8 @@
                                             </td>                                            
                                             <td class="text-center">
                                                 @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Editar">
-                                                    Atualizar
+                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                    <i class="far fa-edit"></i>
                                                 </a>  
                                                 @endif                                             
                                             </td>
@@ -71,7 +71,13 @@
                                     </table>
 
                                     <div class="card bg-default">
-                                        <h5 class="card-header">Anexo(s) @if ($status == 'N') <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a> @endif</h5>
+                                        <h5 class="card-header">Anexo(s) 
+                                            @if ($status == 'N') 
+                                                <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                                    <i class="fa fa-plus"></i>
+                                                </a> 
+                                            @endif
+                                        </h5>
                                         <div class="card-body">
                                             @if (count($arquivos) == 0)
                                                 <div class="alert alert-warning">Nenhum documento cadastrado</div>                    
@@ -100,12 +106,17 @@
                                                                 @endif                                                                 
                                                             </td>
                                                             <td class="text-center">
-                                                                <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                                                <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                                                                     <i class="far fa-eye"></i>
                                                                 </a>
-                                                                <!--<a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" title="Alterar">
+                                                                @if ($status == 'N')
+                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
                                                                     <i class="fa fa-wrench"></i>
-                                                                </a>-->                                                              
+                                                                </a>
+                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                                @endif                                                         
                                                             </td>
                                                         </tr>
                                                     @endforeach                   
