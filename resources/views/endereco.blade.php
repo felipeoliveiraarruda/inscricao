@@ -11,8 +11,10 @@
             <div class="card bg-default">
                 <h5 class="card-header">Endereço
                     @if (empty($enderecos->codigoEndereco))
-                        <a href="inscricao/{{ $codigoInscricao }}/endereco/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
-                    @endif
+                        <a href="inscricao/{{ $codigoInscricao }}/endereco/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>                        
+                        </a>
+                    @endif                   
                 </h5>
 
                 <div class="card-body">                    
@@ -54,9 +56,11 @@
                                             <td>{{ $enderecos->localidadeEndereco }}/{{ $enderecos->ufEndereco }}</td>
                                             <td>{{ $enderecos->cepEndereco }}</td>
                                             <td>
-                                                <a href="inscricao/{{ $codigoInscricao }}/endereco/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" target="_new" title="Editar">
-                                                    <i class="far fa-eye"></i>
-                                                </a>
+                                                @if ($status == 'N')
+                                                <a href="inscricao/{{ $codigoInscricao }}/endereco/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                    <i class="far fa-edit"></i>
+                                                </a>  
+                                                @endif
                                             </td>
                                         </tr>
                                     @endif
