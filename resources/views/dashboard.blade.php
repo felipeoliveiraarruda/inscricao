@@ -39,7 +39,7 @@
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
 
-                                        @if ($hoje > $edital->dataInicioEdital->format('d/m/Y H:i:s'))
+                                        @if ($hoje < $edital->dataFinalEdital->format('d/m/Y H:i:s'))
                                             @if (Gate::check('admin') || Gate::check('gerente'))
                                                 <td><a href="inscricao/{{ $edital->codigoEdital }}/listar">Lista de Inscritos</a></td>
                                             @else

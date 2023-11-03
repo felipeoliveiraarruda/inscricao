@@ -83,12 +83,24 @@ class AdminController extends Controller
                 {
                     $codigoCurso = Utils::obterCodigoCursoPorEmail(Auth::user()->email);
 
-                    $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
-                                       ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                                       ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                       ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
-                                       ->where('editais.codigoEdital', $id)
-                                       ->where('pae.codigoCurso', $codigoCurso)->paginate(10);
+                    if ($codigoCurso == null)
+                    {
+                        $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                            ->where('editais.codigoEdital', $id)->paginate(10);
+                    }
+                    else
+                    {
+                        $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                            ->where('editais.codigoEdital', $id)
+                                            ->where('pae.codigoCurso', $codigoCurso)->paginate(10);
+                    }
+
                 }
                 else
                 {

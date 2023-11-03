@@ -34,6 +34,7 @@ class DesempenhoController extends Controller
         $total       = DesempenhoAcademico::obterTotalDesempenho($codigoPae);
         $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
         $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
+        $historico   = Arquivo::listarArquivosPae($codigoPae, 5);
 
         return view('admin.pae.desempenho',
         [
@@ -46,6 +47,7 @@ class DesempenhoController extends Controller
             'vinculo'      => $vinculo,
             'ficha'        => $ficha[0],
             'lattes'       => $lattes[0],
+            'historico'    => $historico[0],
             'nota'         => 0,            
         ]);
     }
