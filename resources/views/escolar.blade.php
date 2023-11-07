@@ -11,7 +11,9 @@
             <div class="card bg-default">
                 <h5 class="card-header">Resumo Escolar
                     @if ($status == 'N')
-                    <a href="inscricao/{{ $codigoInscricao }}/escolar/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                    <a href="inscricao/{{ $codigoInscricao }}/escolar/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                        <i class="fa fa-plus"></i>                        
+                    </a>
                     @endif
                 </h5>
 
@@ -62,14 +64,20 @@
                                             <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
                                             <td>{{ $escolar->finalResumoEscolar->format('d/m/Y') }}</td>
                                             <td>
-                                                <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" title="Histórico">
+                                                <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Histórico">
                                                     <i class="fas fa-user-graduate"></i>
                                                 </a>
-                                                <a href="{{ asset('storage/'.$diploma->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" title="Diploma">
+                                                <a href="{{ asset('storage/'.$diploma->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Diploma/Certificado">
                                                     <i class="fas fa-graduation-cap"></i>
                                                 </a>                                              
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                @if ($status == 'N')
+                                                <a href="inscricao/{{ $codigoInscricao }}/escolar/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                    <i class="far fa-edit"></i>
+                                                </a>  
+                                                @endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </table>                                  

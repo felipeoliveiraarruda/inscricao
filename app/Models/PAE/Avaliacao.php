@@ -17,16 +17,16 @@ class Avaliacao extends Model
     protected $primaryKey = 'codigoAvaliacao';
 
     protected $fillable = [
-        'codigoPae',
+        'codigoAvaliadorPae',
         'codigoTipoAnalise',
         'pontuacaoAvaliacao',
         'totalAvaliacao',
         'codigoPessoaAlteracao',
     ];
 
-    public function pae()
+    public function avaliadores_pae()
     {
-        return $this->hasMany(\App\Models\PAE\Pae::class);
+        return $this->hasMany(\App\Models\Avaliadores::class);
     }
 
     public function tipo_analise()
@@ -35,6 +35,15 @@ class Avaliacao extends Model
     }
 
     public function obterAvaliacao($codigoPae, $codigoTipoDocumento)
+    {
+        $avaliacao = Avaliacao::join('tipo_analise', 'tipo_analise.codigoTipoAnalise', 'avaliacao_pae.codigoTipoAnalise')
+                              ->where('avaliacao_pae.codigoPae', $codigoPae)
+                              ->where('tipo_analise.codigoTipoDocumento', $codigoTipoDocumento)
+                              ->first(); 
+        return $avaliacao;
+    }
+
+    public function listarAvaliacao($codigoPae, $codigoTipoDocumento)
     {
         $avaliacao = Avaliacao::join('tipo_analise', 'tipo_analise.codigoTipoAnalise', 'avaliacao_pae.codigoTipoAnalise')
                               ->where('avaliacao_pae.codigoPae', $codigoPae)

@@ -52,9 +52,9 @@ class Inscricao extends Model
         return $total;
     }
 
-    public static function obterStatusInscricao($codigoInscricao)
+    public static function obterStatusInscricao($codigoEdital, $user_id)
     {
-        $inscricao = Inscricao::select('statusInscricao')->where('codigoInscricao', $codigoInscricao)->first();
+        $inscricao = Inscricao::select('statusInscricao')->where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->first();
     
         if (empty($inscricao))
         {

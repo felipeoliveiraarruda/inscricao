@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TipoDocumentoController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\PAE\DesempenhoController;
 use App\Http\Controllers\PAE\AnaliseCurriculoController;
+use App\Http\Controllers\PAE\AvaliacaoController;
 
 Route::middleware(['auth','verified'])->group(function () 
 {   
@@ -43,6 +44,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('{codigoPae}/pae/analise',                      [AnaliseCurriculoController::class, 'store']);
         Route::patch('{codigoPae}/pae/analise',                     [AnaliseCurriculoController::class, 'update']);
         Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}', [AnaliseCurriculoController::class, 'analisar']);
+
+        /* PAE - Avaliacao */
+        Route::get('{codigoEdital}/pae/avaliacao',              [AvaliacaoController::class, 'index']);
+        Route::get('{codigoEdital}/pae/distribuicao',           [AvaliacaoController::class, 'distribuicao']);
+        Route::post('{codigoEdital}/pae/distribuicao/store',    [AvaliacaoController::class, 'distribuicao_store']);
 
         /* PAE - Desempenho Academico
         Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);

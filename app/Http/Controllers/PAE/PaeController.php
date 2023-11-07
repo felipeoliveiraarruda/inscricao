@@ -135,6 +135,71 @@ class PaeController extends Controller
     public function finalizar_store(Request $request)
     {
         $inscricao = Inscricao::obterInscricaoPae(Auth::user()->id, $request->codigoEdital);
+                                            
+        $user = User::find($inscricao->id);
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($user->codpes);
+        $arquivos    = Arquivo::listarArquivosPae($inscricao->codigoPae);
+        $total       = Arquivo::verificaArquivosPae($inscricao->codigoPae);
+
+        $pdf = new Fpdf();
+
+        $pdf->AddPage();
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Image(asset('images/cabecalho/pae.png'), 10, 10, 190);
+        $pdf->Ln(40);
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(190, 8, utf8_decode("COMPROVANTE DE INSCRIÇÃO Nº {$inscricao->numeroInscricao} - {$anosemestre}"), 1, 0, 'C', true);
+        $pdf->Ln();        
+        $pdf->Cell(190, 2, '', 0,  0, 'C', false);
+        $pdf->Ln();   
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(25, 8, utf8_decode("Número USP"), 'TLR',  0, 'C', false);
+        $pdf->Cell(60, 8, utf8_decode("Nome"), 'TLR',  0, 'C', false);
+        $pdf->Cell(50, 8, utf8_decode("Programa"), 'TLR',  0, 'C', false);
+        $pdf->Cell(55, 8, utf8_decode("Já recebeu remuneração do PAE?"), 'TLR',  0, 'C', false);
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->Ln();  
+        $pdf->Cell(25, 8, utf8_decode($user->codpes), 1,  0, 'C', false);
+        $pdf->Cell(60, 8, utf8_decode($user->name), 1,  0, 'C', false);
+        $pdf->Cell(50, 8, utf8_decode($vinculo['nomcur'].'-'.$vinculo['nivpgm']), 1,  0, 'C', false);
+        $pdf->Cell(55, 8, utf8_decode(($inscricao->remuneracaoPae == "S") ? "Sim" : "Não"), 1,  0, 'C', false);        
+        $pdf->Ln();        
+        $pdf->Cell(190, 2, '', 0,  0, 'C', false);
+        $pdf->Ln();   
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(190, 8, utf8_decode("DOCUMENTOS COMPROBATÓRIOS"), 1, 0, 'C', true);
+        $pdf->Ln();        
+        $pdf->Cell(190, 2, '', 0,  0, 'C', false);
+        $pdf->Ln();   
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(160, 8, utf8_decode("Tipo de Documento"), 1,  0, 'C', false);
+        $pdf->Cell(30, 8, utf8_decode("Quantidade"), 1, 0, 'C', false);
+        $pdf->Ln(); 
+
+        $pdf->SetFont('Arial', '', 9);
+
+        foreach($arquivos as $arquivo)
+        {
+            $pdf->Cell(160, 8, utf8_decode($arquivo->tipoDocumento), 1, 0, 'L', false);
+            $pdf->Cell(30, 8, utf8_decode($arquivo->total), 1, 0, 'C', false);
+            $pdf->Ln();   
+        }
+
+        $pdf->SetFont('Arial','B',8);
+        $pdf->SetY(-30);
+        $pdf->Cell(95, 3, utf8_decode('ÁREA I'), 0, 0, 'L');
+        $pdf->Cell(95, 3, utf8_decode('ÁREA II'), 0, 0, 'R');
+        $pdf->SetFont('Times', '', 7);
+        $pdf->Ln();
+        $pdf->Cell(95, 3, 'Estrada Municipal  do Campinho, 100, Campinho - LORENA - S.P.', 0, 0, 'L');
+        $pdf->Cell(95, 3, 'Estrada Municipal Chiquito de Aquino, 1000, Mondesir - LORENA - S.P.', 0, 0, 'R');
+        $pdf->Ln();
+        $pdf->Cell(95, 3, 'CEP 12602-810 - Tel. (012) 3159-5000', 0, 0, 'L');
+        $pdf->Cell(95, 3, 'CEP 12612-550 - Tel. (012) 3159-9009', 0, 0, 'R');
+
+        $pdf->Output('F', storage_path("app/public/pae/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"));
 
         $temp = Inscricao::find($inscricao->codigoInscricao);
         
@@ -142,7 +207,7 @@ class PaeController extends Controller
         $temp->codigoPessoaAlteracao = Auth::user()->codpes;
         $temp->save();
 
-        Mail::to(Auth::user()->email)->cc('pae@eel.usp.br')->send(new EnviarPaeMail($request->codigoEdital));
+        Mail::to(Auth::user()->email)->cc('pae@eel.usp.br')->send(new EnviarPaeMail($request->codigoEdital, Auth::user()->id));
         
         if (Mail::failures()) 
         {

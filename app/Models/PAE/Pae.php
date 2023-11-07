@@ -56,4 +56,27 @@ class Pae extends Model
                   ->first();
         return $pae;
     }
+
+    public function obterConfirmados($codigoEdital, $total = false)
+    {
+       if ($total)
+       {
+            $pae = Pae::select('pae.codigoPae')
+                      ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                      ->where('inscricoes.codigoEdital', $codigoEdital)
+                      ->where('inscricoes.statusInscricao', 'C')
+                      ->count();
+       }
+       else
+       {
+            $pae = Pae::select('pae.codigoPae')
+                    ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                    ->where('inscricoes.codigoEdital', $codigoEdital)
+                    ->where('inscricoes.statusInscricao', 'C')
+                    ->get();
+       } 
+
+        return $pae;
+    }
+
 }

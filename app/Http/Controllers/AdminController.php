@@ -14,6 +14,7 @@ use App\Mail\ClassificadosMail;
 use App\Mail\EliminadosMail;
 use App\Mail\AusentesMail;
 use App\Mail\ApresentacaoMail;
+use App\Mail\PAE\InscritosPaeMail;
 
 class AdminController extends Controller
 {
@@ -50,6 +51,7 @@ class AdminController extends Controller
             'editais' => $editais,
             'utils'   => new Utils,    
             'docente' => (in_array("Docenteusp", session('vinculos'))),
+            'level'     => session('level'),
         ]);
     }
 
@@ -132,7 +134,7 @@ class AdminController extends Controller
             'id'        => $id,
             'inscritos' => $inscritos,
             'curso'     => $curso['nomcur'],
-            'docente' => (in_array("Docenteusp", session('vinculos'))),
+            'docente'   => (in_array("Docenteusp", session('vinculos'))),
         ]);
     }
 
@@ -156,15 +158,25 @@ class AdminController extends Controller
         else 
         {
             $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                ->where('editais.codigoEdital', $request->codigoEdital)
-                                ->where('inscricoes.situacaoInscricao', $request->tipoDestinatario[0])
-                                ->get();
+                               ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                               ->where('editais.codigoEdital', $request->codigoEdital)
+                               ->where('inscricoes.statusInscricao', $request->tipoDestinatario[0])
+                               ->get();                   
         }
         
         foreach($inscritos as $inscrito)
         {
-            Mail::to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
+
+            if ($request->codigoEdital == 1)
+            {
+                Mail::to(mb_strtolower($inscrito->email))->send(new InscritosPaeMail($request->codigoEdital, $request->assunto, $request->body));
+            }
+            else
+            {
+                Mail::to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
+            }
+
+            
             //Mail::to('felipeoa@usp.br')->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
 
             if (Mail::failures()) 
@@ -175,7 +187,6 @@ class AdminController extends Controller
             else
             {    
                 request()->session()->flash('alert-success', "E-mail enviado com sucesso.");
-                return redirect("admin/enviar-email/{$request->codigoEdital}");
             }
         }
         
@@ -354,5 +365,10 @@ class AdminController extends Controller
 
         request()->session()->flash('alert-success', "E-mail enviado com sucesso.");                
         return redirect("admin/");
+    }
+
+    public function distribuicao_pae($codigoEdital)
+    {
+        
     }
 }
