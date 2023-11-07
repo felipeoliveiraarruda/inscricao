@@ -47,7 +47,7 @@ class DesempenhoController extends Controller
             'vinculo'      => $vinculo,
             'ficha'        => $ficha[0],
             'lattes'       => $lattes[0],
-            'historico'    => $historico[0],
+            'historico'    => (count($historico) == 0 ? '' : $historico[0]),
             'nota'         => 0,            
         ]);
     }

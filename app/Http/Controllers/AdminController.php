@@ -148,34 +148,86 @@ class AdminController extends Controller
 
     public function enviar_email(Request $request)
     {
-        if ($request->tipoDestinatario[0] == 'T')
+        $codigoCurso = '';
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoEdital', $request->codigoEdital)->first();
+        $curso   = Utils::obterCurso($editais->codigoCurso);
+
+        if ($editais->codigoNivel == 5)
         {
-            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                ->where('editais.codigoEdital', $request->codigoEdital)                                
-                                ->get();
+            $codigoCurso = Utils::obterCodigoCursoPorEmail(Auth::user()->email);
+
+            if ($codigoCurso == null)
+            {
+                if ($request->tipoDestinatario[0] == 'T')
+                {
+                    $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                        ->where('editais.codigoEdital', $request->codigoEdital)                                
+                                        ->get();
+                }
+                else 
+                {
+                    $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                    ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                    ->where('editais.codigoEdital', $request->codigoEdital)
+                                    ->where('inscricoes.statusInscricao', $request->tipoDestinatario[0])
+                                    ->get();                   
+                }            
+            }
+            else
+            {
+                if ($request->tipoDestinatario[0] == 'T')
+                {
+                    $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                        ->where('editais.codigoEdital', $request->codigoEdital)   
+                                        ->where('pae.codigoCurso', $codigoCurso)                             
+                                        ->get();
+                }
+                else 
+                {
+                    $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                        ->where('editais.codigoEdital', $request->codigoEdital)
+                                        ->where('pae.codigoCurso', $codigoCurso)
+                                        ->where('inscricoes.statusInscricao', $request->tipoDestinatario[0])
+                                        ->get();                   
+                }  
+            }
         }
-        else 
+        else
         {
-            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                               ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                               ->where('editais.codigoEdital', $request->codigoEdital)
-                               ->where('inscricoes.statusInscricao', $request->tipoDestinatario[0])
-                               ->get();                   
+            if ($request->tipoDestinatario[0] == 'T')
+            {
+                $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                    ->where('editais.codigoEdital', $request->codigoEdital)                                
+                                    ->get();
+            }
+            else 
+            {
+                $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                ->where('editais.codigoEdital', $request->codigoEdital)
+                                ->where('inscricoes.statusInscricao', $request->tipoDestinatario[0])
+                                ->get();                   
+            }
         }
         
         foreach($inscritos as $inscrito)
         {
-
             if ($request->codigoEdital == 1)
-            {
+            {                
                 Mail::to(mb_strtolower($inscrito->email))->send(new InscritosPaeMail($request->codigoEdital, $request->assunto, $request->body));
             }
             else
             {
                 Mail::to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
             }
-
             
             //Mail::to('felipeoa@usp.br')->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
 
