@@ -19,6 +19,7 @@ use App\Models\PAE\Pae;
 use App\Models\PAE\AnaliseCurriculo;
 use App\Models\PAE\Avaliacao;
 use App\Models\PAE\TipoAnalise;
+use App\Models\PAE\AvaliadorPae;
 use Uspdev\Replicado\Pessoa;
 use Uspdev\Replicado\Posgraduacao;
 
@@ -122,8 +123,10 @@ class AnaliseCurriculoController extends Controller
             $total = (float)$pontuacao * (float)$tipo->valorTipoAnalise;
         }
 
+        $codigoAvaliadorPae = AvaliadorPae::obterCodigoAvaliadorPae(Auth::user()->id, $request->codigoPae);
+
         $avaliacao = Avaliacao::create([
-            'codigoPae'             => $request->codigoPae,
+            'codigoAvaliadorPae'    => $codigoAvaliadorPae,
             'codigoTipoAnalise'     => $tipo->codigoTipoAnalise,
             'pontuacaoAvaliacao'    => $pontuacao,
             'totalAvaliacao'        => $total,

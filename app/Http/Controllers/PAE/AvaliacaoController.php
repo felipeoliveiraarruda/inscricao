@@ -139,8 +139,6 @@ class AvaliacaoController extends Controller
                         $codigoAvaliador = $avaliadores2[$sortear2]["codigoAvaliador"];
                         $codigoPae       = $confirmados[$sortear]["codigoPae"];
 
-                        echo $avaliadores2[$sortear2]['codigoAvaliador'].' - '.$confirmados[$sortear]['codigoPae'].'<br/>';
-
                         unset($confirmados[$sortear]);
                         unset($avaliadores2[$sortear2]);
 
@@ -154,8 +152,6 @@ class AvaliacaoController extends Controller
                     {
                         $sortear = array_rand($confirmados);
 
-                        echo $avaliador->codigoAvaliador.' - '.$confirmados[$sortear]['codigoPae'].'<br/>';
-
                         $codigoAvaliador = $avaliador->codigoAvaliador;
                         $codigoPae       = $confirmados[$sortear]["codigoPae"];
 
@@ -168,66 +164,10 @@ class AvaliacaoController extends Controller
                         ]);
                     }
                 }
-
-
             }
         }
 
-        exit;
-
-
-        
-        /*return view('pae.distribuicao',
-        [
-            'utils'            => new Utils,    
-            'confirmados'      => $confirmados,            
-            'avaliadores'      => $avaliadores,
-            'avaliadores2'     => '',
-            'anosemestre'      => $anosemestre,
-            'totalConfirmados' => $total_confirmados,
-            'totalAvaliadores' => $total_avaliadores,
-            'distribuicao'     => $distribuir,
-            'total'            => round($distribuir),
-            'sortear'          => '',
-            'sortear2'         => '',
-            'ultimo'           => '',
-        ]);
-
-
-        @for($i = 1; $i <= $total; $i++)
-        @if ($i == $total)
-            @php
-                $avaliadores2 = $avaliadores->toArray();
-            @endphp
-        @endif
-
-        @foreach($avaliadores as $avaliador)
-            @if(count($confirmados) > 0)
-                @if ($i == $total)
-                    @php
-                        $sortear  = array_rand($confirmados);
-                        $sortear2 = array_rand($avaliadores2);
-                    @endphp
-
-                    {{ $avaliadores2[$sortear2]["codigoAvaliador"] }} - {{ $confirmados[$sortear]["codigoPae"] }}<br/>
-
-                    @php
-                        unset($confirmados[$sortear]);
-                        unset($avaliadores2[$sortear2]);
-                    @endphp
-                @else
-                    @php
-                        $sortear = array_rand($confirmados);
-                    @endphp
-
-                    {{ $avaliador->codigoAvaliador }} - {{ $confirmados[$sortear]["codigoPae"] }}<br/>
-
-                    @php
-                        unset($confirmados[$sortear]);
-                    @endphp
-                @endif
-            @endif
-        @endforeach
-    @endfor*/
+        request()->session()->flash('alert-success', 'Distribuição de Avaliadores realizada com sucesso.');    
+        return redirect("inscricao/{$codigoEdital}/pae");  
     }
 }

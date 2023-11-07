@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
 
 class Avaliacao extends Model
 {
@@ -37,16 +38,23 @@ class Avaliacao extends Model
     public function obterAvaliacao($codigoPae, $codigoTipoDocumento)
     {
         $avaliacao = Avaliacao::join('tipo_analise', 'tipo_analise.codigoTipoAnalise', 'avaliacao_pae.codigoTipoAnalise')
-                              ->where('avaliacao_pae.codigoPae', $codigoPae)
+                                ->rightJoin('avaliadores_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
+                                ->rightJoin('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
+                                ->where('avaliadores_pae.codigoPae', $codigoPae)
+                                ->where('avaliadores.codigoUsuario', Auth::user()->id)
                               ->where('tipo_analise.codigoTipoDocumento', $codigoTipoDocumento)
                               ->first(); 
-        return $avaliacao;
+        return $avaliacao;   
+                     
     }
 
     public function listarAvaliacao($codigoPae, $codigoTipoDocumento)
     {
         $avaliacao = Avaliacao::join('tipo_analise', 'tipo_analise.codigoTipoAnalise', 'avaliacao_pae.codigoTipoAnalise')
-                              ->where('avaliacao_pae.codigoPae', $codigoPae)
+                              ->rightJoin('avaliadores_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
+                              ->rightJoin('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
+                              ->where('avaliadores_pae.codigoPae', $codigoPae)
+                              ->where('avaliadores.codigoUsuario', Auth::user()->id)
                               ->where('tipo_analise.codigoTipoDocumento', $codigoTipoDocumento)
                               ->first(); 
         return $avaliacao;

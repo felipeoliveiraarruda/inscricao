@@ -51,7 +51,8 @@ class AdminController extends Controller
             'editais' => $editais,
             'utils'   => new Utils,    
             'docente' => (in_array("Docenteusp", session('vinculos'))),
-            'level'     => session('level'),
+            'level'   => session('level'),
+            'pae'     => (Auth::user()->id == 4 ? true : false),
         ]);
     }
 
@@ -74,13 +75,16 @@ class AdminController extends Controller
         } 
         else 
         {
-            if (in_array("Docenteusp", session('vinculos')))
+            if ((in_array("Docenteusp", session('vinculos')) == true) && (session('level') == 'manager'))
             {
-                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae', 'avaliadores.codigoAvaliador'))
                                    ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                    ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                                   ->join('avaliadores_pae', 'pae.codigoPae', '=', 'avaliadores_pae.codigoPae')
+                                   ->join('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
                                    ->where('editais.codigoEdital', $id)
+                                   ->where('avaliadores.codigoUsuario', Auth::user()->id)
                                    ->where('inscricoes.statusInscricao', 'C')
                                    ->paginate(10);
             }

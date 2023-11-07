@@ -21,4 +21,15 @@ class AvaliadorPae extends Model
         'codigoPae',
         'codigoPessoaAlteracao',
     ];
+
+    public function obterCodigoAvaliadorPae($codigoAvaliador, $codigoPae)
+    {
+        $codigo = AvaliadorPae::select('codigoAvaliadorPae')
+                              ->join('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
+                              ->where('avaliadores.codigoUsuario', $codigoAvaliador)
+                              ->where('avaliadores_pae.codigoPae', $codigoPae)
+                              ->first();
+        
+        return $codigo->codigoAvaliadorPae;
+    }
 }
