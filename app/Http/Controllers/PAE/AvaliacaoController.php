@@ -118,7 +118,7 @@ class AvaliacaoController extends Controller
 
         $total_avaliadores = count($avaliadores);
         $total_confirmados = count($confirmados);
-        $total             = round($total_confirmados / $total_avaliadores);
+        $total             = ceil($total_confirmados / $total_avaliadores);
         
         for($i = 1; $i <= $total; $i++)
         {
@@ -168,6 +168,6 @@ class AvaliacaoController extends Controller
         }
 
         request()->session()->flash('alert-success', 'Distribuição de Avaliadores realizada com sucesso.');    
-        return redirect("inscricao/{$codigoEdital}/pae");  
+        return redirect("admin");  
     }
 }
