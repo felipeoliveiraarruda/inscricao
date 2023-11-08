@@ -94,7 +94,9 @@ class Inscricao extends Model
                                 ->leftJoin('inscricoes_documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')    
                                 ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                ->first();  
+                                ->first();
+        //dd($pessoal);
+
         return $pessoal;                                 
     }
 
