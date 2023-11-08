@@ -55,7 +55,7 @@
                                             <td>{{ $profissional->entidadeExperiencia }}</td>
                                             <td>{{ $profissional->posicaoExperiencia }}</td>
                                             <td>{{ $profissional->inicioExperiencia->format('d/m/Y') }}</td>
-                                            <td>{{ $profissional->finalExperiencia->format('d/m/Y') }}</td>
+                                            <td>{{ ($profissional->finalExperiencia == '' ? '' : $profissional->finalExperiencia->format('d/m/Y')) }}</td>
                                             <td></td>
                                         </tr>
                                         @endforeach
