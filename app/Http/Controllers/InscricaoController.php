@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Edital;
 use App\Models\Utils;
@@ -21,6 +22,7 @@ use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
 use App\Mail\ConfirmacaoMail;
+use App\Mail\ComprovanteMail;
 use App\Models\InscricoesArquivos;
 
 class InscricaoController extends Controller
@@ -295,21 +297,22 @@ class InscricaoController extends Controller
         ]); 
     } 
     
-    public function escolar_create($codigoInscricao)
+    public function escolar_create($codigoInscricao, $codigoResumoEscolar = '')
     {
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $escolares    = Inscricao::obterEscolarInscricao($codigoInscricao);
+        $escolares    = Inscricao::obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar);
 
-       if ($escolares[0]->statusInscricao == 'P')
-       {
-           return redirect("inscricao/{$codigoEdital}"); 
-       }
+        if ($escolares[0]->statusInscricao == 'P')
+        {
+            return redirect("inscricao/{$codigoEdital}"); 
+        }
 
         return view('inscricao.escolar',
         [
-            'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $codigoEdital,
-           // 'escolar'           => $escolar,
+            'codigoInscricao'       => $codigoInscricao, 
+            'codigoEdital'          => $codigoEdital,
+            'escolar'               => $escolares[0],
+            'codigoResumoEscolar'   => $codigoResumoEscolar,
         ]); 
     } 
 
@@ -645,6 +648,64 @@ class InscricaoController extends Controller
         return redirect($voltar); 
     }
 
+    public function requerimento($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $inscricao    = Inscricao::obterRequerimentoInscricao($codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
+
+        $voltar = "inscricao/{$codigoEdital}/requerimento";
+    
+        return view('requerimento',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            'requerimento'      => $inscricao,
+            'total'             => $total,
+            'nivel'             => session(['nivel']),
+        ]); 
+    } 
+
+    public function requerimento_store(Request $request)
+    { 
+        $codigoEdital = Inscricao::obterEditalInscricao($request->codigoInscricao);
+        $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $codigoEdital)->first();
+
+        /*$path = $request->file('arquivo')->store('arquivos', 'public');
+
+        $arquivo = Arquivo::create([
+            'codigoUsuario'         => Auth::user()->id,
+            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
+            'linkArquivo'           => $path,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        $inscricaoDocumentos = InscricoesArquivos::create([
+            'codigoInscricao'       => $request->codigoInscricao,
+            'codigoArquivo'         => $arquivo->codigoArquivo,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);*/
+
+       // Mail::to($edital->email)->send(new ComprovanteMail($request->codigoInscricao));
+       Mail::to('dev.ci.eel@usp.br')->send(new ComprovanteMail($request->codigoInscricao));
+        
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', "Ocorreu um erro no cadastrado do Requerimento.");
+        }    
+        else
+        {
+            //Inscricao::where('codigoInscricao', $request->codigoInscricao)->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
+
+            request()->session()->flash('alert-success', 'Requerimento cadastrado com sucesso'); 
+        } 
+    
+        return redirect("inscricao/{$request->codigoInscricao}/requerimento"); 
+    }
+
     public static function comprovante(\App\Models\Comprovante $pdf, $codigoInscricao)
     {
         $editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
@@ -662,14 +723,13 @@ class InscricaoController extends Controller
                 'item' => $item,                
             ]);
         }
-        
-        Inscricao::where('codigoInscricao', $codigoInscricao)->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
-            
-        $pessoais    = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $pessoais->codigoEdital)->first();
-        $foto        = Inscricao::obterFotoInscricao($codigoInscricao);
-        $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
-        $anosemestre = Edital::obterSemestreAno($pessoais->codigoEdital, true);
+
+        $pessoais     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $pessoais->codigoEdital)->first();
+        $foto         = Inscricao::obterFotoInscricao($codigoInscricao);
+        $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
+        $anosemestre  = Edital::obterSemestreAno($pessoais->codigoEdital, true);
+        $arquivo      = Inscricao::obterRequerimentoInscricao($codigoInscricao);
 
         $pdf->setCabecalho($sigla);
       
@@ -703,7 +763,7 @@ class InscricaoController extends Controller
         $pdf->SetFillColor(190,190,190);
         $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
         $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
-        $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37);
+        $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
         $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
         $pdf->SetFont('Arial', 'B', 10);
   
@@ -791,7 +851,7 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial', '', 10);
         $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
         
-        if ($pessoais->codpes == $pessoais->cpf)
+        if ((substr($pessoais->codpes, 0, 2) == 88))
         {
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
@@ -995,7 +1055,7 @@ class InscricaoController extends Controller
 
         $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
    
-        if ($financeiros->solicitarRecursoFinanceiro == 'S')
+        if ($financeiros->bolsaRecursoFinanceiro == 'S')
         {
             $bolsa = true;
             $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
@@ -1004,7 +1064,7 @@ class InscricaoController extends Controller
             $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
             $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
             $pdf->Ln();
-            $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".$financeiros->inicioRecursoFinanceiro->format('m/Y')." a ".$financeiros->finalRecursoFinanceiro->format('m/Y')), "LR", 0, "L");
+            $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
             $pdf->Ln();
     
             $pdf->Cell(190, 8, "", "LR", 0, "L");
@@ -1061,62 +1121,80 @@ class InscricaoController extends Controller
         $pdf->Ln();
         $pdf->Cell(140, 8, 'Assinatura do candidato:', 'LB', 0, 'L', false);
         $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
-        
-        $sigla = Str::lower($sigla);
-        $pdf->Output('F', storage_path("app/public/{$sigla}/comprovante/{$diretorio}/{$pessoais->numeroInscricao}.pdf"));
 
-        $pdf->Output();
+        $sigla   = Str::lower($sigla);
+        $arquivo = storage_path("app/public/{$sigla}/comprovante/{$diretorio}/{$pessoais->numeroInscricao}.pdf");
+        $nome    = "{$sigla}/comprovante/{$diretorio}/{$pessoais->numeroInscricao}.pdf";
 
-        return redirect("inscricao/{$edital->codigoEdital}");
-    }
-
-    public function show($codigoInscricao)
-    {
-        $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
-        $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
-        $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
-        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
-
-        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
-
-        $sigla = Str::lower($sigla);
-        return view('inscricao.visualizar',
-        [
-            'codigoInscricao' => $codigoInscricao,
-            'inscricao'       => $inscricao,
-            'endereco'        => $endereco,
-            'arquivos'        => $arquivos,
-            'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
-        ]);
-
-
-        /*$temps = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                          ->where('codigoInscricao', $codigoInscricao)->get();
-        
-        $enderecos = Endereco::join('inscricoes_enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')
-                             ->where('inscricoes_enderecos.codigoInscricao', $codigoInscricao)->get();
-
-        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                             ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                             ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
-
-                             storage_path("app/public/{$sigla}/comprovante/{$diretorio}/{$pessoais->numeroInscricao}.pdf")
-
-
-        foreach($temps as $temp)
+        if (!file_exists($arquivo))
         {
-            $inscricao = $temp;
+            $pdf->Output('F', $arquivo);
+
+            if (file_exists($arquivo))
+            {
+                $arquivo = Arquivo::create([
+                    'codigoUsuario'         => Auth::user()->id,
+                    'codigoTipoDocumento'   => 26,
+                    'linkArquivo'           => $nome,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+        
+                $inscricaoDocumentos = InscricoesArquivos::create([
+                    'codigoInscricao'       => $codigoInscricao,
+                    'codigoArquivo'         => $arquivo->codigoArquivo,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
         }
 
-        return view('inscricao.visualizar',
-        [
-            'inscricao' => $inscricao,
-            'endereco'  => $enderecos,
-            'arquivos'  => $arquivos,
-        ]);*/
+        $pdf->Output('I', "{$pessoais->numeroInscricao}.pdf");
+    }
+
+    public function show($codigoInscricao, $tipo = '')
+    {    
+        if ($tipo == 'pessoal')
+        {
+            $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+            $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
+            $emergencia  = Inscricao::obterEmergenciaInscricao($codigoInscricao);
+            $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
+            $sigla       = Str::lower(Utils::obterSiglaCurso($edital->codigoCurso));
+            $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);   
+
+            return view('inscricao.visualizar',
+            [
+                'codigoInscricao' => $codigoInscricao,
+                'inscricao'       => $inscricao,
+                'endereco'        => $endereco,
+                'emergencia'      => $emergencia,
+                'arquivos'        => '',
+                'tipo'            => "inscricao.visualizar.{$tipo}",
+                'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
+            ]);
+        }
+        else if ($tipo == '')
+        {
+            $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+            $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
+            $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
+            $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
+            $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+    
+            $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                               ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                               ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
+    
+            $sigla = Str::lower($sigla);
+            return view('inscricao.visualizar',
+            [
+                'codigoInscricao' => $codigoInscricao,
+                'inscricao'       => $inscricao,
+                'endereco'        => $endereco,
+                'arquivos'        => $arquivos,
+                'tipo'            => "inscricao.visualizar.index",
+                'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
+            ]);
+        }
     }
 
     public function validar($codigoInscricao)

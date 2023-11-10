@@ -246,20 +246,22 @@ class Utils extends Model
         $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
         $curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
+        $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
 
-        $total['pessoal']       = InscricoesPessoais::obterTotal($codigoInscricao);
-        $total['documento']     = InscricoesDocumentos::obterTotal($codigoInscricao);
-        $total['endereco']      = InscricoesEnderecos::obterTotal($codigoInscricao);
-        $total['arquivo']       = InscricoesArquivos::obterTotal($codigoInscricao);
-        $total['emergencia']    = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
-        $total['escolar']       = InscricoesResumoEscolar::obterTotal($codigoInscricao);
-        $total['idioma']        = InscricoesIdiomas::obterTotal($codigoInscricao);
-        $total['profissional']  = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
-        $total['ensino']        = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
-        $total['financeiro']    = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
-        $total['expectativas']  = (empty($expectativas->expectativasInscricao) ? 0 : 1);
-        $total['curriculo']     = (empty($curriculo->codigoArquivo) ? 0 : 1);
-        $total['pre-projeto']   = $pre_projeto;
+        $total['pessoal']      = InscricoesPessoais::obterTotal($codigoInscricao);
+        $total['documento']    = InscricoesDocumentos::obterTotal($codigoInscricao);
+        $total['endereco']     = InscricoesEnderecos::obterTotal($codigoInscricao);
+        $total['arquivo']      = InscricoesArquivos::obterTotal($codigoInscricao);
+        $total['emergencia']   = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
+        $total['escolar']      = InscricoesResumoEscolar::obterTotal($codigoInscricao);
+        $total['idioma']       = InscricoesIdiomas::obterTotal($codigoInscricao);
+        $total['profissional'] = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
+        $total['ensino']       = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
+        $total['financeiro']   = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
+        $total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
+        $total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
+        $total['pre-projeto']  = $pre_projeto;
+        $total['requerimento'] = $requerimento;
 
         session(['total' => $total]);
     }   

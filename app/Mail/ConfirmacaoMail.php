@@ -30,7 +30,6 @@ class ConfirmacaoMail extends Mailable
         $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital, true);
 
-
         return $this->subject("[INSCRIÇÃO EEL/USP] - CONFIRMAÇÃO DE INSCRIÇÃO {$sigla} - {$anosemestre}")
                     ->replyTo($edital->email, "{$sigla} EEL/USP")
                     ->view('emails.confirmacao')

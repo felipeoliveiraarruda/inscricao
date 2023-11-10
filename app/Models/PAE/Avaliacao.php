@@ -41,7 +41,7 @@ class Avaliacao extends Model
                                 ->rightJoin('avaliadores_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
                                 ->rightJoin('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
                                 ->where('avaliadores_pae.codigoPae', $codigoPae)
-                                ->where('avaliadores.codigoUsuario', Auth::user()->id)
+                                //->where('avaliadores.codigoUsuario', Auth::user()->id)
                               ->where('tipo_analise.codigoTipoDocumento', $codigoTipoDocumento)
                               ->first(); 
         return $avaliacao;   

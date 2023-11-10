@@ -139,6 +139,7 @@ class AdminController extends Controller
             'inscritos' => $inscritos,
             'curso'     => $curso['nomcur'],
             'docente'   => (in_array("Docenteusp", session('vinculos'))),
+            'pae'       => (Auth::user()->id == 4 ? true : false),
         ]);
     }
 

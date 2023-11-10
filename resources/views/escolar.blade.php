@@ -72,8 +72,8 @@
                                                 </a>                                              
                                             </td>
                                             <td>
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/escolar/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                @if ($escolar->statusInscricao == 'N')
+                                                <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
                                                     <i class="far fa-edit"></i>
                                                 </a>  
                                                 @endif

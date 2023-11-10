@@ -127,9 +127,10 @@ class Arquivo extends Model
 
     public static function obterArquivosDiploma($codigoInscricao)
     {
-        $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('codigoInscricao',       $codigoInscricao)
-                           ->whereIn('codigoTipoDocumento', array('6,7'))
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                           ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                           ->whereIn('arquivos.codigoTipoDocumento', array('6,7'))
                            ->first();
         return $arquivos;           
     }

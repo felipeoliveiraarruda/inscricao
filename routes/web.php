@@ -31,12 +31,13 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::group(['prefix' => 'inscricao'], function()
     { 
         /* Inscrição no Edital */
-        Route::get('{codigoInscricao}',             [InscricaoController::class, 'create']);
-        Route::get('{codigoEdital}/store',          [InscricaoController::class, 'store']);
-        Route::get('comprovante/{codigoInscricao}', [InscricaoController::class, 'comprovante']);
-        Route::get('visualizar/{codigoInscricao}',  [InscricaoController::class, 'show']);
-        Route::get('validar/{codigoInscricao}',     [InscricaoController::class, 'validar']);
-
+        Route::get('{codigoInscricao}',                     [InscricaoController::class, 'create']);
+        Route::get('{codigoEdital}/store',                  [InscricaoController::class, 'store']);
+        Route::get('comprovante/{codigoInscricao}',         [InscricaoController::class, 'comprovante']);
+        Route::get('visualizar/{codigoInscricao}/{tipo?}',  [InscricaoController::class, 'show']);
+        Route::get('validar/{codigoInscricao}',             [InscricaoController::class, 'validar']);
+        Route::get('requerimento/{codigoInscricao}',        [InscricaoController::class, 'comprovante']);
+        
         /* Dados Pessoais Inscrição */
         Route::get('{codigoInscricao}/pessoal',         [InscricaoController::class, 'pessoal']);
         Route::get('{codigoInscricao}/pessoal/create',  [InscricaoController::class, 'pessoal_create']);
@@ -50,8 +51,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/emergencia/create', [InscricaoController::class, 'emergencia_create']);
 
         /* Resumo Escolar Inscrição */
-        Route::get('{codigoInscricao}/escolar/',       [InscricaoController::class, 'escolar']);
-        Route::get('{codigoInscricao}/escolar/create', [InscricaoController::class, 'escolar_create']);
+        Route::get('{codigoInscricao}/escolar/',                                [InscricaoController::class, 'escolar']);
+        Route::get('{codigoInscricao}/escolar/create/{codigoResumoEscolar?}',   [InscricaoController::class, 'escolar_create']);
 
         /* Idioma Inscrição */
         Route::get('{codigoInscricao}/idioma/',       [InscricaoController::class, 'idioma']);
@@ -86,6 +87,10 @@ Route::middleware(['auth','verified'])->group(function ()
 
         /* Anexar arquivos já existentes a inscrição */
         Route::post('anexar',   [InscricaoController::class, 'anexar']);
+
+        /* Requerimento de Inscriçao */
+        Route::get('{codigoInscricao}/requerimento/',       [InscricaoController::class, 'requerimento']);
+        Route::post('{codigoInscricao}/requerimento/store', [InscricaoController::class, 'requerimento_store']);
 
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);

@@ -81,13 +81,15 @@
                                 <td>{{ $arquivo->tipoDocumento }}</td>
                                 <td>{{ $total }}</td>
 
-                                @if ($avaliacao == null)
+                                @if ($avaliacao == null) 
                                     <td></td>
                                     <td></td>
-                                    <td>                                    
+                                    <td>   
+                                        @if ($docente == true)                                  
                                         <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
                                             <i class="fas fa-tasks"></i>
-                                        </a>       
+                                        </a> 
+                                        @endif      
                                     </td>
                                 @else
                                     <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>

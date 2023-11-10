@@ -81,6 +81,10 @@
                                                 @else
                                                     <a href="admin/{{ $inscrito->codigoPae }}/pae/analise" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Análise de Currículo"><i class="fas fa-chart-line"></i></a>
                                                 @endif
+
+                                                @if ($pae)
+                                                    <a href="admin/{{ $inscrito->codigoPae }}/pae/analise" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Análise de Currículo"><i class="fas fa-chart-line"></i></a>
+                                                @endif 
                                             @endif
                                         @else
                                         <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>

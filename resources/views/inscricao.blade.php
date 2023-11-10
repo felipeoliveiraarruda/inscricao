@@ -27,11 +27,8 @@
                             @elseif ($status == 'N')
                                 <hr></hr>
                                 @if ($total > 4)
-                                    <p class="text-justify">Você deve enviar por e-mail, em uma única mensagem, o Requerimento de Inscrição assinado eletronicamente (assinatura eletrônica certificada: GOV.BR, DocuSign ou equivalente), para o endereço eletrônico {{ $email }}.</p> 
-                                    <p class="text-justify">Colocar no assunto o seu nome e o texto "Seleção {{ $sigla }} {{ $anosemestre }}". Não serão aceitos fotos, "prints" ou digitalização do documento assinado eletronicamente.</p>
-                                    <p class="text-justify text-danger font-weight-bold">Atenção: só clique no botão abaixo após ter certeza de ter feito o cadastro de todos os seus dados e o upload de todos os seu documentos obrigatórios conforme o edital.</p>
-                                    
-                                    <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>
+                                    <a class="text-justify">Você deve enviar o Requerimento de Inscrição assinado eletronicamente (assinatura eletrônica certificada: GOV.BR, DocuSign ou equivalente), através do menu do "Requerimento de Inscrição".</p> 
+                                    <p class="text-justify">Não serão aceitos fotos, "prints" ou digitalização do documento assinado eletronicamente.</p>                                    
                                 @endif
                             @elseif ($status == 'C')
                                 <p class="text-center">Sua inscrição para esse processo seletivo já está confirmada.</p>

@@ -29,7 +29,7 @@ class Documento extends Model
     ];
 
     protected $casts = [
-        'dataEmissaoRG' => 'date',
+        'dataEmissaoRG' => 'date:d/m/Y',
      ];
 
      public function user()

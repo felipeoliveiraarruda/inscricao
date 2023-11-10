@@ -152,9 +152,8 @@ class Inscricao extends Model
                                     ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
                                     ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                     ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
-                                    ->first();
+                                    ->get();
         }
 
         return $escolar;                                 
@@ -259,4 +258,16 @@ class Inscricao extends Model
                                    ->first(); 
         return $foto;                                   
     }
+
+    public static function obterRequerimentoInscricao($codigoInscricao)
+    {
+        $requerimento = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
+                               ->rightJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                               ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                               ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                               ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                               ->whereIn('arquivos.codigoTipoDocumento', [28])
+                               ->first(); 
+        return $requerimento;                                 
+    } 
 }

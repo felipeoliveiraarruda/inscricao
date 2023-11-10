@@ -57,6 +57,7 @@ class AnaliseCurriculoController extends Controller
             'ficha'        => $ficha[0],
             'lattes'       => $lattes[0],
             'nota'         => 0,
+            'docente' => (in_array("Docenteusp", session('vinculos'))),
         ]);
     }
 

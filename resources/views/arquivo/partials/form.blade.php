@@ -17,7 +17,7 @@
         Arquivo Atual : <a href="storage/{{ $arquivo->linkArquivo }}" target="_new">Visualizar</a>
         <input type="hidden" name="arquivoAtual" value="{{ $arquivo->linkArquivo }}">
     </div>
-@endif    
+@endif
 
 <div class="form-group">
     <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="application/pdf">
