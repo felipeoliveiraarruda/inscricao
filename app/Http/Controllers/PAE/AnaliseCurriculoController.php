@@ -57,7 +57,8 @@ class AnaliseCurriculoController extends Controller
             'ficha'        => $ficha[0],
             'lattes'       => $lattes[0],
             'nota'         => 0,
-            'docente' => (in_array("Docenteusp", session('vinculos'))),
+            'docente'      => (in_array("Docenteusp", session('vinculos'))),
+            'pae'          => (Auth::user()->id == 4 ? true : false),
         ]);
     }
 
@@ -200,6 +201,38 @@ class AnaliseCurriculoController extends Controller
         $arquivos    = Arquivo::listarArquivosPae($codigoPae, $codigoTipoDocumento);
         
         return view('admin.pae.analisar',
+        [
+            'utils'                 => new Utils,
+            'tipos'                 => $tipos,
+            'codigoPae'             => $codigoPae,
+            'codigoEdital'          => $inscricao->codigoEdital,
+            'codigoTipoDocumento'   => $codigoTipoDocumento,
+            'editar'                => ($total == 0 ? false : true),
+            'inscricao'             => $inscricao,
+            'vinculo'               => $vinculo,
+            'arquivos'              => $arquivos,
+            'ficha'                 => $ficha[0],
+            'lattes'                => $lattes[0],
+        ]);
+    }
+
+    public function visualizar($codigoPae, $codigoTipoDocumento)
+    {
+        if ((session('level') != 'admin') && (session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
+        $inscricao   = Pae::obterPae($codigoPae);
+        $tipos       = TipoDocumento::listarTipoDocumentosAnalisePae();
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $total       = AnaliseCurriculo::obterTotalAnalise($codigoPae);
+        $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
+        $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
+        $arquivos    = Arquivo::listarArquivosPae($codigoPae, $codigoTipoDocumento);
+        
+        return view('admin.pae.visualizar',
         [
             'utils'                 => new Utils,
             'tipos'                 => $tipos,

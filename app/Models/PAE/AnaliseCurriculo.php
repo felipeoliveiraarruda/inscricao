@@ -45,18 +45,18 @@ class AnaliseCurriculo extends Model
                                    ->where('inscricoes.codigoEdital', $codigoEdital)->get();
 
         return $analise;
-    }
+    }*/
 
-    public static function obterAnalise($codigoPae, $codigoTipoAnalise)
+    public static function obterAnalise($codigoPae, $codigoArquivo)
     {
         $analise = AnaliseCurriculo::join('pae', 'analise_curriculo.codigoPae', '=', 'pae.codigoPae')
-                                   ->join('tipo_analise', 'tipo_analise.codigoTipoAnalise', '=', 'analise_curriculo.codigoTipoAnalise')
+                                   ->join('arquivos', 'arquivos.codigoArquivo', '=', 'analise_curriculo.codigoArquivo')
                                    ->where('pae.codigoPae', $codigoPae)
-                                   ->where('tipo_analise.codigoTipoAnalise', $codigoTipoAnalise)
+                                   ->where('arquivos.codigoArquivo', $codigoArquivo)
                                    ->first();                                         
 
         return $analise;
-    }*/
+    }
 
     public static function obterTotalAnalise($codigoPae)
     {

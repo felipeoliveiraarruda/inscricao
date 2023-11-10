@@ -85,16 +85,22 @@
                                     <td></td>
                                     <td></td>
                                     <td>   
-                                        @if ($docente == true)                                  
+                                        @if ($docente == true)
                                         <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
                                             <i class="fas fa-tasks"></i>
-                                        </a> 
-                                        @endif      
+                                        </a>
+                                        @endif
                                     </td>
                                 @else
                                     <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
                                     <td>{{ number_format($avaliacao->totalAvaliacao, 2, ',', '') ?? '' }}</td>
-                                    <td></td>
+                                    <td>
+                                        @if ($pae == true)
+                                        <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}/visualizar" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                            <i class="fas fa-tasks"></i>
+                                        </a> 
+                                        @endif 
+                                    </td>
                                 @endif
                             </tr>
                         </tbody>

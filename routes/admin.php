@@ -40,10 +40,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::patch('{codigoPae}/pae/desempenho', [DesempenhoController::class, 'update']);
 
         /* PAE - Analise */
-        Route::get('{codigoPae}/pae/analise',                       [AnaliseCurriculoController::class, 'index']);
-        Route::post('{codigoPae}/pae/analise',                      [AnaliseCurriculoController::class, 'store']);
-        Route::patch('{codigoPae}/pae/analise',                     [AnaliseCurriculoController::class, 'update']);
-        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}', [AnaliseCurriculoController::class, 'analisar']);
+        Route::get('{codigoPae}/pae/analise',                                   [AnaliseCurriculoController::class, 'index']);
+        Route::post('{codigoPae}/pae/analise',                                  [AnaliseCurriculoController::class, 'store']);
+        Route::patch('{codigoPae}/pae/analise',                                 [AnaliseCurriculoController::class, 'update']);
+        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}',             [AnaliseCurriculoController::class, 'analisar']);
+        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}/visualizar',  [AnaliseCurriculoController::class, 'visualizar']);
 
         /* PAE - Avaliacao */
         Route::get('{codigoEdital}/pae/avaliacao',              [AvaliacaoController::class, 'index']);
