@@ -23,6 +23,7 @@ class Pae extends Model
         'partipacaoPae',
         'remuneracaoPae',
         'resultadoPae',
+        'notaFinalPae',
         'classificacaoPae',
         'resultadoPae',
         'observacoesPae',
@@ -77,6 +78,27 @@ class Pae extends Model
        } 
 
         return $pae;
+    }
+
+    public function obterClassificacao($codigoEdital, $total = false)
+    {
+        if ($total)
+        {
+            $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                      ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                      ->whereNotNull('pae.classificacaoPae')
+                      ->count();
+        }
+        else
+        {
+            $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                      ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                      ->whereNotNull('pae.classificacaoPae')
+                      ->orderBy('pae.classificacaoPae')
+                      ->get();
+        }
+
+        return $pae;                  
     }
 
 }

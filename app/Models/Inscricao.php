@@ -269,5 +269,5 @@ class Inscricao extends Model
                                ->whereIn('arquivos.codigoTipoDocumento', [28])
                                ->first(); 
         return $requerimento;                                 
-    } 
+    }
 }

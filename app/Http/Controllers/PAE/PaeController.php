@@ -12,6 +12,7 @@ use App\Models\PAE\TipoAnalise;
 use App\Models\PAE\DesempenhoAcademico;
 use App\Models\PAE\AnaliseCurriculo;
 use App\Models\PAE\AnaliseCurriculoArquivo;
+use App\Models\PAE\Avaliacao;
 use App\Models\Utils;
 use App\Models\Edital;
 use App\Models\Inscricao;
@@ -403,6 +404,199 @@ class PaeController extends Controller
             'arquivos'     => $arquivos,
             'total'        => $total,
         ]);
+    }
+
+    public function classificacao($codigoEdital)
+    {
+        if ((session('level') != 'manager') && (session('level') != 'admin'))
+        {
+            return redirect("/");
+        }
+
+        $classificacao = Pae::obterClassificacao($codigoEdital, true);
+        $anosemestre   = Edital::obterSemestreAno($codigoEdital);
+
+        if ($classificacao == 0)
+        {
+            $i = 1;
+
+            $semRemuneracao = array();
+            $comRemuneracao = array();
+
+            $totalConceito = Conceito::obterTotalConceito();
+            $notaConceito  = Conceito::obterNotaConceito();
+
+            $conceitoIC      = AnaliseCurriculo::obterConceitoIC();
+            $conceitoEstagio = AnaliseCurriculo::obterConceitoEstagio();
+
+            $notaEstagio     = AnaliseCurriculo::obterNotaPublicacao();
+            $notaPublicacao  = AnaliseCurriculo::obterNotaICEstagio();
+
+            /*===========LANÇAR A NOTA DOS INSCRITOS QUE NUNCA RECEBRERM BOLSA PAE==============*/
+            $inscritos = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                            ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->where('inscricoes.codigoEdital', $codigoEdital)
+                            ->where('inscricoes.statusInscricao', 'C')
+                            ->where('pae.remuneracaoPae', 'N')->get();
+
+            foreach($inscritos as $inscrito)
+            {
+                if ($inscrito->notaFinalPae == 0.00)
+                {
+                    $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
+                    $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
+                    $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                    $finalDesempenho      = $notaDesempenho * $notaConceito;
+
+                    $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
+                    $estagio     = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [25]);
+                    $publicacoes = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [12,13,14,15,16,17,18,19,20]);
+
+                    $finalEstagio = ($ic + $estagio) * $notaEstagio;
+
+                    if ($publicacoes > 10)
+                    {        
+                        $finalPublicacao = 10 * $notaPublicacao;
+                    }
+                    else
+                    {
+                        $finalPublicacao = $publicacoes * $notaPublicacao;
+                    }
+
+                    $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
+
+                    $pae  = Pae::find($inscrito->codigoPae);
+                    $pae->notaFinalPae = $notaFinal;
+                    $pae->save();
+
+                    $semRemuneracao["{$inscrito->codigoPae}"] = $notaFinal;
+                }
+            }
+
+            /*===========FAZ A ORDENAÇÃO E A CLASSIFICAÇÃO DOS QUE NUNCA RECEBRERM BOLSA PAE==============*/
+            if (count($semRemuneracao) > 0) 
+            {
+                arsort($semRemuneracao);
+
+                foreach($semRemuneracao as $key => $value)
+                {
+                    $pae  = Pae::find($key);
+                    $pae->classificacaoPae = $i;
+                    $pae->save();
+                    $i++;
+                }
+            }
+            
+            /*===========LANÇAR A NOTA DOS INSCRITOS QUE RECEBRERM BOLSA PAE==============*/
+            $inscritos = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                            ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->where('inscricoes.codigoEdital', $codigoEdital)
+                            ->where('inscricoes.statusInscricao', 'C')
+                            ->where('pae.remuneracaoPae', 'S')->get();
+
+            foreach($inscritos as $inscrito)
+            {
+                if ($inscrito->notaFinalPae == 0.00)
+                {
+                    $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
+                    $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
+                    $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                    $finalDesempenho      = $notaDesempenho * $notaConceito;
+
+                    $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
+                    $estagio     = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [25]);
+                    $publicacoes = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [12,13,14,15,16,17,18,19,20]);
+
+                    $finalEstagio = ($ic + $estagio) * $notaEstagio;
+
+                    if ($publicacoes > 10)
+                    {        
+                        $finalPublicacao = 10 * $notaPublicacao;
+                    }
+                    else
+                    {
+                        $finalPublicacao = $publicacoes * $notaPublicacao;
+                    }
+
+                    $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
+
+                    $pae  = Pae::find($inscrito->codigoPae);
+                    $pae->notaFinalPAe = $notaFinal;
+                    $pae->save();
+
+                    $comRemuneracao["{$inscrito->codigoPae}"] = $notaFinal;
+                }
+            }
+
+            /*===========FAZ A ORDENAÇÃO E A CLASSIFICAÇÃO DOS QUE NUNCA RECEBRERM BOLSA PAE==============*/
+            if (count($comRemuneracao) > 0)
+            {
+                arsort($comRemuneracao);
+
+                foreach($comRemuneracao as $key => $value)
+                {
+                    $pae  = Pae::find($key);
+                    $pae->classificacaoPae = $i;
+                    $pae->save();
+                    $i++;
+                }
+            }
+        
+            /*===========DESEMPATE==============*/
+            /*$empates = Pae::select('notaFinalPae')
+                        ->groupBy('notaFinalPae')
+                        ->having(\DB::raw('COUNT(codigoPae)'), '>', 1)
+                        ->orderBy('notaFinalPae', 'desc')
+                        ->get();*/
+
+            /*===========DESEMPATE POR DATA DE INICIO NO PROGRAMA==============*/
+            /*foreach($empates as $empate)
+            {
+                $temps = array();
+
+                $inscritos = Pae::select(\DB::raw('`pae`.codigoPae, `pae`.classificacaoPae, `users`.codpes'))
+                                ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->where('pae.notaFinalPae', $empate->notaFinalPae)
+                                ->orderBy('pae.classificacaoPae')
+                                ->get();
+
+                $inicio = $inscritos[0]->classificacaoPae;
+                $final  = $inscritos[count($inscritos)-1]->classificacaoPae; 
+                $iguais = array();
+
+                foreach($inscritos as $inscrito)
+                {
+                    $vinculo = Posgraduacao::obterVinculoAtivo($inscrito->codpes);
+                    $temps[$inscrito->codigoPae] = $vinculo["dtainivin"];
+
+                    //$empate = $vinculo["dtainivin"];
+                }
+
+            /* sort($temps);
+
+                for($j = $inicio; $inicio < $final; $j++)
+                {
+
+                }
+
+
+                //$result = array_unique($temps);
+
+                echo "<pre>";
+                var_dump($temps);
+                echo "</pre>";
+            }*/
+
+            $classificacao = Pae::obterClassificacao($codigoEdital);
+        }
+
+        return view('admin.pae.classificacao',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $classificacao,
+            'anosemestre'   => $anosemestre,
+        ]);                        
     }
 
 

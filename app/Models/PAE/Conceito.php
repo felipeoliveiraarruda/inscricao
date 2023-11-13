@@ -15,6 +15,7 @@ class Conceito extends Model
 
     protected $table      = 'conceito';
     protected $primaryKey = 'codigoConceito';
+    protected $nota       = 0.6;
 
     protected $fillable = [
         'descricaoConceito',
@@ -23,4 +24,16 @@ class Conceito extends Model
         'statusConceito',
         'codigoPessoaAlteracao',
     ];
+
+    public static function obterTotalConceito()
+    {
+        $conceito = Conceito::where('statusConceito', 'S')->count();
+        return $conceito;
+    }
+
+    public static function obterNotaConceito()
+    {
+        return 0.6;
+    }
+
 }  

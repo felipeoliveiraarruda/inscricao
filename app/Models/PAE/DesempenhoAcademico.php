@@ -57,13 +57,33 @@ class DesempenhoAcademico extends Model
 
         return $desempenho;
     }
-
+    
     public static function obterTotalDesempenho($codigoPae)
     {
         $desempenho = DesempenhoAcademico::join('pae', 'desempenho_academico.codigoPae', '=', 'pae.codigoPae')
                                          ->join('conceito', 'conceito.codigoConceito', '=', 'desempenho_academico.codigoConceito')
                                          ->where('pae.codigoPae', $codigoPae)
                                          ->count();                                         
+
+        return $desempenho;
+    }
+
+    public static function obterSomaTotalDesempenho($codigoPae)
+    {
+        $desempenho = DesempenhoAcademico::join('pae', 'desempenho_academico.codigoPae', '=', 'pae.codigoPae')
+                                         ->join('conceito', 'conceito.codigoConceito', '=', 'desempenho_academico.codigoConceito')
+                                         ->where('pae.codigoPae', $codigoPae)
+                                         ->sum('totalDesempenhoAcademico');                                          
+
+        return $desempenho;
+    }
+
+    public static function obterSomaQuantidadeDesempenho($codigoPae)
+    {
+        $desempenho = DesempenhoAcademico::join('pae', 'desempenho_academico.codigoPae', '=', 'pae.codigoPae')
+                                         ->join('conceito', 'conceito.codigoConceito', '=', 'desempenho_academico.codigoConceito')
+                                         ->where('pae.codigoPae', $codigoPae)
+                                         ->sum('quantidadeDesempenhoAcademico');                                          
 
         return $desempenho;
     }

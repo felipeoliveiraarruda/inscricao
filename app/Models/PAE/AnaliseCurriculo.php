@@ -13,8 +13,12 @@ class AnaliseCurriculo extends Model
     use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $table      = 'analise_curriculo';
-    protected $primaryKey = 'codigoAnaliseCurriculo';
+    protected $table            = 'analise_curriculo';
+    protected $primaryKey       = 'codigoAnaliseCurriculo';
+    protected $notaPublicacao   = 0.2;
+    protected $notaICEstagio    = 0.2;
+    protected $conceitoIC       = 0.5;
+    protected $conceitoEstagio  = 0.5;
 
     protected $fillable = [
         'codigoPae',
@@ -65,5 +69,25 @@ class AnaliseCurriculo extends Model
                                    ->count();                                         
 
         return $analise;
+    }
+
+    public static function obterNotaPublicacao()
+    {
+        return 0.2;
+    }
+
+    public static function obterNotaICEstagio()
+    {
+        return 0.2;
+    }
+
+    public static function obterConceitoIC()
+    {
+        return 0.5;
+    }
+
+    public static function obterConceitoEstagio()
+    {
+        return 0.5;
     }
 }

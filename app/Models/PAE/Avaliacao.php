@@ -58,4 +58,16 @@ class Avaliacao extends Model
                               ->first(); 
         return $avaliacao;
     }
+
+    public function obterSomaAvaliacao($codigoPae, $codigoTipoDocumento)
+    {
+        $avaliacao = Avaliacao::join('tipo_analise', 'tipo_analise.codigoTipoAnalise', 'avaliacao_pae.codigoTipoAnalise')
+                              ->join('avaliadores_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
+                              ->join('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
+                              ->where('avaliadores_pae.codigoPae', $codigoPae)
+                              ->whereIn('tipo_analise.codigoTipoDocumento', $codigoTipoDocumento)
+                              ->sum('totalAvaliacao'); 
+        return $avaliacao;   
+                     
+    }
 }

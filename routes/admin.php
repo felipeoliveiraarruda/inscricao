@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\EditalController;
 use App\Http\Controllers\Admin\TipoDocumentoController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DesempenhoController;
 use App\Http\Controllers\PAE\AnaliseCurriculoController;
 use App\Http\Controllers\PAE\AvaliacaoController;
@@ -50,6 +51,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoEdital}/pae/avaliacao',              [AvaliacaoController::class, 'index']);
         Route::get('{codigoEdital}/pae/distribuicao',           [AvaliacaoController::class, 'distribuicao']);
         Route::post('{codigoEdital}/pae/distribuicao/store',    [AvaliacaoController::class, 'distribuicao_store']);
+                
+        /* PAE - Classificacao */
+        Route::get('{codigoEdital}/pae/classificacao',  [PaeController::class, 'classificacao']);
 
         /* PAE - Desempenho Academico
         Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);
