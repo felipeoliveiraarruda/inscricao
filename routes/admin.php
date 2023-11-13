@@ -54,6 +54,7 @@ Route::middleware(['auth','verified'])->group(function ()
                 
         /* PAE - Classificacao */
         Route::get('{codigoEdital}/pae/classificacao',  [PaeController::class, 'classificacao']);
+        Route::get('{codigoEdital}/pae/planilha',       [PaeController::class, 'planilha']);
 
         /* PAE - Desempenho Academico
         Route::get('{codigoEdital}/pae/desempenho/create',               [PaeController::class, 'desempenho']);

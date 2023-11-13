@@ -587,9 +587,9 @@ class PaeController extends Controller
                 var_dump($temps);
                 echo "</pre>";
             }*/
-
-            $classificacao = Pae::obterClassificacao($codigoEdital);
         }
+
+        $classificacao = Pae::obterClassificacao($codigoEdital);
 
         return view('admin.pae.classificacao',
         [
@@ -597,6 +597,182 @@ class PaeController extends Controller
             'inscritos'     => $classificacao,
             'anosemestre'   => $anosemestre,
         ]);                        
+    }
+
+    public function planilha($codigoEdital)
+    {
+        $tabela = "<table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th scope='col'colspan='6'>Inscritos com prioridade para auxílio</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th scope='col'>Nº USP</th>
+                            <th scope='col'>Nome</th>                                
+                            <th scope='col'>Desempenho Acadêmico</th>
+                            <th scope='col'>Análise Currículo Lattes</th>
+                            <th scope='col'>Nota</th>
+                            <th scope='col'>Classificação</th>
+                        </tr>
+                    </thead>";
+                
+        $inscritos = Pae::obterClassificacao($codigoEdital, 'N');
+
+        $semRemuneracao = array();
+        $comRemuneracao = array();
+
+        $totalConceito = Conceito::obterTotalConceito();
+        $notaConceito  = Conceito::obterNotaConceito();
+
+        $conceitoIC      = AnaliseCurriculo::obterConceitoIC();
+        $conceitoEstagio = AnaliseCurriculo::obterConceitoEstagio();
+
+        $notaEstagio     = AnaliseCurriculo::obterNotaPublicacao();
+        $notaPublicacao  = AnaliseCurriculo::obterNotaICEstagio();
+
+        foreach($inscritos as $inscrito)
+        {
+            $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
+            $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
+            $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+            $finalDesempenho      = $notaDesempenho * $notaConceito;
+
+            $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
+            $estagio     = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [25]);
+            $publicacoes = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [12,13,14,15,16,17,18,19,20]);
+
+            $finalEstagio = ($ic + $estagio) * $notaEstagio;
+
+            if ($publicacoes > 10)
+            {        
+                $finalPublicacao = 10 * $notaPublicacao;
+            }
+            else
+            {
+                $finalPublicacao = $publicacoes * $notaPublicacao;
+            }
+
+            $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
+
+            $tabela .= "<tr>
+                        <td>".$inscrito->codpes."</td>
+                        <td>".$inscrito->name."</td>
+                        <td>".$finalDesempenho."</td>
+                        <td>".($finalEstagio + $finalPublicacao)."</td>
+                        <td>".$notaFinal."</td>
+                        <td>".$inscrito->classificacaoPae."</td>
+                    </tr>";
+
+        }
+
+        $inscritos = Pae::obterClassificacao($codigoEdital, 'S');
+
+        $tabela .= "<table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th scope='col'colspan='6'>Inscritos sem prioridade para auxílio</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th scope='col'>Nº USP</th>
+                            <th scope='col'>Nome</th>                                
+                            <th scope='col'>Desempenho Acadêmico</th>
+                            <th scope='col'>Análise Currículo Lattes</th>
+                            <th scope='col'>Nota</th>
+                            <th scope='col'>Classificação</th>
+                        </tr>
+                    </thead>";
+
+        foreach($inscritos as $inscrito)
+        {
+            $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
+            $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
+            $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+            $finalDesempenho      = $notaDesempenho * $notaConceito;
+
+            $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
+            $estagio     = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [25]);
+            $publicacoes = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [12,13,14,15,16,17,18,19,20]);
+
+            $finalEstagio = ($ic + $estagio) * $notaEstagio;
+
+            if ($publicacoes > 10)
+            {        
+                $finalPublicacao = 10 * $notaPublicacao;
+            }
+            else
+            {
+                $finalPublicacao = $publicacoes * $notaPublicacao;
+            }
+
+            $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
+
+            $tabela .= "<tr>
+                        <td>".$inscrito->codpes."</td>
+                        <td>".$inscrito->name."</td>
+                        <td>".$finalDesempenho."</td>
+                        <td>".($finalEstagio + $finalPublicacao)."</td>
+                        <td>".$notaFinal."</td>
+                        <td>".$inscrito->classificacaoPae."</td>
+                    </tr>";
+
+        }
+
+        echo $tabela;
+    }
+
+
+    public function resultado($codigoEdital)
+    {
+        $inscricao   = Inscricao::obterInscricaoPae(Auth::user()->id, $codigoEdital);
+        $anosemestre = Edital::obterSemestreAno($codigoEdital);
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+
+        $totalConceito = Conceito::obterTotalConceito();
+        $notaConceito  = Conceito::obterNotaConceito();
+
+        $conceitoIC      = AnaliseCurriculo::obterConceitoIC();
+        $conceitoEstagio = AnaliseCurriculo::obterConceitoEstagio();
+
+        $notaEstagio     = AnaliseCurriculo::obterNotaPublicacao();
+        $notaPublicacao  = AnaliseCurriculo::obterNotaICEstagio();
+
+        $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscricao->codigoPae);
+        $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscricao->codigoPae);
+        $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+        $finalDesempenho      = $notaDesempenho * $notaConceito;
+
+        $ic          = Avaliacao::obterSomaAvaliacao($inscricao->codigoPae, [24]);
+        $estagio     = Avaliacao::obterSomaAvaliacao($inscricao->codigoPae, [25]);
+        $publicacoes = Avaliacao::obterSomaAvaliacao($inscricao->codigoPae, [12,13,14,15,16,17,18,19,20]);
+
+        $finalEstagio = ($ic + $estagio) * $notaEstagio;
+
+        if ($publicacoes > 10)
+        {        
+            $finalPublicacao = 10 * $notaPublicacao;
+        }
+        else
+        {
+            $finalPublicacao = $publicacoes * $notaPublicacao;
+        }
+
+        $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
+
+        return view('pae.resultado',
+        [
+            'utils'          => new Utils,
+            'inscricao'      => $inscricao,
+            'anosemestre'    => $anosemestre,
+            'vinculo'        => $vinculo,
+            'codigoEdital'   => $codigoEdital,    
+            'notaDesempenho' => number_format($finalDesempenho, 2, ',', ''),
+            'notaAnalise'    => number_format($finalEstagio + $finalPublicacao, 2, ',', ''),
+            'notaFinal'      => number_format($notaFinal, 2, ',', ''),
+        ]);
     }
 
 

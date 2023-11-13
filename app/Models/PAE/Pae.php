@@ -80,7 +80,7 @@ class Pae extends Model
         return $pae;
     }
 
-    public function obterClassificacao($codigoEdital, $total = false)
+    public function obterClassificacao($codigoEdital, $remuneracao = '', $total = false)
     {
         if ($total)
         {
@@ -91,11 +91,23 @@ class Pae extends Model
         }
         else
         {
-            $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
-                      ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
-                      ->whereNotNull('pae.classificacaoPae')
-                      ->orderBy('pae.classificacaoPae')
-                      ->get();
+            if ($remuneracao == '')
+            {
+                $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                    ->whereNotNull('pae.classificacaoPae')
+                    ->orderBy('pae.classificacaoPae')
+                    ->get();
+            }
+            else
+            {
+                $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                    ->where('pae.remuneracaoPae', $remuneracao)
+                    ->whereNotNull('pae.classificacaoPae')
+                    ->orderBy('pae.classificacaoPae')
+                    ->get();
+            }
         }
 
         return $pae;                  

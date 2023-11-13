@@ -27,6 +27,8 @@ class Edital extends Model
         'linkEdital',
         'dataInicioEdital',
         'dataFinalEdital',
+        'dataInicioRecurso',
+        'dataFinalRecurso',
         'dataDoeEdital',
         'codigoPessoaAlteracao',
     ];
@@ -35,6 +37,8 @@ class Edital extends Model
         'dataInicioEdital' => 'datetime',
         'dataFinalEdital' => 'datetime',
         'dataDoeEdital' => 'datetime',
+        'dataInicioRecurso' => 'datetime',
+        'dataFinalRecurso' => 'datetime',
      ];
 
     public function inscricoes()

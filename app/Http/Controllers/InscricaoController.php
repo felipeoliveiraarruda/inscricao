@@ -41,8 +41,8 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
-        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                         ->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+                         //->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
 
         return view('dashboard',
         [
