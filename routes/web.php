@@ -15,6 +15,7 @@ use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
 use App\Http\Controllers\PAE\DesempenhoController;
+use App\Http\Controllers\PAE\RecursoPaeController;
 
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
@@ -111,6 +112,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::patch('{codigoPae}/pae/{codigoTipoDocumento}/documentacao',          [DocumentacaoController::class, 'update']);
         Route::get('{codigoPae}/pae/documentacao/{codigoTipoDocumento}/destroy',    [DocumentacaoController::class, 'destroy']);
         Route::get('{codigoEdital}/pae/{codigoUsuadio}/documentacao/visualizar',    [DocumentacaoController::class, 'visualizar']);
+
+        /* PAE - Recurso */
+        Route::get('{codigoPae}/pae/recurso/',       [RecursoPaeController::class, 'index']);
+        Route::get('{codigoPae}/pae/recurso/create', [RecursoPaeController::class, 'create']);
+        Route::post('{codigoPae}/pae/recurso',       [RecursoPaeController::class, 'store']);        
     });
 
     /* Dados Pessoais */

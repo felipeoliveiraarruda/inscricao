@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="list-group">
-                <a href="admin/listar-inscritos/{{$inscricao->codigoEdital}}" class="list-group-item list-group-item-action ">Voltar</a>
+                <a href="dashboard" class="list-group-item list-group-item-action">Voltar</a>
             </div>
         </div>
         <div class="col-md-9">
@@ -36,43 +36,62 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">Nome</th>
                                 <th scope="col">Nº USP</th>
+                                <th scope="col">Nome</th>
                                 <th scope="col">Programa</th>
-                                <th scope="col">Já recebeu remuneração do PAE?</th>
+                                <th scope="col">Avaliação</th>
                             </tr>
                         </thead>
                         <tr>
-                            <td>{{ $inscricao->name }}</td>
                             <td>{{ $inscricao->codpes }}</td>
+                            <td>{{ $inscricao->name }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
-                            <td>{{ ($inscricao->remuneracaoPae == "S") ? "Sim" : "Não" }}</td>
+                            <td>{{ $notaFinal }}</td>
                         </tr>
                     </table>
 
                     <div class="row">
                         <div class="col"> 
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col" colspan="3" class="text-center">Avaliação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="col">Desempenho Acadêmico</th>
-                                        <td>{{ $notaDesempenho }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="col">Análise Currículo Lattes</th>
-                                        <td>{{ $notaAnalise }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="col" class="text-right">Nota Final</th>
-                                        <td>{{ $notaFinal }}</td>
-                                    </tr>                                    
-                                </tbody>
-                            </table>                     
+                            <div class="card-body">
+                                @if($recursos)
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Recurso</th>
+                                            <th scope="col">Status</th>
+                                    </thead>
+                                    @foreach($recursos as $temp)
+                                        <tr>
+                                            <td>{{ $temp->justificativaRecurso }}</td>
+                                            <td>
+                                                @if ($temp->statusRecurso == 'A')
+                                                Aberta
+                                                @elseif ($temp->statusRecurso == 'D')
+                                                Deferida
+                                                @else
+                                                Indeferida
+                                                @endif 
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </table>
+                                @else
+                                    @if($recurso)                                          
+                                        <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                
+                                        <form class="needs-validation" novalidate method="POST" action="inscricao/{{ $codigoPae }}/pae/recurso">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="justificativaRecurso" class="font-weight-bold">Recurso</label><span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="justificativaRecurso" name="justificativaRecurso" rows="5" required></textarea>
+                                            </div>  
+                                            
+                                            <input type="hidden" name="codigoPae" value="{{ $codigoPae }}">
+                                            <input type="hidden" name="codigoEdital" value="{{ $codigoEdital }}">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Enviar Recurso</button>
+                                        </form>
+                                    @endif
+                                @endif
                         </div>
                     </div>
                 </div>

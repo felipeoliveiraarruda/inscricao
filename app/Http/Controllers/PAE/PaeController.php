@@ -13,6 +13,7 @@ use App\Models\PAE\DesempenhoAcademico;
 use App\Models\PAE\AnaliseCurriculo;
 use App\Models\PAE\AnaliseCurriculoArquivo;
 use App\Models\PAE\Avaliacao;
+use App\Models\PAE\RecursoPae;
 use App\Models\Utils;
 use App\Models\Edital;
 use App\Models\Inscricao;
@@ -724,12 +725,12 @@ class PaeController extends Controller
         echo $tabela;
     }
 
-
     public function resultado($codigoEdital)
     {
         $inscricao   = Inscricao::obterInscricaoPae(Auth::user()->id, $codigoEdital);
         $anosemestre = Edital::obterSemestreAno($codigoEdital);
         $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $recursos    = RecursoPae::where('codigoPae', $inscricao->codigoPae)->get();        
 
         $totalConceito = Conceito::obterTotalConceito();
         $notaConceito  = Conceito::obterNotaConceito();
@@ -764,14 +765,15 @@ class PaeController extends Controller
 
         return view('pae.resultado',
         [
-            'utils'          => new Utils,
-            'inscricao'      => $inscricao,
-            'anosemestre'    => $anosemestre,
-            'vinculo'        => $vinculo,
-            'codigoEdital'   => $codigoEdital,    
-            'notaDesempenho' => number_format($finalDesempenho, 2, ',', ''),
-            'notaAnalise'    => number_format($finalEstagio + $finalPublicacao, 2, ',', ''),
-            'notaFinal'      => number_format($notaFinal, 2, ',', ''),
+            'utils'         => new Utils,
+            'inscricao'     => $inscricao,
+            'anosemestre'   => $anosemestre,
+            'vinculo'       => $vinculo,
+            'codigoEdital'  => $codigoEdital,   
+            'recurso'       => Edital::obterPeriodoRecurso($codigoEdital),
+            'recursos'      => $recursos,
+            'notaFinal'     => number_format($notaFinal, 2, ',', ''),
+            'codigoPae'     => $inscricao->codigoPae,
         ]);
     }
 

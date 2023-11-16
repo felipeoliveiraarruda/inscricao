@@ -38,10 +38,11 @@
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
+                                        @if ($hoje <= $edital->dataFinalEdital->format('d/m/Y H:i:s'))
                                             @if ($inscrito == 0)
                                                 @if ($edital->codigoNivel == 5)
                                                 <td>                                                                                                                
-                                                    <a href="inscricao/{{ $edital->codigoEdital }}/pae/create" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se {{ $edital->nivelEdital }}</a>
+                                                    <a href="inscricao/{{ $edital->codigoEdital }}/pae/create" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
                                                 </td>
                                                 @else
                                                 <td>                                                                                                                
@@ -73,7 +74,30 @@
                                                         <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
                                                     @endif
                                                 @endif
-                                            @endif                                         
+                                            @endif  
+                                        @else
+                                            @if ($edital->codigoNivel == 5)
+                                                @if ($status == 'P')
+                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                @elseif ($status == 'N')
+                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
+                                                @elseif ($status == 'C')
+                                                    <td>
+                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a>
+                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae/comprovante" role="button" aria-pressed="true" target="_new" class="btn btn-info">Comprovante de Inscrição</a>
+
+                                                        @if ($hoje < $edital->dataFinalRecurso)
+                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae/resultado" role="button" aria-pressed="true" class="btn btn-primary">Resultado</a>
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td>Inscrições encerradas</td>
+                                                @endif
+                                            @endif
+                                        @endif
+
+
+                                      
                                     </tr>
                                 @endforeach
                             @endif

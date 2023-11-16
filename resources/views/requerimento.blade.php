@@ -43,22 +43,25 @@
                                 <div class="col-sm-12"> 
                                    @if($requerimento == null)
 
-                                    <!-- Validation Errors -->
-                                    <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                                    
-                                    <form class="needs-validation" novalidate method="POST" action="inscricao/{{ $codigoInscricao }}/requerimento/store" enctype="multipart/form-data"> 
-                                        @csrf
-                                                                                        
-                                        <div class="form-group">
-                                            <label for="uploadArquivo" class="font-weight-bold">Upload Requerimento Assinado Digitalmente<span class="text-danger">*</span></label>
-                                            <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
-                                        </div>
+                                        <!-- Validation Errors -->
+                                        <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                                        
+                                        <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/{{ $codigoInscricao }}/requerimento/store" enctype="multipart/form-data"> 
+                                            @csrf
+                                                                                            
+                                            <div class="form-group">
+                                                <label for="uploadArquivo" class="font-weight-bold">Upload Requerimento Assinado Digitalmente<span class="text-danger">*</span></label>
+                                                <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
+                                            </div>
 
-                                        <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        
-                                        <input type="hidden" name="codigoTipoDocumento" value="28">
+                                            <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        
+                                            <input type="hidden" name="codigoTipoDocumento" value="28">
 
-                                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
-                                    </form>
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
+                                        </form>
+
+                                        <!-- Modal -->
+                                        @include('utils.loader')
                                     @else
                                     <label for="uploadArquivo" class="font-weight-bold">Requerimento Assinado Digitalmente</span></label>
                                     <p>

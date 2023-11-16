@@ -95,4 +95,18 @@ class Edital extends Model
             return "{$edital->ano}{$edital->semestre}";
         }
     }
+
+    public static function obterPeriodoRecurso($codigoEdital)
+    {
+        $edital = Edital::whereBetween(\DB::raw('NOW()'), [\DB::raw('dataInicioRecurso'), \DB::raw('dataFinalRecurso')])->count();
+        
+        if ($edital > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }   
+    }
 }

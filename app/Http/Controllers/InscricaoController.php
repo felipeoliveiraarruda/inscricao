@@ -137,6 +137,8 @@ class InscricaoController extends Controller
 
         $arquivos  = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 27), $codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
     
         return view('pessoal',
@@ -149,6 +151,7 @@ class InscricaoController extends Controller
             'status'            => $inscricao->statusInscricao,
             'arquivo_inscricao' => '',
             'nivel'             => session(['nivel']),
+            'total'             => $total,
         ]); 
     }
 
@@ -207,6 +210,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEnderecoInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
     
@@ -218,6 +222,7 @@ class InscricaoController extends Controller
             'enderecos'         => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
+            'total'             => $total,
         ]); 
     }  
     
@@ -245,6 +250,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/emergencia";
     
@@ -256,6 +262,7 @@ class InscricaoController extends Controller
             'emergencia'        => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -283,6 +290,7 @@ class InscricaoController extends Controller
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
         $escolares    = Inscricao::obterEscolarInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/escolar";
     
@@ -294,6 +302,7 @@ class InscricaoController extends Controller
             'escolares'         => $escolares,
             'nivel'             => session(['nivel']),
             'status'            => $escolares[0]->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -320,6 +329,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterIdiomaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
         $voltar = "inscricao/{$inscricao[0]->codigoEdital}/idioma";
     
         return view('idioma',
@@ -330,6 +340,7 @@ class InscricaoController extends Controller
             'idiomas'           => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao[0]->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -356,6 +367,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterProfissionalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($$codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/profissional";
     
@@ -367,6 +379,7 @@ class InscricaoController extends Controller
             'profissionais'     => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao[0]->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -393,6 +406,7 @@ class InscricaoController extends Controller
         $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao);     
 
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/ensino";
     
@@ -404,6 +418,7 @@ class InscricaoController extends Controller
             'ensinos'           => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => (isset($inscricao->statusInscricao) ? $inscricao->statusInscricao : 'N'),
+            'total'             => $total,
         ]); 
     } 
     
@@ -433,6 +448,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterFinanceiroInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/financeiro";
     
@@ -444,6 +460,7 @@ class InscricaoController extends Controller
             'financeiros'       => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -469,6 +486,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
     
@@ -480,6 +498,7 @@ class InscricaoController extends Controller
             'expectativas'      => $inscricao,
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
+            'total'             => $total,
         ]); 
     } 
 
@@ -493,6 +512,7 @@ class InscricaoController extends Controller
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
     
@@ -502,6 +522,7 @@ class InscricaoController extends Controller
             'codigoEdital'      => $inscricao->codigoEdital,
             'link_voltar'       => $voltar,
             'expectativas'      => $inscricao,
+            'total'             => $total,
         ]); 
     } 
     
@@ -524,6 +545,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterCurriculoInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/curriculo";
     
@@ -534,6 +556,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'curriculo'         => $inscricao,
             'nivel'             => session(['nivel']),
+            'total'             => $total,
         ]); 
     } 
 
@@ -590,6 +613,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterProjetoInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/pre-projeto";
     
@@ -600,6 +624,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'projeto'           => $inscricao,
             'nivel'             => session(['nivel']),
+            'total'             => $total,
         ]); 
     } 
 
@@ -674,7 +699,7 @@ class InscricaoController extends Controller
         $codigoEdital = Inscricao::obterEditalInscricao($request->codigoInscricao);
         $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $codigoEdital)->first();
 
-        /*$path = $request->file('arquivo')->store('arquivos', 'public');
+        $path = $request->file('arquivo')->store('arquivos', 'public');
 
         $arquivo = Arquivo::create([
             'codigoUsuario'         => Auth::user()->id,
@@ -687,10 +712,9 @@ class InscricaoController extends Controller
             'codigoInscricao'       => $request->codigoInscricao,
             'codigoArquivo'         => $arquivo->codigoArquivo,
             'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);*/
-
-       // Mail::to($edital->email)->send(new ComprovanteMail($request->codigoInscricao));
-       Mail::to('dev.ci.eel@usp.br')->send(new ComprovanteMail($request->codigoInscricao));
+        ]);
+       
+        Mail::to('ppgem@eel.usp.br')->send(new ComprovanteMail($request->codigoInscricao));
         
         if (Mail::failures()) 
         {
@@ -698,7 +722,7 @@ class InscricaoController extends Controller
         }    
         else
         {
-            //Inscricao::where('codigoInscricao', $request->codigoInscricao)->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
+            Inscricao::where('codigoInscricao', $request->codigoInscricao)->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
 
             request()->session()->flash('alert-success', 'Requerimento cadastrado com sucesso'); 
         } 
