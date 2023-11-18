@@ -1222,29 +1222,55 @@ class InscricaoController extends Controller
         }*/
 
         $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
         $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
         $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
 
-        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
+        $foto        = Inscricao::obterFotoInscricao($codigoInscricao);
+        $historicos  = Arquivo::obterArquivosHistorico($codigoInscricao, true);
+        $diplomas    = Arquivo::obterArquivosDiploma($codigoInscricao, true);
+        $curriculo   = Arquivo::obterArquivosCurriculo($codigoInscricao);
+
+        $cpf   = Arquivo::obterArquivosCpf($codigoInscricao);
+        $rg    = Arquivo::obterArquivosRg($codigoInscricao);
+        $rne   = Arquivo::obterArquivosRne($codigoInscricao);
+
+        $projeto = Arquivo::obterArquivosPreProjeto($codigoInscricao);
 
         $sigla = Str::lower($sigla);
+
+        if (file_exists(asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf")))
+        {
+            $ficha = asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf");
+        }
+        else
+        {
+            $ficha = "";
+        }
+
 
         return view('inscricao.visualizar.index',
         [
             'codigoInscricao' => $codigoInscricao,
             'inscricao'       => $inscricao,
-            'endereco'        => $endereco,
-            'arquivos'        => $arquivos,
             'tipo'            => "inscricao.visualizar.index",
-            'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
+            'ficha'           => $ficha,
+            'foto'            => (empty($foto) ? '' : $foto->linkArquivo),
+            'cpf'             => (empty($cpf) ? '' : $cpf),
+            'rg'              => (empty($rg) ? '' : $rg->linkArquivo),
+            'rne'             => (empty($rne) ? '' : $rne->linkArquivo),
+            'historicos'      => (count($historicos) == 0 ? '' : $historicos),
+            'diplomas'        => (count($diplomas) == 0 ? '' : $diplomas),
+            'curriculo'       => (empty($curriculo) ? '' : $curriculo->linkArquivo),
+            'doutorado'       => (($edital->codigoNivel == 2) ? true : false),
+            'projeto'         => (empty($projeto) ? '' : $projeto->linkArquivo),
         ]);
+
+
+        /* (Auth::user()->id == 4 ? true : false),*/
     }
 
-    public function validar($codigoInscricao)
+    public function validar(Request $request, $codigoInscricao)
     {
         $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $codigoInscricao)->first();
 

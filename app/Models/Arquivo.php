@@ -116,22 +116,96 @@ class Arquivo extends Model
         return false;
     }
 
-    public static function obterArquivosHistorico($codigoInscricao)
+    public static function obterArquivosHistorico($codigoInscricao, $todos = false)
     {
-        $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('codigoInscricao',       $codigoInscricao)
-                           ->where('codigoTipoDocumento', '5')
-                           ->first();
+        if ($todos)
+        {
+            $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                               ->where('codigoInscricao',       $codigoInscricao)
+                               ->where('codigoTipoDocumento', '5')
+                               ->get();
+        }
+        else
+        {
+            $arquivos = Arquivo::join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                               ->where('codigoInscricao',       $codigoInscricao)
+                               ->where('codigoTipoDocumento', '5')
+                               ->first();
+        }
+
+
         return $arquivos;           
     }
 
-    public static function obterArquivosDiploma($codigoInscricao)
+    public static function obterArquivosDiploma($codigoInscricao, $todos = false)
+    {
+        if ($todos)
+        {
+            $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                               ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                               ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                               ->whereIn('arquivos.codigoTipoDocumento', array(6, 7))
+                               ->get();
+        }
+        else
+        {
+            $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                               ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                               ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                               ->whereIn('arquivos.codigoTipoDocumento', array(6, 7))
+                               ->first();
+        }
+
+        return $arquivos;           
+    }
+
+    public static function obterArquivosCurriculo($codigoInscricao)
     {
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
-                           ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
-                           ->whereIn('arquivos.codigoTipoDocumento', array('6,7'))
-                           ->first();
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(8, 9))
+                            ->first();
+        return $arquivos;           
+    }
+
+    public static function obterArquivosCpf($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(1, 3))
+                            ->first();
+        return $arquivos;           
+    }
+
+    public static function obterArquivosRg($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(2))
+                            ->first();
+        return $arquivos;           
+    }
+
+    public static function obterArquivosRne($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(4))
+                            ->first();
+        return $arquivos;           
+    }
+
+    public static function obterArquivosPreProjeto($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(10))
+                            ->first();
         return $arquivos;           
     }
 

@@ -6,8 +6,21 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="card bg-default">
+                @if ($inscricao->statusInscricao == 'P')
+                <!-- Validation Errors -->
+                <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                   
+                <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/validar/{{ $codigoInscricao }}">                                    
+                    @csrf                   
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Validar Inscrição</button>
+                </form>
+
+                    <!-- Modal -->
+                    @include('utils.loader')                        
+                @endif
+
                 <div class="list-group">
-                    <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">Dados Pessoais</a>
+                      <!--<a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">Dados Pessoais</a>
                     <a href="inscricao/{{ $codigoInscricao }}/escolar" class="list-group-item list-group-item-action">Resumo Escolar</a>
                     <a href="inscricao/{{ $codigoInscricao }}/idioma" class="list-group-item list-group-item-action">Idiomas</a>
                     <a href="inscricao/{{ $codigoInscricao }}/profissional" class="list-group-item list-group-item-action">Experiência Profissional</a>
@@ -18,7 +31,7 @@
                 
                     @if (Session::get('nivel') == 2)
                         <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">Pré-projeto</a>
-                    @endif
+                    @endif-->
                 
                     <a href="admin/listar-inscritos/{{ $inscricao->codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
     
@@ -36,29 +49,38 @@
 
         <div class="col-md-9">
             <div class="flash-message">
-                @foreach (['danger', 'warning', 'success', 'info'] as $msg)
-                    @if(Session::has('alert-' . $msg))
-                        <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
-                            <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
-                        </p>
-                    @endif
-                @endforeach
+                <div class="flash-message">
+                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                        @if(Session::has('alert-' . $msg))
+                            @if ($msg == 'success')
+                            <div class="alert alert-success" id="success-alert">
+                                {{ Session::get('alert-' . $msg) }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @else
+                            <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                                <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                            </p>
+                            @endif
+                        @endif
+                    @endforeach
+                </div>
             </div>
 
             <div class="card bg-default">
-                <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}
-                    @if ($inscricao->statusInscricao == 'P')
-                        <a href="inscricao/validar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm float-right">Validar Inscrição</a>
-                    @endif
-                </h5>
+                <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}</h5>
 
                 <div class="card-body">
+
+
 
 
                     <table class="table table-striped">
                         <thead>
                             <tr class="text-center">
-                                <th scope="col">Documentos</th>                               
+                                <th scope="col" colspan="8">Documentos</th>                               
                             </tr>
                             <tr class="text-center">
                                 <th scope="col">3.1.1</th>
@@ -69,25 +91,87 @@
                                 <th scope="col">3.1.6</th>
                                 <th scope="col">3.1.7</th>
                                 <th scope="col">3.1.8</th>
+                                @if ($doutorado)
+                                <th scope="col">3.2.1</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="text-center">
-                            <td></td>
-                            <td><a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Ficha de Inscrição</a></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                @if(!empty($foto))
+                                    <a href="{{ $foto }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Foto</a>
+                                @else
+                                    -                                    
+                                @endif
+                            </td>
+                            <td>
+                                @if(!empty($ficha))
+                                    <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Ficha de Inscrição</a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                @if(!empty($cpf))                            
+                                    @if ($cpf->codigoTipoDocumento == 1)    
+                                        <a href="{{ $cpf->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">CPF</a>
+                                    @else
+                                        <a href="{{ $cpf->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Passaporte</a>
+                                    @endif
+                                @else
+                                    -                                    
+                                @endif 
+                            </td>
+                            <td>
+                                @if(!empty($rg))
+                                    <a href="{{ $rg }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RG</a>
+                                @else
+                                    -                                    
+                                @endif                                
+                            </td>
+                            <td>
+                                @if(!empty($rne))
+                                    <a href="{{ $rne }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RNE</a>
+                                @else
+                                    -                                    
+                                @endif                                  
+                            </td>
+                            <td>
+                                @if(!empty($diplomas))
+                                    @foreach ($diplomas as $diploma)
+                                        <a href="{{ $diploma->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Certificado/Diploma</a><br/>
+                                    @endforeach
+                                @else
+                                    -                                    
+                                @endif                                
+                            </td>
+                            <td>
+                                @if(!empty($historicos))
+                                    @foreach ($historicos as $historico)
+                                        <a href="{{ $historico->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Histórico Escolar</a><br/>
+                                    @endforeach
+                                @else
+                                    -                                    
+                                @endif  
+                            </td>
+                            <td>
+                                @if(!empty($curriculo))
+                                    <a href="{{ $curriculo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Currículo Lattes/Vittae</a>
+                                @else
+                                    -                                    
+                                @endif
+                            </td>
+                            @if ($doutorado)
+                            <td>
+                                @if(!empty($projeto))
+                                    <a href="{{ $projeto }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Pré-projeto</a>
+                                @else
+                                    -                                    
+                                @endif                                
+                            </td>
+                            @endif
                         </tbody>
                     </table>
-
-
-
-                    @foreach($arquivos as $arquivo)
-                        <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-block">{{ $arquivo->tipoDocumento }}</a>
-                    @endforeach
                 </div>
             </div>                    
         </div>        
