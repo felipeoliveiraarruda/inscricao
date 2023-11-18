@@ -78,7 +78,7 @@
                             <tr class="text-center">
                                 <th scope="col" colspan="8">Documentos
                                     @if(!empty($requerimento))
-                                        <a href="{{ $requerimento }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
+                                        <a href="{{ asset('storage/'.$requerimento) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
                                     @endif
                                 </th>                               
                             </tr>
@@ -99,7 +99,7 @@
                         <tbody class="text-center">
                             <td>
                                 @if(!empty($foto))
-                                    <a href="{{ $foto }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Foto</a>
+                                    <a href="{{ asset('storage/'.$foto) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Foto</a>
                                 @else
                                     -                                    
                                 @endif
@@ -114,9 +114,9 @@
                             <td>
                                 @if(!empty($cpf))                            
                                     @if ($cpf->codigoTipoDocumento == 1)    
-                                        <a href="{{ $cpf->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">CPF</a>
+                                        <a href="{{ asset('storage/'.$cpf->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">CPF</a>
                                     @else
-                                        <a href="{{ $cpf->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Passaporte</a>
+                                        <a href="{{ asset('storage/'.$cpf->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Passaporte</a>
                                     @endif
                                 @else
                                     -                                    
@@ -124,14 +124,14 @@
                             </td>
                             <td>
                                 @if(!empty($rg))
-                                    <a href="{{ $rg }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RG</a>
+                                    <a href="{{ asset('storage/'.$rg) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RG</a>
                                 @else
                                     -                                    
                                 @endif                                
                             </td>
                             <td>
                                 @if(!empty($rne))
-                                    <a href="{{ $rne }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RNE</a>
+                                    <a href="{{ asset('storage/'.$rne) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">RNE</a>
                                 @else
                                     -                                    
                                 @endif                                  
@@ -139,7 +139,7 @@
                             <td>
                                 @if(!empty($diplomas))
                                     @foreach ($diplomas as $diploma)
-                                        <a href="{{ $diploma->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Certificado/Diploma</a><br/><br/>
+                                        <a href="{{ asset('storage/'.$diploma->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Certificado/Diploma</a><br/><br/>
                                     @endforeach
                                 @else
                                     -                                    
@@ -148,7 +148,7 @@
                             <td>
                                 @if(!empty($historicos))
                                     @foreach ($historicos as $historico)
-                                        <a href="{{ $historico->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Histórico Escolar</a><br/><br/>
+                                        <a href="{{ asset('storage/'.$historico->linkArquivo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Histórico Escolar</a><br/><br/>
                                     @endforeach
                                 @else
                                     -                                    
@@ -156,7 +156,7 @@
                             </td>
                             <td>
                                 @if(!empty($curriculo))
-                                    <a href="{{ $curriculo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Currículo Lattes/Vittae</a>
+                                    <a href="{{ asset('storage/'.$curriculo) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Currículo Lattes/Vittae</a>
                                 @else
                                     -                                    
                                 @endif
@@ -164,7 +164,7 @@
                             @if ($doutorado)
                             <td>
                                 @if(!empty($projeto))
-                                    <a href="{{ $projeto }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Pré-projeto</a>
+                                    <a href="{{ asset('storage/'.$projeto) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Pré-projeto</a>
                                 @else
                                     -                                    
                                 @endif                                
