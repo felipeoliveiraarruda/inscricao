@@ -1176,7 +1176,7 @@ class InscricaoController extends Controller
 
     public function show($codigoInscricao, $tipo = '')
     {    
-        if ($tipo == 'pessoal')
+        /*if ($tipo == 'pessoal')
         {
             $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
             $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
@@ -1209,6 +1209,7 @@ class InscricaoController extends Controller
                                ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
     
             $sigla = Str::lower($sigla);
+
             return view('inscricao.visualizar',
             [
                 'codigoInscricao' => $codigoInscricao,
@@ -1218,7 +1219,29 @@ class InscricaoController extends Controller
                 'tipo'            => "inscricao.visualizar.index",
                 'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
             ]);
-        }
+        }*/
+
+        $inscricao   = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $endereco    = Inscricao::obterEnderecoInscricao($codigoInscricao);
+        $edital      = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $inscricao->codigoEdital)->first();
+        $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
+
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                           ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                           ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)->get();
+
+        $sigla = Str::lower($sigla);
+
+        return view('inscricao.visualizar.index',
+        [
+            'codigoInscricao' => $codigoInscricao,
+            'inscricao'       => $inscricao,
+            'endereco'        => $endereco,
+            'arquivos'        => $arquivos,
+            'tipo'            => "inscricao.visualizar.index",
+            'ficha'           => asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
+        ]);
     }
 
     public function validar($codigoInscricao)

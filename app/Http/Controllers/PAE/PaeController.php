@@ -777,6 +777,23 @@ class PaeController extends Controller
         ]);
     }
 
+    public function recurso($codigoEdital)
+    {
+        $anosemestre = Edital::obterSemestreAno($codigoEdital);
+        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
+                              ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
+                              ->get();
+
+        return view('admin.pae.recurso',
+        [
+            'utils'         => new Utils,
+            'recursos'      => $recursos,
+            'codigoEdital'  => $codigoEdital,
+        ]);
+    }
+
 
 
    /* public function desempenho($codigoEdital)

@@ -51,7 +51,7 @@
                                                                                             
                                             <div class="form-group">
                                                 <label for="uploadArquivo" class="font-weight-bold">Upload Requerimento Assinado Digitalmente<span class="text-danger">*</span></label>
-                                                <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
+                                                <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="application/pdf">
                                             </div>
 
                                             <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        

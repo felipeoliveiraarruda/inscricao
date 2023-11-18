@@ -35,8 +35,9 @@
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td><a href="admin/listar-inscritos/{{ $edital->codigoEdital }}">Lista de Inscritos</a></td>
                                         @if ($pae == true)
-                                        <td><!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>--></td>
-                                        <td><a href="admin/{{ $edital->codigoEdital }}/pae/classificacao">Classificação</a></td>
+                                            <td><!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>--></td>
+                                            <td><a href="admin/{{ $edital->codigoEdital }}/pae/classificacao">Classificação</a></td>
+                                            <td><a href="admin/{{ $edital->codigoEdital }}/pae/recurso">Recursos</a></td>
                                         @endif
                                      </tr>
                                 @endforeach

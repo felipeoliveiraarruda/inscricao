@@ -53,16 +53,17 @@
                     <div class="row">
                         <div class="col"> 
                             <div class="card-body">
-                                @if($recursos)
+                                @if(!empty($recursos[0]))
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">Recurso</th>
                                             <th scope="col">Status</th>
+                                        </tr>
                                     </thead>
                                     @foreach($recursos as $temp)
                                         <tr>
-                                            <td>{{ $temp->justificativaRecurso }}</td>
+                                            <td class="text-justify">{{ $temp->justificativaRecurso }}</td>
                                             <td>
                                                 @if ($temp->statusRecurso == 'A')
                                                 Aberta
@@ -72,6 +73,14 @@
                                                 Indeferida
                                                 @endif 
                                             </td>
+                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" colspan="2">Análise</th>
+                                            </tr>
+                                        </thead>
+                                        <tr>
+                                            <td colspan="2" class="text-justify">{{ $temp->analiseRecurso }}</td>
                                         </tr>
                                     @endforeach
                                     </table>
@@ -90,6 +99,9 @@
                                             <input type="hidden" name="codigoEdital" value="{{ $codigoEdital }}">
                                             <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Enviar Recurso</button>
                                         </form>
+
+                                        <!-- Modal -->
+                                        @include('utils.loader')
                                     @endif
                                 @endif
                         </div>

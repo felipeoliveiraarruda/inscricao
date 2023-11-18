@@ -12,6 +12,12 @@ use Illuminate\Support\Str;
 use App\Models\Utils;
 use App\Models\Edital;
 use App\Models\PAE\Pae;
+use Uspdev\Replicado\Pessoa;
+use Uspdev\Replicado\Posgraduacao;
+use Uspdev\Replicado\Estrutura;
+use Illuminate\Routing\UrlGenerator;
+use Mail;
+use App\Mail\PAE\RecursoMail;
 
 class RecursoPaeController extends Controller
 {
@@ -20,14 +26,13 @@ class RecursoPaeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($codigoPae)
+    public function index()
     {
-        $inscricao   = Pae::obterPae($codigoPae);
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
 
-        $recurso = RecursoPae::find($codigoPae);
+        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')->get();
 
-        return view('pae.recurso.index',
+        return view('admin.pae.recurso',
         [
             'utils'        => new Utils,
             'recurso'      => $recurso,
@@ -68,7 +73,7 @@ class RecursoPaeController extends Controller
         }    
         else
         {
-            request()->session()->flash('alert-success', "Recurso ennviado com sucesso.");
+            request()->session()->flash('alert-success', "Recurso enviado com sucesso.");
         } 
 
         return redirect("inscricao/{$request->codigoEdital}/pae/recurso");
@@ -91,9 +96,24 @@ class RecursoPaeController extends Controller
      * @param  \App\Models\PAE\RecursoPae  $recursoPae
      * @return \Illuminate\Http\Response
      */
-    public function edit(RecursoPae $recursoPae)
+    public function edit($codigoRecurso)
     {
-        //
+        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
+                              ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('recurso_pae.codigoRecurso', $codigoRecurso)
+                              ->first();
+
+        $vinculo = Posgraduacao::obterVinculoAtivo($recursos->codpes);
+
+        return view('admin.pae.recurso.edit',
+        [
+            'utils'        => new Utils,
+            'recurso'      => $recursos,
+            'codigoPae'    => $recursos->codigoPae,
+            'codigoEdital' => $recursos->codigoEdital,
+            'vinculo'      => $vinculo,
+        ]);
     }
 
     /**
@@ -103,9 +123,30 @@ class RecursoPaeController extends Controller
      * @param  \App\Models\PAE\RecursoPae  $recursoPae
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RecursoPae $recursoPae)
+    public function update(Request $request)
     {
-        //
+        $recurso = RecursoPae::find($request->codigoRecurso);
+        $pae = Pae::obterPae($recurso->codigoPae);
+       
+        $recurso->statusRecurso         = $request->statusRecurso[0];
+        $recurso->analiseRecurso        = $request->analiseRecurso; 
+        $recurso->codigoPessoaAlteracao = Auth::user()->codpes;      
+        $recurso->save();
+
+       /* Mail::to('dev.ci.eel@usp.br')->send(new RecursoMail($request->codigoEdital, $pae->codigoUsuario));
+        
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', "Ocorreu um erro no envio da avaliação do Recurso.");
+        }    
+        else
+        {
+            request()->session()->flash('alert-success', "Recurso avaliado com sucesso.");
+        } */
+
+        request()->session()->flash('alert-success', "Recurso avaliado com sucesso.");
+
+        return redirect("admin/{$request->codigoRecurso}/pae/recurso");
     }
 
     /**

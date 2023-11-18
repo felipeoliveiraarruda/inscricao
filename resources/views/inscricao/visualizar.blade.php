@@ -5,7 +5,6 @@
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-3">
-
             <div class="list-group">
                 <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action active">Dados Pessoais</a>
                 <a href="inscricao/{{ $codigoInscricao }}/escolar" class="list-group-item list-group-item-action">Resumo Escolar</a>
@@ -25,8 +24,8 @@
                 @if ($inscricao->statusInscricao == 'P')
                     <a href="inscricao/validar/{{ $codigoInscricao }}" id="validarInscricao" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
                     <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-block">Ficha de Inscrição</a>
-                <br/>
-            @endif
+                    <br/>
+                @endif
             </div>
         </div>     
         <div class="col-md-9">
