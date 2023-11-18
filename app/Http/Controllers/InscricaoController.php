@@ -1235,7 +1235,8 @@ class InscricaoController extends Controller
         $rg    = Arquivo::obterArquivosRg($codigoInscricao);
         $rne   = Arquivo::obterArquivosRne($codigoInscricao);
 
-        $projeto = Arquivo::obterArquivosPreProjeto($codigoInscricao);
+        $requerimento = Arquivo::obterArquivosRequerimento($codigoInscricao);
+        $projeto      = Arquivo::obterArquivosPreProjeto($codigoInscricao);
 
         $sigla = Str::lower($sigla);
 
@@ -1264,10 +1265,8 @@ class InscricaoController extends Controller
             'curriculo'       => (empty($curriculo) ? '' : $curriculo->linkArquivo),
             'doutorado'       => (($edital->codigoNivel == 2) ? true : false),
             'projeto'         => (empty($projeto) ? '' : $projeto->linkArquivo),
+            'requerimento'    => (empty($requerimento) ? '' : $requerimento->linkArquivo),
         ]);
-
-
-        /* (Auth::user()->id == 4 ? true : false),*/
     }
 
     public function validar(Request $request, $codigoInscricao)

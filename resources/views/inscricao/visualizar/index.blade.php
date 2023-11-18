@@ -73,14 +73,14 @@
                 <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}</h5>
 
                 <div class="card-body">
-
-
-
-
                     <table class="table table-striped">
                         <thead>
                             <tr class="text-center">
-                                <th scope="col" colspan="8">Documentos</th>                               
+                                <th scope="col" colspan="8">Documentos
+                                    @if(!empty($requerimento))
+                                        <a href="{{ $requerimento }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
+                                    @endif
+                                </th>                               
                             </tr>
                             <tr class="text-center">
                                 <th scope="col">3.1.1</th>
@@ -139,7 +139,7 @@
                             <td>
                                 @if(!empty($diplomas))
                                     @foreach ($diplomas as $diploma)
-                                        <a href="{{ $diploma->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Certificado/Diploma</a><br/>
+                                        <a href="{{ $diploma->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Certificado/Diploma</a><br/><br/>
                                     @endforeach
                                 @else
                                     -                                    
@@ -148,7 +148,7 @@
                             <td>
                                 @if(!empty($historicos))
                                     @foreach ($historicos as $historico)
-                                        <a href="{{ $historico->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Histórico Escolar</a><br/>
+                                        <a href="{{ $historico->linkArquivo }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Histórico Escolar</a><br/><br/>
                                     @endforeach
                                 @else
                                     -                                    

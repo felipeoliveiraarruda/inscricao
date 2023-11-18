@@ -199,6 +199,16 @@ class Arquivo extends Model
         return $arquivos;           
     }
 
+    public static function obterArquivosRequerimento($codigoInscricao)
+    {
+        $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->where('inscricoes_arquivos.codigoInscricao', $codigoInscricao)
+                            ->whereIn('arquivos.codigoTipoDocumento', array(28))
+                            ->first();
+        return $arquivos;           
+    }
+
     public static function obterArquivosPreProjeto($codigoInscricao)
     {
         $arquivos = Arquivo::join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
