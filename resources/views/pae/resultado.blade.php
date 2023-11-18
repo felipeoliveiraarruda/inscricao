@@ -65,12 +65,12 @@
                                         <tr>
                                             <td class="text-justify">{{ $temp->justificativaRecurso }}</td>
                                             <td>
-                                                @if ($temp->statusRecurso == 'A')
-                                                Aberta
+                                                @if ($temp->statusRecurso == 'N')
+                                                    Aberta
                                                 @elseif ($temp->statusRecurso == 'D')
-                                                Deferida
+                                                    Deferida
                                                 @else
-                                                Indeferida
+                                                    Indeferida
                                                 @endif 
                                             </td>
                                         </tr>
