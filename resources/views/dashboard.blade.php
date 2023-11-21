@@ -93,11 +93,16 @@
                                                 @else
                                                     <td>Inscrições encerradas</td>
                                                 @endif
+                                            @else
+                                                @if ($status == 'C')
+                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
+                                                @elseif ($status == 'P')
+                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                @else
+                                                    <td>Inscrições encerradas</td>
+                                                @endif   
                                             @endif
                                         @endif
-
-
-                                      
                                     </tr>
                                 @endforeach
                             @endif

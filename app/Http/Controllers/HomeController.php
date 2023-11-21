@@ -17,14 +17,18 @@ class HomeController extends Controller
     public function index()
     {
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                         ->where('dataFinalEdital', '>',  Carbon::now())->get();
+                         ->where('dataFinalEdital', '>=',  Carbon::now())->get();
+
+        $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                            ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);                         
 
         if (Auth::guest())
         {
             return view('index', 
             [
-                'editais' => $editais,
-                'utils'   => new Utils,        
+                'editais'    => $editais,
+                'encerrados' => $encerrados,
+                'utils'      => new Utils,        
             ]);
         }
         else

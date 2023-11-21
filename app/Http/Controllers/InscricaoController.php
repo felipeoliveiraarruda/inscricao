@@ -732,7 +732,7 @@ class InscricaoController extends Controller
 
     public static function comprovante(\App\Models\Comprovante $pdf, $codigoInscricao)
     {
-        $editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
+        /*$editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
                          ->where('editais.dataFinalEdital', '>', Carbon::now())
                          ->where('inscricoes.codigoInscricao', $codigoInscricao)->count();
 
@@ -746,7 +746,7 @@ class InscricaoController extends Controller
             [
                 'item' => $item,                
             ]);
-        }
+        }*/
 
         $pessoais     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
         $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $pessoais->codigoEdital)->first();
