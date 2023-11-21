@@ -77,22 +77,22 @@
                         <thead>
                             <tr class="text-center">
                                 <th scope="col" colspan="8">Documentos
-                                    @if(!empty($requerimento))
-                                        <a href="{{ asset('storage/'.$requerimento) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
-                                    @endif
+                                    @if(!empty($ficha))
+                                        <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Ficha de Inscrição</a>
+                                    @endif                                    
                                 </th>                               
                             </tr>
                             <tr class="text-center">
-                                <th scope="col">3.1.1</th>
-                                <th scope="col">3.1.2</th>
-                                <th scope="col">3.1.3</th>
-                                <th scope="col">3.1.4</th>
-                                <th scope="col">3.1.5</th>
-                                <th scope="col">3.1.6</th>
-                                <th scope="col">3.1.7</th>
-                                <th scope="col">3.1.8</th>
+                                <th scope="col">3.1.1<br/>Foto</th>
+                                <th scope="col">3.1.2<br/>Ficha de Inscrição</th>
+                                <th scope="col">3.1.3<br/>CPF/Passaporte</th>
+                                <th scope="col">3.1.4<br/>RG</th>
+                                <th scope="col">3.1.5<br/>RNE</th>
+                                <th scope="col">3.1.6<br/>Certificado/Diploma</th>
+                                <th scope="col">3.1.7<br/>Histórico Escolar</th>
+                                <th scope="col">3.1.8<br/>Currículo Lattes/Vittae</th>
                                 @if ($doutorado)
-                                <th scope="col">3.2.1</th>
+                                <th scope="col">3.2.1<br/>Pré-projeto</th>
                                 @endif
                             </tr>
                         </thead>
@@ -105,8 +105,8 @@
                                 @endif
                             </td>
                             <td>
-                                @if(!empty($ficha))
-                                    <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Ficha de Inscrição</a>
+                                @if(!empty($requerimento))
+                                    <a href="{{ asset('storage/'.$requerimento) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
                                 @else
                                     -
                                 @endif

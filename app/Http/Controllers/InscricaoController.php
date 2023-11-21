@@ -36,6 +36,8 @@ class InscricaoController extends Controller
 
     public function index()
     {
+
+
         if (Auth::user()->cpf == '99999999999')
         {    
             return redirect('admin/dados'); 
@@ -44,12 +46,15 @@ class InscricaoController extends Controller
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
                          //->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
 
+        $liberados = array(47, 52, 48);
+
         return view('dashboard',
         [
             'editais'   => $editais,
             'utils'     => new Utils,
             'inscricao' => new Inscricao,
-            'user_id'   => Auth::user()->id
+            'user_id'   => Auth::user()->id,
+            'liberado'  => (in_array(Auth::user()->id, $liberados) ? true : false),
         ]);
     }
 
@@ -1248,7 +1253,6 @@ class InscricaoController extends Controller
         {
             $ficha = "";
         }
-
 
         return view('inscricao.visualizar.index',
         [
