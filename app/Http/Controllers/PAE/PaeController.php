@@ -414,7 +414,7 @@ class PaeController extends Controller
             return redirect("/");
         }
 
-        $classificacao = Pae::obterClassificacao($codigoEdital, true);
+        $classificacao = Pae::obterClassificacao($codigoEdital, '', true);
         $anosemestre   = Edital::obterSemestreAno($codigoEdital);
 
         if ($classificacao == 0)

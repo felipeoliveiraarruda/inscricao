@@ -367,7 +367,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterProfissionalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($$codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$codigoEdital}/profissional";
     

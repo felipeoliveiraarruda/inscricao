@@ -52,7 +52,7 @@ class AdminController extends Controller
             'utils'   => new Utils,    
             'docente' => (in_array("Docenteusp", session('vinculos'))),
             'level'   => session('level'),
-            'pae'     => (Auth::user()->id == 4 ? true : false),
+            'pae'     => ((Auth::user()->id == 4 || Auth::user()->id == 26)  ? true : false),
         ]);
     }
 
@@ -139,7 +139,7 @@ class AdminController extends Controller
             'inscritos' => $inscritos,
             'curso'     => $curso['nomcur'],
             'docente'   => (in_array("Docenteusp", session('vinculos'))),
-            'pae'       => (Auth::user()->id == 4 ? true : false),
+            'pae'       => (Auth::user()->id == 4  ? true : false),
         ]);
     }
 
