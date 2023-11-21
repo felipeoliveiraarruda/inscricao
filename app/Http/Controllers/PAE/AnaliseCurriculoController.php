@@ -45,6 +45,7 @@ class AnaliseCurriculoController extends Controller
         $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
         $arquivos    = Arquivo::listarArquivosAnalisePae($codigoPae, true);
 
+
         return view('admin.pae.analise',
         [
             'utils'        => new Utils,
@@ -59,6 +60,7 @@ class AnaliseCurriculoController extends Controller
             'nota'         => 0,
             'docente'      => (in_array("Docenteusp", session('vinculos'))),
             'pae'          => (Auth::user()->id == 4 ? true : false),
+            'requerimento' => asset("storage/pae/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf"),
         ]);
     }
 

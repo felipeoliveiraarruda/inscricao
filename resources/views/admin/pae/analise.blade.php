@@ -54,6 +54,7 @@
                             <td>{{ $inscricao->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
                             <td>
+                                <a href="{{ $requerimento }}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Requerimento de Inscrição"><i class="fas fa-eye"></i></a>                            
                                 <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
                                 <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
                             </td>
@@ -95,11 +96,9 @@
                                     <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
                                     <td>{{ number_format($avaliacao->totalAvaliacao, 2, ',', '') ?? '' }}</td>
                                     <td>
-                                        @if ($pae == true)
                                         <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}/visualizar" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                                             <i class="fas fa-tasks"></i>
                                         </a> 
-                                        @endif 
                                     </td>
                                 @endif
                             </tr>
