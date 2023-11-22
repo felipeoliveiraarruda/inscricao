@@ -33,7 +33,7 @@
                         <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">Pré-projeto</a>
                     @endif-->
                 
-                    <a href="admin/listar-inscritos/{{ $inscricao->codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
+                    <a href="{{ url()->previous() }}" class="list-group-item list-group-item-action">Voltar</a>
     
                     <!--if ($inscricao->statusInscricao == 'P')
                         <a href="inscricao/validar/{{ $codigoInscricao }}" id="validarInscricao" class="btn btn-warning btn-block" role="button" aria-pressed="true">Validar Inscrição</a>
@@ -78,7 +78,7 @@
                             <tr class="text-center">
                                 <th scope="col" colspan="8">Documentos
                                     @if(!empty($ficha))
-                                        <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Ficha de Inscrição</a>
+                                        <a href="{{ $ficha }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Ficha de Inscrição</a>
                                     @endif                                    
                                 </th>                               
                             </tr>
@@ -106,7 +106,7 @@
                             </td>
                             <td>
                                 @if(!empty($requerimento))
-                                    <a href="{{ asset('storage/'.$requerimento) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary float-right">Requerimento</a>
+                                    <a href="{{ asset('storage/'.$requerimento) }}" target="_new" role="button" aria-pressed="true" class="btn btn-sm btn-primary">Requerimento Assinado</a>
                                 @else
                                     -
                                 @endif

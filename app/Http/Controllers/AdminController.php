@@ -119,7 +119,9 @@ class AdminController extends Controller
                     $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*'))
                                         ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                        ->where('editais.codigoEdital', $id)->paginate(10);
+                                        ->where('editais.codigoEdital', $id)
+                                        ->orderBy('users.name')
+                                        ->paginate(30);
                 }
 
             }
@@ -129,7 +131,9 @@ class AdminController extends Controller
                                    ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                    ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
-                                   ->where('editais.codigoEdital', $id)->paginate(10);
+                                   ->where('editais.codigoEdital', $id)
+                                   ->orderBy('users.name')
+                                   ->paginate(30);
             }
         }
                 
@@ -424,8 +428,100 @@ class AdminController extends Controller
         return redirect("admin/");
     }
 
-    public function distribuicao_pae($codigoEdital)
-    {
-        
+    public function confirmados(Request $request, $id)
+    {  
+        $codigoCurso = '';
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoEdital', $id)->first();
+        $curso   = Utils::obterCurso($editais->codigoCurso);
+
+        if(isset($request->search)) 
+        {
+            $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                               ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                               ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                               ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                               ->where('editais.codigoEdital', $id)
+                               ->where('inscricoes.statusInscricao', 'C')
+                               ->where('users.name', 'LIKE', "%{$request->search}%")
+                               ->orWhere('users.email', 'LIKE', "%{$request->search}%")
+                               ->get();
+        } 
+        else 
+        {
+            if ((in_array("Docenteusp", session('vinculos')) == true) && (session('level') == 'manager'))
+            {
+                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae', 'avaliadores.codigoAvaliador'))
+                                   ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                   ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                   ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                                   ->join('avaliadores_pae', 'pae.codigoPae', '=', 'avaliadores_pae.codigoPae')
+                                   ->join('avaliadores', 'avaliadores_pae.codigoAvaliador', '=', 'avaliadores.codigoAvaliador')
+                                   ->where('editais.codigoEdital', $id)
+                                   ->where('avaliadores.codigoUsuario', Auth::user()->id)
+                                   ->where('inscricoes.statusInscricao', 'C')
+                                   ->paginate(10);
+            }
+            else if ((session('level') == 'manager'))
+            {
+                if ($editais->codigoNivel == 5)
+                {
+                    $codigoCurso = Utils::obterCodigoCursoPorEmail(Auth::user()->email);
+
+                    if ($codigoCurso == null)
+                    {
+                        $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                            ->where('editais.codigoEdital', $id)
+                                            ->where('inscricoes.statusInscricao', 'C')
+                                            ->paginate(10);
+                    }
+                    else
+                    {
+                        $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                            ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                            ->where('editais.codigoEdital', $id)
+                                            ->where('inscricoes.statusInscricao', 'C')
+                                            ->where('pae.codigoCurso', $codigoCurso)->paginate(10);
+                    }
+
+                }
+                else
+                {
+            
+                    $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*'))
+                                        ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->where('editais.codigoEdital', $id)
+                                        ->where('inscricoes.statusInscricao', 'C')
+                                        ->orderBy('users.name')
+                                        ->paginate(30);
+                }
+
+            }
+            else
+            {
+                $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                                   ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                   ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                   ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                                   ->where('editais.codigoEdital', $id)
+                                   ->where('inscricoes.statusInscricao', 'C')
+                                   ->orderBy('users.name')
+                                   ->paginate(30);
+            }
+        }
+                
+        return view('admin.confirmados',
+        [
+            'id'        => $id,
+            'inscritos' => $inscritos,
+            'curso'     => $curso['nomcur'],
+            'docente'   => (in_array("Docenteusp", session('vinculos'))),
+            'pae'       => (Auth::user()->id == 4  ? true : false),
+        ]);
     }
 }

@@ -53,13 +53,13 @@
                             <td>{{ $inscricao->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
                             <td>
-                                <a href="{{ asset("storage/{$ficha->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
+                                <a href='{{ asset("storage/{$ficha->linkArquivo}")}}' target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
                                 
                                 @if(!empty($historico))
-                                <a href="{{ asset("storage/{$historico->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $historico->tipoDocumento}}"><i class="fas fa-book-open"></i></a>
+                                <a href='{{ asset("storage/{ $historico->linkArquivo}')}}" target="_new" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $historico->tipoDocumento}}"><i class="fas fa-book-open"></i></a>
                                 @endif
                                 
-                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>                                
+                                <a href='{{ asset("storage/{$lattes->linkArquivo}")}}' target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>                                
                             </td>
                         </tr>
                     </table>

@@ -22,6 +22,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('enviar-email',                     [AdminController::class, 'enviar_email']);
         Route::get('enviar-email-classificados/{id}',   [AdminController::class, 'enviar_email_classificados']);
         Route::post('final',                            [AdminController::class, 'final']);
+        Route::get('confirmados/{id}',                  [AdminController::class, 'confirmados']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');
@@ -43,9 +44,11 @@ Route::middleware(['auth','verified'])->group(function ()
         /* PAE - Analise */
         Route::get('{codigoPae}/pae/analise',                                   [AnaliseCurriculoController::class, 'index']);
         Route::post('{codigoPae}/pae/analise',                                  [AnaliseCurriculoController::class, 'store']);
-        Route::patch('{codigoPae}/pae/analise',                                 [AnaliseCurriculoController::class, 'update']);
-        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}',             [AnaliseCurriculoController::class, 'analisar']);
+        Route::patch('{codigoPae}/pae/analise',                                 [AnaliseCurriculoController::class, 'update']);        
         Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}/visualizar',  [AnaliseCurriculoController::class, 'visualizar']);
+        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}',             [AnaliseCurriculoController::class, 'analisar']);
+        Route::get('{codigoPae}/pae/analise/{codigoTipoDocumento}/edit',        [AnaliseCurriculoController::class, 'analisar_edit']);
+        Route::patch('{codigoPae}/pae/analise/{codigoTipoDocumento}',           [AnaliseCurriculoController::class, 'analisar_update']);
 
         /* PAE - Avaliacao */
         Route::get('{codigoEdital}/pae/avaliacao',              [AvaliacaoController::class, 'index']);

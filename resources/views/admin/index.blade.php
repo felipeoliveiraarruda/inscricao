@@ -34,6 +34,7 @@
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td><a href="admin/listar-inscritos/{{ $edital->codigoEdital }}">Lista de Inscritos</a></td>
+                                        <td><a href="admin/confirmados/{{ $edital->codigoEdital }}">Confirmados</a></td>
                                         @if ($pae == true)
                                             <td><!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>--></td>
                                             <td><a href="admin/{{ $edital->codigoEdital }}/pae/classificacao">Classificação</a></td>

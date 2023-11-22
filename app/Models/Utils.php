@@ -278,9 +278,9 @@ class Utils extends Model
         $documento = Arquivo::verificarArquivo($codigoInscricao, [1,2]);
         $historico = Arquivo::verificarArquivo($codigoInscricao, [5]);
         $curriculo = Arquivo::verificarArquivo($codigoInscricao, [8,9]);
-        $diploma   = Arquivo::verificarArquivo($codigoInscricao, [6]);
+        //$diploma   = Arquivo::verificarArquivo($codigoInscricao, [6]);
 
-        return $foto + $documento + $historico + $curriculo + $diploma;
+        return $foto + $documento + $historico + $curriculo;
     }
 
     public static function obterTipoEspecial($tipoEspecial)

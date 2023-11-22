@@ -9,28 +9,19 @@
                 <h6 class="card-header">Pesquisar</h6>
 
                 <div class="card-body"> 
-                    <form method="get" action="admin/listar-inscritos/{{ $id }}/">
+                    <form method="get" action="admin/confirmados/{{ $id }}/">
                         <div class="form-group">
                             <input type="text" placeholder="Nome ou E-mail" class="form-control" id="search" name="search" value="{{ request()->search }}" maxlength="255" required />
                         </div>
 
                         <button type="submit" class="btn btn-success btn-block">Pesquisar</button>
                         @isset(request()->search)
-                        <a href="admin/listar-inscritos/{{ $id }}/" role="button" aria-pressed="true" class="btn btn-info btn-block">Limpar</a>
+                        <a href="admin/confirmados/{{ $id }}/" role="button" aria-pressed="true" class="btn btn-info btn-block">Limpar</a>
                         @endisset
                     </form>
                 </div>
             </div>
             <br/>
-            @if($docente == false)
-            <div class="card bg-default">
-                <h6 class="card-header">E-mail</h6>
-
-                <div class="card-body"> 
-                    <a href="admin/enviar-email/{{ $id }}" role="button" aria-pressed="true" class="btn btn-info btn-block">Enviar E-mail</a>
-                </div>
-            </div>
-            @endif
         </div>
 
         <div class="col-md-9">    

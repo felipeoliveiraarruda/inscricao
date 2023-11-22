@@ -49,6 +49,7 @@ class ResumoEscolarController extends Controller
         $inscricaoResumoEscolar = true;
         $inscricaoHistorico = true;
         $inscricaoDiploma = true;
+        $diploma = false;
         
         \DB::beginTransaction();
 

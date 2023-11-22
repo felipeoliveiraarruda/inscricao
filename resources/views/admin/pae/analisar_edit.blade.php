@@ -40,12 +40,14 @@
                         </tr>
                     </table>
             
-                    <form class="needs-validation" novalidate method="POST" action="admin/{{ $codigoPae }}/pae/analise">
+                    <form class="needs-validation" novalidate method="POST" action="admin/{{ $codigoPae }}/pae/analise/{{ $arquivos[0]->codigoTipoDocumento }}">
                         @csrf
-                                                                        
-                        @include('admin.pae.partials.form_analise')                        
                         
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Inserir</button>
+                        @method('patch')                               
+                        
+                        @include('admin.pae.partials.edit.form_edit_analise')                        
+                        
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Atualizar</button>
                     </form>
                 </div>
             </div>

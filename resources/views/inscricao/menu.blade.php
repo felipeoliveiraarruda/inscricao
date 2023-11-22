@@ -37,11 +37,11 @@
     <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">10.Pré-projeto
         <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
     </a>
-        @if ($total > 4)
+        @if ($total > 3)
             <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">11.Requerimento de Inscrição</a>
         @endif
     @else
-        @if ($total > 4)
+        @if ($total > 2)
             <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
                 <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a>

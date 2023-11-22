@@ -45,7 +45,6 @@ class AnaliseCurriculoController extends Controller
         $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
         $arquivos    = Arquivo::listarArquivosAnalisePae($codigoPae, true);
 
-
         return view('admin.pae.analise',
         [
             'utils'        => new Utils,
@@ -92,7 +91,7 @@ class AnaliseCurriculoController extends Controller
 
             if (isset($request->tipoDocumentoAnalise[$codigoArquivo]))
             {
-                $arquivo = Arquivo::find($codigoArquivo );
+                $arquivo = Arquivo::find($codigoArquivo);
                 $arquivo->codigoTipoDocumento = $request->tipoDocumentoAnalise[$codigoArquivo];
                 $arquivo->save();
             }
@@ -216,6 +215,95 @@ class AnaliseCurriculoController extends Controller
             'ficha'                 => $ficha[0],
             'lattes'                => $lattes[0],
         ]);
+    }
+
+
+    public function analisar_edit($codigoPae, $codigoTipoDocumento)
+    {
+        if ((session('level') != 'admin') && (session('level') != 'manager'))
+        {
+            return redirect("/");
+        }
+
+        $inscricao   = Pae::obterPae($codigoPae);        
+        $tipos       = TipoDocumento::listarTipoDocumentosAnalisePae();
+        $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);        
+        $vinculo     = Posgraduacao::obterVinculoAtivo($inscricao->codpes);
+        $total       = AnaliseCurriculo::obterTotalAnalise($codigoPae);        
+        $lattes      = Arquivo::listarArquivosPae($codigoPae, 9);
+        $ficha       = Arquivo::listarArquivosPae($codigoPae, 22);
+        $arquivos    = Arquivo::listarArquivosPae($codigoPae, $codigoTipoDocumento);
+        
+        return view('admin.pae.analisar_edit',
+        [
+            'utils'                 => new Utils,
+            'tipos'                 => $tipos,
+            'codigoPae'             => $codigoPae,
+            'codigoEdital'          => $inscricao->codigoEdital,
+            'codigoTipoDocumento'   => $codigoTipoDocumento,
+            'editar'                => ($total == 0 ? false : true),
+            'inscricao'             => $inscricao,
+            'vinculo'               => $vinculo,
+            'arquivos'              => $arquivos,
+            'ficha'                 => $ficha[0],
+            'lattes'                => $lattes[0],
+        ]);
+    }
+
+    public function analisar_update(Request $request)
+    {
+        $pontuacao = 0;
+
+        foreach($request->codigoAnaliseCurriculo as $codigoAnaliseCurriculo)
+        {
+            $temp = explode("|", $request->aceitarDocumento[$codigoAnaliseCurriculo]);
+            $statusAnaliseCurriculo = $temp[0];
+            $codigoArquivo          = $temp[1];
+
+            if (isset($request->tipoDocumentoAnalise[$codigoAnaliseCurriculo]))
+            {
+                $arquivo = Arquivo::find($codigoArquivo);
+                $arquivo->codigoTipoDocumento = $request->tipoDocumentoAnalise[$codigoAnaliseCurriculo];
+                $arquivo->save();
+            }
+
+            $analise =  AnaliseCurriculo::find($codigoAnaliseCurriculo);
+            $analise->pontuacaoAnaliseCurriculo     = $request->pontuacaoAnalise[$codigoAnaliseCurriculo];
+            $analise->statusAnaliseCurriculo        = $statusAnaliseCurriculo;
+            $analise->justificativaAnaliseCurriculo = (isset($request->justificativaAnalise[$codigoAnaliseCurriculo]) ? $request->justificativaAnalise[$codigoAnaliseCurriculo] : NULL);            
+            $analise->codigoPessoaAlteracao         = Auth::user()->codpes;
+            
+            $pontuacao = $pontuacao + $request->pontuacaoAnalise[$codigoAnaliseCurriculo];
+        }        
+        
+        $tipo  = TipoAnalise::obterTipoAnaliseCodigoDocumento($request->codigoTipoDocumento);
+
+        if ($tipo->maximoTipoAnalise > 0)
+        {
+            if ($pontuacao > $tipo->maximoTipoAnalise)
+            {
+                $total = (float)$tipo->maximoTipoAnalise * (float)$tipo->valorTipoAnalise;    
+            }
+            else
+            {
+                $total = (float)$pontuacao * (float)$tipo->valorTipoAnalise;    
+            }
+        }
+        else
+        {
+            $total = (float)$pontuacao * (float)$tipo->valorTipoAnalise;
+        }
+
+        $temp = Avaliacao::obterAvaliacao($request->codigoPae, $request->codigoTipoDocumento);
+        
+        $avaliacao = Avaliacao::find($temp->codigoAvaliacao);
+        $avaliacao->pontuacaoAvaliacao    = $pontuacao;
+        $avaliacao->totalAvaliacao        = $total;
+        $avaliacao->codigoPessoaAlteracao = Auth::user()->codpes;
+        $avaliacao->save();
+
+        request()->session()->flash('alert-success', 'Análise atualizada com sucesso.');    
+        return redirect("admin/{$request->codigoPae}/pae/analise");
     }
 
     public function visualizar($codigoPae, $codigoTipoDocumento)

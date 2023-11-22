@@ -100,7 +100,9 @@
                                                     <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
                                                 @elseif ($status == 'N')
                                                     @if($liberado)
-                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>                                                    
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>    
+                                                    @else
+                                                        <td>Inscrições encerradas</td>                                                
                                                     @endif
                                                 @else
                                                     <td>Inscrições encerradas</td>

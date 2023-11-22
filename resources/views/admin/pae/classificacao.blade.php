@@ -31,6 +31,7 @@
                             <td>{{ $inscrito->codpes }}</td>
                             <td>{{ $inscrito->name }}</td>
                             <td>{{ $inscrito->classificacaoPae }}</td>
+                            <td>{{ $inscrito->notaFinalPae }}</td>
                         </tr>
                         @endforeach
                     </table>

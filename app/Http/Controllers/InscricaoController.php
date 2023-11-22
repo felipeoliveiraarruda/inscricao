@@ -36,8 +36,6 @@ class InscricaoController extends Controller
 
     public function index()
     {
-
-
         if (Auth::user()->cpf == '99999999999')
         {    
             return redirect('admin/dados'); 
@@ -46,7 +44,7 @@ class InscricaoController extends Controller
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
                          //->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
 
-        $liberados = array(47, 52, 48);
+        $liberados = array();
 
         return view('dashboard',
         [
@@ -998,7 +996,15 @@ class InscricaoController extends Controller
             $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
             $pdf->CellFitScale(70, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
             $pdf->CellFitScale(25, 8, $escolar->inicioResumoEscolar->format('m/Y'), 1, 0, 'C', false);
-            $pdf->CellFitScale(25, 8, $escolar->finalResumoEscolar->format('m/Y'), 1, 0, 'C', false);            
+                        
+            if ($escolar->finalResumoEscolar == '')
+            {
+                $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+            }
+            else
+            {
+                $pdf->CellFitScale(25, 8, $escolar->finalResumoEscolar->format('m/Y'), 1, 0, 'C', false);            
+            }
         }
 
         $pdf->Ln();
@@ -1040,13 +1046,24 @@ class InscricaoController extends Controller
 
         $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
 
-        foreach($profissionais as $profissional)
-        {   
-            $pdf->Ln();
-            $pdf->CellFitScale(70, 8, utf8_decode($profissional->entidadeExperiencia), 1, 0, 'J', false);
-            $pdf->CellFitScale(70, 8, utf8_decode($profissional->posicaoExperiencia), 1, 0, 'J', false);    
-            $pdf->CellFitScale(25, 8, $profissional->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
-            $pdf->CellFitScale(25, 8, $profissional->finalExperiencia->format('m/Y'), 1, 0, 'C', false);        
+        if (!empty($profissionais->codigoExperiencia))
+        {
+            foreach($profissionais as $profissional)
+            {   
+                $pdf->Ln();
+                $pdf->CellFitScale(70, 8, utf8_decode($profissional->entidadeExperiencia), 1, 0, 'J', false);
+                $pdf->CellFitScale(70, 8, utf8_decode($profissional->posicaoExperiencia), 1, 0, 'J', false);    
+                $pdf->CellFitScale(25, 8, $profissional->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
+               
+                if ($profissional->finalExperiencia == '')
+                {
+                    $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                }
+                else
+                {
+                    $pdf->CellFitScale(25, 8, $profissional->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
+                }
+            }
         }
 
         $pdf->Ln();
@@ -1064,13 +1081,24 @@ class InscricaoController extends Controller
 
         $ensinos = Inscricao::obterEnsinoInscricao($codigoInscricao);
 
-        foreach($ensinos as $ensino)
-        {   
-            $pdf->Ln();
-            $pdf->CellFitScale(70, 8, utf8_decode($ensino->entidadeExperiencia), 1, 0, 'J', false);
-            $pdf->CellFitScale(70, 8, utf8_decode($ensino->posicaoExperiencia), 1, 0, 'J', false);    
-            $pdf->CellFitScale(25, 8, $ensino->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
-            $pdf->CellFitScale(25, 8, $ensino->finalExperiencia->format('m/Y'), 1, 0, 'C', false);        
+        if (!empty($ensinos->codigoExperiencia))
+        {
+            foreach($ensinos as $ensino)
+            {   
+                $pdf->Ln();
+                $pdf->CellFitScale(70, 8, utf8_decode($ensino->entidadeExperiencia), 1, 0, 'J', false);
+                $pdf->CellFitScale(70, 8, utf8_decode($ensino->posicaoExperiencia), 1, 0, 'J', false);    
+                $pdf->CellFitScale(25, 8, $ensino->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);    
+
+                if ($ensino->finalExperiencia == '')
+                {
+                    $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                }
+                else
+                {
+                    $pdf->CellFitScale(25, 8, $ensino->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
+                }
+            }
         }
 
         $pdf->Ln();
@@ -1243,9 +1271,9 @@ class InscricaoController extends Controller
         $requerimento = Arquivo::obterArquivosRequerimento($codigoInscricao);
         $projeto      = Arquivo::obterArquivosPreProjeto($codigoInscricao);
 
-        $sigla = Str::lower($sigla);
+        $sigla = Str::lower($sigla);        
 
-        if (file_exists(asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf")))
+        if (file_exists(storage_path("app/public/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf")))
         {
             $ficha = asset("storage/{$sigla}/comprovante/{$anosemestre}/{$inscricao->numeroInscricao}.pdf");
         }
@@ -1291,6 +1319,17 @@ class InscricaoController extends Controller
         } 
 
         return redirect("/inscricao/visualizar/{$codigoInscricao}");
+    }
+
+    public function recusar($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+
+        Inscricao::where('codigoInscricao', $codigoInscricao)->update(['statusInscricao' => 'R']);
+        
+        request()->session()->flash('alert-success', "Inscrição Nº {$codigoInscricao} recusada com sucesso.");
+
+        return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
     }
 
 

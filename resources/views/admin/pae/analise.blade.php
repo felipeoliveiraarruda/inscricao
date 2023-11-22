@@ -87,7 +87,7 @@
                                     <td></td>
                                     <td>   
                                         @if ($docente == true)
-                                        <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
+                                        <a href="admin/{{$codigoPae}}/pae/analise/{{ $arquivo->codigoTipoDocumento }}" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Avaliar">
                                             <i class="fas fa-tasks"></i>
                                         </a>
                                         @endif
@@ -96,9 +96,14 @@
                                     <td>{{ $avaliacao->pontuacaoAvaliacao ?? '' }}</td>
                                     <td>{{ number_format($avaliacao->totalAvaliacao, 2, ',', '') ?? '' }}</td>
                                     <td>
-                                        <a href="admin/{{$codigoPae}}/pae/analise/{{$arquivo->codigoTipoDocumento}}/visualizar" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                        <a href="admin/{{$codigoPae}}/pae/analise/{{ $arquivo->codigoTipoDocumento }}/visualizar" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                                             <i class="fas fa-tasks"></i>
-                                        </a> 
+                                        </a>
+                                        @if ($arquivo->codigoTipoDocumento == 24 || $arquivo->codigoTipoDocumento == 25)
+                                        <a href="admin/{{$codigoPae}}/pae/analise/{{ $arquivo->codigoTipoDocumento }}/edit" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        @endif 
                                     </td>
                                 @endif
                             </tr>

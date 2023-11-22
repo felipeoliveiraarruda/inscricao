@@ -16,8 +16,8 @@
         </div>
 
         <div class="col">
-            <label for="finalResumoEscolar" class="font-weight-bold">Final<span class="text-danger">*</span></label>
-            <input type="date" step="1" class="form-control" id="finalResumoEscolar" name="finalResumoEscolar" value="{{ old('finalResumoEscolar')  }}" required />
+            <label for="finalResumoEscolar" class="font-weight-bold">Final</label>
+            <input type="date" step="1" class="form-control" id="finalResumoEscolar" name="finalResumoEscolar" value="{{ old('finalResumoEscolar')  }}"/>
         </div> 
     </div>
 </div>
