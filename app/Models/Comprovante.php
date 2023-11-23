@@ -14,11 +14,24 @@ use App\Models\Inscricao;
 class Comprovante extends Fpdf
 {
     protected $cabecalho;
+    protected $presenca = '';
 
     function setCabecalho($sigla)
     {
         $sigla = Str::lower($sigla);
         $this->cabecalho = asset("images/cabecalho/{$sigla}.png");
+    }
+
+    function setCabecalhoPresenca($sigla)
+    {
+        $sigla = Str::lower($sigla);
+        $this->cabecalho = asset("images/cabecalho/presenca/{$sigla}.png");
+    }
+
+    function setPresenca($sigla)
+    {
+        $sigla = Str::lower($sigla);
+        $this->presenca = $sigla;
     }
 
     function Header()
@@ -29,17 +42,52 @@ class Comprovante extends Fpdf
 
     function Footer()
     {
-        $this->SetFont("Arial","B",8);
-        $this->SetY(-15);
-        $this->Cell(95, 3, utf8_decode("ÁREA I"), 0, 0, "L");
-        $this->Cell(95, 3, utf8_decode("ÁREA II"), 0, 0, "R");
-        $this->SetFont("Times", "", 7);
-        $this->Ln();
-        $this->Cell(95, 3, utf8_decode("Estrada Municipal do Campinho, Nº 100, Campinho, Lorena/SP"), 0, 0, "L");
-        $this->Cell(95, 3, utf8_decode("Estrada Municipal Chiquito de Aquino, Nº 1000, Mondesir, Lorena/SP"), 0, 0, "R");
-        $this->Ln();
-        $this->Cell(95, 3, "CEP 12602-810 - Tel. (012) 3159-5000", 0, 0, "L");
-        $this->Cell(95, 3, "CEP 12612-550 - Tel. (012) 3159-9900", 0, 0, "R");
+        if ($this->presenca == '')
+        {
+            $this->SetFont("Arial","B",8);
+            $this->SetY(-15);
+            $this->Cell(95, 3, utf8_decode("ÁREA I"), 0, 0, "L");
+            $this->Cell(95, 3, utf8_decode("ÁREA II"), 0, 0, "R");
+            $this->SetFont("Times", "", 7);
+            $this->Ln();
+            $this->Cell(95, 3, utf8_decode("Estrada Municipal do Campinho, Nº 100, Campinho, Lorena/SP"), 0, 0, "L");
+            $this->Cell(95, 3, utf8_decode("Estrada Municipal Chiquito de Aquino, Nº 1000, Mondesir, Lorena/SP"), 0, 0, "R");
+            $this->Ln();
+            $this->Cell(95, 3, "CEP 12602-810 - Tel. (012) 3159-5000", 0, 0, "L");
+            $this->Cell(95, 3, "CEP 12612-550 - Tel. (012) 3159-9900", 0, 0, "R");
+        }
+        else
+        {
+            $this->SetFont("Times", "", 7);
+            $this->SetY(-30);
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("Escola de Engenharia de Lorena - EEL/USP"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("Área II / DEMAR / PPGEM"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("Estrada Municipal do Campinho, Nº 100, Campinho, Lorena/SP"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("CEP: 12.602-810 - Lorena/SP"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("(12) 3159-9904"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Cell(170, 3, utf8_decode("www.eel.usp.br / ppgem-eel@usp.br"), 0, 0, "L");
+            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+            $this->Ln();
+
+            $this->Image(asset("images/cabecalho/presenca/logo_{$this->presenca}.jpg"), 135, 270, 30);
+        }
+
     }
 
     //Cell with horizontal scaling if text is too wide
@@ -141,6 +189,19 @@ class Comprovante extends Fpdf
         }
 
         return  $titulo;
+    }
+
+    public static function setTituloPresenca($siglaNivel, $codigoCurso, $siglaPrograma)
+    {
+        $curso = Utils::obterCurso($codigoCurso);
+
+        if ($siglaNivel == "ME")
+        {
+            $temp['titulo']     = "PROVA DE SELEÇÃO MESTRADO - {$siglaPrograma}";
+            $temp['sub_titulo'] = "PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - {$siglaPrograma}";
+        }
+
+        return  $temp;
     }
     
     public static function gerarComprovante($cabecalho, $codigoInscricao)

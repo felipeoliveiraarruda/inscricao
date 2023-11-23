@@ -23,6 +23,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('enviar-email-classificados/{id}',   [AdminController::class, 'enviar_email_classificados']);
         Route::post('final',                            [AdminController::class, 'final']);
         Route::get('confirmados/{id}',                  [AdminController::class, 'confirmados']);
+        Route::get('lista-presenca/{id}',               [AdminController::class, 'presenca']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');

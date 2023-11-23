@@ -29,6 +29,7 @@ class Edital extends Model
         'dataFinalEdital',
         'dataInicioRecurso',
         'dataFinalRecurso',
+        'dataExameEdital',
         'dataDoeEdital',
         'codigoPessoaAlteracao',
     ];
@@ -39,6 +40,7 @@ class Edital extends Model
         'dataDoeEdital' => 'datetime',
         'dataInicioRecurso' => 'datetime',
         'dataFinalRecurso' => 'datetime',
+        'dataExameEdital' => 'datetime',
      ];
 
     public function inscricoes()

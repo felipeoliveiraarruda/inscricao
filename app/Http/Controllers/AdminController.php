@@ -522,6 +522,79 @@ class AdminController extends Controller
             'curso'     => $curso['nomcur'],
             'docente'   => (in_array("Docenteusp", session('vinculos'))),
             'pae'       => (Auth::user()->id == 4  ? true : false),
+            'codigoEdital' => $editais->codigoEdital,
         ]);
+    }
+
+    public function presenca(\App\Models\Comprovante $pdf, $codigoEdital)
+    {            
+        $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $codigoEdital)->first();        
+        $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
+        $anosemestre  = Edital::obterSemestreAno($codigoEdital, true, true);
+    
+        $pdf->setCabecalhoPresenca($sigla);
+        $pdf->setPresenca($sigla);
+
+        $titulo = $pdf->setTituloPresenca($edital->siglaNivel, $edital->codigoCurso, $sigla);
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B', 14);
+        $pdf->SetFillColor(190, 190, 190);
+        $pdf->Cell(190, 8, utf8_decode($titulo['titulo']), 0, 0, 'C');
+        $pdf->Ln();
+        $pdf->Cell(190, 8, utf8_decode($titulo['sub_titulo']), 0, 0, 'C');
+        $pdf->Ln();
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->Cell(190, 8, utf8_decode("Exame em {$edital->dataExameEdital->format('d/m/Y')} - Ingresso {$anosemestre}"), 0, 0, 'C');
+        $pdf->Ln(15);
+        
+        $pdf->SetFont('Arial','B', 10);
+        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
+        $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
+        $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', '', 10);
+
+        $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                           ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                           ->join('documentos', 'documentos.codigoUsuario', '=', 'users.id')
+                           ->where('editais.codigoEdital', $codigoEdital)
+                           ->where('inscricoes.statusInscricao', 'C')
+                           ->orderBy('users.name')
+                           ->get();
+
+        $total = 0;
+
+        foreach($inscritos as $inscrito)
+        {
+            $pdf->Cell(15, 8, utf8_decode($inscrito->numeroInscricao), 1, 0, 'C');
+            $pdf->Cell(75, 8, utf8_decode($inscrito->name), 1, 0, 'J');
+            $pdf->Cell(40, 8, utf8_decode($inscrito->numeroRG), 1, 0, 'C');
+            $pdf->Cell(60, 8, utf8_decode(''), 1, 0, 'C');
+            $pdf->Ln();
+
+            $total++;
+        }
+
+        $pdf->Ln(15);
+        $pdf->SetFont('Arial','B', 10);
+        $pdf->Cell(30, 8, utf8_decode(" Total: {$total}"), 1, 0, 'L');
+
+        $pdf->SetFont('Arial','', 10);
+        $pdf->Cell(30, 8, utf8_decode(' Presentes:'), 1, 0, 'L');
+        $pdf->Cell(30, 8, utf8_decode(' Ausentes:'), 1, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode(' Aplicador:'), 1, 0, 'L');
+        $pdf->Ln(50);
+        
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->Cell(190, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C');
+        $pdf->Ln();
+        $pdf->Cell(190, 8, utf8_decode('Coordenador da CCP-PPGEM'), 0, 0, 'C');
+
+        $pdf->Output();
     }
 }

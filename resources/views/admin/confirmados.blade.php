@@ -26,7 +26,13 @@
 
         <div class="col-md-9">    
             <div class="card bg-default">
-                <h5 class="card-header">{{ $curso }} - Lista de Inscritos</h5>
+                <h5 class="card-header">{{ $curso }} - Lista de Inscritos
+                    @if (count($inscritos) > 0)
+                        <a href="admin/lista-presenca/{{ $codigoEdital }}" target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Lista de Presença">
+                            <i class="fa fa-print"></i>  
+                        </a>
+                    @endif
+                </h5>
                 
                 <div class="card-body">                
                     <div class="flash-message">
