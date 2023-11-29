@@ -595,6 +595,6 @@ class AdminController extends Controller
         $pdf->Ln();
         $pdf->Cell(190, 8, utf8_decode('Coordenador da CCP-PPGEM'), 0, 0, 'C');
 
-        $pdf->Output();
+        $pdf->Output('I', 'presenca.pdf');
     }
 }
