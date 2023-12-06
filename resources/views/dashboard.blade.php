@@ -33,12 +33,12 @@
                                         $curso    = $utils->obterCurso($edital->codigoCurso);
                                         $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
                                         $status   = $inscricao->obterStatusInscricao($edital->codigoEdital, $user_id);
-                                        $hoje     = date('d/m/Y H:i:s');
+                                        $hoje     = date('d/m/Y H:i:s');                                        
                                     @endphp       
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
-                                        @if ($hoje <= $edital->dataFinalEdital->format('d/m/Y H:i:s'))
+                                        @if ($hoje > $edital->dataFinalEdital->format('d/m/Y H:i:s'))
                                             @if ($inscrito == 0)
                                                 @if ($edital->codigoNivel == 5)
                                                 <td>                                                                                                                
@@ -95,7 +95,17 @@
                                                 @endif
                                             @else
                                                 @if ($status == 'C')
-                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
+                                                    <td>
+                                                        <a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a>         
+                                                        @php
+                                                            $temp = $inscricao->obterInscricao($user_id, $edital->codigoEdital);                                                    
+                                                            $financeiro = $inscricao->obterFinanceiroInscricao($temp->codigoInscricao);                                                            
+                                                        @endphp
+
+                                                        @if ($financeiro->solicitarRecursoFinanceiro == 'S')
+                                                            <a href="inscricao/{{ $temp->codigoInscricao }}/bolsista" role="button" aria-pressed="true" class="btn btn-primary">Bolsista</a>
+                                                        @endif
+                                                    </td>
                                                 @elseif ($status == 'P')
                                                     <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
                                                 @elseif ($status == 'N')

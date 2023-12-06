@@ -406,7 +406,7 @@ class InscricaoController extends Controller
     public function ensino($codigoInscricao)
     {         
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao);     
+        $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao);  
 
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($codigoInscricao);
@@ -420,7 +420,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'ensinos'           => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => (isset($inscricao->statusInscricao) ? $inscricao->statusInscricao : 'N'),
+            'status'            => (isset($inscricao[0]->statusInscricao) ? $inscricao[0]->statusInscricao : 'N'),
             'total'             => $total,
         ]); 
     } 
@@ -732,6 +732,27 @@ class InscricaoController extends Controller
     
         return redirect("inscricao/{$request->codigoInscricao}/requerimento"); 
     }
+
+    public function bolsista($codigoInscricao)
+    {         
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+           
+        Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
+
+        $voltar = "inscricao/{$codigoEdital}";
+    
+        return view('inscricao.bolsista',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $codigoEdital,
+            'link_voltar'       => $voltar,
+            //'requerimento'      => $inscricao,
+            'total'             => $total,
+            'nivel'             => session(['nivel']),
+        ]); 
+    } 
+
 
     public static function comprovante(\App\Models\Comprovante $pdf, $codigoInscricao)
     {

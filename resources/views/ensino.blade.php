@@ -11,7 +11,7 @@
             <div class="card bg-default">
                 <h5 class="card-header">Experiência Em Ensino
                     @if ($status == 'N')
-                    <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                        <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
                     @endif
                 </h5>
 
