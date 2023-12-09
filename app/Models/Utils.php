@@ -231,6 +231,23 @@ class Utils extends Model
         return $response[0];
     }
 
+    public static function listarOferecimentoPos($codcur, $dtainiofe, $dtafimofe)
+    {
+        $link = env('URL_API_EEL')."/posgraduacao/oferecimento/listar";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codcur'    => $codcur,
+            'dtainiofe' => $dtainiofe,
+            'dtafimofe' => $dtafimofe,
+        ]);
+
+        return $response->json();
+    }
+
     public static function setSession($id)
     {
         $level = User::obterLevel($id);        

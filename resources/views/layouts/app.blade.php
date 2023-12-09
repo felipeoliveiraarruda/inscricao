@@ -43,6 +43,7 @@
         $("#exibirQuais").hide();
         $("#exibirTipoDocumentoPessoal").hide();
         $("#exibirArquivoDocumentoPessoal").hide();
+        $("#exibirEmpregador").hide();
 
         $('#modalAviso').modal('show');
 
@@ -254,6 +255,38 @@
             $(justificativa).prop('disabled', false);
 
             $(pontuacao).val('0');
+          }
+        });
+
+        $("#vinculoEmpregaticioSim").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            //$("#exibirEmpregador").show();
+
+            $("#tipoEmpregador").prop('required',true);
+            $("#nomeEmpregador").prop('required',true);
+            $("#tipoAfastamento").prop('required',true);
+            $("#categoriaFuncional").prop('required',true);
+            $("#situacaoSalarial").prop('required',true);
+            $("#tempoServico").prop('required',true);
+            $("#tempoServicoMesAno").prop('required',true);
+          }
+        });
+
+        $("#vinculoEmpregaticioNao").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+           $("#exibirEmpregador").hide();
+
+           $("#tipoEmpregador").prop('required',false);
+            $("#nomeEmpregador").prop('required',false);
+            $("#tipoAfastamento").prop('required',false);
+            $("#categoriaFuncional").prop('required',false);
+            $("#situacaoSalarial").prop('required',false);
+            $("#tempoServico").prop('required',false);
+            $("#tempoServicoMesAno").prop('required',false);
           }
         });
     })  
