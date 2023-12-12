@@ -321,4 +321,30 @@ class Utils extends Model
 
         return $tipos;
     }
+
+    public static function listaSecaoCnae()
+    {
+        $link = "https://servicodados.ibge.gov.br/api/v2/cnae/secoes";
+
+        $response = Http::get($link);
+
+        $temp = $response->json(); 
+
+        dd($temp);
+ 
+        return $temp;
+    }
+
+    public static function listaDivisaoCnae($secao)
+    {
+        $link = "https://servicodados.ibge.gov.br/api/v2/cnae/secoes/{$secao}/divisoes";
+
+        $response = Http::get($link);
+
+        $temp = $response->json(); 
+
+        dd($temp);
+ 
+        return $temp;
+    }
 }

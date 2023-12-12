@@ -13,19 +13,20 @@ use App\Models\Inscricao;
 
 class Comprovante extends Fpdf
 {
-    protected $cabecalho;
-    protected $presenca = '';
+	protected $sigla     = '';
+    protected $cabecalho = '';
+    protected $presenca  = '';
 
     function setCabecalho($sigla)
     {
-        $sigla = Str::lower($sigla);
-        $this->cabecalho = asset("images/cabecalho/{$sigla}.png");
+        $this->sigla = Str::lower($sigla);
+        $this->cabecalho = asset("images/cabecalho/{$this->sigla}.png");
     }
 
     function setCabecalhoPresenca($sigla)
     {
-        $sigla = Str::lower($sigla);
-        $this->cabecalho = asset("images/cabecalho/presenca/{$sigla}.png");
+        $this->sigla = Str::lower($sigla);
+        $this->cabecalho = asset("images/cabecalho/presenca/{$this->sigla}.png");
     }
 
     function setPresenca($sigla)
@@ -36,8 +37,15 @@ class Comprovante extends Fpdf
 
     function Header()
     {
-        $this->Image($this->cabecalho, 10, 10, 190);
-        $this->Ln(35);
+		if ($this->sigla == 'bolsista')
+		{
+			$this->Image($this->cabecalho, 0, 0, 210);
+		}
+		else
+		{
+			$this->Image($this->cabecalho, 10, 10, 190);
+			$this->Ln(35);
+		}
     }
 
     function Footer()
@@ -190,7 +198,7 @@ class Comprovante extends Fpdf
 	protected $tPadding = '';
 	protected $bPadding = '';
 	protected $rPadding = '';
-	protected $TagStyle = ''; // Style for each tag
+	protected $TagStyle = array(); // Style for each tag
 	protected $Indent = '';
 	protected $Bullet = ''; // Bullet character
 	protected $Space = ''; // Minimum space between words
@@ -242,7 +250,6 @@ class Comprovante extends Fpdf
 		$this->BorderBottom();
 	}
 
-
 	function SetStyle($tag, $family, $style, $size, $color, $indent=-1, $bullet='')
 	{
 		$tag=trim($tag);
@@ -254,17 +261,15 @@ class Comprovante extends Fpdf
 		$this->TagStyle[$tag]['bullet']=$bullet;
 	}
 
-
 	// Private Functions
-
 	function SetSpace() // Minimal space between words
 	{
 		$tag=$this->Parser($this->Text);
+		
 		$this->FindStyle($tag[2],0);
 		$this->DoStyle(0);
 		$this->Space=$this->GetStringWidth(" ");
 	}
-
 
 	function Padding()
 	{
@@ -321,7 +326,6 @@ class Comprovante extends Fpdf
 		$this->Cell($this->wLine,$this->bPadding,"",$border,0,'C',$this->fill);
 	}
 
-
 	function DoStyle($ind) // Applies a style
 	{
 		if(!isset($this->TagStyle[$ind]))
@@ -337,7 +341,6 @@ class Comprovante extends Fpdf
 		else
 			$this->SetTextColor($tab[0],$tab[1],$tab[2]);
 	}
-
 
 	function FindStyle($tag, $ind) // Inheritance from parent elements
 	{
@@ -391,10 +394,10 @@ class Comprovante extends Fpdf
 		}
 
 		// Size
-		if($this->TagStyle[$tag]['size']!=0)
+		if($this->TagStyle[$tag]['size'] != 0)
 			$size=$this->TagStyle[$tag]['size'];
 		else
-		{
+		{			
 			foreach($this->PileStyle as $val)
 			{
 				$val=trim($val);
@@ -419,11 +422,13 @@ class Comprovante extends Fpdf
 				}
 			}
 		}
+
+	
 		 
 		// Result
 		$this->TagStyle[$ind]['family']=$family;
 		$this->TagStyle[$ind]['style']=$style;
-		$this->TagStyle[$ind]['size']=$size;
+		$this->TagStyle[$ind]['size']=0;
 		$this->TagStyle[$ind]['color']=$color;
 		$this->TagStyle[$ind]['indent']=$this->TagStyle[$tag]['indent'];
 	}

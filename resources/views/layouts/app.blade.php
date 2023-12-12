@@ -262,7 +262,7 @@
         {
           if ($(this).prop('checked')) 
           {
-            //$("#exibirEmpregador").show();
+            $("#exibirEmpregador").show();
 
             $("#tipoEmpregador").prop('required',true);
             $("#nomeEmpregador").prop('required',true);

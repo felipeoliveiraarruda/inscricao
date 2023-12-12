@@ -23,7 +23,7 @@
                         <div class="text-justify">
                             @if ($status == 'P')
                                 <hr></hr>
-                                <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>                            
+                                <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>
                             @elseif ($status == 'N')
                                 <hr></hr>
                                 @if ($total > 4)

@@ -65,7 +65,7 @@
 
 <div class="form-group">  
     <div class="form-row">
-        <div class="col-4">
+        <div class="col-3">
             <label for="nivelTitulacao" class="font-weight-bold">{{ __('Maior nível de titulação obtido') }}<span class="text-danger">*</span></label>
             <select class="form-control" id="nivelTitulacao" name="nivelTitulacao" required>
                 <option value="">Selecione uma opção</option>
@@ -83,6 +83,18 @@
         <div class="col-2">
             <label for="anoTitulacao" class="font-weight-bold">{{ __('Ano de titulação') }}<span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="anoTitulacao" name="anoTitulacao" maxlength="4" required>
+        </div>
+
+        <div class="col-2">
+            <label for="codigoPaisTitulacao" class="font-weight-bold">{{ __('País de Titulação') }}<span class="text-danger">*</span></label>
+            <select class="form-control" id="codigoPaisTitulacao" name="codigoPaisTitulacao" required>
+                <option value="">Selecione uma opção</option>
+                @foreach($paises as $pais)
+                    @if (!empty($pais['codddi']))
+                        <option value="{{ $pais['codpas'] }}" {{ old('codigoPaisTitulacao') == $pais['codpas'] ? "selected" : "" }}>+({{ $pais['codddi'] }}) {{ $pais['nompas'] }}</option>
+                    @endif
+                @endforeach
+            </select> 
         </div>
     </div>
 </div>
