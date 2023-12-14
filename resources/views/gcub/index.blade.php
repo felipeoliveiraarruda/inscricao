@@ -4,8 +4,8 @@
 
 <main role="main" class="container-fluid">
     <div class="row">
-        <div class="col-sm-3">
-            <img src="{{ $logo }}" class="img-fluid" height="400" width="400">            
+        <div class="col-sm-3 text-center">
+            @include('gcub.menu')
         </div>
         <div class="col-sm-9">
             <div class="card bg-default">
@@ -18,7 +18,7 @@
                     <form class="needs-validation" novalidate method="POST" action="gcub/store">
                         @csrf
                         @include('gcub.partials.form')
-                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Enviar</button>
                     </form>
                 </div>
             </div>            

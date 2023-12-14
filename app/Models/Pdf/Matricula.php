@@ -16,7 +16,7 @@ class Matricula extends Comprovante
     {
         $this->SetY(-40);
         $this->SetFont('Arial', 'B', 12);
-        $this->Cell(120, 8, utf8_decode('DEFERIDO EM 21/07/2023'), 0, 0, 'L', false);
+        $this->Cell(120, 8, utf8_decode('DEFERIDO EM ____/____/________'), 0, 0, 'L', false);
         $this->Cell(60, 8, '', 'B', 0, 'C', false);
         $this->Cell(10, 8, '', 0, 0, 'L', false);
         $this->Ln();         

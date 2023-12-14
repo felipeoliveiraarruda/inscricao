@@ -11,6 +11,7 @@ use App\Models\Utils;
 use App\Models\Pdf\Matricula;
 use Carbon\Carbon;
 use Uspdev\Replicado\Posgraduacao;
+use App\Http\Requests\GcubPostRequest;
 
 class GcubController extends Controller
 {
@@ -24,45 +25,72 @@ class GcubController extends Controller
         if (Auth::guest())
         {
             $logo = asset("images/cabecalho/presenca/logo_{$tipo}.jpg");
+            $gcub = asset("images/gcub.png");
 
             if($tipo == 'ppgem')
             {
-                $disciplinas = Posgraduacao::disciplinasOferecimento(97134);
+                $disciplinas = Utils::listarOferecimentoPos(97002, '04/03/2024', '16/06/2024');                
             }
 
             $paises = Utils::listarPais();            
 
             return view('gcub.index', 
             [
-                'logo'        => $logo,
-                'paises'      => $paises,
-                'sexos'       => Utils::obterDadosSysUtils('sexo'),
-                'disciplinas' => $disciplinas
+                'logo'         => $logo,
+                'gcub'         => $gcub,
+                'paises'       => $paises,
+                'sexos'        => Utils::obterDadosSysUtils('sexo'),
+                'disciplinas'  => $disciplinas,
+                'tipo'         => $tipo,
+                'desabilitado' => '',
             ]);
         }
     }
 
-    public function store(Request $request)
+    public function store(GcubPostRequest $request)
     {
+        $validated = $request->validated();        
+       
+        $passaporte = $request->passaporteAluno;
+
         unset($request['_token']);
         unset($request['cadastrar']);
+        unset($request['passaporteAluno']);
 
         $gcub = Gcub::create([
-            'dadosGcub' => $request->collect()->toJson(),
+            'passaporteAluno' => $passaporte,
+            'dadosGcub'       => $request->collect()->toJson(),
         ]);
 
         request()->session()->flash('alert-success', 'Requerimento de Primeira Matrícula cadastrado com sucesso.');    
-        return redirect("gcub/ppgem");
+        
+        return redirect("gcub/{$request->tipo}/{$gcub->codigoGcub}/show");
     }
 
-    public function show($codigoGcub)
+    public function show($tipo, $codigoGcub)
     {
-        $logo = asset("images/cabecalho/presenca/logo_ppgem.jpg");
+        $logo = asset("images/cabecalho/presenca/logo_{$tipo}.jpg");
+        $gcub = asset("images/gcub.png");
+
+        $temp  = Gcub::find($codigoGcub);
+        $dados = json_decode($temp->dadosGcub);
+
+        $dataNascimento = new Carbon($dados->dataNascimentoAluno);
+        $nacionalidade  = Utils::obterPais($dados->nacionalidadeAluno);
+        $paisTitulacao  = Utils::obterPais($dados->codigoPaisTitulacao);
+        $dddPais        = Utils::obterPais($dados->codigoPaisAluno);
 
         return view('gcub.show', 
         [
             'logo'   => $logo,
+            'gcub'   => $gcub,
             'codigo' => $codigoGcub,
+            'dados'  => $dados,
+            'passaporte' => $temp->passaporteAluno,
+            'dataNascimento' => $dataNascimento->format('d/m/Y'),
+            'nacionalidade'  => $nacionalidade['nompas'],
+            'paisTitulacao'  => $paisTitulacao['nompas'],
+            'dddPais'        => $dddPais['codddi'],
         ]);
     }
 
@@ -81,7 +109,7 @@ class GcubController extends Controller
         $pdf->SetDisplayMode('real');
         $pdf->AliasNbPages();   
 
-        $texto = "<p>Eu, {$dados->nomeAluno}, Passaporte {$dados->passaporteAluno}, e-mail {$dados->emailAluno}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+        $texto = "<p>Eu, {$dados->nomeAluno}, Passaporte {$gcub->passaporteAluno}, e-mail {$dados->emailAluno}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
 
         $pdf->AddPage();
         
@@ -288,7 +316,7 @@ class GcubController extends Controller
         $pdf->Cell(9, 9, '', 0, 0, 'C');
         $pdf->Cell(5, 9, '', 0, 0, 'L');
         $pdf->Cell(29, 9, '', 0, 0, 'C');
-        $pdf->Cell(29, 9, utf8_decode($dados->passaporteAluno), 0, 0, 'L');
+        $pdf->Cell(29, 9, utf8_decode($gcub->passaporteAluno), 0, 0, 'L');
         $pdf->Cell(31, 9, utf8_decode($nacionalidade['nompas']), 0, 0, 'L');
         $pdf->Ln();
 
@@ -436,16 +464,7 @@ class GcubController extends Controller
             $pdf->Ln();
 
             $pdf->Cell(190, 2, '', 0, 0, 'C');
-            $pdf->Ln();
-            
-            $pdf->Cell(91, 6, '', 0, 0, 'C');
-            $pdf->Cell(5, 6, '', 0, 0, 'C');
-            $pdf->Cell(22, 6, '', 0, 0, 'C');
-            $pdf->Cell(5, 6, '', 0, 0, 'C');
-            $pdf->Cell(27, 6, '', 0, 0, 'C');
-            $pdf->Cell(5, 6, '', 0, 0, 'L');
-            $pdf->Cell(35, 6, '', 0, 0, 'C');
-            $pdf->Ln();
+            $pdf->Ln(39);
         }
 
         /* Ultima Titulação */

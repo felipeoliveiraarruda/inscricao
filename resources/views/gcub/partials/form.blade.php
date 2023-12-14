@@ -2,7 +2,7 @@
     <div class="form-row">
         <div class="col">               
             <label for="nomeAluno" class="font-weight-bold">{{ __('Name') }}<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="nomeAluno" name="nomeAluno" value="{{  old('nomeAluno') }}" required maxlength="255">
+            <input type="text" class="form-control" id="nomeAluno" name="nomeAluno" value="{{ old('nomeAluno') }}" required maxlength="255">
         </div>
 
         <div class="col">
@@ -90,25 +90,38 @@
             <select class="form-control" id="codigoPaisTitulacao" name="codigoPaisTitulacao" required>
                 <option value="">Selecione uma opção</option>
                 @foreach($paises as $pais)
-                    @if (!empty($pais['codddi']))
-                        <option value="{{ $pais['codpas'] }}" {{ old('codigoPaisTitulacao') == $pais['codpas'] ? "selected" : "" }}>+({{ $pais['codddi'] }}) {{ $pais['nompas'] }}</option>
-                    @endif
+                    <option value="{{ $pais['codpas'] }}" {{ old('codigoPaisTitulacao') == $pais['codpas'] ? "selected" : "" }}>{{ $pais['nompas'] }}</option>
                 @endforeach
             </select> 
         </div>
     </div>
 </div>
 
-<div class="form-group">  
-    <label class="font-weight-bold mr-2">Possui vínculo empregatício?<span class="text-danger">*</span></label>
-    <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="vinculoEmpregaticio" id="vinculoEmpregaticioSim" value="Sim">
-        <label class="form-check-label" for="vinculoEmpregaticioSim">Sim</label>
+<div class="form-group">
+    <div class="form-row"> 
+        <div class="col-3"> 
+            <label class="font-weight-bold mr-2">Possui vínculo empregatício?<span class="text-danger">*</span></label><br/>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vinculoEmpregaticio" id="vinculoEmpregaticioSim" value="Sim">
+                <label class="form-check-label" for="vinculoEmpregaticioSim">Sim</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vinculoEmpregaticio" id="vinculoEmpregaticioNao" value="Não">
+                <label class="form-check-label" for="vinculoEmpregaticioNao">Não</label>
+            </div>
+        </div>
+        <div class="col"> 
+            <label class="font-weight-bold mr-2">Nível<span class="text-danger">*</span></label><br/>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="nivelPrograma" id="nivelProgramaMestrado" value="Mestrado">
+                <label class="form-check-label" for="nivelProgramaMestrado">Mestrado</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="nivelPrograma" id="nivelProgramaDoutorado" value="Doutorado">
+                <label class="form-check-label" for="nivelProgramaDoutorado">Doutorado</label>
+            </div>
+        </div>               
     </div>
-    <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="vinculoEmpregaticio" id="vinculoEmpregaticioNao" value="Não">
-        <label class="form-check-label" for="vinculoEmpregaticioNao">Não</label>
-    </div>    
 </div>
 
 <span id="exibirEmpregador">
@@ -186,3 +199,5 @@
     </div>
     @endforeach
 </div>
+
+<input type="hidden" name="tipo" value="{{ $tipo }}">

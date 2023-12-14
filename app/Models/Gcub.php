@@ -17,6 +17,7 @@ class Gcub extends Model
     protected $primaryKey = 'codigoGcub';
 
     protected $fillable = [
+        'passaporteAluno',
         'dadosGcub',
     ];
 }
