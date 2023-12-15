@@ -24,7 +24,7 @@ class InscricoesRecursosFinanceiros extends Model
         'codigoPessoaAlteracao',
     ];
 
-    public function obterTotal($codigoInscricao)
+    public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesRecursosFinanceiros::join('inscricoes', 'inscricoes_recursos_financeiros.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                               ->join('recursos_financeiros', 'inscricoes_recursos_financeiros.codigoRecursoFinanceiro', '=', 'recursos_financeiros.codigoRecursoFinanceiro')

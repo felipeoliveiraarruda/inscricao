@@ -22,7 +22,7 @@ class InscricoesExperiencias extends Model
         'codigoPessoaAlteracao'
     ];
 
-    public function obterTotal($codigoInscricao, $codigoTipoExperiencia)
+    public static function obterTotal($codigoInscricao, $codigoTipoExperiencia)
     {
         $total = InscricoesExperiencias::join('inscricoes', 'inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                        ->join('experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')

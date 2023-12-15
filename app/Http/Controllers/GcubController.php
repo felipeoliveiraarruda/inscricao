@@ -156,38 +156,40 @@ class GcubController extends Controller
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln(10);
 
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(75,  8, utf8_decode('____________________________________'), 0, 0, 'L', false);
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
         $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  8, utf8_decode('____________________________________'), 0, 0, 'C', false);
+        
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
         $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 'T', 0, 'C', false);
         $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 'T', 0, 'C', false);
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
-        $pdf->Cell(75,  5, utf8_decode('       Orientador Acadêmico'), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
         $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln(20);
 
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(35,  8, utf8_decode(''), 0, 0, 'L', false);
-        $pdf->Cell(115, 8, utf8_decode('____________________________________'), 0, 0, 'C', false);
-        $pdf->Cell(35,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
+        
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
         $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(35,  5, utf8_decode(''), 0, 0, 'L', false);
-        $pdf->Cell(115, 5, utf8_decode('Coordenador do Progama'), 0, 0, 'C', false);
-        $pdf->Cell(35,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+        $pdf->Cell(80, 5, utf8_decode('Coordenador do Progama'), 'T', 0, 'C', false);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
         $pdf->Output();
@@ -316,7 +318,11 @@ class GcubController extends Controller
         $pdf->Cell(9, 9, '', 0, 0, 'C');
         $pdf->Cell(5, 9, '', 0, 0, 'L');
         $pdf->Cell(29, 9, '', 0, 0, 'C');
+        
+        $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(29, 9, utf8_decode($gcub->passaporteAluno), 0, 0, 'L');
+        
+        $pdf->SetFont('Arial', '', 10);
         $pdf->Cell(31, 9, utf8_decode($nacionalidade['nompas']), 0, 0, 'L');
         $pdf->Ln();
 

@@ -21,7 +21,7 @@ class InscricoesPessoais extends Model
         'codigoPessoaAlteracao'
     ];
 
-    public function obterTotal($codigoInscricao)
+    public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesPessoais::join('inscricoes', 'inscricoes_pessoais.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                    ->join('pessoais', 'inscricoes_pessoais.codigoPessoal', '=', 'pessoais.codigoPessoal')

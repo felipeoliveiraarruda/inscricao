@@ -24,7 +24,7 @@ class InscricoesResumoEscolar extends Model
         'codigoPessoaAlteracao',
     ];
 
-    public function obterTotal($codigoInscricao)
+    public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesResumoEscolar::join('inscricoes', 'inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                         ->join('resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')

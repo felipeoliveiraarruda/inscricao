@@ -22,7 +22,7 @@ class InscricoesIdiomas extends Model
         'codigoPessoaAlteracao'
     ];
 
-    public function obterTotal($codigoInscricao)
+    public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesIdiomas::join('inscricoes', 'inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                   ->join('idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')

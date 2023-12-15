@@ -23,7 +23,7 @@ class InscricoesEnderecos extends Model
         'codigoPessoaAlteracao'
     ];
 
-    public function obterTotal($codigoInscricao)
+    public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesEnderecos::join('inscricoes', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                     ->join('enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
@@ -32,7 +32,7 @@ class InscricoesEnderecos extends Model
         return $total;
     }
 
-    public function obterTotalEmergencia($codigoInscricao)
+    public static function obterTotalEmergencia($codigoInscricao)
     {
         $total = InscricoesEnderecos::join('inscricoes', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                     ->join('enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
