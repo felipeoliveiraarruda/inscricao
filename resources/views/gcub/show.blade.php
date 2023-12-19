@@ -31,6 +31,7 @@
                         @endforeach
                     </div>
 
+                    @if($total >= $totalNivel)
                     <div class="row">
                         <div class="col">
                             <a href="gcub/{{ $codigo }}/matricula" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento</a>
@@ -39,6 +40,7 @@
                             <a href="gcub/{{ $codigo }}/bolsista" target="_new" class="btn btn-secondary btn-lg btn-block" role="button" aria-pressed="true">Bolsista</a>
                         </div>
                     </div>
+                    @endif
 
                     <div class="row mt-2">
                         <table class="table">
@@ -87,24 +89,58 @@
                                     <td>{{ $dados->anoTitulacao }}</td>
                                     <td>{{ $paisTitulacao }}</td>                                    
                                 </tr>
-                            </tbody>   
-                            <thead>
-                                <tr>
-                                    <th scope="col" colspan="5">{{ __('Disciplina(s)') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($dados->disciplinasGcub as $disciplina)
-                                
-                                @php
-                                    $temp = \Uspdev\Replicado\Posgraduacao::disciplina($disciplina);
-                                @endphp
-                                <tr>
-                                    <td colspan="5">{{ $temp['sgldis'] }}-{{ $temp['numseqdis'] }} {{ $temp['nomdis'] }}</td>                                
-                                </tr>
-                                @endforeach
-                            </tbody>                                                                                
-                        </table>
+                            </tbody> 
+                        </table>  
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="5">{{ __('Disciplina(s)') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($dados->disciplinasGcub as $disciplina)
+                                    
+                                    @php
+                                        $temp = \Uspdev\Replicado\Posgraduacao::disciplina($disciplina);
+                                    @endphp
+                                    <tr>
+                                        <td colspan="5">{{ $temp['sgldis'] }}-{{ $temp['numseqdis'] }} {{ $temp['nomdis'] }}</td>                                
+                                    </tr>
+                                    @endforeach
+                                </tbody>                                                                                
+                            </table>
+                        </div>
+                        <div class="col">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="2">{{ __('Documentos Obrigatórios') }}
+                                        <a href="gcub/{{ $tipo }}/{{ $codigo }}/documento" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                            <i class="fa fa-plus"></i>                        
+                                        </a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($arquivos as $arquivo)
+                                    <tr>
+                                        <td>{{ $arquivo->tipoDocumento }}</td>
+                                        <td>
+                                            <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm  float-right" target="_new" title="Visualizar">
+                                                <i class="far fa-eye"></i> Visualizar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>                                                                                
+                            </table>                            
+                        </div>
+                    </div>
+
                     </div>
                 </div>
             </div>            

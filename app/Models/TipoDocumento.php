@@ -59,4 +59,11 @@ class TipoDocumento extends Model
 
         return $tipos;                  
     }
+
+    public static function listarTipoDocumentosGcub()
+    {
+        $tipos = TipoDocumento::whereIn('codigoTipoDocumento', [1, 2, 3, 4, 5, 6, 27, 29, 30])->get();
+
+        return $tipos;                  
+    }
 }

@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use App\Models\Utils;
 use App\Models\Pdf\Matricula;
+use App\Models\TipoDocumento;
+use App\Models\ArquivoGcub;
 use Carbon\Carbon;
 use Uspdev\Replicado\Posgraduacao;
 use App\Http\Requests\GcubPostRequest;
+use App\Http\Requests\GcubDocumentoPostRequest;
 
 class GcubController extends Controller
 {
@@ -80,17 +83,23 @@ class GcubController extends Controller
         $paisTitulacao  = Utils::obterPais($dados->codigoPaisTitulacao);
         $dddPais        = Utils::obterPais($dados->codigoPaisAluno);
 
+        $arquivos = ArquivoGcub::listarArquivos($codigoGcub);
+
         return view('gcub.show', 
         [
-            'logo'   => $logo,
-            'gcub'   => $gcub,
-            'codigo' => $codigoGcub,
-            'dados'  => $dados,
-            'passaporte' => $temp->passaporteAluno,
+            'logo'           => $logo,
+            'gcub'           => $gcub,
+            'codigo'         => $codigoGcub,
+            'dados'          => $dados,
+            'passaporte'     => $temp->passaporteAluno,
             'dataNascimento' => $dataNascimento->format('d/m/Y'),
             'nacionalidade'  => $nacionalidade['nompas'],
             'paisTitulacao'  => $paisTitulacao['nompas'],
             'dddPais'        => $dddPais['codddi'],
+            'total'          => count($arquivos),
+            'totalNivel'     => ($dados->nivelPrograma == 'Mestrado' ? 6 : 9),
+            'tipo'           => $tipo,
+            'arquivos'       => $arquivos,
         ]);
     }
 
@@ -522,5 +531,43 @@ class GcubController extends Controller
         $pdf->Ln();
 
         $pdf->Output();
+    }
+
+    public function documento($tipo, $codigoGcub)
+    {
+        $logo = asset("images/cabecalho/presenca/logo_{$tipo}.jpg");
+        $gcub = asset("images/gcub.png");
+
+        $tipos = TipoDocumento::listarTipoDocumentosGcub();
+
+        $temp  = Gcub::find($codigoGcub);
+        $dados = json_decode($temp->dadosGcub);
+
+        return view('gcub.documento',
+        [
+            'logo'         => $logo,
+            'gcub'         => $gcub,
+            'codigoGcub'   => $codigoGcub,
+            'tipos'        => $tipos,  
+            'nivel'        => $dados->nivelPrograma,
+            'tipo'         => $tipo, 
+        ]);
+    }
+
+    public function documento_store(GcubDocumentoPostRequest $request)    
+    {
+        $validated = $request->validated();
+
+        $path = $request->file('arquivo')->store("gcub/{$request->codigoGcub}", 'public');
+
+        $gcub = ArquivoGcub::create([
+            'codigoGcub'            => $request->codigoGcub,
+            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
+            'linkArquivo'           => $path,
+        ]);
+
+        request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
+        
+        return redirect("gcub/{$request->tipo}/{$gcub->codigoGcub}/show");
     }
 }
