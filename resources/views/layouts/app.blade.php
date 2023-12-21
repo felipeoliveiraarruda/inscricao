@@ -289,6 +289,11 @@
             $("#tempoServicoMesAno").prop('required',false);
           }
         });
+
+        $('input[name^="arquivoGcub"]').change(function() 
+        {
+          document.getElementById('_'+$(this).attr('name')).innerHTML = '<i class="fa fa-check text-success"></i>';
+        });
     })  
 
     /*tinymce.init({

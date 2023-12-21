@@ -141,7 +141,7 @@ class GcubController extends Controller
     {
         $validated = $request->validated();
 
-        foreach($request->file('arquivo') as $key => $value)
+        foreach($request->file('arquivoGcub') as $key => $value)
         {
             $path = $value->store("gcub/{$request->codigoGcub}", 'public');
 
