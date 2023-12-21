@@ -41,10 +41,17 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
-        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
-                         //->where('editais.dataFinalEdital', '>=', Carbon::now())->get();
-
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->whereRaw('NOW() > `dataInicioEdital` AND NOW() < `dataFinalEdital`')
+                         //->whereRaw('`dataInicioEdital` > NOW()')
+                         ->get();
+        
         $liberados = array();
+
+        if (empty(session('level')))
+        {
+            Utils::setSession(Auth::user()->id);
+        }
 
         return view('dashboard',
         [
@@ -53,6 +60,8 @@ class InscricaoController extends Controller
             'inscricao' => new Inscricao,
             'user_id'   => Auth::user()->id,
             'liberado'  => (in_array(Auth::user()->id, $liberados) ? true : false),
+            'level'     => session('level'),
+            'total'     => count($editais),
         ]);
     }
 

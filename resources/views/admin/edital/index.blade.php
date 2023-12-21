@@ -54,7 +54,7 @@
                     <tr>
                         <th scope="row">{{ $edital->codigoEdital }}</th>
                         <td><a href="{{ $edital->linkEdital }}" target="_new">{{ $curso['nomcur'] }}</a></td>
-                        <td>{{ $utils->obterNivelEdital($edital->nivelEdital) }}</td>
+                        <td>{{ $edital->descricaoNivel }}</td>
                         <td>{{ $edital->dataInicioEdital->format('d/m/Y H:i:s') }}</td>
                         <td>{{ $edital->dataFinalEdital->format('d/m/Y H:i:s') }}</td>
                         <!--<td>Editar - Ver</td>-->

@@ -1,11 +1,11 @@
-@if (Session::get('level') == 'manager')
+@if ($level == 'manager')
     @include('admin.menu.manager')  
 @endif 
 
-@if (Session::get('level') == 'admin')
+@if ($level == 'admin')
     @include('admin.menu.admin')  
 @endif  
 
-@if (Session::get('level') == 'user')
+@if ($level == 'user')
     @include('admin.menu.user')  
 @endif 

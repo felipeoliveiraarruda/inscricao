@@ -14,7 +14,7 @@
         </div>
         <div class="col">
             <label for="dataNascimentoPessoal" class="font-weight-bold">{{ __('Data de Nascimento') }}<span class="text-danger">*</span></label>
-            <input type="date" class="form-control" id="dataNascimentoPessoal" name="dataNascimentoPessoal" value="{{ old('dataNascimentoPessoal') ? $pessoais->dataNascimentoPessoal->format('Y-m-d') : '' }}" required>
+            <input type="date" class="form-control" id="dataNascimentoPessoal" name="dataNascimentoPessoal" value="{{ old('dataNascimentoPessoal') ?? $pessoais->dataNascimentoPessoal->format('Y-m-d') ?? '' }}" required>
         </div>          
     </div>
 </div> 

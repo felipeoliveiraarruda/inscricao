@@ -174,6 +174,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        /*
+        *  Laravel PDFMerger
+        */
+        Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class
 
     ],
 
@@ -229,6 +233,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'PDFMerger' => Webklex\PDFMerger\Facades\PDFMergerFacade::class,
 
     ],
 

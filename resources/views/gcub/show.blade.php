@@ -117,10 +117,10 @@
                         <div class="col">
                             <table class="table">
                                 <thead>
-                                    <tr>
+                                    <tr class="table-secondary">
                                         <th scope="col" colspan="2">{{ __('Documentos Obrigatórios') }}
-                                        <a href="gcub/{{ $tipo }}/{{ $codigo }}/documento" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                                            <i class="fa fa-plus"></i>                        
+                                        <a href="gcub/{{ $tipo }}/{{ $codigo }}/documento" role="button" aria-pressed="true" class="btn btn-success float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                            <i class="fa fa-plus"></i> Upload
                                         </a>
                                         </th>
                                     </tr>

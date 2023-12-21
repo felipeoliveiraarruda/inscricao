@@ -40,7 +40,19 @@ class Arquivo extends Model
                                ->where('arquivos.codigoUsuario', $codigoUsuario)
                                ->get();
         }
-        else
+        else if ($codigoInscricao != 0)
+        {
+            $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes_arquivos.codigoInscricaoArquivo'))
+                               ->join('tipo_documentos', 'tipo_documentos.codigoTipoDocumento', '=', 'arquivos.codigoTipoDocumento')
+                               ->rightJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
+                               ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                               ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                               ->where('inscricoes.codigoInscricao',  $codigoInscricao)                               
+                               ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
+                               ->get();
+        }
+
+        else 
         {
             $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes_arquivos.codigoInscricaoArquivo'))
                                ->join('tipo_documentos', 'tipo_documentos.codigoTipoDocumento', '=', 'arquivos.codigoTipoDocumento')

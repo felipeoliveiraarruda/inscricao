@@ -1,16 +1,28 @@
-<div class="form-group">
-    <label for="codigoTipoDocumento" class="font-weight-bold">Tipo<span class="text-danger">*</span></label>
-    <select class="form-control" id="codigoTipoDocumento" name="codigoTipoDocumento" required>
-        <option value="">Selecione o Tipo de Documento</option>
-        @foreach($tipos as $temp)
-            <option value="{{ $temp->codigoTipoDocumento }}">{{ $temp->tipoDocumento }}</option>
-        @endforeach
-    </select>
-</div>                           
+
 
 <div class="form-group">
-    <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="application/pdf">
+    @foreach($tipos as $temp)
+    <div class="row">
+        @if($temp->codigoTipoDocumento == 1 || $temp->codigoTipoDocumento == 2 || $temp->codigoTipoDocumento == 3 || $temp->codigoTipoDocumento == 29 || $temp->codigoTipoDocumento == 30)
+        <div class="col-4">
+            <label for="codigoTipoDocumento" class="font-weight-bold">{{ $temp->tipoDocumento }}</label>
+        </div>
+        <div class="col">            
+            <input type="file" class="form-control-file" id="arquivo" name="arquivo[{{ $temp->codigoTipoDocumento }}]" accept="application/pdf">            
+        </div>
+        @else
+        <div class="col-4">
+            <label for="codigoTipoDocumento" class="font-weight-bold">{{ $temp->tipoDocumento }}<span class="text-danger">*</span></label>
+        </div>
+        <div class="col">            
+            <input type="file" class="form-control-file" id="arquivo" name="arquivo[{{ $temp->codigoTipoDocumento }}]" required accept="application/pdf">
+        </div>        
+
+        @endif
+    </div>                
+    @endforeach    
 </div>
+
 
 <input type="hidden" name="codigoGcub" value="{{ $codigoGcub }}">
 <input type="hidden" name="tipo" value="{{ $tipo }}">

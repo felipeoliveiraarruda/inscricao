@@ -257,17 +257,40 @@ class DadosPessoaisController extends Controller
 
         if(!empty($request->codigoInscricao))
         {
-            $inscricaoPessoal = InscricoesPessoais::find($request->codigoInscricaoPessoal);
-            $inscricaoPessoal->codigoInscricao       = $request->codigoInscricao;
-            $inscricaoPessoal->codigoPessoal         = $request->codigoPessoal;
-            $inscricaoPessoal->codigoPessoaAlteracao = Auth::user()->codpes;
-            $inscricaoPessoal->save();
+            if(empty($request->codigoInscricaoPessoal))
+            {
+                $inscricaoPessoal = InscricoesPessoais::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoPessoal'         => $pessoal->codigoPessoal,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoPessoal = InscricoesPessoais::find($request->codigoInscricaoPessoal);                
+                $inscricaoPessoal->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoPessoal->codigoPessoal         = $request->codigoPessoal;
+                $inscricaoPessoal->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoPessoal->save();
+            }
 
-            $inscricaoDocumento = InscricoesDocumentos::find($request->codigoInscricaoDocumento);
-            $inscricaoDocumento->codigoInscricao       = $request->codigoInscricao;
-            $inscricaoDocumento->codigoDocumento       = $request->codigoDocumento;
-            $inscricaoDocumento->codigoPessoaAlteracao = Auth::user()->codpes;
-            $inscricaoDocumento->save();
+            if(empty($request->codigoInscricaoDocumento))
+            {                
+                $inscricaoDocumentos = InscricoesDocumentos::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoDocumento'       => $documento->codigoDocumento,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoDocumento = InscricoesDocumentos::find($request->codigoInscricaoDocumento);
+                        
+                $inscricaoDocumento->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoDocumento->codigoDocumento       = $request->codigoDocumento;
+                $inscricaoDocumento->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoDocumento->save();
+            }
 
             $voltar = "inscricao/{$request->codigoInscricao}/pessoal";
         }

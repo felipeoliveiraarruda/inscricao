@@ -4,11 +4,11 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <!--<div class="col-md-3">
-            @include('admin.menu.list')  
-        </div>-->
+        <div class="col-md-3">
+            @include('admin.menu.list')
+        </div>
 
-        <div class="col-md-12">
+        <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Home</h5>
                 
@@ -33,12 +33,19 @@
                                         $curso    = $utils->obterCurso($edital->codigoCurso);
                                         $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
                                         $status   = $inscricao->obterStatusInscricao($edital->codigoEdital, $user_id);
-                                        $hoje     = date('d/m/Y H:i:s');                                        
-                                    @endphp       
+                                        $hoje     = date('Y-m-d H:i:s');
+
+                                        $inicio = $edital->dataInicioEdital;
+                                        $final  = $edital->dataFinalEdital;
+                                    @endphp
+
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
-                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
-                                        @if ($hoje > $edital->dataFinalEdital->format('d/m/Y H:i:s'))
+                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                        
+
+                                        @if ($hoje < $inicio)
+                                            <td>Aguarde a abertura das inscrições</td>
+                                        @elseif ($hoje >= $inicio && $hoje <= $final)
                                             @if ($inscrito == 0)
                                                 @if ($edital->codigoNivel == 5)
                                                 <td>                                                                                                                
@@ -48,7 +55,7 @@
                                                 <td>                                                                                                                
                                                     <a href="inscricao/{{ $edital->codigoEdital }}/store" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
                                                 </td>
-                                                @endif
+                                               @endif
                                             @else
                                                 @if ($edital->codigoNivel == 5)
                                                     @if ($status == 'P')
@@ -74,50 +81,9 @@
                                                         <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a></td>
                                                     @endif
                                                 @endif
-                                            @endif  
-                                        @else
-                                            @if ($edital->codigoNivel == 5)
-                                                @if ($status == 'P')
-                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
-                                                @elseif ($status == 'N')
-                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
-                                                @elseif ($status == 'C')
-                                                    <td>
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a>
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae/comprovante" role="button" aria-pressed="true" target="_new" class="btn btn-info">Comprovante de Inscrição</a>
-
-                                                        @if ($hoje < $edital->dataFinalRecurso)
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae/resultado" role="button" aria-pressed="true" class="btn btn-primary">Resultado</a>
-                                                        @endif
-                                                    </td>
-                                                @else
-                                                    <td>Inscrições encerradas</td>
-                                                @endif
-                                            @else
-                                                @if ($status == 'C')
-                                                    <td>
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-success">Inscrito</a>         
-                                                        @php
-                                                            $temp = $inscricao->obterInscricao($user_id, $edital->codigoEdital);                                                    
-                                                            $financeiro = $inscricao->obterFinanceiroInscricao($temp->codigoInscricao);                                                            
-                                                        @endphp
-
-                                                        @if ($financeiro->solicitarRecursoFinanceiro == 'S')
-                                                            <a href="inscricao/{{ $temp->codigoInscricao }}/bolsista" role="button" aria-pressed="true" class="btn btn-primary">Bolsista</a>
-                                                        @endif
-                                                    </td>
-                                                @elseif ($status == 'P')
-                                                    <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
-                                                @elseif ($status == 'N')
-                                                    @if($liberado)
-                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>    
-                                                    @else
-                                                        <td>Inscrições encerradas</td>                                                
-                                                    @endif
-                                                @else
-                                                    <td>Inscrições encerradas</td>
-                                                @endif   
                                             @endif
+                                        @else
+                                            <td>Inscrições encerradas</td>
                                         @endif
                                     </tr>
                                 @endforeach

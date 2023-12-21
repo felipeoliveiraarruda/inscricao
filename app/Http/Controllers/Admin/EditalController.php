@@ -24,7 +24,8 @@ class EditalController extends Controller
 
         if (session('level') == "admin")
         {
-            $editais = Edital::all();
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+            
         }
         
         if (session('level') == "manager")

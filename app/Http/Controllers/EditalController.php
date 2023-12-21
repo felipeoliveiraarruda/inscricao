@@ -12,7 +12,9 @@ class EditalController extends Controller
 {
     public function index()
     {
-        $editais = Edital::all();
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+
+        dd($editais);
         
         return view('admin.edital.index',
         [

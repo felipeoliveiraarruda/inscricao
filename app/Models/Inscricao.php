@@ -86,17 +86,16 @@ class Inscricao extends Model
     }
 
     public static function obterDadosPessoaisInscricao($codigoInscricao)
-    {        
+    {   
         $pessoal = DadosPessoais::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.numeroInscricao, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
                                 ->rightJoin('users', 'users.id', '=', 'pessoais.codigoUsuario')
-                                ->leftJoin('documentos', 'users.id', '=', 'documentos.codigoUsuario')
-                                ->leftJoin('inscricoes_pessoais', 'inscricoes_pessoais.codigoPessoal', '=', 'pessoais.codigoPessoal')
-                                ->leftJoin('inscricoes_documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')    
                                 ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->leftJoin('documentos', 'users.id', '=', 'documentos.codigoUsuario')
+                                ->leftJoin('inscricoes_pessoais', 'inscricoes_pessoais.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                ->leftJoin('inscricoes_documentos', 'inscricoes_documentos.codigoInscricao', '=', 'inscricoes.codigoInscricao')                                    
                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                 ->first();
-        //dd($pessoal);
-
+        
         return $pessoal;                                 
     }
 
