@@ -159,6 +159,7 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::get('arquivo/{codigoArquivo}/edit/{codigoInscricao?}',       [ArquivoController::class, 'edit']);
     Route::patch('arquivo/{codigoArquivo}',                             [ArquivoController::class, 'update']);
     Route::get('arquivo/{codigoArquivo}/destroy/{codigoInscricao?}',    [ArquivoController::class, 'destroy']);
+    Route::get('arquivo/{codigoArquivo}/anexar/{codigoInscricao?}',     [ArquivoController::class, 'anexar']);
 
     /* PAE - Recurso*/
     Route::get('recurso/{codigoRecurso}/edit',      [RecursoPaeController::class, 'edit']);

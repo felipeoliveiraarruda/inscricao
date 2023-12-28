@@ -37,11 +37,12 @@
 
                                         $inicio = $edital->dataInicioEdital;
                                         $final  = $edital->dataFinalEdital;
+
+                                        $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
                                     @endphp
 
                                     <tr>
-                                        <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
-                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>                                        
+                                        <td>{{ $edital->descricaoNivel }} - {{ $semestre }} - {{ $curso['nomcur'] }}</td>                                      
 
                                         @if ($hoje < $inicio)
                                             <td>Aguarde a abertura das inscrições</td>

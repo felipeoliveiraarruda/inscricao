@@ -3,11 +3,11 @@
 @section('content')
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">        
-        <div class="col-md-3">
+        <div class="col-sm-3">
             @include('admin.menu.list')           
         </div> 
         
-        <div class="col-md-9">
+        <div class="col-sm-9">
             <div class="card bg-default">
                 <h5 class="card-header">Administração</h5>
                 
@@ -29,17 +29,34 @@
                             @else
                                 @foreach ($editais as $edital)
                                     @php
-                                        $curso = $utils->obterCurso($edital->codigoCurso);
+                                        $curso    = $utils->obterCurso($edital->codigoCurso);
+                                        $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
                                     @endphp       
                                     <tr>
-                                        <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
-                                        <td><a href="admin/listar-inscritos/{{ $edital->codigoEdital }}">Lista de Inscritos</a></td>
-                                        <td><a href="admin/confirmados/{{ $edital->codigoEdital }}">Confirmados</a></td>
-                                        @if ($pae == true)
-                                            <td><!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>--></td>
-                                            <td><a href="admin/{{ $edital->codigoEdital }}/pae/classificacao">Classificação</a></td>
-                                            <td><a href="admin/{{ $edital->codigoEdital }}/pae/recurso">Recursos</a></td>
-                                        @endif
+                                        <td>{{ $edital->descricaoNivel }} - {{ $semestre }} - {{ $curso['nomcur'] }}</td>
+                                        <td>
+                                            <a href="admin/listar-inscritos/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Inscritos">
+                                               <i class="fas fa-list"></i>
+                                            </a>
+
+                                            <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
+                                                <i class="fas fa-tasks"></i>
+                                            </a>
+
+                                            @if ($pae == true && $edital->codigoNivel == 5)
+                                                <!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>-->
+
+                                                <a href="admin/{{ $edital->codigoEdital }}/pae/classificacao" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Classificação">
+                                                    <i class="fas fa-check-double"></i>
+                                                </a>
+
+                                                <a href="admin/{{ $edital->codigoEdital }}/pae/classificacao" role="button" aria-pressed="true" class="btn btn-dark btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Recursos">
+                                                    <i class="fas fa-exchange-alt"></i>
+                                                </a>
+                                            @endif
+
+                                        </td>
+       
                                      </tr>
                                 @endforeach
                             @endif

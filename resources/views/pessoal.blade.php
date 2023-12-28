@@ -4,10 +4,10 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-3">
+        <div class="col-sm-3">
             @include('inscricao.menu')  
         </div>
-        <div class="col-md-9">
+        <div class="col-sm-9">
             <div class="card bg-default">
                 <h5 class="card-header">Dados Pessoais</h5>
                 @if (!empty($pessoais) == 0)
@@ -54,7 +54,7 @@
                                             <td class="text-center">{{ $pessoais->cpf }}</td>
                                             <td class="text-center">{{ $pessoais->rg }}</td>
                                             <td class="text-center">
-                                                @if (!empty($pessoais->codigoInscricaoPessoal) || (!empty($pessoais->codigoInscricaoDocumento)))
+                                                @if (!empty($pessoais->codigoInscricaoPessoal) && (!empty($pessoais->codigoInscricaoDocumento)))
                                                     <i class="fa fa-check text-success"></i>
                                                 @else
                                                     <i class="fa fa-times text-danger"></i>
@@ -93,9 +93,6 @@
                                                         </thead>
 
                                                     @foreach ($arquivos as $arquivo)
-                                                        @php
-                                                            $arquivo_inscricao .= $arquivo->codigoArquivo."|";
-                                                        @endphp
                                                         <tr>
                                                             <th>{{ $arquivo->tipoDocumento }}</th>
                                                             <td class="text-center">                          
@@ -105,17 +102,24 @@
                                                                     <i class="fa fa-times text-danger"></i>
                                                                 @endif                                                                 
                                                             </td>
-                                                            <td class="text-center">
+                                                            <td>
+                                                                @if (empty($arquivo->codigoInscricaoArquivo))
+                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/anexar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Anexar arquivo a inscrição">
+                                                                        <i class="fas fa-paperclip"></i>
+                                                                    </a>                                                                    
+                                                                @endif
+
                                                                 <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                                                                    <i class="far fa-eye"></i>
+                                                                    <i class="fas fa-eye"></i>
                                                                 </a>
+
                                                                 @if ($status == 'N')
-                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                                                                    <i class="fa fa-wrench"></i>
-                                                                </a>
-                                                                <a href="arquivo/{{ $arquivo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </a>
+                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                                                                        <i class="fa fa-wrench"></i>
+                                                                    </a>
+                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
                                                                 @endif                                                         
                                                             </td>
                                                         </tr>
@@ -123,7 +127,6 @@
                                                     </table>  
                                                 </div>                
                                             @endif
-
                                         </div>
                                     </div>                                    
                                     @endif

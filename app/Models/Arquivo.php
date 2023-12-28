@@ -42,14 +42,22 @@ class Arquivo extends Model
         }
         else if ($codigoInscricao != 0)
         {
+            //\DB::enableQueryLog();
+
             $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes_arquivos.codigoInscricaoArquivo'))
                                ->join('tipo_documentos', 'tipo_documentos.codigoTipoDocumento', '=', 'arquivos.codigoTipoDocumento')
-                               ->rightJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
-                               ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                               ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                               ->join('users', 'users.id', '=', 'arquivos.codigoUsuario')
+                               ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                               ->leftJoin('inscricoes_arquivos', function($join)
+                               {
+                                   $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                   $join->on('arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo');
+                               })
                                ->where('inscricoes.codigoInscricao',  $codigoInscricao)                               
                                ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
                                ->get();
+
+            //dd(\DB::getQueryLog()); 
         }
 
         else 

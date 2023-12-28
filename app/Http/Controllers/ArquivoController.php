@@ -159,6 +159,26 @@ class ArquivoController extends Controller
         }
     }
 
+    public function anexar($codigoArquivo, $codigoInscricao)
+    {
+        $inscricao = InscricoesArquivos::create([
+            'codigoInscricao'       => $codigoInscricao,
+            'codigoArquivo'         => $codigoArquivo,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
+
+        if($inscricao)
+        {
+            session()->flash('alert-success', 'Documento anexado a Inscrição com sucesso');  
+        }
+        else
+        {
+            session()->flash('alert-danger', 'Ocorreu um erro na anexação do Documento a Inscrição.');
+        }
+
+        return redirect("inscricao/{$codigoInscricao}/pessoal");
+    }
+
     /*public function remover($codigoInscricao, $codigoArquivo)
     {
         $arquivo = Arquivo::find($codigoArquivo);

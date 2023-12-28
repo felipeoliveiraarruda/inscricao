@@ -4,7 +4,7 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-sm-12">
             <br/>        
             <div class="card bg-default">
                 <h5 class="card-header">Editais</h5>
