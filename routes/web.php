@@ -132,8 +132,9 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::post('pessoal/anexo/salvar',                                     [DadosPessoaisController::class, 'anexo_salvar']);
     
     /* Endereço */    
-    Route::post('endereco/',                    [EnderecoController::class, 'store']);
-    Route::patch('endereco/{codigoEndereco}',   [EnderecoController::class, 'update']);
+    Route::post('endereco/',                                        [EnderecoController::class, 'store']);
+    Route::get('endereco/{codigoEndereco}/edit/{codigoInscricao?}', [EnderecoController::class, 'edit']);
+    Route::patch('endereco/{codigoEndereco}/{codigoInscricao?}',    [EnderecoController::class, 'update']);
 
     /* Emergencia */
     Route::post('emergencia/',                      [EmergenciaController::class, 'store']);

@@ -37,3 +37,4 @@
 </div>
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
+<input type="hidden" name="codigoInscricaoEndereco" value="{{ $enderecos->codigoInscricaoEndereco }}">

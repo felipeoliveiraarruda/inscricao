@@ -112,10 +112,10 @@ class Inscricao extends Model
 
     public static function obterEnderecoInscricao($codigoInscricao)
     {
-        $endereco = Endereco::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoEndereco, inscricoes_enderecos.codigoInscricaoEndereco'))
-                            ->rightJoin('users', 'users.id', '=', 'enderecos.codigoUsuario')                           
-                            ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEndereco', '=', 'enderecos.codigoEndereco')
-                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+        $endereco = Endereco::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco'))
+                            ->rightJoin('users', 'users.id', '=', 'enderecos.codigoUsuario')
+                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                         
+                            ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                             ->where('inscricoes.codigoInscricao', $codigoInscricao)
                             ->first();                         
         return $endereco;                                 

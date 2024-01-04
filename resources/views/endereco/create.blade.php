@@ -7,7 +7,7 @@
 @section('content')
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-sm-6">
             <br/>        
             <div class="card bg-default">
                 <h5 class="card-header">Novo Endereço</h5>

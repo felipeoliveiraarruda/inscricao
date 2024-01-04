@@ -93,6 +93,7 @@ class EnderecoController extends Controller
         \DB::beginTransaction();
 
         $endereco = Endereco::find($request->codigoEndereco);
+
         $endereco->codigoUsuario         = Auth::user()->id;
         $endereco->cepEndereco           = $request->cep;
         $endereco->logradouroEndereco    = $request->logradouro;
@@ -105,13 +106,29 @@ class EnderecoController extends Controller
         $endereco->save();
         
         if(!empty($request->codigoInscricao))
-        {
-            $inscricaoEndereco = InscricoesEnderecos::find($request->codigoEndereco);
-            $inscricaoEndereco->codigoInscricao       = $request->codigoInscricao;
-            $inscricaoEndereco->codigoEndereco        = $endereco->codigoEndereco;
-            $inscricaoEndereco->codigoPessoaAlteracao = Auth::user()->codpes;
+        {        
+            if(empty($request->codigoInscricaoEndereco))
+            {
+                $inscricaoEndereco = InscricoesEnderecos::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoEndereco'        => $endereco->codigoEndereco,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoEndereco = InscricoesEnderecos::find($request->codigoInscricaoEndereco);
+                $inscricaoEndereco->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoEndereco->codigoEndereco        = $endereco->codigoEndereco;
+                $inscricaoEndereco->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoEndereco->save();
+            }
 
             $voltar = "inscricao/{$request->codigoInscricao}/endereco";
+        }
+        else
+        {
+            $inscricaoEndereco = true;
         }
 
         if($endereco && $inscricaoEndereco) 

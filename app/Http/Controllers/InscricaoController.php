@@ -242,10 +242,16 @@ class InscricaoController extends Controller
     public function endereco_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterEnderecoInscricao($codigoInscricao);
+        $update    = false;
 
         if ($inscricao->statusInscricao == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
+        }
+
+        if (!empty($inscricao->codigoEndereco))
+        {
+            $update = true;
         }
         
         $estados = Utils::listarEstado(1);
@@ -253,9 +259,10 @@ class InscricaoController extends Controller
         return view('inscricao.endereco',
         [
             'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $inscricao->codigoEdital,                      
+            'codigoEdital'      => $inscricao->codigoEdital,    
             'enderecos'         => $inscricao,
             'estados'           => $estados,
+            'update'            => $update,
         ]); 
     }
 

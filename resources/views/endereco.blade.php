@@ -4,7 +4,7 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-3">
+        <div class="col-sm-3">
             @include('inscricao.menu')  
         </div>
         <div class="col-md-9">
@@ -19,7 +19,7 @@
 
                 <div class="card-body">                    
                     <div class="row justify-content-center">        
-                        <div class="col-md-12">
+                        <div class="col-sm-12">
                             <div class="flash-message">
                                 @foreach (['danger', 'warning', 'success', 'info'] as $msg)
                                     @if(Session::has('alert-' . $msg))
