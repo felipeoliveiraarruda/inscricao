@@ -62,6 +62,8 @@
                                             </td>
                                         </tr>
                                     </table>
+
+                                    @if (!empty($emergencia->codigoEmergenciaInscricao))
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
@@ -71,11 +73,12 @@
                                             </tr>
                                         </thead>                                
                                         <tr>
-                                            <td>{{ $emergencia->logradouroEndereco }}, {{ $emergencia->numeroEndereco }} {{ $emergencia->bairroEndereco }}</td>
-                                            <td>{{ $emergencia->localidadeEndereco }}/{{ $emergencia->ufEndereco }}</td>
-                                            <td>{{ $emergencia->cepEndereco }}</td>
+                                            <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
+                                            <td>{{ $endereco->localidadeEndereco }}/{{ $endereco->ufEndereco }}</td>
+                                            <td>{{ $endereco->cepEndereco }}</td>
                                         </tr>
-                                    </table>                                    
+                                    </table>  
+                                    @endif                                  
                                     @endif                                    
                                 </div>                                 
                             </div>                                                        

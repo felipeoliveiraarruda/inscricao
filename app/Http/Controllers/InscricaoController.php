@@ -271,6 +271,12 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+        $endereco = '';
+
+        if (!empty($inscricao->codigoEmergenciaEndereco))
+        {
+            $endereco = Endereco::find($inscricao->codigoEmergenciaEndereco);
+        }
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/emergencia";
     
@@ -283,25 +289,22 @@ class InscricaoController extends Controller
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
             'total'             => $total,
+            'endereco'          => $endereco,
         ]); 
     } 
     
     public function emergencia_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
-        $endereco  = Inscricao::obterEnderecoInscricao($codigoInscricao);
-
-        if ($inscricao->statusInscricao == 'P')
-        {
-            return redirect("inscricao/{$inscricao->codigoEdital}"); 
-        }
+        $endereco  = Endereco::find($inscricao->codigoEmergenciaEndereco);
 
         return view('inscricao.emergencia',
         [
             'codigoInscricao'           => $codigoInscricao, 
             'codigoEdital'              => $inscricao->codigoEdital,
-            'codigoInscricaoEndereco'   => $endereco->codigoInscricaoEndereco,                     
+            'codigoInscricaoEndereco'   => $inscricao->codigoInscricaoEndereco,                     
             'emergencia'                => $inscricao,
+            'endereco'                  => $endereco,
         ]); 
     }   
     

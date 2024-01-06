@@ -46,6 +46,7 @@
         $("#exibirEmpregador").hide();
 
         $('#modalAviso').modal('show');
+        $("#mostrarEnderecoEmergencia").hide();
 
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function()
         {
@@ -178,10 +179,28 @@
           if ($(this).prop('checked')) 
           {
             $("#mostrarEnderecoEmergencia").hide();
+
+            $("#cep").prop('required',false);
+            $("#logradouro").prop('required',false);
+            $("#numero").prop('required',false);
+            $("#bairro").prop('required',false);
+            $("#cidade").prop('required',false);
+            $("#uf").prop('required',false);
           }
-          else
+        });
+
+        $("#novoEndereco").click(function() 
+        {
+          if ($(this).prop('checked')) 
           {
             $("#mostrarEnderecoEmergencia").show();
+
+            $("#cep").prop('required',true);
+            $("#logradouro").prop('required',true);
+            $("#numero").prop('required',true);
+            $("#bairro").prop('required',true);
+            $("#cidade").prop('required',true);
+            $("#uf").prop('required',true);
           }
         });
 

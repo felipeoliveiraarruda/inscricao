@@ -154,28 +154,70 @@ class EmergenciaController extends Controller
         $emergencia->codigoPessoaAlteracao    = Auth::user()->codpes;
         $emergencia->save();
 
-        $endereco = Endereco::find($request->codigoEndereco);
-        $endereco->codigoUsuario         = Auth::user()->id;
-        $endereco->cepEndereco           = $request->cep;
-        $endereco->logradouroEndereco    = $request->logradouro;
-        $endereco->numeroEndereco        = $request->numero;
-        $endereco->complementoEndereco   = $request->complemento;
-        $endereco->bairroEndereco        = $request->bairro;
-        $endereco->localidadeEndereco    = $request->localidade;
-        $endereco->ufEndereco            = $request->uf;
-        $endereco->codigoPessoaAlteracao = Auth::user()->codpes;
-        $endereco->save();
-
         if(!empty($request->codigoInscricao))
         {
-            $inscricaoEndereco = InscricoesEnderecos::find($request->codigoInscricaoEndereco);
-            $inscricaoEndereco->codigoInscricao       = $request->codigoInscricao;
-            $inscricaoEndereco->codigoEndereco        = $request->codigoEndereco;
-            $inscricaoEndereco->codigoEmergencia      = $request->codigoEmergencia;
-            $inscricaoEndereco->codigoPessoaAlteracao = Auth::user()->codpes;
-            $inscricaoEndereco->save();
+            $inscricaoEndereco = InscricoesEnderecos::where('codigoInscricao', '=', $request->codigoInscricao)->first();
 
-            $voltar = "inscricao/{$request->codigoInscricao}/emergencia";
+            if($request->mesmoEnderecoOptions[0] == 'S')
+            {                
+                $inscricaoEndereco->codigoEmergencia = $emergencia->codigoEmergencia;
+                $inscricaoEndereco->mesmoEndereco    = $request->mesmoEnderecoOptions[0];
+                $inscricaoEndereco->save();
+    
+                $voltar = "inscricao/{$request->codigoInscricao}/emergencia";
+            }
+            else
+            {
+                $inscricaoEndereco->mesmoEndereco = $request->mesmoEnderecoOptions[0];
+                $inscricaoEndereco->save();
+
+                if(empty($inscricaoEndereco->codigoInscricaoEndereco))
+                {
+                    $endereco = Endereco::create([
+                        'codigoUsuario'         => Auth::user()->id,
+                        'cepEndereco'           => $request->cep,
+                        'logradouroEndereco'    => $request->logradouro,
+                        'numeroEndereco'        => $request->numero,
+                        'complementoEndereco'   => $request->complemento,
+                        'bairroEndereco'        => $request->bairro,
+                        'localidadeEndereco'    => $request->localidade,
+                        'ufEndereco'            => $request->uf,
+                        'codigoPessoaAlteracao' => Auth::user()->codpes,
+                    ]);
+
+                    $inscricaoEndereco = InscricoesEnderecos::create([
+                        'codigoInscricao'       => $request->codigoInscricao,
+                        'codigoEndereco'        => $endereco->codigoEndereco,
+                        'codigoEmergencia'      => $emergencia->codigoEmergencia,
+                        'mesmoEndereco'         => $request->mesmoEnderecoOptions[0],
+                        'codigoPessoaAlteracao' => Auth::user()->codpes,
+                    ]);
+                }
+                else
+                {
+                    $endereco = Endereco::find($request->codigoEndereco);
+                    $endereco->codigoUsuario         = Auth::user()->id;
+                    $endereco->cepEndereco           = $request->cep;
+                    $endereco->logradouroEndereco    = $request->logradouro;
+                    $endereco->numeroEndereco        = $request->numero;
+                    $endereco->complementoEndereco   = $request->complemento;
+                    $endereco->bairroEndereco        = $request->bairro;
+                    $endereco->localidadeEndereco    = $request->localidade;
+                    $endereco->ufEndereco            = $request->uf;
+                    $endereco->codigoPessoaAlteracao = Auth::user()->codpes;
+                    $endereco->save();
+
+                    $inscricaoEndereco = InscricoesEnderecos::find($request->codigoInscricaoEndereco);
+                    $inscricaoEndereco->codigoInscricao       = $request->codigoInscricao;
+                    $inscricaoEndereco->codigoEndereco        = $request->codigoEndereco;
+                    $inscricaoEndereco->codigoEmergencia      = $request->codigoEmergencia;
+                    $inscricaoEndereco->mesmoEndereco         = $request->mesmoEnderecoOptions[0];
+                    $inscricaoEndereco->codigoPessoaAlteracao = Auth::user()->codpes;
+                    $inscricaoEndereco->save();
+                }
+
+                $voltar = "inscricao/{$request->codigoInscricao}/emergencia";
+            }
         }
 
         if($emergencia && $endereco && $inscricaoEndereco) 

@@ -123,14 +123,26 @@ class Inscricao extends Model
 
     public static function obterEmergenciaInscricao($codigoInscricao)
     {
-        $emergencia = Emergencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, enderecos.*, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco'))
-                          ->rightJoin('users', 'users.id', '=', 'emergencias.codigoUsuario')                                
-                          ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoEmergencia', '=', 'emergencias.codigoEmergencia')
-                          ->leftjoin('enderecos', 'enderecos.codigoEndereco', '=', 'inscricoes_enderecos.codigoEndereco')   
-                          ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                          ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                          ->first();                                               
-        return $emergencia;                                 
+        $emergencias = Emergencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco, inscricoes_enderecos.codigoEndereco AS codigoEmergenciaEndereco, inscricoes_enderecos.codigoEmergencia AS codigoEmergenciaInscricao, inscricoes_enderecos.mesmoEndereco'))
+                                ->join('users', 'users.id', '=', 'emergencias.codigoUsuario')                     
+                                ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->rightJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')                                
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->get();  
+                                
+        if (count($emergencias) > 1)
+        {
+            foreach($emergencias as $emergencia)
+            {
+                if (!empty($emergencia->codigoEmergenciaInscricao))
+                {
+                    return $emergencia;
+                }
+            }
+        }
+
+
+        return $emergencias[0];                                 
     }
     
     public static function obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar = '')

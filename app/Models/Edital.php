@@ -85,8 +85,18 @@ class Edital extends Model
 
     public static function obterSemestreAno($codigoEdital, $curso = false)
     {
-        $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
-                       ->where('codigoEdital', $codigoEdital)->first();
+        $edital = Edital::find($codigoEdital);
+
+        if($edital->codigoNivel == 1)
+        {
+            $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 1, 2) AS semestre'))
+                            ->where('codigoEdital', $codigoEdital)->first();  
+        }
+        else
+        {
+            $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
+                            ->where('codigoEdital', $codigoEdital)->first();   
+        }
 
         if ($curso)
         {
