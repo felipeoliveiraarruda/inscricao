@@ -402,7 +402,7 @@ class InscricaoController extends Controller
     public function profissional($codigoInscricao)
     {         
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $inscricao = Inscricao::obterProfissionalInscricao($codigoInscricao);
+        $inscricao    = Inscricao::obterProfissionalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($codigoInscricao);
@@ -421,27 +421,41 @@ class InscricaoController extends Controller
         ]); 
     } 
     
-    public function profissional_create($codigoInscricao)
+    public function profissional_create($codigoInscricao, $codigoExperiencia = '')
     {
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $inscricao    = Inscricao::obterProfissionalInscricao($codigoInscricao);
-
-        if ($inscricao[0]->statusInscricao == 'P')
+        if (!empty($codigoExperiencia))
         {
-            return redirect("inscricao/{$codigoEdital}"); 
+            $inscricao = Inscricao::obterProfissionalInscricao($codigoInscricao, $codigoExperiencia);
+            $codigoInscricaoExperiencia = $inscricao->codigoInscricaoExperiencia;
+        }
+        else
+        {
+            $inscricao = array();
+            $codigoInscricaoExperiencia = '';
+        }
+        
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if ($status == 'P')
+        {
+            return redirect("inscricao/{$edital}"); 
         }
 
         return view('inscricao.profissional',
         [
-            'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $codigoEdital,
+            'codigoInscricao'               => $codigoInscricao, 
+            'codigoEdital'                  => $edital,
+            'codigoInscricaoExperiencia'    => $codigoInscricaoExperiencia,
+            'profissional'                  => $inscricao,
+            'codigoExperiencia'             => $codigoExperiencia,
         ]); 
     } 
 
     public function ensino($codigoInscricao)
     {         
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao);  
+        $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao); 
 
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($codigoInscricao);
@@ -460,24 +474,36 @@ class InscricaoController extends Controller
         ]); 
     } 
     
-    public function ensino_create($codigoInscricao)
+    public function ensino_create($codigoInscricao, $codigoExperiencia = '')
     {
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao);
-        $tipos        = TipoEntidade::whereIn('codigoTipoEntidade', [2,3])->get();
+        if (!empty($codigoExperiencia))
+        {
+            $inscricao = Inscricao::obterEnsinoInscricao($codigoInscricao, $codigoExperiencia);
+            $codigoInscricaoExperiencia = $inscricao->codigoInscricaoExperiencia;
+        }
+        else
+        {
+            $inscricao = array();
+            $codigoInscricaoExperiencia = '';
+        }
 
-        $status = (isset($inscricao->statusInscricao) ? $inscricao->statusInscricao : 'N');
+        $tipos     = TipoEntidade::whereIn('codigoTipoEntidade', [2,3])->get();
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
 
         if ($status == 'P')
         {
-            return redirect("inscricao/{$codigoEdital}"); 
+            return redirect("inscricao/{$edital}"); 
         }
 
         return view('inscricao.ensino',
         [
-            'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $codigoEdital,
-            'tipos'             => $tipos, 
+            'codigoInscricao'               => $codigoInscricao, 
+            'codigoEdital'                  => $edital,
+            'tipos'                         => $tipos, 
+            'codigoInscricaoExperiencia'    => $codigoInscricaoExperiencia,
+            'ensino'                        => $inscricao,
+            'codigoExperiencia'             => $codigoExperiencia,
         ]); 
     } 
 

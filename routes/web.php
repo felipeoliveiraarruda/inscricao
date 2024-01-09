@@ -61,12 +61,12 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/idioma/create/{codigoIdioma?}', [InscricaoController::class, 'idioma_create']);
 
         /* Experiencia Profissional Inscricao */
-        Route::get('{codigoInscricao}/profissional/',       [InscricaoController::class, 'profissional']);
-        Route::get('{codigoInscricao}/profissional/create', [InscricaoController::class, 'profissional_create']);
+        Route::get('{codigoInscricao}/profissional/',                               [InscricaoController::class, 'profissional']);
+        Route::get('{codigoInscricao}/profissional/create/{codigoExperiencia?}',    [InscricaoController::class, 'profissional_create']);
 
         /* Experiencia Em Ensino Inscricao */
-        Route::get('{codigoInscricao}/ensino/',       [InscricaoController::class, 'ensino']);
-        Route::get('{codigoInscricao}/ensino/create', [InscricaoController::class, 'ensino_create']);
+        Route::get('{codigoInscricao}/ensino/',                             [InscricaoController::class, 'ensino']);
+        Route::get('{codigoInscricao}/ensino/create/{codigoExperiencia?}',  [InscricaoController::class, 'ensino_create']);
 
         /* Recursos Financeiros Inscricao */
         Route::get('{codigoInscricao}/financeiro/',       [InscricaoController::class, 'financeiro']);

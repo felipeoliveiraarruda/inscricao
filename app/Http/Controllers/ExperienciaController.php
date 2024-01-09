@@ -132,7 +132,74 @@ class ExperienciaController extends Controller
      */
     public function update(Request $request, Experiencia $experiencia)
     {
-        //
+        $temp = '';
+        
+        $voltar             = ($request->codigoTipoExperiencia == 2 ? '/profissional' : '/ensino');
+        $inscricaoExperiencia = true;
+        
+        \DB::beginTransaction();
+
+        $profissional = Experiencia::find($request->codigoExperiencia);
+
+        if ($request->codigoTipoExperiencia == 2)
+        {   
+            $profissional->codigoUsuario         = Auth::user()->id;
+            $profissional->codigoTipoExperiencia = $request->codigoTipoExperiencia;
+            $profissional->entidadeExperiencia   = $request->entidadeExperiencia;
+            $profissional->posicaoExperiencia    = $request->posicaoExperiencia;
+            $profissional->inicioExperiencia     = $request->inicioExperiencia;
+            $profissional->finalExperiencia      = $request->finalExperiencia;
+            $profissional->codigoPessoaAlteracao = Auth::user()->codpes;
+            $profissional->save();
+        }
+        else
+        {
+            $profissional->codigoUsuario         = Auth::user()->id;
+            $profissional->codigoTipoExperiencia = $request->codigoTipoExperiencia;
+            $profissional->codigoTipoEntidade    = $request->codigoTipoEntidade;
+            $profissional->entidadeExperiencia   = $request->entidadeExperiencia;
+            $profissional->posicaoExperiencia    = $request->posicaoExperiencia;
+            $profissional->inicioExperiencia     = $request->inicioExperiencia;
+            $profissional->finalExperiencia      = $request->finalExperiencia;
+            $profissional->codigoPessoaAlteracao = Auth::user()->codpes;
+            $profissional->save();
+        }
+
+        if(!empty($request->codigoInscricao))
+        {
+            if(empty($request->codigoInscricaoExperiencia))
+            {
+                $inscricaoExperiencia = InscricoesExperiencias::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoExperiencia'     => $request->codigoExperiencia,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoExperiencia = InscricoesExperiencias::find($request->codigoInscricaoExperiencia);
+
+                $inscricaoExperiencia->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoExperiencia->codigoExperiencia     = $request->codigoExperiencia;
+                $inscricaoExperiencia->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoExperiencia->save();
+            }
+
+            $voltar = ($request->codigoTipoExperiencia == 2 ? "inscricao/{$request->codigoInscricao}/profissional" : "inscricao/{$request->codigoInscricao}/ensino");            
+        }
+
+        if($profissional && $inscricaoExperiencia) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Experiência Profissional cadastrada com sucesso.');
+        
+        return redirect($voltar); 
     }
 
     /**

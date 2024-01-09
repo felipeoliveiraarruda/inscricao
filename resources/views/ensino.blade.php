@@ -11,7 +11,9 @@
             <div class="card bg-default">
                 <h5 class="card-header">Experiência Em Ensino
                     @if ($status == 'N')
-                        <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                        <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i> 
+                        </a>
                     @endif
                 </h5>
 
@@ -48,6 +50,7 @@
                                                 <th scope="col">Posição Ocupada</th>
                                                 <th scope="col">Início</th>
                                                 <th scope="col">Fim</th>
+                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -57,8 +60,19 @@
                                             <td>{{ $ensino->tipoEntidade }}</td>
                                             <td>{{ $ensino->posicaoExperiencia }}</td>
                                             <td>{{ $ensino->inicioExperiencia->format('d/m/Y') }}</td>
-                                            <td>{{ $ensino->finalExperiencia->format('d/m/Y') }}</td>
-                                            <td></td>
+                                            <td>{{ ($ensino->finalExperiencia == '' ? '' : $ensino->finalExperiencia->format('d/m/Y')) }}</td>
+                                            <td>
+                                                @if (!empty($ensino->codigoInscricaoExperiencia))
+                                                <i class="fa fa-check text-success"></i>
+                                                @else
+                                                    <i class="fa fa-times text-danger"></i>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="inscricao/{{ $codigoInscricao }}/ensino/create/{{ $ensino->codigoExperiencia }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                    <i class="far fa-edit"></i>
+                                                </a>   
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </table>                                  

@@ -203,35 +203,86 @@ class Inscricao extends Model
         return $idioma;                                 
     }
     
-    public static function obterProfissionalInscricao($codigoInscricao)
+    public static function obterProfissionalInscricao($codigoInscricao, $codigoExperiencia = '')
     {
-        $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
-                                   ->rightJoin('users', function($join)
-                                   {
-                                       $join->on('users.id', '=', 'experiencias.codigoUsuario');
-                                       $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
-                                   })                          
-                                   ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
-                                   ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')    
-                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                   ->get();
+        if (empty($codigoExperiencia))
+        {
+            $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
+                                    ->leftjoin('users', function($join)
+                                    {
+                                        $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                        $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
+                                    })       
+                                    ->leftjoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                      
+                                    ->leftJoin('inscricoes_experiencias', function($join)
+                                    {
+                                        $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                        $join->on('inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia');
+                                    })                                 
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->get();
+        }
+        else
+        {
+            $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
+                                        ->leftjoin('users', function($join)
+                                        {
+                                            $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                            $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
+                                        })       
+                                        ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                              
+                                        ->leftJoin('inscricoes_experiencias', function($join)
+                                        {
+                                            $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                            $join->on('inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia');
+                                        })    
+                                        ->where('experiencias.codigoExperiencia', $codigoExperiencia)
+                                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                        ->first();
+        }
 
         return $profissional;                                 
     }
     
-    public static function obterEnsinoInscricao($codigoInscricao)
+    public static function obterEnsinoInscricao($codigoInscricao, $codigoExperiencia = '')
     {
-        $ensino = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia, tipo_entidade.*'))
-                            ->rightJoin('users', function($join)
-                            {
-                                $join->on('users.id', '=', 'experiencias.codigoUsuario');
-                                $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
-                            })                          
-                            ->leftJoin('inscricoes_experiencias', 'inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia')
-                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')  
-                            ->rightJoin('tipo_entidade', 'tipo_entidade.codigoTipoEntidade', '=', 'experiencias.codigoTipoEntidade')  
-                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                            ->get();                                             
+        if (empty($codigoExperiencia))
+        {
+            $ensino = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, tipo_entidade.*, inscricoes_experiencias.codigoInscricaoExperiencia'))
+                                ->join('tipo_entidade', 'tipo_entidade.codigoTipoEntidade', '=', 'experiencias.codigoTipoEntidade')
+                                ->leftjoin('users', function($join)
+                                {
+                                    $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                    $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
+                                })       
+                                ->leftjoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                      
+                                ->leftJoin('inscricoes_experiencias', function($join)
+                                {
+                                    $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                    $join->on('inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia');
+                                })                                 
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->get();    
+        }
+        else
+        {
+            $ensino = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, tipo_experiencia.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
+                                ->join('tipo_experiencia', 'tipo_experiencia.codigoTipoExperiencia', '=', 'experiencias.codigoTipoExperiencia')
+                                ->leftjoin('users', function($join)
+                                {
+                                    $join->on('users.id', '=', 'experiencias.codigoUsuario');
+                                    $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(1));
+                                })       
+                                ->leftjoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                      
+                                ->leftJoin('inscricoes_experiencias', function($join)
+                                {
+                                    $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                    $join->on('inscricoes_experiencias.codigoExperiencia', '=', 'experiencias.codigoExperiencia');
+                                })                                 
+                                ->where('experiencias.codigoExperiencia', $codigoExperiencia)
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->first(); 
+        }
         return $ensino;                                 
     }   
     
