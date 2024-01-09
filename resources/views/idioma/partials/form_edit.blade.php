@@ -10,7 +10,7 @@
             <select class="form-control" id="leituraIdioma" name="leituraIdioma" required>
                 <option value="">Selecione uma opção</option>
                 @foreach($idiomas as $temp)
-                    <option value="{{ $temp }}" {{ old('leituraIdioma') == $temp ? "selected" : "" }}>{{ $temp }}</option>
+                    <option value="{{ $temp }}" {{ old('leituraIdioma') == $temp ? "selected" : $idioma->leituraIdioma == $temp ? "selected" : "" }}>{{ $temp }}</option>
                 @endforeach
             </select>
         </div>
@@ -20,7 +20,7 @@
             <select class="form-control" id="redacaoIdioma" name="redacaoIdioma" required>
                 <option value="">Selecione uma opção</option>
                 @foreach($idiomas as $temp)
-                    <option value="{{ $temp }}" {{ old('redacaoIdioma') == $temp ? "selected" : "" }}>{{ $temp }}</option>
+                    <option value="{{ $temp }}" {{ old('redacaoIdioma') == $temp ? "selected" : $idioma->redacaoIdioma == $temp ? "selected" : "" }}>{{ $temp }}</option>
                 @endforeach
             </select>
         </div>
@@ -30,7 +30,7 @@
             <select class="form-control" id="conversacaoIdioma" name="conversacaoIdioma" required>
                 <option value="">Selecione uma opção</option>
                 @foreach($idiomas as $temp)
-                    <option value="{{ $temp }}" {{ old('conversacaoIdioma') == $temp ? "selected" : "" }}>{{ $temp }}</option>
+                    <option value="{{ $temp }}" {{ old('conversacaoIdioma') == $temp ? "selected" : $idioma->conversacaoIdioma == $temp ? "selected" : "" }}>{{ $temp }}</option>
                 @endforeach
             </select>
         </div>

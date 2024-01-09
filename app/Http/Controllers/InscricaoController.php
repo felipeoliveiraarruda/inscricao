@@ -367,20 +367,35 @@ class InscricaoController extends Controller
         ]); 
     } 
     
-    public function idioma_create($codigoInscricao)
+    public function idioma_create($codigoInscricao, $codigoIdioma = '')
     {
-        $inscricao = Inscricao::obterIdiomaInscricao($codigoInscricao);
-
-        if ($inscricao[0]->statusInscricao == 'P')
+        if (!empty($codigoIdioma))
         {
-            return redirect("inscricao/{$inscricao[0]->codigoEdital}"); 
+            $inscricao = Inscricao::obterIdiomaInscricao($codigoInscricao, $codigoIdioma);
+            $codigoInscricaoIdioma = $inscricao->codigoInscricaoIdioma;
+        }
+        else
+        {
+            $inscricao = array();
+            $codigoInscricaoIdioma = '';
+        }
+        
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if ($status == 'P')
+        {
+            return redirect("inscricao/{$edital}"); 
         }
 
         return view('inscricao.idioma',
         [
-            'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $inscricao[0]->codigoEdital,
-            'idiomas'           => Utils::obterDadosSysUtils('idioma'),
+            'codigoInscricao'       => $codigoInscricao, 
+            'codigoEdital'          => $edital,
+            'idiomas'               => Utils::obterDadosSysUtils('idioma'),
+            'idioma'                => $inscricao,
+            'codigoIdioma'          => $codigoIdioma,
+            'codigoInscricaoIdioma' => $codigoInscricaoIdioma,
         ]); 
     } 
     

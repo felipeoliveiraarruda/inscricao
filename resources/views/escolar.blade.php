@@ -47,8 +47,6 @@
                                             <tr>
                                                 <th scope="col">Escola</th>
                                                 <th scope="col">Título/Especialidade</th>
-                                                <th scope="col">Início</th>
-                                                <th scope="col">Fim</th>
                                                 <th scope="col">Anexos</th>
                                                 <th scope="col"></th>
                                             </tr>
@@ -56,17 +54,18 @@
                                         @foreach($escolares as $escolar)                                
                                             @php
                                                 $historico = \App\Models\Arquivo::obterArquivosHistorico($codigoInscricao);
-                                                $diploma = \App\Models\Arquivo::obterArquivosDiploma($codigoInscricao);
+                                                $diploma   = \App\Models\Arquivo::obterArquivosDiploma($codigoInscricao);
                                             @endphp
                                         <tr>
                                             <td>{{ $escolar->escolaResumoEscolar }}</td>
                                             <td>{{ $escolar->especialidadeResumoEscolar }}</td>
-                                            <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
-                                            <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('d/m/Y')) }}</td>
                                             <td>
+                                                @if (!empty($historico))
                                                 <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Histórico">
                                                     <i class="fas fa-user-graduate"></i>
                                                 </a>
+                                                @endif
+
                                                 @if (!empty($diploma))
                                                 <a href="{{ asset('storage/'.$diploma->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Diploma/Certificado">
                                                     <i class="fas fa-graduation-cap"></i>
@@ -74,11 +73,9 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                 <!--@if ($escolar->statusInscricao == 'N')
                                                 <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
                                                     <i class="far fa-edit"></i>
-                                                </a>  
-                                                @endif-->
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach

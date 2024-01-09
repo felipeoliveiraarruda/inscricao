@@ -52,9 +52,9 @@ class Inscricao extends Model
         return $total;
     }
 
-    public static function obterStatusInscricao($codigoEdital, $user_id)
+    public static function obterStatusInscricao($codigoInscricao)
     {
-        $inscricao = Inscricao::select('statusInscricao')->where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->first();
+        $inscricao = Inscricao::select('statusInscricao')->where('codigoInscricao', $codigoInscricao)->first();
     
         if (empty($inscricao))
         {
@@ -170,14 +170,36 @@ class Inscricao extends Model
         return $escolar;                                 
     }
 
-    public static function obterIdiomaInscricao($codigoInscricao)
+    public static function obterIdiomaInscricao($codigoInscricao, $codigoIdioma = '')
     {
-        $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
-                        ->rightJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                                
-                        ->leftJoin('inscricoes_idiomas', 'inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma')
-                        ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                        ->get();                                               
+        if (empty($codigoIdioma))
+        {
+            $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
+                            ->leftJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
+                            ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')   
+                            ->leftJoin('inscricoes_idiomas', function($join)
+                            {
+                                $join->on('inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                $join->on('inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma');
+                            }) 
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->get();         
+        }
+        else
+        {
+            $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
+                            ->leftJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
+                            ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')              
+                            ->leftJoin('inscricoes_idiomas', function($join)
+                            {
+                                $join->on('inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                $join->on('inscricoes_idiomas.codigoIdioma', '=', 'idiomas.codigoIdioma');
+                            })    
+                            ->where('idiomas.codigoIdioma', $codigoIdioma)
+                            ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                            ->first();  
+        }
+                                            
         return $idioma;                                 
     }
     

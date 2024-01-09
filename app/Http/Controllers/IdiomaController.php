@@ -109,7 +109,55 @@ class IdiomaController extends Controller
      */
     public function update(Request $request, Idioma $idioma)
     {
-        //
+        $temp = '';
+        $voltar = '/idioma';
+        $inscricaoIdioma = true;
+        
+        \DB::beginTransaction();
+
+        $idioma = Idioma::find($request->codigoIdioma);
+        $idioma->codigoUsuario         = Auth::user()->id;
+        $idioma->descricaoIdioma       = $request->descricaoIdioma;
+        $idioma->leituraIdioma         = $request->leituraIdioma;
+        $idioma->redacaoIdioma         = $request->redacaoIdioma;
+        $idioma->conversacaoIdioma     = $request->conversacaoIdioma;
+        $idioma->codigoPessoaAlteracao = Auth::user()->codpes;
+        $idioma->save();
+        
+        if(!empty($request->codigoInscricao))
+        {
+            if(empty($request->codigoInscricaoIdioma))
+            {
+                $inscricaoIdioma = InscricoesIdiomas::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoIdioma'          => $idioma->codigoIdioma,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoIdioma = InscricoesIdiomas::find($request->codigoInscricaoIdioma);
+                $inscricaoIdioma->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoIdioma->codigoIdioma          = $request->codigoIdioma;
+                $inscricaoIdioma->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoIdioma->save();
+            }
+
+            $voltar = "inscricao/{$request->codigoInscricao}/idioma";
+        }
+
+        if($idioma && $inscricaoIdioma) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Conhecimento de Idioma cadastrado com sucesso.');
+        
+        return redirect($voltar);    
     }
 
     /**

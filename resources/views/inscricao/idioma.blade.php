@@ -15,15 +15,22 @@
 
         <div class="col-sm-9">
             <div class="card bg-default">
-                <h5 class="card-header">Resumo Escolar</h5>
+                <h5 class="card-header">Conhecimento de Idiomas Estrangeiros</h5>
                 
                 <div class="card-body">
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                       
-                    <form class="needs-validation" novalidate method="POST" action="idioma">                                    
+                    
+                    @if ($codigoIdioma == '')      
+                    <form class="needs-validation" novalidate method="POST" action="idioma">  
                         @csrf
-                        @include('idioma.partials.form')                        
+                        @include('idioma.partials.form')  
+                    @else
+                    <form class="needs-validation" novalidate method="POST" action="idioma/{{ $codigoIdioma }}">
+                        @method('patch')
+                        @csrf
+                        @include('idioma.partials.form_edit')  
+                    @endif                       
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                     </form>
                 </div>

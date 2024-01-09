@@ -57,8 +57,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/escolar/create/{codigoResumoEscolar?}',   [InscricaoController::class, 'escolar_create']);
 
         /* Idioma Inscrição */
-        Route::get('{codigoInscricao}/idioma/',       [InscricaoController::class, 'idioma']);
-        Route::get('{codigoInscricao}/idioma/create', [InscricaoController::class, 'idioma_create']);
+        Route::get('{codigoInscricao}/idioma/',                       [InscricaoController::class, 'idioma']);
+        Route::get('{codigoInscricao}/idioma/create/{codigoIdioma?}', [InscricaoController::class, 'idioma_create']);
 
         /* Experiencia Profissional Inscricao */
         Route::get('{codigoInscricao}/profissional/',       [InscricaoController::class, 'profissional']);
