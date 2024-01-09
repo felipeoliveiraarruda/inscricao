@@ -10,8 +10,10 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Recursos Financeiros
-                    @if (empty($financeiros->codigoRecursoFinanceiro))
-                        <a href="inscricao/{{ $codigoInscricao }}/financeiro/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                    @if (empty($financeiros->codigoInscricaoRecursoFinanceiro))
+                        <a href="inscricao/{{ $codigoInscricao }}/financeiro/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>
+                        </a>
                     @endif
                 </h5>
 
@@ -39,7 +41,7 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($financeiros->codigoRecursoFinanceiro))
+                                    @if (!empty($financeiros->codigoInscricaoRecursoFinanceiro))
 
                                         <p><span class="font-weight-bold">Possui bolsa de estudos de alguma instituição?</span> Sim ({{ ($financeiros->bolsaRecursoFinanceiro == 'S' ? 'X' : ' ') }}) Não ({{ ($financeiros->bolsaRecursoFinanceiro == 'N' ? 'X' : ' ') }})</p>
 

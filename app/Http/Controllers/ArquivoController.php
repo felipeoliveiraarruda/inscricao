@@ -68,8 +68,16 @@ class ArquivoController extends Controller
     {
         if (!empty($codigoInscricao))
         {
-            //$temp = Inscricao::where('codigoUsuario', Auth::user()->id)->where('codigoInscricao', $inscricao)->first();
-            $voltar = "inscricao/{$codigoInscricao}/pessoal";
+            $arquivo = Arquivo::find($codigoArquivo);
+
+            if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
+            {
+                $voltar = "inscricao/{$codigoInscricao}/curriculo";
+            }
+            else
+            {
+                $voltar = "inscricao/{$codigoInscricao}/pessoal";
+            }
         }
         else
         {
@@ -128,6 +136,8 @@ class ArquivoController extends Controller
     public function destroy($codigoArquivo, $codigoInscricao = '')
     {
         $arquivo = Arquivo::find($codigoArquivo);
+
+        $codigoTipoDocumento = $arquivo->codigoTipoDocumento;
                 
         $remover = unlink(Storage::path($arquivo->linkArquivo));
 
@@ -151,7 +161,14 @@ class ArquivoController extends Controller
         
         if(!empty($codigoInscricao))
         {
-            return redirect("inscricao/{$codigoInscricao}/pessoal");
+            if ($codigoTipoDocumento == 8 || $codigoTipoDocumento == 9)
+            {
+                return redirect("inscricao/{$codigoInscricao}/curriculo");
+            }
+            else
+            {
+                return redirect("inscricao/{$codigoInscricao}/pessoal");    
+            }
         }
         else
         {
@@ -161,6 +178,8 @@ class ArquivoController extends Controller
 
     public function anexar($codigoArquivo, $codigoInscricao)
     {
+        $arquivo = Arquivo::find($codigoArquivo);
+
         $inscricao = InscricoesArquivos::create([
             'codigoInscricao'       => $codigoInscricao,
             'codigoArquivo'         => $codigoArquivo,
@@ -176,7 +195,14 @@ class ArquivoController extends Controller
             session()->flash('alert-danger', 'Ocorreu um erro na anexação do Documento a Inscrição.');
         }
 
-        return redirect("inscricao/{$codigoInscricao}/pessoal");
+        if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
+        {
+            return redirect("inscricao/{$codigoInscricao}/curriculo");
+        }
+        else
+        {
+            return redirect("inscricao/{$codigoInscricao}/pessoal");    
+        }
     }
 
     /*public function remover($codigoInscricao, $codigoArquivo)

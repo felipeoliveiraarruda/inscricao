@@ -11,7 +11,9 @@
             <div class="card bg-default">
                 <h5 class="card-header">Expectativas
                     @if (empty($expectativas->expectativasInscricao))
-                        <a href="inscricao/{{ $codigoInscricao }}/expectativas/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                        <a href="inscricao/{{ $codigoInscricao }}/expectativas/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>
+                        </a>
                     @endif
                 </h5>
 

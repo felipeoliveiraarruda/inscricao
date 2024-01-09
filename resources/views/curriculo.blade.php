@@ -11,7 +11,9 @@
             <div class="card bg-default">
                 <h5 class="card-header">Currículo
                     @if (empty($curriculo->codigoArquivo))
-                        <a href="inscricao/{{ $codigoInscricao }}/curriculo/create/" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right">Novo</a>
+                        <a href="inscricao/{{ $codigoInscricao }}/curriculo/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>
+                        </a>
                     @endif
                 </h5>
 
@@ -39,11 +41,49 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($curriculo->codigoArquivo))                                        
-                                        <a href="{{ asset('storage/'.$curriculo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
-                                            <i class="far fa-eye"></i> Visualizar
-                                        </a>
-                                    @endif                                       
+                                    @if (!empty($curriculo->codigoArquivo))
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th scope="col">Arquivo</th>
+                                                        <th scope="col">Status</th>                                                                
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <th>{{ $curriculo->tipoDocumento }}</th>
+                                                    <td class="text-center">                          
+                                                        @if (!empty($curriculo->codigoInscricaoArquivo))
+                                                            <i class="fa fa-check text-success"></i>
+                                                        @else
+                                                            <i class="fa fa-times text-danger"></i>
+                                                        @endif                                                                 
+                                                    </td>
+                                                    <td>
+                                                        @if (empty($curriculo->codigoInscricaoArquivo))
+                                                            <a href="arquivo/{{ $curriculo->codigoArquivo }}/anexar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Anexar arquivo a inscrição">
+                                                                <i class="fas fa-paperclip"></i>
+                                                            </a>                                                                    
+                                                        @endif
+
+                                                        <a href="{{ asset('storage/'.$curriculo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+
+                                                        @if ($status == 'N')
+                                                            <a href="arquivo/{{ $curriculo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                                                                <i class="fa fa-wrench"></i>
+                                                            </a>
+                                                            <a href="arquivo/{{ $curriculo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                                                                <i class="fa fa-trash"></i>
+                                                            </a>
+                                                        @endif                                                         
+                                                    </td>
+                                                </tr>                
+                                            </table>
+                                        </div>  
+                                    @endif  
                                 </div>                                 
                             </div>                                                        
                         </div>

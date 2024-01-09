@@ -288,12 +288,13 @@ class Inscricao extends Model
     
     public static function obterFinanceiroInscricao($codigoInscricao)
     {
-        $financeiro = RecursoFinanceiro::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))
-                                       ->rightJoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                                
-                                       ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoRecursoFinanceiro', '=', 'recursos_financeiros.codigoRecursoFinanceiro')
-                                       ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+        $financeiro = RecursoFinanceiro::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))                                       
+                                       ->leftJoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                  
+                                       ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                      
+                                       ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                       ->first();                                              
+                                       ->first();
+                                       
         return $financeiro;                                 
     }    
 
@@ -309,10 +310,15 @@ class Inscricao extends Model
     
     public static function obterCurriculoInscricao($codigoInscricao)
     {
-        $curriculo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
-                            ->rightJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
-                            ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
-                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+        $curriculo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*, tipo_documentos.*, inscricoes_arquivos.codigoInscricaoArquivo'))
+                            ->join('tipo_documentos', 'tipo_documentos.codigoTipoDocumento', '=', 'arquivos.codigoTipoDocumento')
+                            ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                            ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->leftJoin('inscricoes_arquivos', function($join)
+                            {
+                                $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
+                            })
                             ->where('inscricoes.codigoInscricao', $codigoInscricao)
                             ->whereIn('arquivos.codigoTipoDocumento', [8,9])
                             ->first(); 

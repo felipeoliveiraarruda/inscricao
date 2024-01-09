@@ -605,22 +605,25 @@ class InscricaoController extends Controller
 
     public function curriculo($codigoInscricao)
     {         
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
         $inscricao = Inscricao::obterCurriculoInscricao($codigoInscricao);
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($codigoInscricao);
 
-        $voltar = "inscricao/{$codigoEdital}/curriculo";
+        $voltar = "inscricao/{$edital}/curriculo";
     
         return view('curriculo',
         [
             'codigoInscricao'   => $codigoInscricao,
-            'codigoEdital'      => $codigoEdital,
+            'codigoEdital'      => $edital,
             'link_voltar'       => $voltar,
             'curriculo'         => $inscricao,
             'nivel'             => session(['nivel']),
             'total'             => $total,
+            'status'            => $status,
         ]); 
     } 
 

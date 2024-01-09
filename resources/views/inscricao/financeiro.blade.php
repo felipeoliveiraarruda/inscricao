@@ -21,7 +21,7 @@
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
-                    @if ($financeiros->codigoRecursoFinanceiro == '')
+                    @if ($financeiros->codigoInscricaoRecursoFinanceiro == '')
                     <form class="needs-validation" novalidate method="POST" action="financeiro">
                     @else
                     <form class="needs-validation" novalidate method="POST" action="/financeiro/{{ $financeiros->codigoRecursoFinanceiro }}">
