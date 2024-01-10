@@ -47,6 +47,7 @@
 
         $('#modalAviso').modal('show');
         $("#mostrarEnderecoEmergencia").hide();
+        $("#mostraAnoEspecial").hide();
 
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function()
         {
@@ -312,6 +313,26 @@
         $('input[name^="arquivoGcub"]').change(function() 
         {
           document.getElementById('_'+$(this).attr('name')).innerHTML = '<i class="fa fa-check text-success"></i>';
+        });
+
+        $("#alunoEspecialS").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            $("#mostraAnoEspecial").show();
+
+            $("#dataAlunoEspecial").prop('required',true);
+          }
+        });
+
+        $("#alunoEspecialN").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+            $("#mostraAnoEspecial").hide();
+
+            $("#dataAlunoEspecial").prop('required',false);
+          }
         });
     })  
 

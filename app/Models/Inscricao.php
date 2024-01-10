@@ -350,7 +350,7 @@ class Inscricao extends Model
         $disciplinas = Inscricao::select('inscricoes.codigoEdital', 'inscricoes.statusInscricao', 'editais.*', 'users.*', 'inscricoes_disciplinas.codigoInscricaoDisciplina', 'inscricoes_disciplinas.codigoDisciplina')
                                  ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
                                  ->join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                                 ->leftJoin('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                 ->join('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                  ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                  ->get(); 
 

@@ -815,6 +815,7 @@ class InscricaoController extends Controller
             'nivel'             => session(['nivel']),
             'total'             => $total,
             'status'            => $status,
+            'count'             => count($inscricao),
         ]); 
     } 
 
@@ -861,6 +862,12 @@ class InscricaoController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
         }
+
+        $inscricao = Inscricao::find($request->codigoInscricao);
+        $inscricao->alunoEspecial = $request->alunoEspecial;
+        $inscricao->dataAlunoEspecial = $request->dataAlunoEspecial;
+        $inscricao->save();
+
 
         request()->session()->flash('alert-success', 'Disciplina cadastrada com sucesso');    
         $voltar = "inscricao/{$request->codigoInscricao}/disciplina";
