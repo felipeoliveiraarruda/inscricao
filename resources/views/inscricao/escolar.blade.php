@@ -20,10 +20,17 @@
                 <div class="card-body">
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                       
+
+                    @if(empty($codigoResumoEscolar))
                     <form class="needs-validation" novalidate method="POST" action="escolar" enctype="multipart/form-data">                                    
                         @csrf
-                        @include('escolar.partials.form')                        
+                        @include('escolar.partials.form')
+                    @else
+                    <form class="needs-validation" novalidate method="POST" action="escolar/{{$codigoResumoEscolar}}" enctype="multipart/form-data">                                    
+                        @csrf
+                        @method('patch')
+                        @include('escolar.partials.form_edit')
+                    @endif                       
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                     </form>
                 </div>

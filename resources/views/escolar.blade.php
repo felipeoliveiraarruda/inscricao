@@ -47,7 +47,9 @@
                                             <tr>
                                                 <th scope="col">Escola</th>
                                                 <th scope="col">Título/Especialidade</th>
-                                                <th scope="col">Anexos</th>
+                                                <th scope="col">Início</th>
+                                                <th scope="col">Fim</th>
+                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -59,7 +61,17 @@
                                         <tr>
                                             <td>{{ $escolar->escolaResumoEscolar }}</td>
                                             <td>{{ $escolar->especialidadeResumoEscolar }}</td>
+                                            <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
+                                            <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('d/m/Y')) }}</td>
+
+
                                             <td>
+                                                @if (!empty($escolar->codigoInscricaoResumoEscolar))
+                                                <i class="fa fa-check text-success"></i>
+                                                @else
+                                                    <i class="fa fa-times text-danger"></i>
+                                                @endif
+
                                                 @if (!empty($historico))
                                                 <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Histórico">
                                                     <i class="fas fa-user-graduate"></i>

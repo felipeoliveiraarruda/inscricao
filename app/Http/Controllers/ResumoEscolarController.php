@@ -154,7 +154,114 @@ class ResumoEscolarController extends Controller
      */
     public function update(Request $request, ResumoEscolar $resumoEscolar)
     {
-        //
+        $temp = '';
+        $voltar = '/escolar';
+        $inscricaoResumoEscolar = true;
+        $inscricaoHistorico = true;
+        $inscricaoDiploma = true;
+        $diploma = false;
+        
+        \DB::beginTransaction();
+
+        $escolar = ResumoEscolar::find($request->codigoResumoEscolar);
+        $escolar->codigoUsuario                 = Auth::user()->id;
+        $escolar->escolaResumoEscolar           = $request->escolaResumoEscolar;
+        $escolar->especialidadeResumoEscolar    = $request->especialidadeResumoEscolar;
+        $escolar->inicioResumoEscolar           = $request->inicioResumoEscolar;
+        $escolar->finalResumoEscolar            = $request->finalResumoEscolar;
+        $escolar->codigoPessoaAlteracao         = Auth::user()->codpes;
+        $escolar->save();
+
+        if(!empty($request->codigoInscricao))
+        {
+            if ($request->file('historicoEscolar'))
+            {
+                $path = $request->file('historicoEscolar')->store('arquivos', 'public');
+
+                $historico = Arquivo::create([
+                    'codigoUsuario'         => Auth::user()->id,
+                    'codigoTipoDocumento'   => 5,
+                    'linkArquivo'           => $path,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+
+                $inscricaoHistorico = InscricoesArquivos::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoArquivo'         => $historico->codigoArquivo,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+
+                $arquivoHistorico = $inscricaoHistorico->codigoInscricaoArquivo;
+            }
+            else
+            {
+                $arquivoHistorico = $request->arquivoHistorico;
+            }
+
+            if ($request->file('diplomaEscolar'))
+            {
+                $path = $request->file('diplomaEscolar')->store('arquivos', 'public');
+    
+                $diploma = Arquivo::create([
+                    'codigoUsuario'         => Auth::user()->id,
+                    'codigoTipoDocumento'   => $request->inlineDocumentos,
+                    'linkArquivo'           => $path,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+
+                if ($diploma)
+                {
+                    $inscricaoDiploma = InscricoesArquivos::create([
+                        'codigoInscricao'       => $request->codigoInscricao,
+                        'codigoArquivo'         => $diploma->codigoArquivo,
+                        'codigoPessoaAlteracao' => Auth::user()->codpes,
+                    ]); 
+
+                    $arquivoDiploma = $inscricaoDiploma->codigoInscricaoArquivo;
+                }
+            }
+            else
+            {
+                $arquivoDiploma = $request->arquivoDiploma;
+            }
+
+            if(!empty($request->codigoInscricaoResumoEscolar))
+            {
+                $inscricaoResumoEscolar = InscricoesResumoEscolar::find($request->codigoInscricaoResumoEscolar);
+                
+                $inscricaoResumoEscolar->codigoInscricao       = $request->codigoInscricao;
+                $inscricaoResumoEscolar->codigoResumoEscolar   = $escolar->codigoResumoEscolar;
+                $inscricaoResumoEscolar->codigoPessoaAlteracao = Auth::user()->codpes;
+                $inscricaoResumoEscolar->codigoHistorico       = $arquivoHistorico;
+                $inscricaoResumoEscolar->codigoDiploma         = $arquivoDiploma;
+                $inscricaoResumoEscolar->save();
+            }
+            else
+            {
+                $inscricaoResumoEscolar = InscricoesResumoEscolar::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoResumoEscolar'   => $escolar->codigoResumoEscolar,
+                    'codigoHistorico'       => $arquivoHistorico,
+                    'codigoDiploma'         => $arquivoDiploma,
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+
+            $voltar = "inscricao/{$request->codigoInscricao}/escolar";
+        }
+
+        if($escolar && $inscricaoResumoEscolar && $inscricaoHistorico && $inscricaoDiploma) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Resumo Escolar cadastrado com sucesso.');
+        
+        return redirect($voltar);         
     }
 
     /**

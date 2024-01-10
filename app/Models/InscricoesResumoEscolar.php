@@ -15,12 +15,14 @@ class InscricoesResumoEscolar extends Model
     use \Spatie\Permission\Traits\HasRoles;
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $primaryKey = 'codigoInscricoesResumoEscolar';
+    protected $primaryKey = 'codigoInscricaoResumoEscolar';
     protected $table      = 'inscricoes_resumo_escolar';
     
     protected $fillable = [
         'codigoInscricao',
         'codigoResumoEscolar',
+        'codigoHistorico',
+        'codigoDiploma',
         'codigoPessoaAlteracao',
     ];
 

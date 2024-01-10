@@ -149,22 +149,30 @@ class Inscricao extends Model
     {
         if(empty($codigoResumoEscolar))
         {
-            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
-                           ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
-                           ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
-                           ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                           ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                           ->get();
+            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar, inscricoes_resumo_escolar.codigoHistorico, inscricoes_resumo_escolar.codigoDiploma'))
+                                    ->leftJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
+                                    ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->leftJoin('inscricoes_resumo_escolar', function($join)
+                                    {
+                                        $join->on('inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                        $join->on('inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar');
+                                    })    
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->get();
         }
         else
         {
             $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
-                                    ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                
-                                    ->leftJoin('inscricoes_resumo_escolar', 'inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar')                             
-                                    ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->leftJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
+                                    ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->leftJoin('inscricoes_resumo_escolar', function($join)
+                                    {
+                                        $join->on('inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                        $join->on('inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar');
+                                    })    
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                     ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
-                                    ->get();
+                                    ->first();
         }
 
         return $escolar;                                 

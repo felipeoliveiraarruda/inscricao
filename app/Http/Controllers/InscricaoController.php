@@ -18,6 +18,7 @@ use App\Models\TipoDocumento;
 use App\Models\User;
 use App\Models\TipoEntidade;
 use App\Models\Comprovante;
+use App\Models\InscricoesResumoEscolar;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
@@ -331,20 +332,47 @@ class InscricaoController extends Controller
     
     public function escolar_create($codigoInscricao, $codigoResumoEscolar = '')
     {
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
-        $escolares    = Inscricao::obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar);
-
-        if ($escolares[0]->statusInscricao == 'P')
+        if (!empty($codigoResumoEscolar))
         {
-            return redirect("inscricao/{$codigoEdital}"); 
+            $inscricao = Inscricao::obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar);
+            $codigoInscricaoResumoEscolar = $inscricao->codigoInscricaoResumoEscolar;
+        }
+        else
+        {
+            $inscricao = array();
+            $codigoInscricaoResumoEscolar = '';
+        }
+        
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if (!empty($codigoInscricaoResumoEscolar))
+        {
+            $arquivos = InscricoesResumoEscolar::find($codigoInscricaoResumoEscolar);
+            $codigoHistorico = $arquivos->codigoHistorico;
+            $codigoDiploma   = $arquivos->codigoDiploma;
+        }
+        else
+        {
+            $codigoHistorico = '';
+            $codigoDiploma   = '';
+        }
+
+        if ($status == 'P')
+        {
+            return redirect("inscricao/{$edital}"); 
         }
 
         return view('inscricao.escolar',
         [
-            'codigoInscricao'       => $codigoInscricao, 
-            'codigoEdital'          => $codigoEdital,
-            'escolar'               => $escolares[0],
-            'codigoResumoEscolar'   => $codigoResumoEscolar,
+            'codigoInscricao'               => $codigoInscricao, 
+            'codigoEdital'                  => $edital,
+            'escolar'                       => $inscricao,
+            'codigoResumoEscolar'           => $codigoResumoEscolar,
+            'codigoInscricaoResumoEscolar'  => $codigoInscricaoResumoEscolar,
+            'status'                        => $status,
+            'codigoHistorico'               => $codigoHistorico,
+            'codigoDiploma'                 => $codigoDiploma,
         ]); 
     } 
 

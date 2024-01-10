@@ -81,9 +81,5 @@
     </div>    
 </div> 
 
-
-
-
-
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
 <input type="hidden" name="codigoResumoEscolar" value="{{ $codigoResumoEscolar }}">
