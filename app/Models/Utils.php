@@ -19,6 +19,7 @@ use App\Models\InscricoesResumoEscolar;
 use App\Models\InscricoesIdiomas;
 use App\Models\InscricoesExperiencias;
 use App\Models\InscricoesRecursosFinanceiros;
+use App\Models\InscricoesDisciplinas;
 use App\Models\Arquivo;
 
 class Utils extends Model
@@ -275,6 +276,7 @@ class Utils extends Model
         $total['profissional'] = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
         $total['ensino']       = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
         $total['financeiro']   = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
+        $total['disciplina']   = InscricoesDisciplinas::obterTotal($codigoInscricao);
         $total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
         $total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;

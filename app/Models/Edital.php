@@ -121,4 +121,11 @@ class Edital extends Model
             return false;
         }   
     }
+
+    public static function obterCursoEdital($codigoEdital)
+    {
+        $edital = Edital::find($codigoEdital);
+        
+        return $edital->codigoCurso;  
+    }
 }

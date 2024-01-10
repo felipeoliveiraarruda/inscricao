@@ -9,11 +9,13 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">{{ $titulo }}
-                    @if (empty($expectativas->expectativasInscricao))
-                        <a href="inscricao/{{ $codigoInscricao }}/expectativas/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                <h5 class="card-header">Disciplinas
+                    @if ($status == 'N')
+                        @if (count($disciplinas) == 0)
+                            <a href="inscricao/{{ $codigoInscricao }}/disciplina/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                <i class="fa fa-plus"></i>                        
+                            </a>
+                        @endif
                     @endif
                 </h5>
 
@@ -41,12 +43,26 @@
                             
                             <div class="row">                             
                                 <div class="col-sm-12"> 
-                                    @if (!empty($expectativas->expectativasInscricao))
+                                    @if (count($disciplinas) > 0)
 
-                                        <!--<p><span class="font-weight-bold">Quais as suas expectativas com relação ao curso?</span></p>-->
-                                        
-                                        <p class="text-justify">{{ $expectativas->expectativasInscricao }}</p>
-                                    @endif                                    
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Código</th>
+                                                <th scope="col">Disciplina</th>
+                                            </tr>
+                                        </thead> 
+                                        @foreach($disciplinas as $disciplina)
+                                            @php
+                                                $temp = \Uspdev\Replicado\Posgraduacao::disciplina($disciplina->codigoDisciplina);
+                                            @endphp                            
+                                            <tr>
+                                                <td>{{ $temp['sgldis'] }}-{{ $temp['numseqdis'] }}</td>
+                                                <td>{{ $temp['nomdis'] }}</td>
+                                            </tr>
+                                        @endforeach 
+                                    </table> 
+                                    @endif
                                 </div>                                 
                             </div>                                                        
                         </div>

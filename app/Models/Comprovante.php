@@ -702,6 +702,11 @@ class Comprovante extends Fpdf
         {
             $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA EXAME DE SELEÇÃO MESTRADO - {$siglaPrograma}";
         }
+		
+        if ($siglaNivel == "AE")
+        {
+            $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA ALUNO ESPECIAL - {$siglaPrograma}";
+        }
 
         return  $titulo;
     }

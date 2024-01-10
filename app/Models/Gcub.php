@@ -136,7 +136,7 @@ class Gcub extends Model
             $pdf->Output('F', $temp);
         }
         
-        $arquivos = ArquivoGcub::where('codigoGcub', $codigoGcub)->get();
+        /*$arquivos = ArquivoGcub::where('codigoGcub', $codigoGcub)->get();
 
         $oMerger = PDFMerger::init();
 
@@ -180,9 +180,9 @@ class Gcub extends Model
         $temp = storage_path("app/public/gcub/{$codigoGcub}/{$codigoGcub}.pdf");
 
         $oMerger->merge();
-        $oMerger->save($temp);
+        $oMerger->save($temp);*/
 
-        return "gcub/{$codigoGcub}/{$codigoGcub}.pdf";
+        return "gcub/{$codigoGcub}/requerimento.pdf";
     }
 
     public static function bolsista($pdf, $codigoGcub)

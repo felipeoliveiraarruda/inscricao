@@ -99,6 +99,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/requerimento/',       [InscricaoController::class, 'requerimento']);
         Route::post('{codigoInscricao}/requerimento/store', [InscricaoController::class, 'requerimento_store']);
 
+        /* Disciplina Inscricao */
+        Route::get('{codigoInscricao}/disciplina/',       [InscricaoController::class, 'disciplina']);
+        Route::get('{codigoInscricao}/disciplina/create', [InscricaoController::class, 'disciplina_create']);
+        Route::post('{codigoInscricao}/disciplina/store', [InscricaoController::class, 'disciplina_store']);
+
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);
         Route::get('{codigoEdital}/pae/create',                         [PaeController::class, 'create']);

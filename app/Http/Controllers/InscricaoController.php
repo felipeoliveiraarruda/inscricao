@@ -19,6 +19,8 @@ use App\Models\User;
 use App\Models\TipoEntidade;
 use App\Models\Comprovante;
 use App\Models\InscricoesResumoEscolar;
+use App\Models\InscricoesDisciplinas;
+use Uspdev\Replicado\Posgraduacao;
 use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 use Mail;
@@ -581,6 +583,17 @@ class InscricaoController extends Controller
         $total = Utils::obterTotalArquivos($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
+
+        $nivel = Edital::obterNivelEdital($inscricao->codigoEdital);
+
+        if ($nivel == 'AE')
+        {
+            $titulo = 'Por que cursar disciplina como aluno especial?';
+        }
+        else
+        {
+            $titulo = 'Quais as suas expectativas com relação ao curso?';
+        }
     
         return view('expectativas',
         [
@@ -591,6 +604,7 @@ class InscricaoController extends Controller
             'nivel'             => session(['nivel']),
             'status'            => $inscricao->statusInscricao,
             'total'             => $total,
+            'titulo'            => $titulo,
         ]); 
     } 
 
@@ -601,6 +615,17 @@ class InscricaoController extends Controller
         if ($inscricao->statusInscricao == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
+        }
+
+        $nivel = Edital::obterNivelEdital($inscricao->codigoEdital);
+
+        if ($nivel == 'AE')
+        {
+            $titulo = 'Por que cursar disciplina como aluno especial?';
+        }
+        else
+        {
+            $titulo = 'Quais as suas expectativas com relação ao curso?';
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
@@ -615,6 +640,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'expectativas'      => $inscricao,
             'total'             => $total,
+            'titulo'            => $titulo,
         ]); 
     } 
     
@@ -768,6 +794,80 @@ class InscricaoController extends Controller
         return redirect($voltar); 
     }
 
+    public function disciplina($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
+
+        $voltar = "inscricao/{$edital}/disciplina";
+    
+        return view('disciplina',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $edital,
+            'link_voltar'       => $voltar,
+            'disciplinas'       => $inscricao,
+            'nivel'             => session(['nivel']),
+            'total'             => $total,
+            'status'            => $status,
+        ]); 
+    } 
+
+    public function disciplina_create($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if ($status == 'P')
+        {
+            return redirect("inscricao/{$inscricao->codigoEdital}"); 
+        }
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
+
+        $codigoCurso = Edital::obterCursoEdital($edital);
+        
+        $disciplinas = Utils::listarOferecimentoPos($codigoCurso, '04/03/2024', '16/06/2024');
+
+        $voltar = "inscricao/{$edital}/disciplinas";
+    
+        return view('inscricao.disciplinas',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $edital,
+            'link_voltar'       => $voltar,
+            'disciplinas'       => $inscricao,
+            'total'             => $total,
+            'disciplinas'       => $disciplinas,
+            'limite'            => ($codigoCurso == 97002 ? 1 : 0),
+        ]); 
+    } 
+
+    public function disciplina_store(Request $request)
+    { 
+        foreach($request->disciplinasGcub as $disciplina)
+        {
+            $inscricaoDisciplinas = InscricoesDisciplinas::create([
+                'codigoInscricao'       => $request->codigoInscricao,
+                'codigoDisciplina'      => $disciplina,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+        }
+
+        request()->session()->flash('alert-success', 'Disciplina cadastrada com sucesso');    
+        $voltar = "inscricao/{$request->codigoInscricao}/disciplina";
+
+        return redirect($voltar); 
+    }
+
     public function requerimento($codigoInscricao)
     {         
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
@@ -870,6 +970,7 @@ class InscricaoController extends Controller
         $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre  = Edital::obterSemestreAno($pessoais->codigoEdital, true);
         $arquivo      = Inscricao::obterRequerimentoInscricao($codigoInscricao);
+        $nivel        = Edital::obterNivelEdital($pessoais->codigoEdital);
 
         $pdf->setCabecalho($sigla);
       
@@ -1044,6 +1145,26 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial', '', 10);
         $pdf->Cell(40, 8, $enderecos->ufEndereco, 'BR',  0, 'L', false);
 
+        if ($nivel == 'AE')
+        {
+            $temp = Inscricao::find($codigoInscricao);
+
+            if ($temp->alunoEspecial == 'S')
+            {
+                $cursou = 'Sim - '.$temp->dataAlunoEspecial;
+            }
+            else
+            {
+                $cursou = utf8_decode('Não');
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
+        }
+
         $pdf->Ln();
         $pdf->SetFont("Arial","B", 10);
         $pdf->Cell(10, 8, utf8_decode("2."), 1, 0, "L", true);
@@ -1214,58 +1335,91 @@ class InscricaoController extends Controller
             }
         }
 
-        $pdf->Ln();
-        $pdf->SetFont("Arial","B", 10);
-        $pdf->Cell(10, 8, utf8_decode("7."), 1, 0, "L", true);
-        $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
-    
-        $pdf->Ln();
-        $pdf->SetFont("Arial","", 10);
-        $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
-
-        $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
-   
-        if ($financeiros->bolsaRecursoFinanceiro == 'S')
+        if ($nivel == 'AE')
         {
-            $bolsa = true;
-            $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
             $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('7.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
+
+            $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
     
-            $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
-            $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
             $pdf->Ln();
-            $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
-            $pdf->Ln();
-    
-            $pdf->Cell(190, 8, "", "LR", 0, "L");
-            $pdf->Ln();
+            $pdf->SetFont("Arial","", 10);
+            $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
+
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('8.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
+            $pdf->SetFont('Arial', '', 10);  
+
+            $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+            foreach($inscricao as $disciplina)
+            {
+                $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
+
+                $pdf->Ln();
+                $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].'/'.$temp['numofe'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+            } 
+
+            $pdf->Ln(); 
         }
         else
         {
-            $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
-
-            $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
             $pdf->Ln();
-    
-            $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
-            $pdf->Ln();
-    
-            $pdf->Cell(190, 8, "", "LR", 0, "L");
-            $pdf->Ln();
-        }   
-
-        $pdf->SetFont("Arial","B", 10);
-        $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
-        $pdf->SetFont("Arial","B", 10);
-        $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
-        $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
-
-        $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-
-        $pdf->Ln();
-        $pdf->SetFont("Arial","", 10);
-        $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
+            $pdf->SetFont("Arial","B", 10);
+            $pdf->Cell(10, 8, utf8_decode("7."), 1, 0, "L", true);
+            $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
         
+            $pdf->Ln();
+            $pdf->SetFont("Arial","", 10);
+            $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
+    
+            $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
+       
+            if ($financeiros->bolsaRecursoFinanceiro == 'S')
+            {
+                $bolsa = true;
+                $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                $pdf->Ln();
+        
+                $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
+                $pdf->Ln();
+                $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                $pdf->Ln();
+        
+                $pdf->Cell(190, 8, "", "LR", 0, "L");
+                $pdf->Ln();
+            }
+            else
+            {
+                $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+    
+                $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                $pdf->Ln();
+        
+                $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
+                $pdf->Ln();
+        
+                $pdf->Cell(190, 8, "", "LR", 0, "L");
+                $pdf->Ln();
+            }   
+    
+            $pdf->SetFont("Arial","B", 10);
+            $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+            $pdf->SetFont("Arial","B", 10);
+            $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
+            $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
+    
+            $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+    
+            $pdf->Ln();
+            $pdf->SetFont("Arial","", 10);
+            $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
+        }
+
         if ($edital->dataDoeEdital->format('m') < 7)
         {
             $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
@@ -1278,11 +1432,18 @@ class InscricaoController extends Controller
             $diretorio = $ano.'1'; 
         }
 
-        if ($edital->codigoNivel == 4)
+        if ($nivel == 'ME')
         {            
             $assunto      = "MESTRADO - {$sigla}";
             $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
             $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+        }
+
+        if ($nivel == 'AE')
+        {            
+            $assunto      = "MESTRADO - {$sigla}";
+            $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+            $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
         }
 
         $pdf->SetFont('Arial', '', 10);
@@ -1318,6 +1479,108 @@ class InscricaoController extends Controller
         }
 
         $pdf->Output('I', "{$pessoais->numeroInscricao}.pdf");
+    }
+
+    public static function matricula(\App\Models\Pdf\Matricula $pdf, $codigoInscricao)
+    {
+        $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+
+        $pdf->setCabecalho('ppgem');
+
+        $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
+        $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+        $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();   
+
+        $texto = "<p>Eu, {$inscricao->name}, Passaporte {$gcub->passaporteAluno}, e-mail {$inscricao->email}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+
+        $pdf->AddPage();
+        
+        $pdf->SetFont('Arial','B', 16);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+        $pdf->Ln();
+        
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->SetFillColor(255,255,255);
+        $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
+        $pdf->Ln(5);
+                    
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+        $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+        $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
+        $pdf->Ln();    
+        
+        $pdf->SetFont('Arial', '', 10);
+
+        foreach($dados->disciplinasGcub as $disciplina)
+        {
+            $temp = Posgraduacao::disciplina($disciplina);
+            
+            $pdf->Cell(40,  8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}"), 1, 0, 'C', false);
+            $pdf->Cell(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+            $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
+            $pdf->Ln();  
+        }
+
+        $pdf->Ln(5);
+        $pdf->Cell(75,  8, utf8_decode('Lorena, _____/_____/_______'), 0, 0, 'L', false);
+        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  8, utf8_decode('____________________________________'), 0, 0, 'C', false);
+        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'L', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Assinatura do Aluno'), 0, 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln(10);
+
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+        
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 'T', 0, 'C', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 'T', 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln(20);
+
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
+        
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->Cell(80, 8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+        $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        //$pdf->Output();
+
+        return redirect(asset('storage/'.$matricula));
     }
 
     public function show($codigoInscricao, $tipo = '')
