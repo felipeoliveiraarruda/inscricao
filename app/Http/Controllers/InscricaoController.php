@@ -97,15 +97,37 @@ class InscricaoController extends Controller
 
         session(['nivel' => $inscricao->codigoNivel]);
 
+        $foto        = Inscricao::obterFotoInscricao($inscricao->codigoInscricao);
+        $historicos  = Arquivo::obterArquivosHistorico($inscricao->codigoInscricao, true);
+        $diplomas    = Arquivo::obterArquivosDiploma($inscricao->codigoInscricao, true);
+        $curriculo   = Arquivo::obterArquivosCurriculo($inscricao->codigoInscricao);
+
+        $cpf   = Arquivo::obterArquivosCpf($inscricao->codigoInscricao);
+        $rg    = Arquivo::obterArquivosRg($inscricao->codigoInscricao);
+        $rne   = Arquivo::obterArquivosRne($inscricao->codigoInscricao);
+
+        $requerimento = Arquivo::obterArquivosRequerimento($inscricao->codigoInscricao);
+        $projeto      = Arquivo::obterArquivosPreProjeto($inscricao->codigoInscricao);
+
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'status'          => $inscricao->statusInscricao,
-            'codigoEdital'    => '',  
+            'codigoEdital'    => $codigoEdital,  
             'total'           => $total,
             'sigla'           => $sigla,
             'anosemestre'     => $anosemestre,
             'email'           => $edital->email,  
+            'foto'            => (empty($foto) ? '' : $foto->linkArquivo),
+            'cpf'             => (empty($cpf) ? '' : $cpf),
+            'rg'              => (empty($rg) ? '' : $rg->linkArquivo),
+            'rne'             => (empty($rne) ? '' : $rne->linkArquivo),
+            'historicos'      => (count($historicos) == 0 ? '' : $historicos),
+            'diplomas'        => (count($diplomas) == 0 ? '' : $diplomas),
+            'curriculo'       => (empty($curriculo) ? '' : $curriculo->linkArquivo),
+            'doutorado'       => (($edital->codigoNivel == 2) ? true : false),
+            'projeto'         => (empty($projeto) ? '' : $projeto->linkArquivo),
+            'requerimento'    => (empty($requerimento) ? '' : $requerimento->linkArquivo),
         ]);
     }
 
@@ -273,24 +295,27 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao);
         $endereco = '';
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
 
         if (!empty($inscricao->codigoEmergenciaEndereco))
         {
             $endereco = Endereco::find($inscricao->codigoEmergenciaEndereco);
         }
 
-        $voltar = "inscricao/{$inscricao->codigoEdital}/emergencia";
+        $voltar = "inscricao/{$edital}/emergencia";
     
         return view('emergencia',
         [
             'codigoInscricao'   => $codigoInscricao,
-            'codigoEdital'      => $inscricao->codigoEdital,
+            'codigoEdital'      => $edital,
             'link_voltar'       => $voltar,
             'emergencia'        => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
             'endereco'          => $endereco,
         ]); 
@@ -299,13 +324,27 @@ class InscricaoController extends Controller
     public function emergencia_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
-        $endereco  = Endereco::find($inscricao->codigoEmergenciaEndereco);
+
+        if (!empty($inscricao->codigoEmergenciaEndereco))
+        {
+            $endereco = Endereco::find($inscricao->codigoEmergenciaEndereco);
+            $codigoInscricaoEndereco = $inscricao->codigoEmergenciaEndereco;
+        }
+        else
+        {
+            $endereco = '';
+            $codigoInscricaoEndereco = '';
+            $inscricao = '';
+        }
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
 
         return view('inscricao.emergencia',
         [
             'codigoInscricao'           => $codigoInscricao, 
-            'codigoEdital'              => $inscricao->codigoEdital,
-            'codigoInscricaoEndereco'   => $inscricao->codigoInscricaoEndereco,                     
+            'codigoEdital'              => $edital,
+            'codigoInscricaoEndereco'   => $codigoInscricaoEndereco,                     
             'emergencia'                => $inscricao,
             'endereco'                  => $endereco,
         ]); 
@@ -998,8 +1037,8 @@ class InscricaoController extends Controller
 
         if ($edital->codigoNivel == 1)
         {
-            $eixoy    = 77;            
-            $eixofoto = 71; 
+            $eixoy    = 71;            
+            $eixofoto = 63; 
         }
         else
         {
@@ -1178,6 +1217,7 @@ class InscricaoController extends Controller
         $pdf->Cell(180, 8, utf8_decode("PESSOA A SER NOTIFICADA EM CASO DE EMERGÊNCIA:"), "1", 0, "J", true);
 
         $emergencias = Inscricao::obterEmergenciaInscricao($codigoInscricao);
+        $endereco = Endereco::find($emergencias->codigoEmergenciaEndereco);
 
         $pdf->Ln();
         $pdf->SetFont("Arial", "B", 10);
@@ -1189,13 +1229,13 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(172, 8, utf8_decode("{$emergencias->logradouroEndereco}, {$emergencias->numeroEndereco} {$emergencias->complementoEndereco}"), 'BR',  0, 'L', false);
+        $pdf->Cell(172, 8, utf8_decode("{$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco}"), 'BR',  0, 'L', false);
 
         $pdf->Ln();
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(60, 8, utf8_decode($emergencias->bairroEndereco), 'B',  0, 'L', false);
+        $pdf->Cell(60, 8, utf8_decode($endereco->bairroEndereco), 'B',  0, 'L', false);
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
         $pdf->SetFont('Arial', '', 10);
@@ -1205,15 +1245,15 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(46, 8, $emergencias->cepEndereco, 'B',  0, 'L', false);
+        $pdf->Cell(46, 8, $endereco->cepEndereco, 'B',  0, 'L', false);
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(52, 8, utf8_decode($emergencias->localidadeEndereco), 'B',  0, 'L', false);
+        $pdf->Cell(52, 8, utf8_decode($endereco->localidadeEndereco), 'B',  0, 'L', false);
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(40, 8, $emergencias->ufEndereco, 'BR',  0, 'L', false);
+        $pdf->Cell(40, 8, $endereco->ufEndereco, 'BR',  0, 'L', false);
 
         $pdf->Ln();
         $pdf->SetFont('Arial', 'B', 10);
@@ -1367,7 +1407,7 @@ class InscricaoController extends Controller
                 $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
 
                 $pdf->Ln();
-                $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].'/'.$temp['numofe'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
             } 
 
             $pdf->Ln(); 
@@ -1427,30 +1467,42 @@ class InscricaoController extends Controller
             $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
         }
 
-        if ($edital->dataDoeEdital->format('m') < 7)
-        {
-            $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
-            $diretorio =  $edital->dataDoeEdital->format('Y').'2';
-        }
-        else
-        {
-            $ano       = $edital->dataDoeEdital->format('Y') + 1;
-            $semestre  = 'primero semestre de '.$ano;
-            $diretorio = $ano.'1'; 
-        }
 
         if ($nivel == 'ME')
         {            
+            if ($edital->dataDoeEdital->format('m') < 7)
+            {
+                $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
+                $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+            }
+            else
+            {
+                $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                $semestre  = 'primero semestre de '.$ano;
+                $diretorio = $ano.'1'; 
+            }
+
             $assunto      = "MESTRADO - {$sigla}";
             $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
             $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
         }
 
         if ($nivel == 'AE')
-        {            
+        {         
+            if ($edital->dataFinalEdital->format('m') < 7)
+            {
+                $semestre  = 'primero semestre de '.$edital->dataFinalEdital->format('Y');
+                $diretorio = $edital->dataFinalEdital->format('Y').'1'; 
+            }
+            else
+            {                
+                $semestre  = 'segundo semestre de '.$edital->dataFinalEdital->format('Y');
+                $diretorio =  $edital->dataFinalEdital->format('Y').'2';
+            }
+            
             $assunto      = "MESTRADO - {$sigla}";
             $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-            $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
         }
 
         $pdf->SetFont('Arial', '', 10);

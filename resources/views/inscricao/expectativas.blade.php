@@ -25,7 +25,7 @@
                         @csrf
                         
                         <div class="form-group">
-                            <label for="expectativasInscricao" class="font-weight-bold">Quais as suas expectativas com relação ao curso?<span class="text-danger">*</span></label>
+                            <label for="expectativasInscricao" class="font-weight-bold">{{ $titulo }}<span class="text-danger">*</span></label>
                             <textarea class="form-control" id="expectativasInscricao" name="expectativasInscricao" rows="10" required></textarea>
                         </div>
 

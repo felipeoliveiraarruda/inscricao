@@ -41,7 +41,7 @@
                                     <div id="mostraAnoEspecial">                            
                                         <div class="form-group">
                                             <label for="dataAlunoEspecial" class="font-weight-bold">Semestre/Ano<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="dataAlunoEspecial" name="dataAlunoEspecial" value="{{  old('dataAlunoEspecial') }}" required>
+                                            <input type="text" class="form-control" id="dataAlunoEspecial" name="dataAlunoEspecial" value="{{  old('dataAlunoEspecial') }}">
                                         </div>
                                     </div>
                                 </div>

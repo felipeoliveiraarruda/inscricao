@@ -22,9 +22,15 @@
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $curso['nomcur'] }}</td>
                                         <td>
-                                            <a href="{{ $edital->linkEdital }}" target="_new">Edital</a>
+                                            <a href="{{ $edital->linkEdital }}" target="_new">Procedimentos</a>
                                         </td>
-                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }}</td>
+                                        <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }} 
+                                        </td>
+                                        <td> 
+                                            <a class="login_logout_link" href="{{ $login_url }}">
+                                                <i class="fas fa-sign-in-alt"></i> Entrar
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif

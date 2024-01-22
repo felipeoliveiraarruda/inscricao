@@ -12,14 +12,14 @@
 </div> 
 
 
-@if (empty($emergencia->mesmoEndereco))
+@if (!empty($emergencia->mesmoEndereco))
 <div class="form-group">
     <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="mesmoEnderecoOptions[]" id="mesmoEndereco" value="S" {{ $emergencia->mesmoEndereco == 'S' ? 'checked' : ''}}>
+        <input class="form-check-input" type="radio" name="mesmoEnderecoOptions[]" id="mesmoEndereco" value="S">
         <label class="form-check-label" for="mesmoEndereco">Usar o endereço já cadastrado</label>
     </div>
     <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="mesmoEnderecoOptions[]" id="novoEndereco" value="N" {{ $emergencia->mesmoEndereco == 'N' ? 'checked' : ''}}>
+        <input class="form-check-input" type="radio" name="mesmoEnderecoOptions[]" id="novoEndereco" value="N">
         <label class="form-check-label" for="novoEndereco">Novo Endereço</label>
     </div>
 </div>
@@ -29,15 +29,15 @@
         <div class="form-row">
             <div class="col-2">  
                 <label for="cep" class="font-weight-bold">CEP<span class="text-danger">*</span></label>
-                <input type="text" id="cep" name="cep" value="{{ old('cep') ?? '' }}" class="form-control" maxlength="9" required>
+                <input type="text" id="cep" name="cep" value="{{ old('cep') ?? '' }}" class="form-control" maxlength="9">
             </div>
             <div class="col-8">  
                 <label for="logradouro" class="font-weight-bold">Logradouro<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" id="logradouro" name="logradouro" value="{{ old('logradouro') ?? '' }}"  maxlength="255" required> 
+                <input class="form-control" type="text" id="logradouro" name="logradouro" value="{{ old('logradouro') ?? '' }}"  maxlength="255"> 
             </div>
             <div class="col-2">  
                 <label for="numero" class="font-weight-bold">Número<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" id="numero" name="numero" value="{{ old('numero') ?? '' }}"  maxlength="5" required>
+                <input class="form-control" type="text" id="numero" name="numero" value="{{ old('numero') ?? '' }}"  maxlength="5">
             </div>
         </div>   
     </div>
@@ -50,15 +50,15 @@
             </div>
             <div class="col">
                 <label for="bairro" class="font-weight-bold">Bairro<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" id="bairro" name="bairro" value="{{ old('bairro') ?? '' }}" maxlength="255" required>
+                <input class="form-control" type="text" id="bairro" name="bairro" value="{{ old('bairro') ?? '' }}" maxlength="255">
             </div>
             <div class="col">
                 <label for="cidade" class="font-weight-bold">Cidade<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" id="localidade" name="localidade" value="{{ old('localidade') ?? '' }}" maxlength="255" required>
+                <input class="form-control" type="text" id="localidade" name="localidade" value="{{ old('localidade') ?? '' }}" maxlength="255">
             </div>
             <div class="col">
                 <label for="uf" class="font-weight-bold">UF<span class="text-danger">*</span></label>
-                <input class="form-control" type="text" id="uf" name="uf" value="{{ old('uf') ?? '' }}" maxlength="2" required>
+                <input class="form-control" type="text" id="uf" name="uf" value="{{ old('uf') ?? '' }}" maxlength="2">
             </div>                        
         </div>              
     </div>

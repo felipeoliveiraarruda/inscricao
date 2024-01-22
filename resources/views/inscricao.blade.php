@@ -20,16 +20,22 @@
                 
                 <div class="card-body">                    
                     <div class="row justify-content-center">
-                        <div class="text-justify">
+                        <div class="text-center">
                             @if ($status == 'P')
-                                <hr/>
-                                <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Requerimento de Inscrição</a>
+                                <hr/>               
+
+                                @if ($codigoEdital == 4)
+                                    <p class="text-justify">A relação dos Candidatos a Alunos Especiais com <b><i><u>Matrícula Pré-Aprovada</b></i></u> será divulgada na página da Comissão de Pós-Graduação-CPG (<a href="http://cpg.eel.usp.br/" target="_new"></a>http://cpg.eel.usp.br/</a>) em <b><i>“Notícias”</b></i>, até o dia 23 de Fevereiro de 2024.</p> 
+                                @endif
+
+                                <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Requerimento de Inscrição</a>
                             @elseif ($status == 'N')
-                                <hr/>
-                                @if ($total > 4)
+                                @include('inscricao.visualizar.usuario')  
+
+                               <!--@if ($total > 4)
                                     <p class="text-justify">Você deve enviar o Requerimento de Inscrição assinado eletronicamente (assinatura eletrônica certificada: GOV.BR, DocuSign ou equivalente), através do menu do "Requerimento de Inscrição".</p> 
                                     <p class="text-justify">Não serão aceitos fotos, "prints" ou digitalização do documento assinado eletronicamente.</p>                                    
-                                @endif
+                                @endif-->
                             @elseif ($status == 'C')
                                 <p class="text-justify">Sua inscrição para esse processo seletivo já está confirmada.</p>
                                 <p class="text-justify">Aguarde mais informações no seu e-mail.</p>

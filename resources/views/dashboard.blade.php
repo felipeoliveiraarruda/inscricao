@@ -32,7 +32,8 @@
                                     @php
                                         $curso    = $utils->obterCurso($edital->codigoCurso);
                                         $inscrito = $inscricao->verificarInscricao($edital->codigoEdital, $user_id);
-                                        $status   = $inscricao->obterStatusInscricao($edital->codigoEdital, $user_id);
+
+                                        $status   = $inscricao->obterStatusInscricao($inscrito);
                                         $hoje     = date('Y-m-d H:i:s');
 
                                         $inicio = $edital->dataInicioEdital;

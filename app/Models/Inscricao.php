@@ -48,8 +48,16 @@ class Inscricao extends Model
 
     public static function verificarInscricao($codigoEdital, $user_id)
     {
-        $total = Inscricao::where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->count();
-        return $total;
+        $total = Inscricao::where('codigoEdital', $codigoEdital)->where('codigoUsuario', $user_id)->first();
+
+        if (empty($total))
+        {
+            return 0;
+        }
+        else
+        {
+            return $total->codigoInscricao;
+        }
     }
 
     public static function obterStatusInscricao($codigoInscricao)
@@ -124,9 +132,9 @@ class Inscricao extends Model
     public static function obterEmergenciaInscricao($codigoInscricao)
     {
         $emergencias = Emergencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, emergencias.*, users.*, inscricoes_enderecos.codigoInscricaoEndereco, inscricoes_enderecos.codigoEndereco AS codigoEmergenciaEndereco, inscricoes_enderecos.codigoEmergencia AS codigoEmergenciaInscricao, inscricoes_enderecos.mesmoEndereco'))
-                                ->join('users', 'users.id', '=', 'emergencias.codigoUsuario')                     
-                                ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
-                                ->rightJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')                                
+                                ->rightJoin('users', 'users.id', '=', 'emergencias.codigoUsuario')                     
+                                ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')                                
                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                 ->get();  
                                 
@@ -140,9 +148,10 @@ class Inscricao extends Model
                 }
             }
         }
-
-
-        return $emergencias[0];                                 
+        else
+        {
+            return $emergencias[0]; 
+        }                             
     }
     
     public static function obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar = '')
@@ -150,8 +159,8 @@ class Inscricao extends Model
         if(empty($codigoResumoEscolar))
         {
             $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar, inscricoes_resumo_escolar.codigoHistorico, inscricoes_resumo_escolar.codigoDiploma'))
-                                    ->leftJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
-                                    ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
+                                    ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                     ->leftJoin('inscricoes_resumo_escolar', function($join)
                                     {
                                         $join->on('inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao');
@@ -163,8 +172,8 @@ class Inscricao extends Model
         else
         {
             $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
-                                    ->leftJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
-                                    ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
+                                    ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                     ->leftJoin('inscricoes_resumo_escolar', function($join)
                                     {
                                         $join->on('inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao');
@@ -183,8 +192,8 @@ class Inscricao extends Model
         if (empty($codigoIdioma))
         {
             $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
-                            ->leftJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
-                            ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')   
+                            ->rightJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
+                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')   
                             ->leftJoin('inscricoes_idiomas', function($join)
                             {
                                 $join->on('inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao');
@@ -196,8 +205,8 @@ class Inscricao extends Model
         else
         {
             $idioma = Idioma::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, idiomas.*, users.*, inscricoes_idiomas.codigoInscricaoIdioma'))
-                            ->leftJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
-                            ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')              
+                            ->rightJoin('users', 'users.id', '=', 'idiomas.codigoUsuario')                  
+                            ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')              
                             ->leftJoin('inscricoes_idiomas', function($join)
                             {
                                 $join->on('inscricoes_idiomas.codigoInscricao', '=', 'inscricoes.codigoInscricao');
@@ -216,12 +225,12 @@ class Inscricao extends Model
         if (empty($codigoExperiencia))
         {
             $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
-                                    ->leftjoin('users', function($join)
+                                    ->rightJoin('users', function($join)
                                     {
                                         $join->on('users.id', '=', 'experiencias.codigoUsuario');
                                         $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
                                     })       
-                                    ->leftjoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                      
+                                    ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                      
                                     ->leftJoin('inscricoes_experiencias', function($join)
                                     {
                                         $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
@@ -233,12 +242,12 @@ class Inscricao extends Model
         else
         {
             $profissional = Experiencia::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, experiencias.*, users.*, inscricoes_experiencias.codigoInscricaoExperiencia'))                        
-                                        ->leftjoin('users', function($join)
+                                        ->rightJoin('users', function($join)
                                         {
                                             $join->on('users.id', '=', 'experiencias.codigoUsuario');
                                             $join->on('experiencias.codigoTipoExperiencia', '=', \DB::raw(2));
                                         })       
-                                        ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                              
+                                        ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                              
                                         ->leftJoin('inscricoes_experiencias', function($join)
                                         {
                                             $join->on('inscricoes_experiencias.codigoInscricao', '=', 'inscricoes.codigoInscricao');
