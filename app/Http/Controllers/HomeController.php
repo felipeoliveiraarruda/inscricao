@@ -16,14 +16,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                         ->where('dataFinalEdital', '>=',  Carbon::now())->get();
-
-        $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                            ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);                         
-
         if (Auth::guest())
         {
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                             ->where('dataFinalEdital', '>=',  Carbon::now())->get();
+
+            $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                                ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);      
+            
             return view('index', 
             [
                 'editais'    => $editais,
@@ -32,7 +32,7 @@ class HomeController extends Controller
             ]);
         }
         else
-        {    
+        {
             if (empty(session('level')))
             {
                 Utils::setSession(Auth::user()->id);
@@ -42,9 +42,18 @@ class HomeController extends Controller
             {
                 return redirect('admin');                
             }
-            if ((in_array("Docenteusp", session('vinculos')) == true) && (session('level') == 'manager'))
+
+            if ((in_array("Docenteusp", session('vinculos')) == true))
             {
-                return redirect('admin');                
+                if (session('level') == 'manager')
+                {
+                    return redirect('admin'); 
+                }
+
+                if (session('level') == 'boss')
+                {
+                    return redirect('admin'); 
+                }      
             }
             else
             {

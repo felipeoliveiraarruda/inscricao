@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class InscricoesDisciplinas extends Model
 {
     use \Spatie\Permission\Traits\HasRoles;
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $primaryKey = 'codigoInscricaoDisciplina';
     protected $table = 'inscricoes_disciplinas';
@@ -25,8 +25,20 @@ class InscricoesDisciplinas extends Model
     public static function obterTotal($codigoInscricao)
     {
         $total = InscricoesDisciplinas::join('inscricoes', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
-                                      ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                      ->where('inscricoes.codigoInscricao', $codigoInscricao)   
+                                      ->whereNull('inscricoes_disciplinas.deleted_at')                                   
                                       ->count();
         return $total;
+    }
+
+    public static function listarDisciplinas($codigoEdital)
+    {
+        $disciplinas = InscricoesDisciplinas::join('inscricoes', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                            ->where('inscricoes.codigoEdital', $codigoEdital)
+                                            ->groupBy('inscricoes_disciplinas.codigoDisciplina')
+                                            ->orderBy('inscricoes_disciplinas.codigoDisciplina', 'asc')
+                                            ->get();
+        
+        return $disciplinas;
     }
 }

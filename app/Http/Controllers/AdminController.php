@@ -43,7 +43,7 @@ class AdminController extends Controller
         }
         else
         {
-            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+           $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
         } 
 
         return view('admin.index',

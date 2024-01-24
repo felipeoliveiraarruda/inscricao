@@ -37,6 +37,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('usuario/novo',              [UserController::class, 'create'])->name('novo');
         Route::get('usuario/recuperacao/{id}',  [UserController::class, 'recuperacao']);
 
+        /* Deferimento */
+        Route::get('{codigoEdital}/deferimento',    [DeferimentoController::class, 'index']);
+
         /* PAE - Desempenho Academico */
         Route::get('{codigoPae}/pae/desempenho/',  [DesempenhoController::class, 'index']);
         Route::post('{codigoPae}/pae/desempenho',  [DesempenhoController::class, 'store']);
@@ -77,6 +80,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('{codigoPae}/pae/analise',                     [PaeController::class, 'analise_store']);
         Route::get('{codigoEdital}/pae/analise/{codigoPae}/edit',  [PaeController::class, 'analise_edit']);
         Route::patch('{codigoPae}/pae/analise',                    [PaeController::class, 'analise_update']);
-        Route::get('pae/analise/{codigoAnaliseCurriculo}/destroy', [PaeController::class, 'analise_destroy']);*/        
+        Route::get('pae/analise/{codigoAnaliseCurriculo}/destroy', [PaeController::class, 'analise_destroy']);*/
+        
     });
 });

@@ -37,7 +37,7 @@
             <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
 
-        @if ($total > 5)
+        @if ($total >= 4)
             <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
                 <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a>

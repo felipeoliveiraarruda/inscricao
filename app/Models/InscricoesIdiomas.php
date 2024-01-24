@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class InscricoesIdiomas extends Model
 {
     use \Spatie\Permission\Traits\HasRoles;
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $primaryKey = 'codigoInscricaoIdioma';
     protected $table = 'inscricoes_idiomas';

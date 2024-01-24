@@ -21,6 +21,7 @@ use App\Models\InscricoesExperiencias;
 use App\Models\InscricoesRecursosFinanceiros;
 use App\Models\InscricoesDisciplinas;
 use App\Models\Arquivo;
+use Uspdev\Replicado\Posgraduacao;
 
 class Utils extends Model
 {
@@ -348,5 +349,17 @@ class Utils extends Model
         dd($temp);
  
         return $temp;
+    }
+
+    public static function verificarMinistrante($codigoEdital, $codpes)
+    {
+        $disciplinas = InscricoesDisciplinas::listarDisciplinas($codigoEdital);
+
+        foreach($disciplinas as $disciplina)
+        {
+            dd($disciplina);
+
+            //Posgraduacao::ministrante();
+        }
     }
 }

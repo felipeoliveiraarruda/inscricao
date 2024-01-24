@@ -26,7 +26,7 @@ class AddHistoricoDiplomaTableInscricoesResumoEscolar extends Migration
      */
     public function down()
     {
-        Schema::table('inscricoes_endereinscricoes_resumo_escolarcos', function (Blueprint $table) {
+        Schema::table('inscricoes_resumo_escolar', function (Blueprint $table) {
             $table->dropColumn('codigoHistorico');
             $table->dropColumn('codigoDiploma');
         }); 

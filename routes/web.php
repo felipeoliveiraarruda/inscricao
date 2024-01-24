@@ -12,6 +12,7 @@ use App\Http\Controllers\IdiomaController;
 use App\Http\Controllers\ExperienciaController;
 use App\Http\Controllers\RecursoFinanceiroController;
 use App\Http\Controllers\UtilsController;
+use App\Http\Controllers\DeferimentoController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
 use App\Http\Controllers\PAE\DesempenhoController;
@@ -32,7 +33,7 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::group(['prefix' => 'inscricao'], function()
     { 
         /* Inscrição no Edital */
-        Route::get('{codigoInscricao}',                     [InscricaoController::class, 'create']);
+        Route::get('{codigoInscricao}/',                     [InscricaoController::class, 'create']);
         Route::get('{codigoEdital}/store',                  [InscricaoController::class, 'store']);
         Route::get('comprovante/{codigoInscricao}',         [InscricaoController::class, 'comprovante']);
         Route::get('visualizar/{codigoInscricao}/{tipo?}',  [InscricaoController::class, 'show']);
@@ -104,6 +105,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/disciplina/create', [InscricaoController::class, 'disciplina_create']);
         Route::post('{codigoInscricao}/disciplina/store', [InscricaoController::class, 'disciplina_store']);
 
+        /* Deferimento */
+        Route::get('deferimento',   [DeferimentoController::class, 'index']);
+
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);
         Route::get('{codigoEdital}/pae/create',                         [PaeController::class, 'create']);
@@ -127,7 +131,7 @@ Route::middleware(['auth','verified'])->group(function ()
         /* PAE - Recurso */
         Route::get('{codigoPae}/pae/recurso/',       [RecursoPaeController::class, 'index']);
         Route::get('{codigoPae}/pae/recurso/create', [RecursoPaeController::class, 'create']);
-        Route::post('{codigoPae}/pae/recurso',       [RecursoPaeController::class, 'store']);        
+        Route::post('{codigoPae}/pae/recurso',       [RecursoPaeController::class, 'store']);
     });
 
     /* Dados Pessoais */
@@ -170,6 +174,9 @@ Route::middleware(['auth','verified'])->group(function ()
     /* PAE - Recurso*/
     Route::get('recurso/{codigoRecurso}/edit',      [RecursoPaeController::class, 'edit']);
     Route::patch('recurso/{codigoRecurso}',         [RecursoPaeController::class, 'update']);
+
+    /* Deferimento */
+    Route::get('deferimento',   [DeferimentoController::class, 'index']);
     
     /*Route::get('modelo',        [HomeController::class, 'modelo']);
     Route::get('email-teste',   [HomeController::class, 'email']);

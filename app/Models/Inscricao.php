@@ -361,6 +361,7 @@ class Inscricao extends Model
                                  ->join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                  ->join('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                  ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                 ->whereNull('inscricoes_disciplinas.deleted_at')
                                  ->get(); 
 
         return $disciplinas;                                 
