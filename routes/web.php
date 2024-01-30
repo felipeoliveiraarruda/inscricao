@@ -23,7 +23,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::middleware(['auth','verified'])->group(function () 
 {
-    Route::get('dashboard', [InscricaoController::class, 'index']);
+    Route::get('dashboard',     [InscricaoController::class, 'index']);
+    Route::get('realizadas',    [InscricaoController::class, 'realizadas']);
 
     /* Consultas a API */
     Route::get('estados/{codpas}',          [UtilsController::class, 'estados']);
@@ -33,13 +34,18 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::group(['prefix' => 'inscricao'], function()
     { 
         /* Inscrição no Edital */
-        Route::get('{codigoInscricao}/',                     [InscricaoController::class, 'create']);
+        Route::get('{codigoInscricao}/',                    [InscricaoController::class, 'create']);
         Route::get('{codigoEdital}/store',                  [InscricaoController::class, 'store']);
         Route::get('comprovante/{codigoInscricao}',         [InscricaoController::class, 'comprovante']);
         Route::get('visualizar/{codigoInscricao}/{tipo?}',  [InscricaoController::class, 'show']);
         Route::post('validar/{codigoInscricao}',            [InscricaoController::class, 'validar']);
         Route::get('requerimento/{codigoInscricao}',        [InscricaoController::class, 'comprovante']);
         Route::get('recusar/{codigoInscricao}/',            [InscricaoController::class, 'recusar']);
+        Route::get('{codigoInscricao}/matricula/',          [InscricaoController::class, 'matricula_create']);
+        Route::post('{codigoInscricao}/matricula/',         [InscricaoController::class, 'matricula_store']);
+
+        /* Processo Seletivo */
+        Route::get('{codigoEdital}/processo-seletivo/',     [InscricaoController::class, 'processo_seletivo']);
         
         /* Dados Pessoais Inscrição */
         Route::get('{codigoInscricao}/pessoal',         [InscricaoController::class, 'pessoal']);

@@ -18,6 +18,7 @@ use App\Models\TipoDocumento;
 use App\Models\User;
 use App\Models\TipoEntidade;
 use App\Models\Comprovante;
+use App\Models\ProcessoSeletivo;
 use App\Models\InscricoesResumoEscolar;
 use App\Models\InscricoesDisciplinas;
 use Uspdev\Replicado\Posgraduacao;
@@ -26,6 +27,7 @@ use Carbon\Carbon;
 use Mail;
 use App\Mail\ConfirmacaoMail;
 use App\Mail\ComprovanteMail;
+use App\Mail\MatriculaMail;
 use App\Models\InscricoesArquivos;
 
 class InscricaoController extends Controller
@@ -44,6 +46,11 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
+        $inscricoes = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                            ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
+                            ->get();      
+
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                          ->whereRaw('NOW() > `dataInicioEdital` AND NOW() < `dataFinalEdital`')
                          //->whereRaw('`dataInicioEdital` > NOW()')
@@ -59,6 +66,7 @@ class InscricaoController extends Controller
         return view('dashboard',
         [
             'editais'   => $editais,
+            'inscricoes'   => $inscricoes,
             'utils'     => new Utils,
             'inscricao' => new Inscricao,
             'user_id'   => Auth::user()->id,
@@ -66,6 +74,29 @@ class InscricaoController extends Controller
             'level'     => session('level'),
             'total'     => count($editais),
         ]);
+    }
+
+    public function realizadas()
+    {
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                         ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
+                         ->get();      
+
+        if (empty(session('level')))
+        {
+            Utils::setSession(Auth::user()->id);
+        }
+
+        return view('realizadas',
+        [
+            'editais'   => $editais,
+            'utils'     => new Utils,
+            'inscricao' => new Inscricao,
+            'user_id'   => Auth::user()->id,
+            'level'     => session('level'),
+            'total'     => count($editais),
+        ]); 
     }
 
     public function create($codigoEdital)
@@ -1765,6 +1796,54 @@ class InscricaoController extends Controller
         request()->session()->flash('alert-success', "Inscrição Nº {$codigoInscricao} recusada com sucesso.");
 
         return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
+    }
+
+    public function matricula_create($codigoInscricao)
+    {
+        $disciplinas = Utils::listarOferecimentoPos(97002, '04/03/2024', '16/06/2024');                        
+
+        return view('inscricao.matricula',
+        [
+            'codigoInscricao' => $codigoInscricao,
+            'disciplinas'     => $disciplinas
+        ]);
+    }
+
+    public function matricula_store(Request $request, \App\Models\Pdf\Matricula $pdf)
+    {
+        $disciplinas = InscricoesDisciplinas::where('codigoInscricao', '=', $request->codigoInscricao)->count();
+        $edital      = Edital::obterEditalInscricao($request->codigoInscricao);
+
+        if ($disciplinas == 0)
+        {
+            foreach($request->disciplinasGcub as $disciplina)
+            {
+                $inscricaoDisciplinas = InscricoesDisciplinas::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoDisciplina'      => $disciplina,
+                    'statusDisciplina'      => 'A',
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+        }
+
+        if ($edital->codigoCurso == 97002)
+        {
+            $anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $request->codigoInscricao);
+        }
+        
+        Mail::to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
+        
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', "Ocorreu um erro no cadastrado do Requerimento de Primeira Matrícula. Tente novamente mais tarde.");
+        }    
+        else
+        {
+            request()->session()->flash('alert-success', 'Requerimento de Primeira Matrícula cadastrado com sucesso. Aguarde informações no seu e-mail cadastrado.'); 
+        } 
+    
+        return redirect('dashboard'); 
     }
 
 

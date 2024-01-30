@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\TipoDocumento;
+use App\Models\ProcessoSeletivo;
 use Carbon\Carbon;
 use Mail;
 use App\Mail\ConfirmacaoMail;
@@ -57,12 +58,30 @@ class HomeController extends Controller
             }
             else
             {
-                return redirect('dashboard');
+                $aprovado = ProcessoSeletivo::obterAprovado();
+
+                if (!empty($aprovado))
+                {
+                    $seletivo = ProcessoSeletivo::obterInscricaoAprovado($aprovado);
+
+                    if (empty($seletivo->codigoInscricaoDisciplina))
+                    {
+                        return redirect("inscricao/{$seletivo->codigoInscricao}/matricula");
+                    }
+                    else
+                    {
+                        return redirect('dashboard');
+                    }
+                }
+                else
+                {
+                    return redirect('dashboard');
+                }
             }
         }
     }
 
-    public function modelo()
+    /*public function modelo()
     {
         $tipos = TipoDocumento::all();
 
@@ -109,5 +128,7 @@ class HomeController extends Controller
         } 
 
         return redirect("/modelo");
-    }
+    }*/
+
+
 }

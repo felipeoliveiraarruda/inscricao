@@ -128,4 +128,16 @@ class Edital extends Model
         
         return $edital->codigoCurso;  
     }
+
+
+    public static function obterEditalInscricao($codigoInscricao)
+    {
+        $dados = Edital::select(\DB::raw('editais.*, users.name, users.email'))
+                       ->join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                       ->join('users', 'editais.codigoUsuario', '=', 'users.id')
+                       ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                       ->where('inscricoes.codigoInscricao', $codigoInscricao)->first();
+
+        return $dados;
+    }
 }

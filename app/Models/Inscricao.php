@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Uspdev\Replicado\Posgraduacao;
+use Illuminate\Support\Str;
+use App\Models\Utils;
 
 class Inscricao extends Model
 {
@@ -389,5 +392,141 @@ class Inscricao extends Model
                                ->whereIn('arquivos.codigoTipoDocumento', [28])
                                ->first(); 
         return $requerimento;                                 
+    }
+
+
+    public static function gerarMatricula($pdf, $tipo, $codigoInscricao)
+    {
+        $dados    = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $endereco = Inscricao::obterEnderecoInscricao($codigoInscricao);
+
+        $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $dados->codigoEdital)->first();
+        $anosemestre  = Edital::obterSemestreAno($dados->codigoEdital, true);
+        $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
+        $nivel        = Edital::obterNivelEdital($dados->codigoEdital);
+
+        $pdf->setCabecalho($tipo);
+
+        $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
+        $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+        $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();   
+        $pdf->AddPage();
+
+        if ($tipo == 'ppgem')
+        {
+            if ($nivel = 'ME')
+            {
+                if ($edital->dataDoeEdital->format('m') < 7)
+                {
+                    $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $diretorio = $ano.'1'; 
+                }
+
+                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+            }
+            
+            $pdf->SetFont('Arial','B', 16);
+            $pdf->SetFillColor(190,190,190);
+            $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+            $pdf->Ln();
+        }
+
+
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->SetFillColor(255,255,255);
+        $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
+        $pdf->Ln(5);
+                    
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+        $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+        $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
+        $pdf->Ln();    
+        
+        $pdf->SetFont('Arial', '', 10);
+
+        $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+        foreach($disciplinas as $disciplina)
+        {
+            $temp1 = explode('-', $disciplina->codigoDisciplina);
+
+            $temp = Posgraduacao::disciplina($temp1[0]);
+            
+            $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
+            $pdf->Cell(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+            $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
+            $pdf->Ln();  
+        }
+
+        $pdf->Ln(5);
+        $pdf->Cell(75,  8, utf8_decode('Lorena, _____/_____/_______'), 0, 0, 'L', false);
+        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'L', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Assinatura do Aluno'), 'T', 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln(10);
+
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+        
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 'T', 0, 'C', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 'T', 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln(5);
+
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
+        
+        $pdf->SetFont('Arial', '', 14);
+        $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
+        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+        $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Ln();
+
+        $sigla   = Str::lower($sigla);
+        $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf");
+        $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf";
+
+        if (!file_exists($arquivo))
+        {
+            $pdf->Output('F', $arquivo);
+        }
+
+        return $arquivo;
     }
 }
