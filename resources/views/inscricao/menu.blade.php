@@ -37,10 +37,12 @@
             <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
 
-        @if ($total >= 4)
-            <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
-                <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-            </a>
+        @if ($codigoEdital != 5)
+            @if ($total >= 4 && (Session::get('total')['foto'] > 0))
+                <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
+                    <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+                </a>
+            @endif
         @endif        
     @else
         <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">7.Recursos Financeiros
@@ -59,11 +61,11 @@
         <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">10.Pré-projeto
             <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
-            @if ($total > 3)
+            @if ($total > 3 && (Session::get('total')['foto'] > 0))
                 <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">11.Requerimento de Inscrição</a>
             @endif
         @else
-            @if ($total > 2)
+            @if ($total > 2 && (Session::get('total')['foto'] > 0))
                 <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
                     <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
                 </a>

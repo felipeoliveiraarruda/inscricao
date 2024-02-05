@@ -482,13 +482,15 @@ class Inscricao extends Model
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln(10);
 
-        $pdf->SetFont('Arial', '', 12);
+        /*$pdf->SetFont('Arial', '', 12);
         $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);*/
         
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
         $pdf->SetFont('Arial', 'B', 10);

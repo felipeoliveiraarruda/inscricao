@@ -49,6 +49,13 @@
                                 </label>
                             </div>
                             @endforeach
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="EEL5000-1/6">
+                                <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
+                                EEL5000-1/6 Didática e Prática de Ensino de Engenharia</label>
+                                </label>
+                            </div>
                         </div>
                         
                         <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">

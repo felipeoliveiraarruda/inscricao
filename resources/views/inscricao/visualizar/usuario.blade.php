@@ -6,7 +6,7 @@
             </tr>
             <tr class="text-center">
                 <th scope="col">3.1.1<br/>Foto</th>
-                <th scope="col">3.1.2<br/>Ficha de Inscrição</th>
+                @if ($codigoEdital != 5) <th scope="col">3.1.2<br/>Ficha de Inscrição</th> @endif
                 <th scope="col">3.1.3<br/>CPF/Passaporte</th>
                 <th scope="col">3.1.4<br/>RG</th>
                 <th scope="col">3.1.5<br/>RNE</th>
@@ -26,13 +26,15 @@
                     <i class="fa fa-exclamation-triangle text-warning"></i>                                  
                 @endif
             </td>
+            @if ($codigoEdital != 5)
             <td>
                 @if(!empty($requerimento))
-                <i class="fa fa-check text-success"></i>
+                    <i class="fa fa-check text-success"></i>
                 @else
                     <i class="fa fa-exclamation-triangle text-warning"></i>                                  
                 @endif
             </td>
+            @endif
             <td>
                 @if(!empty($cpf))                            
                     <i class="fa fa-check text-success"></i>
@@ -86,4 +88,22 @@
             @endif
         </tr>
     </table>
+
+    @if (Session::get('total')['ppgpe'] >= 10 && (empty($requerimento) && (Session::get('total')['foto'] == 1)))
+        <!-- Validation Errors -->
+        <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                        
+        <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/{{ $codigoInscricao }}/requerimento/store" enctype="multipart/form-data"> 
+            @csrf
+
+            <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        
+            <input type="hidden" name="codigoTipoDocumento" value="28">
+            <input type="hidden" name="codigoTipo" value="ppgpe">
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Enviar Inscrição</button>
+        </form>
+
+        <!-- Modal -->
+        @include('utils.loader')        
+    @endif
 </div>

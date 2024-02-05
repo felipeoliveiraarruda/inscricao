@@ -71,7 +71,7 @@
                                     </table>
 
                                     <div class="card bg-default">
-                                        <h5 class="card-header">Anexo(s) 
+                                        <h5 class="card-header">Anexo(s) <span class="text-danger">*</span>
                                             @if ($status == 'N') 
                                                 <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
                                                     <i class="fa fa-plus"></i>
@@ -80,7 +80,7 @@
                                         </h5>
                                         <div class="card-body">
                                             @if (count($arquivos) == 0)
-                                                <div class="alert alert-warning">Nenhum documento cadastrado</div>                    
+                                                <div class="alert alert-warning">Nenhum documento cadastrado</div>
                                             @else                
                                                 <div class="table-responsive">
                                                     <table class="table">
@@ -127,6 +127,8 @@
                                                     </table>  
                                                 </div>                
                                             @endif
+
+                                            <p>Documentos obrigatórios que devem ser anexados: Foto (jpg, png, bmp), CPF (pdf), RG/RNE/Passaporte (pdf)</p>
                                         </div>
                                     </div>                                    
                                     @endif

@@ -239,3 +239,4 @@ Route::middleware(['auth','verified'])->group(function ()
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/gcub.php';
+require __DIR__.'/imprimir.php';

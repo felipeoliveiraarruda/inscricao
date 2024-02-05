@@ -266,6 +266,7 @@ class Utils extends Model
         $curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
+        $foto         = Arquivo::verificarArquivo($codigoInscricao, [27]); 
 
         $total['pessoal']      = InscricoesPessoais::obterTotal($codigoInscricao);
         $total['documento']    = InscricoesDocumentos::obterTotal($codigoInscricao);
@@ -280,8 +281,10 @@ class Utils extends Model
         $total['disciplina']   = InscricoesDisciplinas::obterTotal($codigoInscricao);
         $total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
         $total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
+        $total['foto']         = (empty($foto) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;
+        $total['ppgpe']        = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['curriculo'] + $total['disciplina'];
 
         session(['total' => $total]);
     }   
@@ -294,7 +297,7 @@ class Utils extends Model
 
     public static function obterTotalArquivos($codigoInscricao)
     {
-        $foto      = Arquivo::verificarArquivo($codigoInscricao, [26]);
+        $foto      = Arquivo::verificarArquivo($codigoInscricao, [27]);
         $documento = Arquivo::verificarArquivo($codigoInscricao, [1,2]);
         $historico = Arquivo::verificarArquivo($codigoInscricao, [5]);
         $curriculo = Arquivo::verificarArquivo($codigoInscricao, [8,9]);

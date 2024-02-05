@@ -6,7 +6,7 @@
         </div>
         <div class="col">
             <label for="email" class="font-weight-bold">{{ __('Email') }}<span class="text-danger">*</span></label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') ?? Auth::user()->email }}" required>
+            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') ?? Auth::user()->email }}" required disabled>
         </div>   
         <div class="col">                            
             <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}<span class="text-danger">*</span></label>

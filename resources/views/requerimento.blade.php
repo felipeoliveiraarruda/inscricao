@@ -56,6 +56,7 @@
 
                                             <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        
                                             <input type="hidden" name="codigoTipoDocumento" value="28">
+                                            <input type="hidden" name="codigoTipo" value="ppgem">
 
                                             <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                                         </form>
