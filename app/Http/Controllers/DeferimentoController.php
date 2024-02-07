@@ -22,10 +22,45 @@ class DeferimentoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($codigoEdital)
     {
-       // Utils::verificarMinistrante($codigoEdital, Auth::user()->codpes);
-       // Utils::verificarMinistrante($codigoEdital, Auth::user()->codpes);
+       $disciplina = array();
+
+       $edital = Edital::find($codigoEdital);
+
+       $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+
+       if (!empty($temp))
+       {
+            array_push($disciplina, $temp[0]['sgldis']);
+       }
+
+       $inscritos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
+                                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                         ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
+                                         ->where('inscricoes_disciplinas.statusDisciplina', 'N')
+                                         ->orderBy('users.name')
+                                         ->get();
+
+        $deferidos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
+                                        ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
+                                        ->where('inscricoes_disciplinas.statusDisciplina', 'D')
+                                        ->orderBy('users.name')
+                                        ->get();  
+                                        
+                                        
+        $temp2 = Posgraduacao::disciplina($disciplina[0]);
+
+        return view('inscricao.deferimento',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $inscritos,
+            'deferidos'     => $deferidos,
+            'disciplina'    => $temp2['sgldis'].' - '.$temp2['nomdis']
+        ]);
     }
 
     /**
@@ -46,7 +81,18 @@ class DeferimentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        foreach($request->deferimentoCandidato as $deferimento)
+        {
+            $inscricao = InscricoesDisciplinas::find($deferimento);
+
+            $inscricao->statusDisciplina      = 'D';
+            $inscricao->codigoPessoaAlteracao = Auth::user()->codpes;
+            $inscricao->save();
+        }
+
+        request()->session()->flash('alert-success', 'Deferimento realizado com sucesso.');    
+        
+        return redirect("inscricao/deferimento/{$request->codigoEdital}");
     }
 
     /**
@@ -91,6 +137,14 @@ class DeferimentoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $inscricao = InscricoesDisciplinas::find($id);
+
+        $inscricao->statusDisciplina      = 'N';
+        $inscricao->codigoPessoaAlteracao = Auth::user()->codpes;
+        $inscricao->save();
+        
+        request()->session()->flash('alert-success', 'Deferimento desfeito com sucesso.');    
+        
+        return redirect(url()->previous());
     }
 }

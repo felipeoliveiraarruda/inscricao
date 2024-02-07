@@ -334,6 +334,10 @@
             $("#dataAlunoEspecial").prop('required',false);
           }
         });
+
+        $("#checkTodosDeferimento").click(function(){
+   	      $('input:checkbox').prop('checked', $(this).prop('checked'));
+        });
     })  
 
     /*tinymce.init({

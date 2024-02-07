@@ -233,7 +233,7 @@ class Utils extends Model
         return $response[0];
     }
 
-    public static function listarOferecimentoPos($codcur, $dtainiofe, $dtafimofe)
+    public static function listarOferecimentoPos($codcur, $dtainiofe, $dtafimofe, $especial = 'N')
     {
         $link = env('URL_API_EEL')."posgraduacao/oferecimento/listar";
 
@@ -245,6 +245,26 @@ class Utils extends Model
             'codcur'    => $codcur,
             'dtainiofe' => $dtainiofe,
             'dtafimofe' => $dtafimofe,
+            'especial'  => $especial
+        ]);
+
+        return $response->json();
+    }
+
+    public static function listarOferecimentoPosDocente($codcur, $codpes, $dtainiofe, $dtafimofe, $especial = 'N')
+    {
+        $link = env('URL_API_EEL')."posgraduacao/oferecimento/docente";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'codcur'    => $codcur,
+            'codpes'    => $codpes,
+            'dtainiofe' => $dtainiofe,
+            'dtafimofe' => $dtafimofe,
+            'especial'  => $especial
         ]);
 
         return $response->json();
@@ -284,7 +304,7 @@ class Utils extends Model
         $total['foto']         = (empty($foto) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;
-        $total['ppgpe']        = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['curriculo'] + $total['disciplina'];
+        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['curriculo'] + $total['disciplina'];
 
         session(['total' => $total]);
     }   

@@ -145,7 +145,7 @@ class Inscricao extends Model
         {
             foreach($emergencias as $emergencia)
             {
-                if (!empty($emergencia->codigoEmergenciaInscricao))
+                if (!empty($emergencia->codigoEmergencia))
                 {
                     return $emergencia;
                 }
@@ -184,7 +184,7 @@ class Inscricao extends Model
                                     })    
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                     ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
-                                    ->first();
+                                    ->get();
         }
 
         return $escolar;                                 

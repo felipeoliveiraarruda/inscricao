@@ -112,7 +112,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('{codigoInscricao}/disciplina/store', [InscricaoController::class, 'disciplina_store']);
 
         /* Deferimento */
-        Route::get('deferimento',   [DeferimentoController::class, 'index']);
+        Route::get('deferimento/{codigoEdital}',                        [DeferimentoController::class, 'index']);
+        Route::post('deferimento/',                                     [DeferimentoController::class, 'store']);
+        Route::get('deferimento/destroy/{codigoInscricaoDisciplina}',   [DeferimentoController::class, 'destroy']);
 
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Utils;
+use Carbon\Carbon;
 
 class Edital extends Model
 {
@@ -129,7 +130,6 @@ class Edital extends Model
         return $edital->codigoCurso;  
     }
 
-
     public static function obterEditalInscricao($codigoInscricao)
     {
         $dados = Edital::select(\DB::raw('editais.*, users.name, users.email'))
@@ -139,5 +139,33 @@ class Edital extends Model
                        ->where('inscricoes.codigoInscricao', $codigoInscricao)->first();
 
         return $dados;
+    }
+
+    public static function listarEditalDeferimento()
+    {
+        $disciplina = array();
+
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->whereRaw('NOW() BETWEEN editais.dataInicioRecurso AND editais.dataFinalRecurso')
+                         ->get();
+
+        foreach($editais as $edital)                         
+        {
+           $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+
+           if (!empty($temp))
+           {
+                array_push($disciplina, $temp[0]['sgldis']);
+           }
+        }
+
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                         ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                         ->join('inscricoes_disciplinas', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                         ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
+                         ->groupBy('editais.codigoEdital')
+                         ->get();
+
+        return $editais;
     }
 }

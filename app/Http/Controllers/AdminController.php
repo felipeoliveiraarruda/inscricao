@@ -43,7 +43,14 @@ class AdminController extends Controller
         }
         else
         {
-           $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+            if ((session('level') == 'boss'))
+            {
+                $editais = Edital::listarEditalDeferimento();
+            }
+            else
+            {
+                $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+            }
         } 
 
         return view('admin.index',
@@ -52,7 +59,7 @@ class AdminController extends Controller
             'utils'   => new Utils,    
             'docente' => (in_array("Docenteusp", session('vinculos'))),
             'level'   => session('level'),
-            'pae'     => ((Auth::user()->id == 1 || Auth::user()->id == 4 || Auth::user()->id == 26)  ? true : false),
+            'pae'     => ((Auth::user()->id == 1 || Auth::user()->id == 4 || Auth::user()->id == 26) ? true : false),
         ]);
     }
 

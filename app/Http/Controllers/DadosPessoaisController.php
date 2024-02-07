@@ -72,7 +72,7 @@ class DadosPessoaisController extends Controller
         /* Atualiza os dados do Usuário */
         $user = User::find(Auth::user()->id);
         $user->name     = $request->name;
-        $user->email    = $request->email;
+        /*$user->email    = $request->email;*/
         $user->rg       = $request->rg;
         $user->telefone = $request->telefone;
         
@@ -215,7 +215,7 @@ class DadosPessoaisController extends Controller
         /* Atualiza os dados do Usuário */
         $user = User::find(Auth::user()->id);
         $user->name  = $request->name;
-        $user->email = $request->email;
+        /*$user->email = $request->email;*/
         $user->telefone = $request->telefone;
         
         if(Auth::user()->cpf == Auth::user()->codpes)

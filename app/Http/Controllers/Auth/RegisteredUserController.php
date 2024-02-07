@@ -39,30 +39,46 @@ class RegisteredUserController extends Controller
             'cpf' => ['required', 'string', 'cpf', 'max:14', 'unique:users'],
             'rg' => ['required', 'string'],
             'telefone' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'cpf'      => $request->cpf,
-            'rg'       => $request->rg,
-            'telefone' => $request->telefone,
-            'codpes'   => User::gerarCodigoPessoaExterna(),
-            'password' => Hash::make($request->password),
-        ]);
+        if (!empty($request->email))
+        {
+            $user = User::create([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'cpf'      => $request->cpf,
+                'rg'       => $request->rg,
+                'telefone' => $request->telefone,
+                'codpes'   => User::gerarCodigoPessoaExterna(),
+                'password' => Hash::make($request->password),
+            ]);
+    
+            event(new Registered($user));
+    
+            /* Monta as permissões do usuário */
+            $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'user')->first();
+            $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'Outros')->first();
+           
+            $user->syncPermissions($permissions);
+    
+            Auth::login($user);
+    
+            return redirect(RouteServiceProvider::HOME);
+        }
+        else
+        {
+            $item = array();
+            $item['title'] = 'Cadastro de Usuário';
+            $item['story'] = 'Não foi possível realizar o cadastro de usuário. Tente novamente mais tarde';
 
-        event(new Registered($user));
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
 
-        /* Monta as permissões do usuário */
-        $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'user')->first();
-        $permissions[] = Permission::where('guard_name', 'senhaunica')->where('name', 'Outros')->first();
-       
-        $user->syncPermissions($permissions);
-
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+            return redirect(RouteServiceProvider::HOME);
+        }
     }
 }
