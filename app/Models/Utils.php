@@ -251,6 +251,23 @@ class Utils extends Model
         return $response->json();
     }
 
+    public static function obterOferecimentoPos($sgldis, $dtainiofe, $dtafimofe)
+    {
+        $link = env('URL_API_EEL')."posgraduacao/oferecimento/obter";
+
+        $response = Http::asForm()->withHeaders(
+        [
+            'x-api-key' => env('KEY_API_EEL')
+        ])->post($link,
+        [
+            'sgldis'    => $sgldis,
+            'dtainiofe' => $dtainiofe,
+            'dtafimofe' => $dtafimofe,
+        ]);
+
+        return $response[0];
+    }
+
     public static function listarOferecimentoPosDocente($codcur, $codpes, $dtainiofe, $dtafimofe, $especial = 'N')
     {
         $link = env('URL_API_EEL')."posgraduacao/oferecimento/docente";
@@ -283,10 +300,11 @@ class Utils extends Model
     {        
         $total = array();
         $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-        $curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
+        $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
+        /*$curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
-        $foto         = Arquivo::verificarArquivo($codigoInscricao, [27]); 
+        $foto         = Arquivo::verificarArquivo($codigoInscricao, [27]); */
 
         $total['pessoal']      = InscricoesPessoais::obterTotal($codigoInscricao);
         $total['documento']    = InscricoesDocumentos::obterTotal($codigoInscricao);
@@ -300,11 +318,12 @@ class Utils extends Model
         $total['financeiro']   = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
         $total['disciplina']   = InscricoesDisciplinas::obterTotal($codigoInscricao);
         $total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
-        $total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
+        $total['requerimento'] = $requerimento;
+        /*$total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
         $total['foto']         = (empty($foto) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;
-        $total['requerimento'] = $requerimento;
-        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['curriculo'] + $total['disciplina'];
+        $total['requerimento'] = $requerimento;*/
+        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + /*$total['curriculo'] +*/ $total['disciplina'];
 
         session(['total' => $total]);
     }   
@@ -315,15 +334,17 @@ class Utils extends Model
         return $total;
     } */
 
-    public static function obterTotalArquivos($codigoInscricao)
+    public static function obterTotalArquivos($codigoInscricao, $codigoTipoDocumento)
     {
-        $foto      = Arquivo::verificarArquivo($codigoInscricao, [27]);
-        $documento = Arquivo::verificarArquivo($codigoInscricao, [1,2]);
-        $historico = Arquivo::verificarArquivo($codigoInscricao, [5]);
-        $curriculo = Arquivo::verificarArquivo($codigoInscricao, [8,9]);
+        $total      = Arquivo::verificarArquivo($codigoInscricao, $codigoTipoDocumento);
+        //$documento = Arquivo::verificarArquivo($codigoInscricao, [1,2]);
+        //$historico = Arquivo::verificarArquivo($codigoInscricao, [5]);
+        //$curriculo = Arquivo::verificarArquivo($codigoInscricao, [8,9]);
         //$diploma   = Arquivo::verificarArquivo($codigoInscricao, [6]);
 
-        return $foto + $documento + $historico + $curriculo;
+        //return $foto + $documento + $historico + $curriculo;
+
+        return $total;
     }
 
     public static function obterTipoEspecial($tipoEspecial)

@@ -206,6 +206,7 @@
         });
 
         $("#dadosBolsa").hide();
+        $("#solicitarBolsaDados").hide();
 
         $("#inlineBolsaSim").click(function() 
         {
@@ -232,6 +233,38 @@
             $("#tipoBolsaFinanceiro").prop('required',false);
             $("#inicioRecursoFinanceiro").prop('required',false);
             $("#finalRecursoFinanceiro").prop('required',false);
+          }
+        });
+
+        $("#inlineSolicitarSim").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+
+            $("#dadosBolsa").hide();
+            $("#solicitarBolsaDados").show();
+
+            $("#anoTitulacaoRecursoFinanceiro").prop('required',true);
+            $("#iesTitulacaoRecursoFinanceiro").prop('required',true);
+            $("#agenciaRecursoFinanceiro").prop('required',true);
+            $("#contaRecursoFinanceiro").prop('required',true);
+            $("#localRecursoFinanceiro").prop('required',true);
+          }
+        });
+
+        $("#inlineSolicitarNao").click(function() 
+        {
+          if ($(this).prop('checked')) 
+          {
+
+            $("#dadosBolsa").hide();
+            $("#solicitarBolsaDados").hide();
+
+            $("#anoTitulacaoRecursoFinanceiro").prop('required',false);
+            $("#iesTitulacaoRecursoFinanceiro").prop('required',false);
+            $("#agenciaRecursoFinanceiro").prop('required',false);
+            $("#contaRecursoFinanceiro").prop('required',false);
+            $("#localRecursoFinanceiro").prop('required',false);
           }
         });
 
@@ -337,6 +370,18 @@
 
         $("#checkTodosDeferimento").click(function(){
    	      $('input:checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        $('input[name^="deferimentoCandidato"]').change(function()
+        {
+          var countShared = $('input[name^="deferimentoCandidato"]');
+
+          console.log($(this).siblings(':checked').lenght());
+          
+          /*if(countShared > LIMITE_EM_NUMEROS) 
+          {              
+            $(this).prop(‘checked’,false);
+          });*/
         });
     })  
 

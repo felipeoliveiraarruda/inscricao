@@ -45,9 +45,7 @@
 
                                         <p><span class="font-weight-bold">Possui bolsa de estudos de alguma instituição?</span> Sim ({{ ($financeiros->bolsaRecursoFinanceiro == 'S' ? 'X' : ' ') }}) Não ({{ ($financeiros->bolsaRecursoFinanceiro == 'N' ? 'X' : ' ') }})</p>
 
-                                        @if ($financeiros->bolsaRecursoFinanceiro == 'N')
-                                            <p><span class="font-weight-bold">Deseja solicitar bolsa?</span> Sim ({{ ($financeiros->solicitarRecursoFinanceiro == 'S' ? 'X' : ' ') }}) Não ({{ ($financeiros->solicitarRecursoFinanceiro == 'N' ? 'X' : ' ') }})</p>
-                                        @else
+                                        @if ($financeiros->bolsaRecursoFinanceiro == 'S')
                                             <table class="table table-striped">
                                                 <thead>
                                                     <tr>
@@ -65,8 +63,29 @@
                                                 </tr>                                                
                                             </table>
                                         @endif
-
-                                  
+                                        
+                                        <p><span class="font-weight-bold">Deseja solicitar bolsa?</span> Sim ({{ ($financeiros->solicitarRecursoFinanceiro == 'S' ? 'X' : ' ') }}) Não ({{ ($financeiros->solicitarRecursoFinanceiro == 'N' ? 'X' : ' ') }})</p> 
+                                        
+                                        @if ($financeiros->solicitarRecursoFinanceiro == 'S')
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Ano</th>
+                                                        <th scope="col">IES</th>
+                                                        <th scope="col">Agência</th>
+                                                        <th scope="col">Conta Corrente</th>
+                                                        <th scope="col">Cidade/UF</th>
+                                                    </tr>
+                                                </thead>                             
+                                                <tr>
+                                                    <td>{{ $financeiros->anoTitulacaoRecursoFinanceiro }}</td>
+                                                    <td>{{ $financeiros->iesTitulacaoRecursoFinanceiro }}</td>
+                                                    <td>{{ $financeiros->agenciaRecursoFinanceiro }}</td>
+                                                    <td>{{ $financeiros->contaRecursoFinanceiro }}</td>
+                                                    <td>{{ $financeiros->localRecursoFinanceiro }}</td>
+                                                </tr>                                                
+                                            </table>
+                                        @endif
                                     @endif                                    
                                 </div>                                 
                             </div>                                                        

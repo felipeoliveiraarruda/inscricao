@@ -32,13 +32,6 @@ use App\Models\InscricoesArquivos;
 
 class InscricaoController extends Controller
 {
-    /*protected $pdf;
-
-    public function __construct(\App\Models\Comprovante $pdf)
-    {
-        $this->pdf = $pdf;
-    }*/
-
     public function index()
     {
         if (Auth::user()->cpf == '99999999999')
@@ -46,17 +39,29 @@ class InscricaoController extends Controller
             return redirect('admin/dados'); 
         }
 
+        $liberados = array();
+
         $inscricoes = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                             ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                             ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
                             ->get();      
 
-        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                         ->whereRaw('NOW() > `dataInicioEdital` AND NOW() < `dataFinalEdital`')
-                         //->whereRaw('`dataInicioEdital` > NOW()')
-                         ->get();
-        
-        $liberados = array();
+        if (count($liberados) > 0)
+        {
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                            ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                            ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
+                            ->groupBy('editais.codigoEdital')
+                            ->get();
+        }
+        else
+        {   
+            $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
+                            ->whereRaw('NOW() > `dataInicioEdital` AND NOW() < `dataFinalEdital`')
+                            //->whereRaw('`dataInicioEdital` > NOW()')
+                            ->get();
+        }
+
 
         if (empty(session('level')))
         {
@@ -65,14 +70,14 @@ class InscricaoController extends Controller
 
         return view('dashboard',
         [
-            'editais'   => $editais,
-            'inscricoes'   => $inscricoes,
-            'utils'     => new Utils,
-            'inscricao' => new Inscricao,
-            'user_id'   => Auth::user()->id,
-            'liberado'  => (in_array(Auth::user()->id, $liberados) ? true : false),
-            'level'     => session('level'),
-            'total'     => count($editais),
+            'editais'       => $editais,
+            'inscricoes'    => $inscricoes,
+            'utils'         => new Utils,
+            'inscricao'     => new Inscricao,
+            'user_id'       => Auth::user()->id,
+            'liberado'      => (in_array(Auth::user()->id, $liberados) ? true : false),
+            'level'         => session('level'),
+            'total'         => count($editais),
         ]);
     }
 
@@ -117,7 +122,7 @@ class InscricaoController extends Controller
         }
 
         Utils::obterTotalInscricao($inscricao->codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $edital = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                         ->join('users', 'editais.codigoUsuario', '=', 'users.id')
@@ -125,40 +130,59 @@ class InscricaoController extends Controller
 
         $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre = Edital::obterSemestreAno($codigoEdital, true);
+        $status      = Inscricao::obterStatusInscricao($inscricao->codigoInscricao);
 
         session(['nivel' => $inscricao->codigoNivel]);
 
-        $foto        = Inscricao::obterFotoInscricao($inscricao->codigoInscricao);
-        $historicos  = Arquivo::obterArquivosHistorico($inscricao->codigoInscricao, true);
-        $diplomas    = Arquivo::obterArquivosDiploma($inscricao->codigoInscricao, true);
-        $curriculo   = Arquivo::obterArquivosCurriculo($inscricao->codigoInscricao);
+        $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
+        $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
+        $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
+        $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
+        $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
+        $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(29));
+        $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(30));
+        $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
+        $plano_estudo         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(31));
+        $projeto              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(32));
+        $carta                = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(33));
+        $curriculo_orientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(34));
+        $termo_orientacao     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(35));
+        $requerimento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(28));
 
-        $cpf   = Arquivo::obterArquivosCpf($inscricao->codigoInscricao);
-        $rg    = Arquivo::obterArquivosRg($inscricao->codigoInscricao);
-        $rne   = Arquivo::obterArquivosRne($inscricao->codigoInscricao);
-
-        $requerimento = Arquivo::obterArquivosRequerimento($inscricao->codigoInscricao);
-        $projeto      = Arquivo::obterArquivosPreProjeto($inscricao->codigoInscricao);
+        if ($inscricao->planoCoorientador == 'S')
+        {
+            $curriculo_coorientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(36));
+            $credenciamento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(37));
+            $carta_aceite           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(38));
+        }
 
         return view('inscricao',
         [
-            'codigoInscricao' => $inscricao->codigoInscricao,
-            'status'          => $inscricao->statusInscricao,
-            'codigoEdital'    => $codigoEdital,  
-            'total'           => $total,
-            'sigla'           => $sigla,
-            'anosemestre'     => $anosemestre,
-            'email'           => $edital->email,  
-            'foto'            => (empty($foto) ? '' : $foto->linkArquivo),
-            'cpf'             => (empty($cpf) ? '' : $cpf),
-            'rg'              => (empty($rg) ? '' : $rg->linkArquivo),
-            'rne'             => (empty($rne) ? '' : $rne->linkArquivo),
-            'historicos'      => (count($historicos) == 0 ? '' : $historicos),
-            'diplomas'        => (count($diplomas) == 0 ? '' : $diplomas),
-            'curriculo'       => (empty($curriculo) ? '' : $curriculo->linkArquivo),
-            'doutorado'       => (($edital->codigoNivel == 2) ? true : false),
-            'projeto'         => (empty($projeto) ? '' : $projeto->linkArquivo),
-            'requerimento'    => (empty($requerimento) ? '' : $requerimento->linkArquivo),
+            'codigoInscricao'        => $inscricao->codigoInscricao,
+            'status'                 => $status,
+            'codigoEdital'           => $codigoEdital, 
+            'total'                  => $total,
+            'sigla'                  => $sigla,
+            'anosemestre'            => $anosemestre,
+            'email'                  => $edital->email,
+            'coorientador'           => $inscricao->planoCoorientador,
+            'foto'                   => (empty($foto) ? '' : $foto),
+            'cpf'                    => (empty($cpf) ? '' : $cpf),
+            'rg'                     => (empty($rg) ? '' : $rg),
+            'rne'                    => (empty($rne) ? '' : $rne),
+            'passaporte'             => (empty($passaporte) ? '' : $passaporte),
+            'historico'              => (empty($historico) ? '' : $historico),
+            'diploma'                => (empty($diploma) ? '' : $diploma),
+            'curriculo'              => (empty($curriculo) ? '' : $curriculo),
+            'plano_estudo'           => (empty($plano_estudo) ? '' : $plano_estudo),
+            'projeto'                => (empty($projeto) ? '' : $projeto),
+            'carta'                  => (empty($carta) ? '' : $carta),
+            'curriculo_orientador'   => (empty($curriculo_orientador) ? '' : $curriculo_orientador),
+            'termo_orientacao'       => (empty($termo_orientacao) ? '' : $curriculo_orientador),
+            'curriculo_coorientador' => (empty($curriculo_coorientador) ? '' : $curriculo_coorientador),
+            'credenciamento'         => (empty($credenciamento) ? '' : $credenciamento),
+            'carta_aceite'           => (empty($carta_aceite) ? '' : $carta_aceite),
+            'requerimento'           => (empty($requerimento) ? '' : $requerimento),
         ]);
     }
 
@@ -206,9 +230,11 @@ class InscricaoController extends Controller
         $arquivos = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 27), $codigoInscricao);
         
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('pessoal',
         [
@@ -217,8 +243,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'arquivos'          => $arquivos,
             'pessoais'          => $inscricao,
-            'status'            => $inscricao->statusInscricao,
-            'arquivo_inscricao' => '',
+            'status'            => $status,
             'nivel'             => session(['nivel']),
             'total'             => $total,
         ]); 
@@ -227,8 +252,9 @@ class InscricaoController extends Controller
     public function pessoal_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
 
-        if ($inscricao->statusInscricao == 'P')
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -237,11 +263,13 @@ class InscricaoController extends Controller
         $estados = Utils::listarEstado(1);
         $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
 
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+
         return view('inscricao.pessoal',
         [
             'codigoInscricao'   => $codigoInscricao, 
             'codigoEdital'      => $inscricao->codigoEdital,
-            'status'            => $inscricao->statusInscricao,                        
+            'status'            => $status,                        
             'pessoais'          => $inscricao,
             'sexos'             => Utils::obterDadosSysUtils('sexo'),
             'racas'             => Utils::obterDadosSysUtils('raça'),
@@ -279,9 +307,11 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEnderecoInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('endereco',
         [
@@ -290,7 +320,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'enderecos'         => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
         ]); 
     }  
@@ -298,9 +328,11 @@ class InscricaoController extends Controller
     public function endereco_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterEnderecoInscricao($codigoInscricao);
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+
         $update    = false;
 
-        if ($inscricao->statusInscricao == 'P')
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -312,6 +344,8 @@ class InscricaoController extends Controller
         
         $estados = Utils::listarEstado(1);
 
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+
         return view('inscricao.endereco',
         [
             'codigoInscricao'   => $codigoInscricao, 
@@ -319,6 +353,7 @@ class InscricaoController extends Controller
             'enderecos'         => $inscricao,
             'estados'           => $estados,
             'update'            => $update,
+            'status'            => $status,
         ]); 
     }
 
@@ -326,7 +361,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEmergenciaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
         $endereco = '';
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
@@ -386,9 +421,11 @@ class InscricaoController extends Controller
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
         $escolares    = Inscricao::obterEscolarInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}/escolar";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('escolar',
         [
@@ -397,7 +434,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'escolares'         => $escolares,
             'nivel'             => session(['nivel']),
-            'status'            => $escolares[0]->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
         ]); 
     } 
@@ -452,8 +489,10 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterIdiomaInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
         $voltar = "inscricao/{$inscricao[0]->codigoEdital}/idioma";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('idioma',
         [
@@ -462,7 +501,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'idiomas'           => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao[0]->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
         ]); 
     } 
@@ -505,9 +544,11 @@ class InscricaoController extends Controller
         $inscricao    = Inscricao::obterProfissionalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}/profissional";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('profissional',
         [
@@ -516,7 +557,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'profissionais'     => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao[0]->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
         ]); 
     } 
@@ -549,6 +590,7 @@ class InscricaoController extends Controller
             'codigoInscricaoExperiencia'    => $codigoInscricaoExperiencia,
             'profissional'                  => $inscricao,
             'codigoExperiencia'             => $codigoExperiencia,
+            'status'                        => $status,
         ]); 
     } 
 
@@ -558,9 +600,11 @@ class InscricaoController extends Controller
         $inscricao    = Inscricao::obterEnsinoInscricao($codigoInscricao); 
 
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}/ensino";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('ensino',
         [
@@ -569,7 +613,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'ensinos'           => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => (isset($inscricao[0]->statusInscricao) ? $inscricao[0]->statusInscricao : 'N'),
+            'status'            => $status,
             'total'             => $total,
         ]); 
     } 
@@ -604,6 +648,7 @@ class InscricaoController extends Controller
             'codigoInscricaoExperiencia'    => $codigoInscricaoExperiencia,
             'ensino'                        => $inscricao,
             'codigoExperiencia'             => $codigoExperiencia,
+            'status'                        => $status,
         ]); 
     } 
 
@@ -612,9 +657,11 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterFinanceiroInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/financeiro";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('financeiro',
         [
@@ -623,7 +670,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'financeiros'       => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
         ]); 
     } 
@@ -632,16 +679,22 @@ class InscricaoController extends Controller
     {
         $inscricao = Inscricao::obterFinanceiroInscricao($codigoInscricao);
 
-        if ($inscricao->statusInscricao == 'P')
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
 
         return view('inscricao.financeiro',
         [
             'codigoInscricao'   => $codigoInscricao, 
             'codigoEdital'      => $inscricao->codigoEdital,
-            'financeiros'       => $inscricao, 
+            'financeiros'       => $inscricao,
+            'status'            => $status, 
         ]); 
     } 
 
@@ -650,7 +703,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
 
@@ -664,6 +717,8 @@ class InscricaoController extends Controller
         {
             $titulo = 'Quais as suas expectativas com relação ao curso?';
         }
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('expectativas',
         [
@@ -672,7 +727,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'expectativas'      => $inscricao,
             'nivel'             => session(['nivel']),
-            'status'            => $inscricao->statusInscricao,
+            'status'            => $status,
             'total'             => $total,
             'titulo'            => $titulo,
         ]); 
@@ -682,7 +737,10 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
 
-        if ($inscricao->statusInscricao == 'P')
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -699,9 +757,11 @@ class InscricaoController extends Controller
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao);
-
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
+        
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('inscricao.expectativas',
         [
@@ -711,6 +771,7 @@ class InscricaoController extends Controller
             'expectativas'      => $inscricao,
             'total'             => $total,
             'titulo'            => $titulo,
+            'status'            => $status,
         ]); 
     } 
     
@@ -735,7 +796,7 @@ class InscricaoController extends Controller
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$edital}/curriculo";
     
@@ -756,7 +817,7 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
         $tipos     = TipoDocumento::whereIn('codigoTipoDocumento', [8,9])->get();
 
-        if ($inscricao->statusInscricao == 'P')
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -764,6 +825,8 @@ class InscricaoController extends Controller
         Utils::obterTotalInscricao($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/curriculo";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('inscricao.curriculo',
         [
@@ -772,6 +835,7 @@ class InscricaoController extends Controller
             'link_voltar'       => $voltar,
             'curriculo'         => $inscricao,
             'tipos'             => $tipos,
+            'status'            => $status,
         ]); 
     } 
     
@@ -804,9 +868,11 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterProjetoInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}/pre-projeto";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('pre_projeto',
         [
@@ -816,6 +882,7 @@ class InscricaoController extends Controller
             'projeto'           => $inscricao,
             'nivel'             => session(['nivel']),
             'total'             => $total,
+            'status'            => $status,
         ]); 
     } 
 
@@ -823,7 +890,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
 
-        if ($inscricao->statusInscricao == 'P')
+        if ($status == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -831,6 +898,8 @@ class InscricaoController extends Controller
         Utils::obterTotalInscricao($codigoInscricao);
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/pre-projeto";
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('inscricao.pre_projeto',
         [
@@ -838,6 +907,7 @@ class InscricaoController extends Controller
             'codigoEdital'      => $inscricao->codigoEdital,
             'link_voltar'       => $voltar,
             'projeto'           => $inscricao,
+            'status'            => $status,
         ]); 
     } 
     
@@ -872,7 +942,7 @@ class InscricaoController extends Controller
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$edital}/disciplina";
     
@@ -902,11 +972,13 @@ class InscricaoController extends Controller
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $codigoCurso = Edital::obterCursoEdital($edital);
         
         $disciplinas = Utils::listarOferecimentoPos($codigoCurso, '04/03/2024', '16/06/2024');
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
 
         $voltar = "inscricao/{$edital}/disciplinas";
     
@@ -919,6 +991,7 @@ class InscricaoController extends Controller
             'total'             => $total,
             'disciplinas'       => $disciplinas,
             'limite'            => ($codigoCurso == 97002 ? 1 : 0),
+            'status'            => $status,
         ]); 
     } 
 
@@ -945,13 +1018,39 @@ class InscricaoController extends Controller
         return redirect($voltar); 
     }
 
+    public function obrigatorio($codigoInscricao)
+    {         
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
+
+        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+      
+        Utils::obterTotalInscricao($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
+
+        $voltar = "inscricao/{$edital}/disciplina";
+    
+        return view('obrigatorio',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'codigoEdital'      => $edital,
+            'link_voltar'       => $voltar,
+            'arquivos'          => $inscricao,
+            'nivel'             => session(['nivel']),
+            'total'             => $total,
+            'status'            => $status,
+            'count'             => count($inscricao),
+        ]); 
+    }
+      
+
     public function requerimento($codigoInscricao)
     {         
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
         $inscricao    = Inscricao::obterRequerimentoInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}/requerimento";
     
@@ -973,7 +1072,7 @@ class InscricaoController extends Controller
                               ->join('users', 'editais.codigoUsuario', '=', 'users.id')
                               ->where('editais.codigoEdital', $codigoEdital)->first();
 
-        if ($request->codigoTipo == 'ppgem')
+        /*if ($request->codigoTipo == 'ppgem')
         {
             $path = $request->file('arquivo')->store('arquivos', 'public');
 
@@ -1448,7 +1547,6 @@ class InscricaoController extends Controller
                 $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
             }
     
-    
             if ($nivel == 'ME')
             {            
                 if ($edital->dataDoeEdital->format('m') < 7)
@@ -1468,7 +1566,7 @@ class InscricaoController extends Controller
                 $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
     
-            if ($nivel == 'AE')
+            /*if ($nivel == 'AE')
             {         
                 if ($edital->dataFinalEdital->format('m') < 7)
                 {
@@ -1484,6 +1582,15 @@ class InscricaoController extends Controller
                 $assunto      = "MESTRADO - {$sigla}";
                 $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
                 $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
+            }
+
+            if ($nivel == 'DF')
+            {            
+                $diretorio = $ano;
+    
+                $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
+                $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
     
             $pdf->SetFont('Arial', '', 10);
@@ -1517,7 +1624,7 @@ class InscricaoController extends Controller
                     ]);
                 }
             }
-        }
+        }*/
 
         Mail::to($edital->email)->send(new ComprovanteMail($request->codigoInscricao));
             
@@ -1558,7 +1665,7 @@ class InscricaoController extends Controller
             Inscricao::where('codigoInscricao', $request->codigoInscricao)->where('statusInscricao', 'N')->update(['statusInscricao' => 'P']);
 
             request()->session()->flash('alert-success', 'Requerimento cadastrado com sucesso'); 
-        } */
+        } 
     
         if ($request->codigoTipo == 'ppgem')
         {
@@ -1567,7 +1674,9 @@ class InscricaoController extends Controller
         else
         {
             return redirect("inscricao/{$edital->codigoEdital}"); 
-        }
+        }*/
+
+        return redirect("inscricao/{$edital->codigoEdital}"); 
     }
     
     public function bolsista($codigoInscricao)
@@ -1575,7 +1684,7 @@ class InscricaoController extends Controller
         $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
            
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao);
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 5, 6, 7, 9, 29, 30, 31, 32, 33));
 
         $voltar = "inscricao/{$codigoEdital}";
     
@@ -2066,7 +2175,6 @@ class InscricaoController extends Controller
             $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
         }
 
-
         if ($nivel == 'ME')
         {            
             if ($edital->dataDoeEdital->format('m') < 7)
@@ -2086,22 +2194,32 @@ class InscricaoController extends Controller
             $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
         }
 
-        if ($nivel == 'AE')
-        {         
-            if ($edital->dataFinalEdital->format('m') < 7)
-            {
-                $semestre  = 'primero semestre de '.$edital->dataFinalEdital->format('Y');
-                $diretorio = $edital->dataFinalEdital->format('Y').'1'; 
-            }
-            else
-            {                
-                $semestre  = 'segundo semestre de '.$edital->dataFinalEdital->format('Y');
-                $diretorio =  $edital->dataFinalEdital->format('Y').'2';
-            }
+        // if ($nivel == 'AE')
+        // {         
+        //     if ($edital->dataFinalEdital->format('m') < 7)
+        //     {
+        //         $semestre  = 'primero semestre de '.$edital->dataFinalEdital->format('Y');
+        //         $diretorio = $edital->dataFinalEdital->format('Y').'1'; 
+        //     }
+        //     else
+        //     {                
+        //         $semestre  = 'segundo semestre de '.$edital->dataFinalEdital->format('Y');
+        //         $diretorio =  $edital->dataFinalEdital->format('Y').'2';
+        //     }
             
-            $assunto      = "MESTRADO - {$sigla}";
-            $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-            $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
+        //     $assunto      = "MESTRADO - {$sigla}";
+        //     $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+        //     $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
+        // }
+
+        if ($nivel == 'DF')
+        {            
+            $ano       = $edital->dataDoeEdital->format('Y') + 1;
+            $diretorio = $ano;
+
+            $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
+            $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
+            $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
         }
 
         $pdf->SetFont('Arial', '', 10);
@@ -2119,7 +2237,7 @@ class InscricaoController extends Controller
         {
             $pdf->Output('F', $arquivo);
 
-            if (file_exists($arquivo))
+            /*if (file_exists($arquivo))
             {
                 $arquivo = Arquivo::create([
                     'codigoUsuario'         => Auth::user()->id,
@@ -2133,7 +2251,7 @@ class InscricaoController extends Controller
                     'codigoArquivo'         => $arquivo->codigoArquivo,
                     'codigoPessoaAlteracao' => Auth::user()->codpes,
                 ]);
-            }
+            }*/
         }
 
         $pdf->Output('I', "{$pessoais->numeroInscricao}.pdf");
@@ -2366,7 +2484,7 @@ class InscricaoController extends Controller
         return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
     }
 
-    public function matricula_create($codigoInscricao)
+    public function maicula_create($codigoInscricao)
     {
         $aprovado = ProcessoSeletivo::obterAprovado();
 
@@ -2509,7 +2627,7 @@ class InscricaoController extends Controller
         return view('inscricao',
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
-            'status'          => $inscricao->statusInscricao,
+            'status'          => $status,
             'pessoal'         => $inscricao->pessoal,
             'arquivo'         => $inscricao->arquivo,
             'endereco'        => $inscricao->endereco,
@@ -2647,7 +2765,7 @@ class InscricaoController extends Controller
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'codigoEdital'    => $inscricao->codigoEdital,
-            'status'          => $inscricao->statusInscricao,
+            'status'          => $status,
             'enderecos'       => $enderecos,
             'cpf'             => $cpf,
             'rg'              => $rg,
@@ -2705,7 +2823,7 @@ class InscricaoController extends Controller
         [
             'codigoInscricao' => $inscricao->codigoInscricao,
             'codigoEdital'    => $inscricao->codigoEdital,
-            'status'          => $inscricao->statusInscricao,
+            'status'          => $status,
             'arquivos'        => $arquivos,
             'endereco'        => $endereco,
             'cpf'             => $cpf,

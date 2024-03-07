@@ -22,7 +22,7 @@
     </div>
 </div>
 
-@if (!empty($codigoResumoEscolar))
+{{-- @if (!empty($codigoResumoEscolar))
     @php
         $historico  = \App\Models\Arquivo::obterArquivosHistorico($codigoInscricao);
         $diploma    = \App\Models\Arquivo::obterArquivosDiploma($codigoInscricao);
@@ -79,7 +79,7 @@
             <small id="arquivoHelp" class="form-text text-muted">Cópia digital (frente/verso) do Diploma ou Declaração de Conclusão do curso de graduação, contendo a data de colação de grau, conforme item 3.1.7 do edital no formato PDF</small>
         </div>
     </div>    
-</div> 
+</div>  --}}
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
 <input type="hidden" name="codigoResumoEscolar" value="{{ $codigoResumoEscolar }}">

@@ -45,21 +45,13 @@
                                                 <th scope="col">Nome</th>
                                                 <th scope="col">CPF</th>
                                                 <th scope="col">RG</th>
-                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         <tr>
                                             <td>{{ $pessoais->name }}</td>
                                             <td class="text-center">{{ $pessoais->cpf }}</td>
-                                            <td class="text-center">{{ $pessoais->rg }}</td>
-                                            <td class="text-center">
-                                                @if (!empty($pessoais->codigoInscricaoPessoal) && (!empty($pessoais->codigoInscricaoDocumento)))
-                                                    <i class="fa fa-check text-success"></i>
-                                                @else
-                                                    <i class="fa fa-times text-danger"></i>
-                                                @endif
-                                            </td>                                            
+                                            <td class="text-center">{{ $pessoais->rg }}</td>                                          
                                             <td class="text-center">
                                                 @if ($status == 'N')
                                                 <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
@@ -70,7 +62,7 @@
                                         </tr>
                                     </table>
 
-                                    <div class="card bg-default">
+                                    {{-- <div class="card bg-default">
                                         <h5 class="card-header">Anexo(s) <span class="text-danger">*</span>
                                             @if ($status == 'N') 
                                                 <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
@@ -130,7 +122,7 @@
 
                                             <p>Documentos obrigatórios que devem ser anexados: Foto (jpg, png, bmp), CPF (pdf), RG/RNE/Passaporte (pdf)</p>
                                         </div>
-                                    </div>                                    
+                                    </div>                                     --}}
                                     @endif
                                 </div>                                 
                             </div>                                                        

@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Edital;
 use App\Models\Arquivo;
 use App\Models\Inscricao;
 use App\Models\InscricoesArquivos;
 use App\Models\TipoDocumento;
 use App\Http\Requests\ArquivoRequest;
+use App\Http\Requests\Arquivo\ImagemRequest;
+use App\Http\Requests\Arquivo\DocumentoRequest;
 use Mail;
 use App\Mail\EnviarEmailComprovante;
 
@@ -66,18 +69,21 @@ class ArquivoController extends Controller
 
     public function edit($codigoArquivo, $codigoInscricao = '')
     {
+
+        $edital = Edital::obterEditalInscricao($codigoInscricao);
+
         if (!empty($codigoInscricao))
         {
             $arquivo = Arquivo::find($codigoArquivo);
 
-            if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
+            /*if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
             {
                 $voltar = "inscricao/{$codigoInscricao}/curriculo";
             }
             else
             {
                 $voltar = "inscricao/{$codigoInscricao}/pessoal";
-            }
+            }*/
         }
         else
         {
@@ -93,7 +99,7 @@ class ArquivoController extends Controller
             'arquivo'         => $arquivo,
             'tipos'           => $tipos, 
             'codigoInscricao' => $codigoInscricao,
-            'link_voltar'     => $voltar, 
+            'link_voltar'     => "inscricao/{$edital->codigoEdital}", 
         ]);
     }
 
@@ -188,46 +194,63 @@ class ArquivoController extends Controller
 
         if($inscricao)
         {
-            session()->flash('alert-success', 'Documento anexado a Inscrição com sucesso');  
+            session()->flash('alert-success', 'Arquivo anexado a Inscrição com sucesso');  
         }
         else
         {
             session()->flash('alert-danger', 'Ocorreu um erro na anexação do Documento a Inscrição.');
         }
 
-        if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
+        $edital = Edital::obterEditalInscricao($codigoInscricao);
+
+        return redirect("inscricao/{$$edital->codigoEdital}");
+
+        /*if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
         {
             return redirect("inscricao/{$codigoInscricao}/curriculo");
         }
         else
         {
             return redirect("inscricao/{$codigoInscricao}/pessoal");    
+        }*/
+    }
+
+    public function imagem($codigoInscricao, $codigoTipoDocumento)
+    {
+        if ($codigoTipoDocumento == 27)
+        {
+            return view('arquivo.imagem',
+            [
+                'codigoInscricao'     => $codigoInscricao,
+                'codigoTipoDocumento' => $codigoTipoDocumento,
+            ]);
         }
     }
 
-    /*public function remover($codigoInscricao, $codigoArquivo)
+    public function store_imagem(ImagemRequest $request)
     {
-        $arquivo = Arquivo::find($codigoArquivo);
-                
-        $remover = unlink(Storage::path('public/'.$arquivo->linkArquivo));
+        $validated = $request->validated();
 
-        $inscricao = InscricoesArquivos::where([
-            'codigoInscricao'   => $codigoInscricao,
-            'codigoArquivo'     => $codigoArquivo,
-        ])->delete();
+        $path = $request->file('arquivo')->store('arquivos', 'public');
 
-        $arquivo = Arquivo::where(['codigoArquivo' => $codigoArquivo])->delete();        
+        $arquivo = Arquivo::create([
+            'codigoUsuario'         => Auth::user()->id,
+            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
+            'linkArquivo'           => $path,
+            'codigoPessoaAlteracao' => Auth::user()->codpes,
+        ]);
 
-        if(($remover) && ($inscricao) && ($arquivo))
+        if (!empty($request->codigoInscricao))
         {
-            request()->session()->flash('alert-success', 'Documento removido com sucesso');  
+            InscricoesArquivos::create([
+                'codigoInscricao'       => $request->codigoInscricao,
+                'codigoArquivo'         => $arquivo->codigoArquivo,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
         }
-        else
-        {
-            request()->session()->flash('alert-danger', 'Ocorreu um erro na remoção do Documento.');
-        }
-        
-        return redirect("/inscricao/{$codigoInscricao}/documento");
-    } */
+
+        request()->session()->flash('alert-success', 'Arquivo cadastrado com sucesso');    
+        return redirect("/inscricao/{$request->codigoInscricao}");
+    }
 }
 

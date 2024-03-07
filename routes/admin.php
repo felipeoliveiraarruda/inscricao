@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\EditalController;
 use App\Http\Controllers\Admin\TipoDocumentoController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DeferimentoController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DesempenhoController;
 use App\Http\Controllers\PAE\AnaliseCurriculoController;
@@ -38,7 +39,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('usuario/recuperacao/{id}',  [UserController::class, 'recuperacao']);
 
         /* Deferimento */
-        Route::get('{codigoEdital}/deferimento',    [DeferimentoController::class, 'index']);
+        Route::get('deferimento/{codigoEdital}',    [DeferimentoController::class, 'listar']);
 
         /* PAE - Desempenho Academico */
         Route::get('{codigoPae}/pae/desempenho/',  [DesempenhoController::class, 'index']);

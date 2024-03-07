@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Uspdev\Replicado\Pessoa;
 use Uspdev\Replicado\Posgraduacao;
 use Illuminate\Support\Str;
 use App\Models\Utils;
@@ -96,9 +97,20 @@ class Inscricao extends Model
         return $inscricao->codigoEdital;                              
     }
 
+    public static function obterUltimaInscricao($user_id, $codigoEdital)
+    {
+        $inscricao = Inscricao::select('inscricoes.codigoInscricao')                            
+                              ->where('inscricoes.codigoUsuario', $user_id)                              
+                              ->where('inscricoes.codigoEdital', '<>', $codigoEdital)
+                              ->latest('inscricoes.created_at')
+                              ->first();
+
+        return $inscricao->codigoInscricao;
+    }
+
     public static function obterDadosPessoaisInscricao($codigoInscricao)
     {   
-        $pessoal = DadosPessoais::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.numeroInscricao, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
+        $pessoal = DadosPessoais::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.numeroInscricao, inscricoes.alunoEspecial, pessoais.*, users.*, documentos.*, inscricoes_pessoais.codigoInscricaoPessoal, inscricoes_documentos.codigoInscricaoDocumento'))
                                 ->rightJoin('users', 'users.id', '=', 'pessoais.codigoUsuario')
                                 ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                 ->leftJoin('documentos', 'users.id', '=', 'documentos.codigoUsuario')
@@ -139,9 +151,9 @@ class Inscricao extends Model
                                 ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                 ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')                                
                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                ->get();  
+                                ->first();  
                                 
-        if (count($emergencias) > 1)
+        /*if (count($emergencias) > 1)
         {
             foreach($emergencias as $emergencia)
             {
@@ -154,7 +166,9 @@ class Inscricao extends Model
         else
         {
             return $emergencias[0]; 
-        }                             
+        } */  
+        
+        return $emergencias;
     }
     
     public static function obterEscolarInscricao($codigoInscricao, $codigoResumoEscolar = '')
@@ -184,7 +198,7 @@ class Inscricao extends Model
                                     })    
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                     ->where('resumo_escolar.codigoResumoEscolar', $codigoResumoEscolar)
-                                    ->get();
+                                    ->first();
         }
 
         return $escolar;                                 
@@ -309,8 +323,8 @@ class Inscricao extends Model
     public static function obterFinanceiroInscricao($codigoInscricao)
     {
         $financeiro = RecursoFinanceiro::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))                                       
-                                       ->leftJoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                  
-                                       ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                      
+                                       ->rightJoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                     
+                                       ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                                           
                                        ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                        ->first();
@@ -357,30 +371,93 @@ class Inscricao extends Model
         return $projeto;                                 
     } 
 
-    public static function obterDisciplinaInscricao($codigoInscricao)
+    public static function obterDisciplinaInscricao($codigoInscricao, $deferido = 'N')
     {
-        $disciplinas = Inscricao::select('inscricoes.codigoEdital', 'inscricoes.statusInscricao', 'editais.*', 'users.*', 'inscricoes_disciplinas.codigoInscricaoDisciplina', 'inscricoes_disciplinas.codigoDisciplina')
-                                 ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
-                                 ->join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
-                                 ->join('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
-                                 ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                 ->whereNull('inscricoes_disciplinas.deleted_at')
-                                 ->get(); 
+        if ($deferido == 'N')
+        {
+            $disciplinas = Inscricao::select('inscricoes.codigoEdital', 'inscricoes.statusInscricao', 'editais.*', 'users.*', 'inscricoes_disciplinas.codigoInscricaoDisciplina', 'inscricoes_disciplinas.codigoDisciplina', 'inscricoes_disciplinas.codigoPessoaAlteracao AS codigoPessoaDeferimento')
+                                    ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                    ->join('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->whereNull('inscricoes_disciplinas.deleted_at')
+                                    ->get(); 
+        }
+        else
+        {
+            $disciplinas = Inscricao::select('inscricoes.codigoEdital', 'inscricoes.statusInscricao', 'editais.*', 'users.*', 'inscricoes_disciplinas.codigoInscricaoDisciplina', 'inscricoes_disciplinas.codigoDisciplina', 'inscricoes_disciplinas.codigoPessoaAlteracao AS codigoPessoaDeferimento')
+                                    ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                    ->join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                    ->join('inscricoes_disciplinas', 'inscricoes_disciplinas.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                    ->where('inscricoes_disciplinas.statusDisciplina', 'D')
+                                    ->whereNull('inscricoes_disciplinas.deleted_at')
+                                    ->get(); 
+        }
 
         return $disciplinas;                                 
     } 
+
+    public static function obterAnexoInscricao($codigoInscricao, $codigoTipoDocumento)
+    {
+        $anexo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*'))
+                        ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
+                        ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                         
+                        ->leftJoin('inscricoes_arquivos', function($join)
+                        {
+                            $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                            $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
+                        })
+                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                        ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
+                        ->whereNull('inscricoes_arquivos.deleted_at')
+                        ->latest('inscricoes_arquivos.created_at')
+                        ->first();
+
+        return $anexo;   
+    }
+
+    public static function obterObrigatorioInscricao($codigoInscricao, $codigoTipoDocumento)
+    {        
+        $anexo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*, tipo_documentos.tipoDocumento'))
+                        ->join('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                        ->join('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                        ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                        ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
+                        ->whereNull('inscricoes_arquivos.deleted_at')
+                        ->get();
+
+        return $anexo;                                   
+    }
     
     public static function obterFotoInscricao($codigoInscricao)
     {        
-        $foto = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, arquivos.*'))
-                                   ->rightJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+        $foto = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*'))
+                                   ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
                                    ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
-                                   ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                   ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                    ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                    ->whereIn('arquivos.codigoTipoDocumento', [27])
-                                   ->first(); 
+                                   ->whereNull('inscricoes_arquivos.deleted_at')
+                                   ->first();
         return $foto;                                   
     }
+
+    /*public static function obterCpfInscricao($codigoInscricao)
+    {        
+        $foto = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*'))
+                                   ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
+                                   ->leftJoin('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
+                                   ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                   ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                   ->whereIn('arquivos.codigoTipoDocumento', [])
+                                   ->whereNull('inscricoes_arquivos.deleted_at')
+                                   ->first();
+        return $foto;                                   
+    }*/
+    
 
     public static function obterRequerimentoInscricao($codigoInscricao)
     {
@@ -409,6 +486,7 @@ class Inscricao extends Model
 
         $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
         $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('b2', 'arial', 'B', 0, '0,0,0');
         $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
         $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
         
@@ -418,11 +496,56 @@ class Inscricao extends Model
 
         if ($tipo == 'ppgem')
         {
-            if ($nivel = 'ME')
+            if ($nivel == 'ME')
             {
                 if ($edital->dataDoeEdital->format('m') < 7)
                 {
-                    $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+                    $diretorio = $edital->dataDoeEdital->format('Y').'2/mestrado';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $diretorio = $ano.'1/mestrado'; 
+                }
+
+                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+
+                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+                $pdf->Ln();                
+            }
+            
+            if($nivel == 'AE')
+            {
+                if ($edital->dataInicioEdital->format('m') < 7)
+                {
+                    $diretorio = $edital->dataInicioEdital->format('Y').'1/especial';
+                    $semestre  = '1º Semestre de '. $edital->dataInicioEdital->format('Y');
+                }
+                else
+                {
+                    $ano       = $edital->dataInicioEdital->format('Y') + 1;
+                    $diretorio = $ano.'2/especial'; 
+                    $semestre  = '2º Semestre de '.$ano;
+                }
+                
+                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Engenharia de Materiais</p>";
+
+                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('REQUERIMENTO DE MATRÍCULA ALUNO ESPECIAL'), 1, 'C', true);
+                $pdf->Ln();   
+            }
+        }
+
+        if ($tipo == 'ppgpe')
+        {
+            if ($nivel == 'ME')
+            {
+                if ($edital->dataInicioEdital->format('m') < 7)
+                {
+                    $diretorio = $edital->dataDoeEdital->format('Y').'2';
                 }
                 else
                 {
@@ -431,104 +554,218 @@ class Inscricao extends Model
                 }
 
                 $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
-            }
-            
-            $pdf->SetFont('Arial','B', 16);
-            $pdf->SetFillColor(190,190,190);
-            $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
-            $pdf->Ln();
-        }
 
+                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGPE REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+                $pdf->Ln();
+            }
+
+            if($nivel == 'AE')
+            {
+                if ($edital->dataInicioEdital->format('m') < 7)
+                {
+                    $diretorio = $edital->dataInicioEdital->format('Y').'1/especial';
+                    $semestre  = '1º Semestre de '. $edital->dataInicioEdital->format('Y');
+                }
+                else
+                {
+                    $ano       = $edital->dataInicioEdital->format('Y') + 1;
+                    $diretorio = $ano.'2/especial'; 
+                    $semestre  = '2º Semestre de '.$ano;
+                }
+                
+                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Projetos Educacionais de Ciências</p>";
+
+                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('REQUERIMENTO DE MATRÍCULA ALUNO ESPECIAL'), 1, 'C', true);
+                $pdf->Ln();   
+            }   
+        }
 
         $pdf->SetFont('Arial', '', 14);
         $pdf->SetFillColor(255,255,255);
         $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
         $pdf->Ln(5);
-                    
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->SetFillColor(190,190,190);
-        $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
-        $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
-        $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
-        $pdf->Ln();    
-        
-        $pdf->SetFont('Arial', '', 10);
 
-        $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
-
-        foreach($disciplinas as $disciplina)
-        {
-            $temp1 = explode('-', $disciplina->codigoDisciplina);
-
-            $temp = Posgraduacao::disciplina($temp1[0]);
+        if($nivel == 'ME')
+        { 
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->SetFillColor(190,190,190);
+            $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+            $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+            $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
+            $pdf->Ln();           
             
-            $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
-            $pdf->Cell(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
-            $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
+            $pdf->SetFont('Arial', '', 10);
+
+            $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+            foreach($disciplinas as $disciplina)
+            {
+                $temp1 = explode('-', $disciplina->codigoDisciplina);
+
+                $temp = Posgraduacao::disciplina($temp1[0]);
+                
+                $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
+                $pdf->Cell(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+                $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
+                $pdf->Ln();  
+            }
+
+            $pdf->Ln(5);
+            $pdf->Cell(75,  8, utf8_decode('Lorena, _____/_____/_______'), 0, 0, 'L', false);
+            $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+    
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'L', false);
+            $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode('Assinatura do Aluno'), 'T', 0, 'C', false);
+            $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln(10);
+    
+            /*$pdf->SetFont('Arial', '', 12);
+            $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);*/
+            
+            $pdf->SetFont('Arial', '', 12);
+            $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+            $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+            $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+    
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 'T', 0, 'C', false);
+            $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 'T', 0, 'C', false);
+            $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+    
+            $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
+            $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln(5);
+    
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
+            
+            $pdf->SetFont('Arial', '', 14);
+            $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
+            $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+    
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+            $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+            $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+
+            $sigla   = Str::lower($sigla);
+            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf");
+            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf";
+    
+            if (!file_exists($arquivo))
+            {
+                $pdf->Output('F', $arquivo);
+            }
+    
+            return $arquivo;
+        }
+
+        if($nivel == 'AE')
+        { 
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->SetFillColor(190,190,190);
+            $pdf->Cell(25,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+            $pdf->Cell(105, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+            $pdf->Cell(60,  8, utf8_decode('RESPONSÁVEL'), 1, 0, 'C', true);
+            $pdf->Ln();         
+            
+            $pdf->SetFont('Arial', '', 10);
+
+            $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao, 'S');
+
+            foreach($disciplinas as $disciplina)
+            {   
+                $temp = Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '04/03/2024', '16/06/2024');                
+                $docente = User::where('codpes', $disciplina->codigoPessoaDeferimento)->first();
+                
+                $pdf->Cell(25,  8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}/{$temp['numofe']}"), 1, 0, 'C', false);
+                $pdf->Cell(105, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
+                $pdf->Cell(60,  8, utf8_decode($docente->name), 1, 0, 'C', false);
+                $pdf->Ln();  
+            }
+
+            if ($dados->alunoEspecial == 'S')
+            {
+                $sim = '(  X  ) SIM';
+                $nao = '(     ) NÃO';
+            }
+            else
+            {
+                $nao = '(  X  ) NÃO';
+                $sim = '(     ) SIM';
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(130, 8, utf8_decode('JÁ CURSOU DISCIPLINA COMO ALUNO ESPECIAL NA EEL '), 1, 0, 'L', false);
+            $pdf->Cell(30, 8,  utf8_decode($sim), 1, 0, 'C', false);
+            $pdf->Cell(30, 8,  utf8_decode($nao), 1, 0, 'C', false);
+            $pdf->Ln(); 
+
+            $pdf->SetFont('Arial', 'I', 10);
+            $pdf->Cell(190, 8, utf8_decode('Ex-alunos especiais, estão dispensados de apresentar documentação pessoal no ato da matrícula'), 0, 0, 'C', false);
+            $pdf->Ln(); 
+            $pdf->Ln();        
+            $pdf->Ln();
+
+            $pdf->Ln(5);
+            $pdf->Cell(75,  8, utf8_decode('Lorena, _____/_____/_______'), 0, 0, 'L', false);
+            $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Cell(75,  8, utf8_decode(''), 'B', 0, 'C', false);
+            $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
+            $pdf->Ln();
+
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(75, 8, '', 0, 0, 'L', false);
+            $pdf->Cell(35, 8, '', 0, 0, 'L', false);
+            $pdf->Cell(75, 8, 'Assinatura do Aluno', 0, 0, 'C', false);
+            $pdf->Cell(5, 8, '', 0, 0, 'L', false); 
+
+            $pdf->Ln(); 
+            $pdf->Ln();
             $pdf->Ln();  
+
+            $y = $pdf->GetY() - 15;
+            
+            $pdf->SetFont('Arial', '', 12);
+            $pdf->Cell(56, 8, '', 0, 0, 'L', false);
+            $pdf->Cell(75, 8, '', 'B', 0, 'C', false);            
+            $pdf->Cell(54, 8, '', 0, 0, 'L', false);
+            $pdf->Ln();  
+
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(56, 8, '', 0, 0, 'L', false);
+            $pdf->Cell(75, 8, 'Coordenador do Programa', 0, 0, 'C', false);
+            $pdf->Cell(54, 8, '', 0, 0, 'L', false);      
+            $pdf->Ln(); 
+            $pdf->Ln();
+    
+            $sigla   = Str::lower($sigla);
+            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
+            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf";
+    
+            if (!file_exists($arquivo))
+            {
+                $pdf->Output('F', $arquivo);
+            }
         }
-
-        $pdf->Ln(5);
-        $pdf->Cell(75,  8, utf8_decode('Lorena, _____/_____/_______'), 0, 0, 'L', false);
-        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln();
-
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'L', false);
-        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  5, utf8_decode('Assinatura do Aluno'), 'T', 0, 'C', false);
-        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln(10);
-
-        /*$pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(75,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);*/
-        
-        $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
-        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
-        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln();
-
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(75,  5, utf8_decode('Nome / Carimbo do Orientador ou'), 'T', 0, 'C', false);
-        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  5, utf8_decode('Assinatura do Orientador'), 'T', 0, 'C', false);
-        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln();
-
-        $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
-        $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln(5);
-
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
-        
-        $pdf->SetFont('Arial', '', 14);
-        $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
-        $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln();
-
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
-        $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
-        $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
-        $pdf->Ln();
-
-        $sigla   = Str::lower($sigla);
-        $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf");
-        $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf";
-
-        if (!file_exists($arquivo))
-        {
-            $pdf->Output('F', $arquivo);
-        }
-
-        return $arquivo;
     }
 }

@@ -1,6 +1,6 @@
 <div class="form-group">
-    <label for="codigoTipoDocumento">Tipo<span class="text-danger">*</span></label>
-    <select class="form-control" id="codigoTipoDocumento" name="codigoTipoDocumento" required>
+    <label for="codigoTipoDocumento" class="font-weight-bold">Tipo<span class="text-danger">*</span></label>
+    <select class="form-control" id="codigoTipoDocumento" name="codigoTipoDocumento" required disabled>
         <option value="">Selecione o Tipo de Documento</option>
         @foreach($tipos as $tipo)
             @if ($arquivo->codigoTipoDocumento == $tipo->codigoTipoDocumento)
@@ -17,10 +17,12 @@
         Arquivo Atual : <a href="storage/{{ $arquivo->linkArquivo }}" target="_new">Visualizar</a>
         <input type="hidden" name="arquivoAtual" value="{{ $arquivo->linkArquivo }}">
     </div>
+
+    <input type="hidden" name="codigoTipoDocumento" value="{{ $arquivo->codigoTipoDocumento }}">
 @endif
 
 <div class="form-group">
-    <input type="file" class="form-control-file" id="arquivo" name="arquivo" required accept="application/pdf">
+    <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
 </div>
 
 <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">

@@ -62,26 +62,26 @@ class ResumoEscolarController extends Controller
             'codigoPessoaAlteracao'         => Auth::user()->codpes,
         ]);
 
-        $path = $request->file('historicoEscolar')->store('arquivos', 'public');
+        // $path = $request->file('historicoEscolar')->store('arquivos', 'public');
 
-        $historico = Arquivo::create([
-            'codigoUsuario'         => Auth::user()->id,
-            'codigoTipoDocumento'   => 5,
-            'linkArquivo'           => $path,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);
+        // $historico = Arquivo::create([
+        //     'codigoUsuario'         => Auth::user()->id,
+        //     'codigoTipoDocumento'   => 5,
+        //     'linkArquivo'           => $path,
+        //     'codigoPessoaAlteracao' => Auth::user()->codpes,
+        // ]);
 
-        if ($request->file('diplomaEscolar'))
-        {
-            $path = $request->file('diplomaEscolar')->store('arquivos', 'public');
+        // if ($request->file('diplomaEscolar'))
+        // {
+        //     $path = $request->file('diplomaEscolar')->store('arquivos', 'public');
 
-            $diploma = Arquivo::create([
-                'codigoUsuario'         => Auth::user()->id,
-                'codigoTipoDocumento'   => $request->inlineDocumentos,
-                'linkArquivo'           => $path,
-                'codigoPessoaAlteracao' => Auth::user()->codpes,
-            ]);
-        }
+        //     $diploma = Arquivo::create([
+        //         'codigoUsuario'         => Auth::user()->id,
+        //         'codigoTipoDocumento'   => $request->inlineDocumentos,
+        //         'linkArquivo'           => $path,
+        //         'codigoPessoaAlteracao' => Auth::user()->codpes,
+        //     ]);
+        // }
 
         if(!empty($request->codigoInscricao))
         {
@@ -91,25 +91,27 @@ class ResumoEscolarController extends Controller
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
 
-            $inscricaoHistorico = InscricoesArquivos::create([
-                'codigoInscricao'       => $request->codigoInscricao,
-                'codigoArquivo'         => $historico->codigoArquivo,
-                'codigoPessoaAlteracao' => Auth::user()->codpes,
-            ]);
+            // $inscricaoHistorico = InscricoesArquivos::create([
+            //     'codigoInscricao'       => $request->codigoInscricao,
+            //     'codigoArquivo'         => $historico->codigoArquivo,
+            //     'codigoPessoaAlteracao' => Auth::user()->codpes,
+            // ]);
 
-            if ($diploma)
-            {
-                $inscricaoDiploma = InscricoesArquivos::create([
-                    'codigoInscricao'       => $request->codigoInscricao,
-                    'codigoArquivo'         => $diploma->codigoArquivo,
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]); 
-            }
+            // if ($diploma)
+            // {
+            //     $inscricaoDiploma = InscricoesArquivos::create([
+            //         'codigoInscricao'       => $request->codigoInscricao,
+            //         'codigoArquivo'         => $diploma->codigoArquivo,
+            //         'codigoPessoaAlteracao' => Auth::user()->codpes,
+            //     ]); 
+            // }
 
             $voltar = "inscricao/{$request->codigoInscricao}/escolar";
         }
 
-        if($escolar && $inscricaoResumoEscolar && $inscricaoHistorico && $inscricaoDiploma) 
+        //if($escolar && $inscricaoResumoEscolar && $inscricaoHistorico && $inscricaoDiploma) 
+
+        if($escolar && $inscricaoResumoEscolar) 
         {
             \DB::commit();
         } 

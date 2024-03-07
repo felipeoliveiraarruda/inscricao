@@ -55,9 +55,9 @@
                                             <td>{{ $emergencia->telefonePessoaEmergencia }}</td>
                                             <td>
                                                 @if ($status == 'N')
-                                                <!--<a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
                                                     <i class="far fa-edit"></i>
-                                                </a>-->  
+                                                </a>
                                                 @endif                                                
                                             </td>
                                         </tr>
@@ -67,7 +67,7 @@
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Logradrouro {{ $emergencia->codigoEmergenciaInscricao }}</th>
+                                                <th scope="col">Logradrouro</th>
                                                 <th scope="col">Cidade/Uf</th>
                                                 <th scope="col">CEP</th>
                                             </tr>

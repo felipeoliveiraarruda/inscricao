@@ -26,6 +26,11 @@ class RecursoFinanceiro extends Model
         'tipoBolsaFinanceiro',
         'inicioRecursoFinanceiro',
         'finalRecursoFinanceiro',
+        'anoTitulacaoRecursoFinanceiro',
+        'iesTitulacaoRecursoFinanceiro',
+        'agenciaRecursoFinanceiro',
+        'contaRecursoFinanceiro',
+        'localRecursoFinanceiro',
         'codigoPessoaAlteracao',
     ];
 

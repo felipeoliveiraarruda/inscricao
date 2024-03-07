@@ -49,7 +49,6 @@
                                                 <th scope="col">Posição Ocupada</th>
                                                 <th scope="col">Início</th>
                                                 <th scope="col">Fim</th>
-                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -60,16 +59,12 @@
                                             <td>{{ $profissional->inicioExperiencia->format('d/m/Y') }}</td>
                                             <td>{{ ($profissional->finalExperiencia == '' ? '' : $profissional->finalExperiencia->format('d/m/Y')) }}</td>
                                             <td>
-                                                @if (!empty($profissional->codigoInscricaoExperiencia))
-                                                <i class="fa fa-check text-success"></i>
-                                                @else
-                                                    <i class="fa fa-times text-danger"></i>
-                                                @endif
-                                            </td>
                                             <td>
+                                                @if ($status == 'N')
                                                 <a href="inscricao/{{ $codigoInscricao }}/profissional/create/{{ $profissional->codigoExperiencia }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
                                                     <i class="far fa-edit"></i>
-                                                </a>                                                
+                                                </a>
+                                                @endif                                               
                                             </td>
                                         </tr>
                                         @endforeach

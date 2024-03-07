@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
 use App\Http\Controllers\ArquivoController;
+use App\Http\Controllers\Arquivo\ImagemController;
+use App\Http\Controllers\Arquivo\DocumentoController;
 use App\Http\Controllers\EnderecoController;
 use App\Http\Controllers\DadosPessoaisController;
 use App\Http\Controllers\EmergenciaController;
@@ -20,6 +22,7 @@ use App\Http\Controllers\PAE\RecursoPaeController;
 
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
+Route::get('requerimento/{codigoInscricao}', [InscricaoController::class, 'comprovante']);
 
 Route::middleware(['auth','verified'])->group(function () 
 {
@@ -99,8 +102,11 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/bolsista/create', [InscricaoController::class, 'bolsista_create']);
         Route::post('{codigoInscricao}/bolsista/store', [InscricaoController::class, 'bolsista_store']);
 
+         /* Documentos Obrigatorios Inscricao */
+         Route::get('{codigoInscricao}/obrigatorio/',   [InscricaoController::class, 'obrigatorio']);
+
         /* Anexar arquivos já existentes a inscrição */
-        Route::post('anexar',   [InscricaoController::class, 'anexar']);
+        //Route::post('anexar',   [InscricaoController::class, 'anexar']);
 
         /* Requerimento de Inscriçao */
         Route::get('{codigoInscricao}/requerimento/',       [InscricaoController::class, 'requerimento']);
@@ -115,6 +121,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('deferimento/{codigoEdital}',                        [DeferimentoController::class, 'index']);
         Route::post('deferimento/',                                     [DeferimentoController::class, 'store']);
         Route::get('deferimento/destroy/{codigoInscricaoDisciplina}',   [DeferimentoController::class, 'destroy']);
+        Route::get('deferimento/{codigoEdital}/primeira-matricula',     [DeferimentoController::class, 'primeira_matricula']);
 
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);
@@ -173,11 +180,27 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::post('financeiro/',                           [RecursoFinanceiroController::class, 'store']);
     Route::patch('financeiro/{codigoRecursoFinanceiro}', [RecursoFinanceiroController::class, 'update']);
 
-    /* Arquivos */
+    /* Arquivos 
     Route::get('arquivo/{codigoArquivo}/edit/{codigoInscricao?}',       [ArquivoController::class, 'edit']);
     Route::patch('arquivo/{codigoArquivo}',                             [ArquivoController::class, 'update']);
     Route::get('arquivo/{codigoArquivo}/destroy/{codigoInscricao?}',    [ArquivoController::class, 'destroy']);
-    Route::get('arquivo/{codigoArquivo}/anexar/{codigoInscricao?}',     [ArquivoController::class, 'anexar']);
+    Route::get('arquivo/{codigoArquivo}/anexar/{codigoInscricao?}',     [ArquivoController::class, 'anexar']);*/
+    
+    /* Arquivos Imagem */ 
+    Route::get('imagem/{codigoInscricao}/{codigoTipoDocumento}',    [ImagemController::class, 'create']);
+    Route::post('imagem/{codigoInscricao}',                         [ImagemController::class, 'store']);
+    Route::get('imagem/{codigoArquivo}/edit/{codigoInscricao}',     [ImagemController::class, 'edit']);
+    Route::patch('imagem/{codigoArquivo}',                          [ImagemController::class, 'update']);
+    Route::get('imagem/{codigoArquivo}/destroy/{codigoInscricao}',  [ImagemController::class, 'destroy']);
+    Route::get('imagem/{codigoArquivo}/anexar/{codigoInscricao}',   [ImagemController::class, 'anexar']);
+
+    /* Arquivos Documento */ 
+    Route::get('documento/{codigoInscricao}/{codigoTipoDocumento}',     [DocumentoController::class, 'create']);
+    Route::post('documento/{codigoInscricao}',                          [DocumentoController::class, 'store']);
+    Route::get('documento/{codigoArquivo}/edit/{codigoInscricao}',      [DocumentoController::class, 'edit']);
+    Route::patch('documento/{codigoArquivo}',                           [DocumentoController::class, 'update']);
+    Route::get('documento/{codigoArquivo}/destroy/{codigoInscricao}',   [DocumentoController::class, 'destroy']);
+    Route::get('documento/{codigoArquivo}/anexar/{codigoInscricao}',    [DocumentoController::class, 'anexar']);
 
     /* PAE - Recurso*/
     Route::get('recurso/{codigoRecurso}/edit',      [RecursoPaeController::class, 'edit']);

@@ -49,7 +49,6 @@
                                                 <th scope="col">Título/Especialidade</th>
                                                 <th scope="col">Início</th>
                                                 <th scope="col">Fim</th>
-                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -63,31 +62,12 @@
                                             <td>{{ $escolar->especialidadeResumoEscolar }}</td>
                                             <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
                                             <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('d/m/Y')) }}</td>
-
-
                                             <td>
-                                                @if (!empty($escolar->codigoInscricaoResumoEscolar))
-                                                <i class="fa fa-check text-success"></i>
-                                                @else
-                                                    <i class="fa fa-times text-danger"></i>
+                                                @if ($status == 'N')  
+                                                    <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>
                                                 @endif
-
-                                                @if (!empty($historico))
-                                                <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Histórico">
-                                                    <i class="fas fa-user-graduate"></i>
-                                                </a>
-                                                @endif
-
-                                                @if (!empty($diploma))
-                                                <a href="{{ asset('storage/'.$diploma->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Diploma/Certificado">
-                                                    <i class="fas fa-graduation-cap"></i>
-                                                </a>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach

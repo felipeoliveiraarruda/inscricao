@@ -48,12 +48,19 @@ class RecursoFinanceiroController extends Controller
             'codigoUsuario'                 => Auth::user()->id,
             'bolsaRecursoFinanceiro'        => $request->inlineBolsa,
             'solicitarRecursoFinanceiro'    => $request->inlineSolicitar,
-            'orgaoRecursoFinanceiro'        => $request->orgaoRecursoFinanceiro,
-            'tipoBolsaFinanceiro'           => $request->tipoBolsaFinanceiro,
-            'inicioRecursoFinanceiro'       => $request->inicioRecursoFinanceiro,
-            'finalRecursoFinanceiro'        => $request->finalRecursoFinanceiro,
+            'orgaoRecursoFinanceiro'        => (empty($request->orgaoRecursoFinanceiro) ? NULL : $request->orgaoRecursoFinanceiro),
+            'tipoBolsaFinanceiro'           => (empty($request->tipoBolsaFinanceiro) ? NULL : $request->tipoBolsaFinanceiro),
+            'inicioRecursoFinanceiro'       => (empty($request->inicioRecursoFinanceiro) ? NULL : $request->inicioRecursoFinanceiro),
+            'finalRecursoFinanceiro'        => (empty($request->finalRecursoFinanceiro) ? NULL : $request->finalRecursoFinanceiro),
+            'anoTitulacaoRecursoFinanceiro' => (empty($request->anoTitulacaoRecursoFinanceiro) ? NULL : $request->anoTitulacaoRecursoFinanceiro),
+            'iesTitulacaoRecursoFinanceiro' => (empty($request->iesTitulacaoRecursoFinanceiro) ? NULL : $request->iesTitulacaoRecursoFinanceiro),
+            'agenciaRecursoFinanceiro'      => (empty($request->agenciaRecursoFinanceiro) ? NULL : $request->agenciaRecursoFinanceiro),
+            'contaRecursoFinanceiro'        => (empty($request->contaRecursoFinanceiro) ? NULL : $request->contaRecursoFinanceiro),
+            'localRecursoFinanceiro'        => (empty($request->localRecursoFinanceiro) ? NULL : $request->localRecursoFinanceiro),
             'codigoPessoaAlteracao'         => Auth::user()->codpes,
         ]);
+
+        
         
         if(!empty($request->codigoInscricao))
         {

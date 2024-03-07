@@ -49,7 +49,6 @@
                                                 <th scope="col">Leitura</th>
                                                 <th scope="col">Redação</th>
                                                 <th scope="col">Conversação</th>
-                                                <th scope="col">Status</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
@@ -60,16 +59,11 @@
                                             <td>{{ $idioma->redacaoIdioma }}</td>
                                             <td>{{ $idioma->conversacaoIdioma }}</td>
                                             <td>
-                                                @if (!empty($idioma->codigoInscricaoIdioma))
-                                                <i class="fa fa-check text-success"></i>
-                                                @else
-                                                    <i class="fa fa-times text-danger"></i>
-                                                @endif
-                                            </td>
-                                            <td>
+                                                @if ($status == 'N')
                                                 <a href="inscricao/{{ $codigoInscricao }}/idioma/create/{{ $idioma->codigoIdioma }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
                                                     <i class="far fa-edit"></i>
                                                 </a>
+                                                @endif 
                                             </td>
                                         </tr>
                                         @endforeach

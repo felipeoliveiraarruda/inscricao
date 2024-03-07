@@ -12,6 +12,7 @@ use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\Inscricao;
 use App\Models\InscricoesDisciplinas;
+use App\Models\Pdf\Matricula;
 use Uspdev\Replicado\Posgraduacao;
 use Carbon\Carbon;
 
@@ -24,34 +25,47 @@ class DeferimentoController extends Controller
      */
     public function index($codigoEdital)
     {
-       $disciplina = array();
+        $disciplina = array();
 
-       $edital = Edital::find($codigoEdital);
+        $edital = Edital::find($codigoEdital);
 
-       $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+        if($edital->dataFinalRecurso < Carbon::now())
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'Período de Deferimento encerrado';
 
-       if (!empty($temp))
-       {
-            array_push($disciplina, $temp[0]['sgldis']);
-       }
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
+        }
 
-       $inscritos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
-                                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
-                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                         ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
-                                         ->where('inscricoes_disciplinas.statusDisciplina', 'N')
-                                         ->orderBy('users.name')
-                                         ->get();
+        $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+
+        if (!empty($temp))
+        {
+                array_push($disciplina, $temp[0]['sgldis']);
+        }
+
+        $inscritos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
+                                            ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                            ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
+                                            ->where('inscricoes_disciplinas.statusDisciplina', 'N')
+                                            ->where('inscricoes.statusInscricao', 'P')
+                                            ->orderBy('users.name')
+                                            ->get();
 
         $deferidos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
                                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                         ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
                                         ->where('inscricoes_disciplinas.statusDisciplina', 'D')
+                                        ->where('inscricoes.statusInscricao', 'P')
                                         ->orderBy('users.name')
-                                        ->get();  
-                                        
-                                        
+                                        ->get();                                            
+                                                                                
         $temp2 = Posgraduacao::disciplina($disciplina[0]);
 
         return view('inscricao.deferimento',
@@ -146,5 +160,52 @@ class DeferimentoController extends Controller
         request()->session()->flash('alert-success', 'Deferimento desfeito com sucesso.');    
         
         return redirect(url()->previous());
+    }
+
+
+    public function listar($codigoEdital)
+    {
+       $disciplinas = InscricoesDisciplinas::select('inscricoes_disciplinas.codigoDisciplina')
+                                         ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                                         ->where('inscricoes.codigoEdital', $codigoEdital)
+                                         ->groupBy('inscricoes_disciplinas.codigoDisciplina')
+                                         ->orderBy('inscricoes_disciplinas.codigoDisciplina')
+                                         ->get();
+                                         
+        return view('deferimento',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'disciplinas'   => $disciplinas,
+        ]);
+    }
+
+    public function primeira_matricula($codigoEdital)
+    {
+        $deferidos = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
+                                        ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->where('inscricoes.codigoEdital', $codigoEdital)
+                                        ->where('inscricoes_disciplinas.statusDisciplina', 'D')
+                                        ->where('inscricoes.statusInscricao', 'P')
+                                        ->groupBy('inscricoes.codigoInscricao')
+                                        ->orderBy('users.name')
+                                        ->get();
+
+        foreach($deferidos as $deferido)
+        {
+            $edital = Edital::obterEditalInscricao($deferido->codigoInscricao);
+
+            $pdf = new Matricula();
+
+            if ($edital->codigoCurso == 97002)
+            {
+                $anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $deferido->codigoInscricao);
+            }
+
+            if ($edital->codigoCurso == 97004)
+            {
+                $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $deferido->codigoInscricao);
+            }
+        }
     }
 }

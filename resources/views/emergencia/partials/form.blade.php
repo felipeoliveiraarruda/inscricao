@@ -12,7 +12,7 @@
 </div> 
 
 
-@if (!empty($emergencia->mesmoEndereco))
+@if (empty($emergencia->codigoEmergenciaInscricao))
 <div class="form-group">
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="mesmoEnderecoOptions[]" id="mesmoEndereco" value="S">

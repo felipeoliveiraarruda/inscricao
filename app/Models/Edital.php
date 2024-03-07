@@ -95,8 +95,16 @@ class Edital extends Model
         }
         else
         {
-            $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
-                            ->where('codigoEdital', $codigoEdital)->first();   
+            if($edital->codigoNivel == 3)
+            {
+                $edital = Edital::select(\DB::raw('(YEAR(editais.dataDoeEdital) + 1) AS ano, IF(MONTH(editais.dataDoeEdital) > 7, 1, 2) AS semestre'))
+                                ->where('codigoEdital', $codigoEdital)->first();   
+            }
+            else
+            {
+                $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
+                                ->where('codigoEdital', $codigoEdital)->first();   
+            }
         }
 
         if ($curso)

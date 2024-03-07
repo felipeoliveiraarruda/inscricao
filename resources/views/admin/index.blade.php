@@ -43,10 +43,16 @@
                                                 <a href="admin/listar-inscritos/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Inscritos">
                                                     <i class="fas fa-list"></i>
                                                 </a>
-
+                                                
+                                                @if ($edital->codigoNivel == 1)
+                                                <a href="admin/deferimento/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Deferimento">
+                                                    <i class="fas fa-list-ol"></i>
+                                                </a>
+                                                @else
                                                 <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
                                                     <i class="fas fa-tasks"></i>
                                                 </a>
+                                                @endif
 
                                                 @if ($pae == true && $edital->codigoNivel == 5)
                                                     <!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>-->

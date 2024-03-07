@@ -57,7 +57,7 @@ class AdminController extends Controller
         [
             'editais' => $editais,
             'utils'   => new Utils,    
-            'docente' => (in_array("Docenteusp", session('vinculos'))),
+            'docente' => (in_array("Docente", session('vinculos')) || in_array("Docenteusp", session('vinculos')) ? true : false),
             'level'   => session('level'),
             'pae'     => ((Auth::user()->id == 1 || Auth::user()->id == 4 || Auth::user()->id == 26) ? true : false),
         ]);
@@ -82,7 +82,7 @@ class AdminController extends Controller
         } 
         else 
         {
-            if ((in_array("Docenteusp", session('vinculos')) == true) && (session('level') == 'manager'))
+            if (((in_array("Docenteusp", session('vinculos')) == true) || (in_array("Docente", session('vinculos')) == true)) && (session('level') == 'manager'))
             {
                 $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae', 'avaliadores.codigoAvaliador'))
                                    ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
