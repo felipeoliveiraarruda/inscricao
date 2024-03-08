@@ -50,63 +50,9 @@
         <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">8.Expectativas
             <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
-
-        @if ($status == 'P')
-        <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">9.Documentos Obrigatórios
-            <i class="fa fa-check text-success float-right"></i>
-        </a> 
-        @endif
-        
-        {{-- <a href="inscricao/{{ $codigoInscricao }}/curriculo" class="list-group-item list-group-item-action">9.Currículo
-            <i class="fa @if (Session::get('total')['curriculo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-        </a>
-    
-        @if (Session::get('nivel') == 2 || Session::get('nivel') == 3)
-
-            @if (Session::get('nivel') == 2)
-                <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">10.Pré-projeto
-                    <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-                </a>
-
-                @if ($total > 3 && (Session::get('total')['foto'] > 0))
-                    <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">11.Requerimento de Inscrição</a>
-                @endif
-            @endif
-
-            @if (Session::get('nivel') == 3)
-                <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">10.Projeto de Pesquisa
-                    <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-                </a>
-
-                <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">11.Plano de Estudos
-                    <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-                </a>
-
-                <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">11.Plano de Estudos
-                    <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-                </a>
-
-                @if ($total > 3 && (Session::get('total')['foto'] > 0))
-                    <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">11.Requerimento de Inscrição</a>
-                @endif
-            @endif
-
-
-        @else
-            @if ($total > 2 && (Session::get('total')['foto'] > 0))
-                <a href="inscricao/{{ $codigoInscricao }}/requerimento" class="list-group-item list-group-item-action">10.Requerimento de Inscrição
-                    <i class="fa @if (Session::get('total')['requerimento'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-                </a>
-            @endif
-        @endif         --}}
     @endif
 
     @if(!empty($codigoEdital))
-
-        @if(Session::get('level') == 'admin' || Session::get('level') == 'manager')
-            <a href="admin/listar-inscritos/{{ $codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
-        @else
-            <a href="inscricao/{{ $codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
-        @endif
+        <a href="admin/listar-inscritos/{{ $codigoEdital }}" class="list-group-item list-group-item-action">Voltar</a>
     @endif
 </div>

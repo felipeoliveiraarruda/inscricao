@@ -10,10 +10,12 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Experiência Em Ensino
-                    @if ($status == 'N')
-                        <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                    @if(Session::get('level') == 'user')
+                        @if ($status == 'N')
+                            <a href="inscricao/{{ $codigoInscricao }}/ensino/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        @endif
                     @endif
                 </h5>
 
@@ -61,11 +63,13 @@
                                             <td>{{ $ensino->inicioExperiencia->format('d/m/Y') }}</td>
                                             <td>{{ ($ensino->finalExperiencia == '' ? '' : $ensino->finalExperiencia->format('d/m/Y')) }}</td>
                                             <td>
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/ensino/create/{{ $ensino->codigoExperiencia }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>
-                                                @endif   
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')
+                                                    <a href="inscricao/{{ $codigoInscricao }}/ensino/create/{{ $ensino->codigoExperiencia }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>
+                                                    @endif   
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach

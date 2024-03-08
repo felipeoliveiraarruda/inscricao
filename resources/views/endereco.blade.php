@@ -56,10 +56,12 @@
                                             <td>{{ $enderecos->localidadeEndereco }}/{{ $enderecos->ufEndereco }}</td>
                                             <td>{{ $enderecos->cepEndereco }}</td>
                                             <td>
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/endereco/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>  
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')
+                                                    <a href="inscricao/{{ $codigoInscricao }}/endereco/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>  
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>

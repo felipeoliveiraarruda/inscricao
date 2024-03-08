@@ -54,11 +54,13 @@
                                             <td>{{ $emergencia->nomePessoaEmergencia }}</td>
                                             <td>{{ $emergencia->telefonePessoaEmergencia }}</td>
                                             <td>
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>
-                                                @endif                                                
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')
+                                                    <a href="inscricao/{{ $codigoInscricao }}/emergencia/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>
+                                                    @endif      
+                                                @endif
                                             </td>
                                         </tr>
                                     </table>

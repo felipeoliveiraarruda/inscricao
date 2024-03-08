@@ -10,10 +10,12 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Conhecimento de Idiomas Estrangeiros
-                    @if ($status == 'N')
-                    <a href="inscricao/{{ $codigoInscricao }}/idioma/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>  
-                    </a>
+                    @if(Session::get('level') == 'user')
+                        @if ($status == 'N')
+                        <a href="inscricao/{{ $codigoInscricao }}/idioma/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>  
+                        </a>
+                        @endif
                     @endif
                 </h5>
 
@@ -59,11 +61,13 @@
                                             <td>{{ $idioma->redacaoIdioma }}</td>
                                             <td>{{ $idioma->conversacaoIdioma }}</td>
                                             <td>
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/idioma/create/{{ $idioma->codigoIdioma }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>
-                                                @endif 
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')
+                                                    <a href="inscricao/{{ $codigoInscricao }}/idioma/create/{{ $idioma->codigoIdioma }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                        <i class="far fa-edit"></i>
+                                                    </a>
+                                                    @endif 
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach

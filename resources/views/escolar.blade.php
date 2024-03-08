@@ -10,10 +10,12 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Resumo Escolar
-                    @if ($status == 'N')
-                    <a href="inscricao/{{ $codigoInscricao }}/escolar/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>                        
-                    </a>
+                    @if(Session::get('level') == 'user')
+                        @if ($status == 'N')
+                        <a href="inscricao/{{ $codigoInscricao }}/escolar/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                            <i class="fa fa-plus"></i>                        
+                        </a>
+                        @endif
                     @endif
                 </h5>
 
@@ -63,10 +65,12 @@
                                             <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
                                             <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('d/m/Y')) }}</td>
                                             <td>
-                                                @if ($status == 'N')  
-                                                    <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                        <i class="far fa-edit"></i>
-                                                    </a>
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')  
+                                                        <a href="inscricao/{{ $codigoInscricao }}/escolar/create/{{ $escolar->codigoResumoEscolar }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                            <i class="far fa-edit"></i>
+                                                        </a>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>

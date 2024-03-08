@@ -53,10 +53,12 @@
                                             <td class="text-center">{{ $pessoais->cpf }}</td>
                                             <td class="text-center">{{ $pessoais->rg }}</td>                                          
                                             <td class="text-center">
-                                                @if ($status == 'N')
-                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                    <i class="far fa-edit"></i>
-                                                </a>  
+                                                @if(Session::get('level') == 'user')
+                                                    @if ($status == 'N')
+                                                        <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                            <i class="far fa-edit"></i>
+                                                        </a> 
+                                                    @endif 
                                                 @endif                                             
                                             </td>
                                         </tr>
