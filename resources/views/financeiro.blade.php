@@ -10,10 +10,12 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Recursos Financeiros
-                    @if (empty($financeiros->codigoInscricaoRecursoFinanceiro))
-                        <a href="inscricao/{{ $codigoInscricao }}/financeiro/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                    @if(Session::get('level') == 'user')
+                        @if (empty($financeiros->codigoInscricaoRecursoFinanceiro))
+                            <a href="inscricao/{{ $codigoInscricao }}/financeiro/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        @endif
                     @endif
                 </h5>
 
@@ -75,6 +77,7 @@
                                                         <th scope="col">Agência</th>
                                                         <th scope="col">Conta Corrente</th>
                                                         <th scope="col">Cidade/UF</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </thead>                             
                                                 <tr>
@@ -83,6 +86,15 @@
                                                     <td>{{ $financeiros->agenciaRecursoFinanceiro }}</td>
                                                     <td>{{ $financeiros->contaRecursoFinanceiro }}</td>
                                                     <td>{{ $financeiros->localRecursoFinanceiro }}</td>
+                                                    <td>
+                                                    @if(Session::get('level') == 'user')
+                                                        @if ($status == 'N')
+                                                            <a href="inscricao/{{ $codigoInscricao }}/financeiro/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                                <i class="far fa-edit"></i>
+                                                            </a> 
+                                                        @endif 
+                                                    @endif    
+                                                    </td>
                                                 </tr>                                                
                                             </table>
                                         @endif

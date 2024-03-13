@@ -33,36 +33,9 @@
                 <input type="text" class="form-control" id="cpf" name="cpf" value="{{ old('cpf') ?? Auth::user()->cpf }}" required disabled>
             @endif
         </div>
-        <div class="col">
-            <label for="rg" class="font-weight-bold">{{ __('RG') }}/ RNE / Passaporte<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') ?? Auth::user()->rg }}" required>
-        </div>
-        <div class="col">
-            <label for="dataEmissaoRG" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
-            <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}" required>
-        </div>
-        
-        <div class="col-2">
-            <label for="ufEmissorRG" class="font-weight-bold">{{ __('Estado') }}<span class="text-danger">*</span></label>
-            <select class="form-control" id="ufEmissorRG" name="ufEmissorRG" required>
-                <option value="">Selecione o estado</option>
-                @foreach($estados as $estado)
-                    <option value="{{ $estado['sglest'] }}" {{ old('ufEmissorRG') == $estado['sglest'] ? "selected" : $pessoais->ufEmissorRG == $estado['sglest'] ? "selected" : "" }}>{{ $estado['nomest'] }}</option>
-                @endforeach
-            </select> 
-        </div> 
 
         <div class="col">
-            <label for="orgaoEmissorRG" class="font-weight-bold">Orgão Emissor<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="orgaoEmissorRG" name="orgaoEmissorRG" value="{{ old('orgaoEmissorRG') ?? $pessoais->orgaoEmissorRG ?? '' }}" required>
-        </div>  
-    </div>
-</div>
-
-<div class="form-group">  
-    <div class="form-row">
-        <div class="col">
-            <label for="paisPessoal" class="font-weight-bold">País<span class="text-danger">*</span></label>
+            <label for="paisPessoal" class="font-weight-bold">Nacionalidade<span class="text-danger">*</span></label>
             <select class="form-control" id="paisPessoal" name="paisPessoal" required>
                 <option value="">Selecione o país</option>
                 @foreach($paises as $pais)
@@ -89,11 +62,17 @@
             </select> 
         </div>
         @else
-        <div class="col">
-            <label for="naturalidadePessoal" class="font-weight-bold">{{ __('Cidade') }}<span class="text-danger">*</span></label>
-            @php
-            $cidades = App\Models\Utils::listarLocalidades($pessoais->paisPessoal, $pessoais->estadoPessoal);
-            @endphp
+        <div class="col" id="exibirCidades">
+            <label for="naturalidadePessoal" class="font-weight-bold">{{ __('Cidade') }}<span class="text-danger">*</span></label>            
+                @if ($pessoais->paisPessoal == 1)
+                    @php
+                        $cidades = App\Models\Utils::listarLocalidades($pessoais->paisPessoal, $pessoais->estadoPessoal);
+                    @endphp
+                @else
+                    @php
+                        $cidades = App\Models\Utils::listarLocalidades($pessoais->paisPessoal);
+                    @endphp
+                @endif            
             <select class="form-control" id="naturalidadePessoal" name="naturalidadePessoal" required>
                 <option value="">Selecione a cidade</option>
                 @foreach($cidades as $cidade)
@@ -103,7 +82,57 @@
         </div>
         @endif
     </div>
-</div>        
+</div>
+
+
+<div class="form-group" id="mostrarDocumentoNacional">  
+    <div class="form-row">
+        <div class="col">
+            <label for="rg" class="font-weight-bold">{{ __('RG') }}<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') ?? Auth::user()->rg }}" required>
+        </div>
+        <div class="col">
+            <label for="dataEmissaoRG" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}" required>
+        </div>
+        
+        <div class="col">
+            <label for="ufEmissorRG" class="font-weight-bold">{{ __('Estado') }}<span class="text-danger">*</span></label>
+            <select class="form-control" id="ufEmissorRG" name="ufEmissorRG" required>
+                <option value="">Selecione o estado</option>
+                @foreach($estados as $estado)
+                    <option value="{{ $estado['sglest'] }}" {{ old('ufEmissorRG') == $estado['sglest'] ? "selected" : $pessoais->ufEmissorRG == $estado['sglest'] ? "selected" : "" }}>{{ $estado['nomest'] }}</option>
+                @endforeach
+            </select> 
+        </div> 
+
+        <div class="col">
+            <label for="orgaoEmissorRG" class="font-weight-bold">Orgão Emissor<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="orgaoEmissorRG" name="orgaoEmissorRG" value="{{ old('orgaoEmissorRG') ?? $pessoais->orgaoEmissorRG ?? '' }}" required>
+        </div>
+    </div>
+</div>
+
+<div class="form-group" id="mostrarDocumentoInternacional">  
+    <div class="form-row">
+        <div class="col">
+            <label for="tipoDocumento" class="font-weight-bold">Tipo do Documento<span class="text-danger">*</span></label>
+            <select class="form-control" id="tipoDocumento" name="tipoDocumento" required>
+                <option value="">Selecione o tipo de documento</option>
+                <option value="RNE" {{ old('tipoDocumento') == "RNE" ? "selected" : $pessoais->tipoDocumento == "RNE" ? "selected" : "" }}>RNE</option>
+                <option value="Passaporte" {{ old('tipoDocumento') == "Passaporte" ? "selected" : $pessoais->tipoDocumento == "Passaporte" ? "selected" : "" }}>Passaporte</option>
+            </select>         
+        </div>
+        <div class="col">
+            <label for="numeroDocumento" class="font-weight-bold">Número do Documento<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="numeroDocumento" name="numeroDocumento" value="{{ old('numeroDocumento') ?? $pessoais->numeroDocumento }}">
+        </div>
+        <div class="col">
+            <label for="dataEmissaoRG" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}" required>
+        </div>
+    </div>
+</div>      
 
 <div class="form-group">  
     <div class="form-row">
@@ -123,7 +152,7 @@
                 @foreach($racas as $raca)
                     <option value="{{ $raca }}" {{ old('racaPessoal') == $raca ? "selected" : $pessoais->racaPessoal == $raca ? "selected" : "" }}>{{ $raca }}</option>
                 @endforeach
-            </select> 
+            </select>
         </div>
         <div class="col">
             <label for="estadoCivilPessoal" class="font-weight-bold">Estado Civil<span class="text-danger">*</span></label>

@@ -6,7 +6,8 @@
         </div>
         <div class="form-group">                            
             <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="telefonePessoaEmergencia" name="telefonePessoaEmergencia" value="{{ old('telefonePessoaEmergencia') ?? $emergencia->telefonePessoaEmergencia ?? '' }}"  required>
+            <input type="text" class="form-control" id="telefonePessoaEmergencia" name="telefonePessoaEmergencia" value="{{ old('telefonePessoaEmergencia') ?? $emergencia->telefonePessoaEmergencia ?? '' }}" required>
+            <small id="telefoneAjudaBlock" class="form-text text-muted"></small> 
         </div>         
     </div>
 </div> 

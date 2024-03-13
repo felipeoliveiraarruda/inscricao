@@ -27,7 +27,7 @@
                             @include('arquivo.documento.detalhes')
                         </div>
 
-                        @if ($codigoTipoDocumento == 29)
+                        @if ($codigoTipoDocumento == 31)
                         <div class="form-group">  
                             <label for="bolsaRecursoFinanceiro" class="font-weight-bold">O Plano de Estudos possui Co-Orientador?<span class="text-danger">*</span></label>
                             <div class="form-group">

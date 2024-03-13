@@ -10,10 +10,12 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">{{ $titulo }}
-                    @if (empty($expectativas->expectativasInscricao))
-                        <a href="inscricao/{{ $codigoInscricao }}/expectativas/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                            <i class="fa fa-plus"></i>
-                        </a>
+                    @if(Session::get('level') == 'user')
+                        @if (empty($expectativas->expectativasInscricao))
+                            <a href="inscricao/{{ $codigoInscricao }}/expectativas/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        @endif
                     @endif
                 </h5>
 

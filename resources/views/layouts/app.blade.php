@@ -114,14 +114,41 @@
 
         $("#paisPessoal").change(function() 
         {  
-          $.ajax({          
-            url: "/estados/"+$("#paisPessoal").val(),
-            type: "get",          
-            success: function(response)
-            {
-              $("#exibirEstados").html(response);
-            },
-          });        
+          if ($("#paisPessoal").val() == 1)
+          {
+            $.ajax({          
+              url: "/estados/"+$("#paisPessoal").val(),
+              type: "get",          
+              success: function(response)
+              {
+                $("#exibirEstados").html(response);
+              },
+            }); 
+          }
+          else
+          {
+            $.ajax({          
+              url: "/estados/"+$("#paisPessoal").val(),
+              type: "get",          
+              success: function(response)
+              {
+                $("#exibirEstados").html(response);
+              },
+            }); 
+
+            console.log('Carrega estados');
+
+            $.ajax({          
+              url: "/cidades/"+$("#paisPessoal").val()+"/''",
+              type: "get",          
+              success: function(response)
+              {
+                $("#exibirCidades").html(response);
+              },
+            });
+
+            console.log('Carrega cidades');
+          }
         });
 
         $("#estadoPessoal").change(function() 
@@ -207,6 +234,32 @@
 
         $("#dadosBolsa").hide();
         $("#solicitarBolsaDados").hide();
+
+        if ($("#inlineBolsaSim").prop('checked')) 
+        {
+            $("#orgaoRecursoFinanceiro").prop('required',true);
+            $("#tipoBolsaFinanceiro").prop('required',true);
+            $("#inicioRecursoFinanceiro").prop('required',true);
+            $("#finalRecursoFinanceiro").prop('required',true);
+
+            $("#dadosBolsa").show();
+        }
+
+        if ($("#inlineSolicitarSim").prop('checked')) 
+        {
+          $("#orgaoRecursoFinanceiro").prop('required',false);
+          $("#tipoBolsaFinanceiro").prop('required',false);
+          $("#inicioRecursoFinanceiro").prop('required',false);
+          $("#finalRecursoFinanceiro").prop('required',false);
+
+          $("#anoTitulacaoRecursoFinanceiro").prop('required',true);
+          $("#iesTitulacaoRecursoFinanceiro").prop('required',true);
+          $("#agenciaRecursoFinanceiro").prop('required',true);
+          $("#contaRecursoFinanceiro").prop('required',true);
+          $("#localRecursoFinanceiro").prop('required',true);
+
+          $("#solicitarBolsaDados").show();
+        }
 
         $("#inlineBolsaSim").click(function() 
         {
@@ -333,7 +386,7 @@
           {
            $("#exibirEmpregador").hide();
 
-           $("#tipoEmpregador").prop('required',false);
+            $("#tipoEmpregador").prop('required',false);
             $("#nomeEmpregador").prop('required',false);
             $("#tipoAfastamento").prop('required',false);
             $("#categoriaFuncional").prop('required',false);
@@ -382,6 +435,84 @@
           {              
             $(this).prop(‘checked’,false);
           });*/
+        });
+
+        if ($("#paisPessoal").val() == 1)
+        {
+          $("#mostrarDocumentoNacional").show();
+          $("#mostrarDocumentoInternacional").hide();
+
+          $("#tipoDocumento").prop('required',false);
+          $("#numeroDocumento").prop('required',false);
+
+          $("#numeroRG").prop('required',true);
+          $("#ufEmissorRG").prop('required',true);
+          $("#orgaoEmissorRG").prop('required',true);
+        }
+        else
+        {
+          $("#mostrarDocumentoNacional").hide();
+          $("#mostrarDocumentoInternacional").show();
+
+          $("#tipoDocumento").prop('required',true);
+          $("#numeroDocumento").prop('required',true);
+
+          $("#numeroRG").prop('required',false);
+          $("#ufEmissorRG").prop('required',false);
+          $("#orgaoEmissorRG").prop('required',false);
+        }
+
+        $("#paisPessoal").change(function() 
+        { 
+          if ($("#paisPessoal").val() == 1)
+          {
+            $("#mostrarDocumentoNacional").show();
+            $("#mostrarDocumentoInternacional").hide();
+
+            $("#tipoDocumento").prop('required',false);
+            $("#numeroDocumento").prop('required',false);
+
+            $("#numeroRG").prop('required',true);
+            $("#ufEmissorRG").prop('required',true);
+            $("#orgaoEmissorRG").prop('required',true);
+
+          }
+          else
+          {
+            $("#mostrarDocumentoNacional").hide();
+            $("#mostrarDocumentoInternacional").show();
+
+            $("#tipoDocumento").prop('required',true);
+            $("#numeroDocumento").prop('required',true);
+
+            $("#numeroRG").prop('required',false);
+            $("#ufEmissorRG").prop('required',false);
+            $("#orgaoEmissorRG").prop('required',false);
+          }
+        });
+
+        $("#telefonePessoaEmergencia").blur(function()
+        {
+          if ($("#telefonePessoaEmergencia").val() != '')
+          {
+            $.ajax({          
+              url: "/telefone/"+$("#telefonePessoaEmergencia").val(),
+              type: "get",          
+              success: function(response)
+              {
+                if (response > 0)
+                {
+                  $("#telefonePessoaEmergencia").val('');
+                  $("#telefoneAjudaBlock").html('Telefone não pode ser igual ao telefone cadastrado');
+                }
+                else
+                {
+                  $("#telefoneEmergencia").prop('required',false);
+                  $("#telefoneAjudaBlock").html('');
+                }
+              },
+            });
+          }
         });
     })  
 

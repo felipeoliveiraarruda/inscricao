@@ -109,10 +109,12 @@ class DadosPessoaisController extends Controller
         /* Cadastra o documento */
         $documento = Documento::create([
             'codigoUsuario'         => Auth::user()->id,
+            'tipoDocumento'         => $request->tipoDocumento,
             'numeroRG'              => $request->rg,
             'ufEmissorRG'           => $request->ufEmissorRG,
             'orgaoEmissorRG'        => $request->orgaoEmissorRG,
             'dataEmissaoRG'         => $request->dataEmissaoRG,
+            'numeroDocumento'       => $request->numeroDocumento,
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
@@ -248,10 +250,12 @@ class DadosPessoaisController extends Controller
 
         $documento = Documento::find($request->codigoDocumento);
         $documento->codigoUsuario         = Auth::user()->id;
+        $documento->tipoDocumento         = $request->tipoDocumento;
         $documento->numeroRG              = $request->rg;
         $documento->ufEmissorRG           = $request->ufEmissorRG;
         $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
         $documento->dataEmissaoRG         = $request->dataEmissaoRG;
+        $documento->numeroDocumento       = $request->numeroDocumento;
         $documento->codigoPessoaAlteracao = Auth::user()->codpes;
         $documento->save();
 

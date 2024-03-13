@@ -202,18 +202,32 @@ class Utils extends Model
         return $response->json();
     }
 
-    public static function listarLocalidades($codpas, $sglest)
+    public static function listarLocalidades($codpas, $sglest = '')
     {
         $link = env('URL_API_EEL')."/comum/localidade/listar";
 
-        $response = Http::asForm()->withHeaders(
-        [
-            'x-api-key' => env('KEY_API_EEL')
-        ])->post($link,
-        [
-            'codpas' => $codpas,
-            'sglest' => $sglest
-        ]);
+        if ($codpas == 1)
+        {
+            $response = Http::asForm()->withHeaders(
+                [
+                    'x-api-key' => env('KEY_API_EEL')
+                ])->post($link,
+                [
+                    'codpas' => $codpas,
+                    'sglest' => $sglest
+                ]);
+        }
+        else
+        {
+            $response = Http::asForm()->withHeaders(
+                [
+                    'x-api-key' => env('KEY_API_EEL')
+                ])->post($link,
+                [
+                    'codpas' => $codpas,
+                ]);
+        }
+
 
         return $response->json();
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Utils;
+use App\Models\User;
 
 class UtilsController extends Controller
 {
@@ -25,5 +27,11 @@ class UtilsController extends Controller
         [            
             'cidades' => $cidades,
         ]);
+    }
+
+    public function verificaTelefoneEmergencia($telefoneEmergencia)
+    {
+        $telefone = User::where('id', Auth::user()->id)->where('telefone', $telefoneEmergencia)->count();
+        return json_encode($telefone);
     }
 }

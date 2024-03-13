@@ -122,7 +122,7 @@ class InscricaoController extends Controller
         }
 
         Utils::obterTotalInscricao($inscricao->codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 29, 30, 9, 31, 32, 33, 34, 35, 28));;
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 29, 9, 31, 32, 33, 34, 35, 28));
 
         $edital = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                         ->join('users', 'editais.codigoUsuario', '=', 'users.id')
@@ -178,7 +178,7 @@ class InscricaoController extends Controller
             'projeto'                => (empty($projeto) ? '' : $projeto),
             'carta'                  => (empty($carta) ? '' : $carta),
             'curriculo_orientador'   => (empty($curriculo_orientador) ? '' : $curriculo_orientador),
-            'termo_orientacao'       => (empty($termo_orientacao) ? '' : $curriculo_orientador),
+            'termo_orientacao'       => (empty($termo_orientacao) ? '' : $termo_orientacao),
             'curriculo_coorientador' => (empty($curriculo_coorientador) ? '' : $curriculo_coorientador),
             'credenciamento'         => (empty($credenciamento) ? '' : $credenciamento),
             'carta_aceite'           => (empty($carta_aceite) ? '' : $carta_aceite),
@@ -258,9 +258,19 @@ class InscricaoController extends Controller
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
+
+        $paises  = Utils::listarPais();
+
+        if(empty($inscricao))
+        {
+            $estados = Utils::listarEstado(1);
+        }
+        else
+        {
+            $estados = Utils::listarEstado($inscricao->paisPessoal);
+        }
         
         $paises  = Utils::listarPais();
-        $estados = Utils::listarEstado(1);
         $tipos   = TipoDocumento::listarTipoDocumentosPessoal();
 
         $status = Inscricao::obterStatusInscricao($codigoInscricao);
@@ -307,7 +317,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterEnderecoInscricao($codigoInscricao);
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 29, 30, 9, 31, 32, 33, 34, 35, 28));;
+        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 29, 9, 31, 32, 33, 34, 35, 28));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/endereco";
 
@@ -452,8 +462,8 @@ class InscricaoController extends Controller
             $codigoInscricaoResumoEscolar = '';
         }
         
-        $status    = Inscricao::obterStatusInscricao($codigoInscricao);
-        $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital = Inscricao::obterEditalInscricao($codigoInscricao);
 
         if (!empty($codigoInscricaoResumoEscolar))
         {
@@ -687,7 +697,7 @@ class InscricaoController extends Controller
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
 
-        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+        $resumo = Inscricao::obterUltimaTitulacao($codigoInscricao);
 
         return view('inscricao.financeiro',
         [
@@ -695,6 +705,7 @@ class InscricaoController extends Controller
             'codigoEdital'      => $inscricao->codigoEdital,
             'financeiros'       => $inscricao,
             'status'            => $status, 
+            'resumo'            => $resumo,
         ]); 
     } 
 
@@ -2459,7 +2470,7 @@ class InscricaoController extends Controller
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 29, 30, 9, 31, 32, 33, 34, 35, 28));;
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 1, 2, 3, 4, 29, 30, 9, 31, 32, 33, 34, 35, 28));
 
         $voltar = "inscricao/{$edital}";
 

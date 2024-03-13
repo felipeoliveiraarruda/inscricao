@@ -22,7 +22,7 @@
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
                     @if ($emergencia->codigoEmergencia == '')
-                    <form class="needs-validation" novalidate method="POST" action="emergencia">
+                    <form class="needs-validation" id="formEmergencia" novalidate method="POST" action="emergencia">
                     @else
                     <form class="needs-validation" novalidate method="POST" action="/emergencia/{{ $emergencia->codigoEmergencia }}">
                         @method('patch')

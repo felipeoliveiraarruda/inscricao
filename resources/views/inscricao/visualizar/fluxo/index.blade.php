@@ -69,6 +69,8 @@
             <td>4.2 Ficha de Inscrição            
                 @if (Session::get('total')['especial'] >= 6 && $total >= 11)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
+                @else
+                
                 @endif
             </td>   
             <td class="text-center">
@@ -135,7 +137,7 @@
                         </a>
                     @endif 
                 @else
-                    <a href="documento/{{$codigoInscricao}}/27" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                    <a href="documento/{{$codigoInscricao}}/2" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a> 
                 @endif

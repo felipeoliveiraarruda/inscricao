@@ -30,8 +30,9 @@ Route::middleware(['auth','verified'])->group(function ()
     Route::get('realizadas',    [InscricaoController::class, 'realizadas']);
 
     /* Consultas a API */
-    Route::get('estados/{codpas}',          [UtilsController::class, 'estados']);
-    Route::get('cidades/{codpas}/{sglest}', [UtilsController::class, 'cidades']);
+    Route::get('estados/{codpas}',              [UtilsController::class, 'estados']);
+    Route::get('cidades/{codpas}/{sglest}',     [UtilsController::class, 'cidades']);
+    Route::get('telefone/{telefone}/',          [UtilsController::class, 'verificaTelefoneEmergencia']);
 
     /* Inscrição */
     Route::group(['prefix' => 'inscricao'], function()

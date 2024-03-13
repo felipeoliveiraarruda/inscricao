@@ -204,6 +204,22 @@ class Inscricao extends Model
         return $escolar;                                 
     }
 
+    public function obterUltimaTitulacao($codigoInscricao)
+    {
+        $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar, inscricoes_resumo_escolar.codigoHistorico, inscricoes_resumo_escolar.codigoDiploma'))
+                                ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
+                                ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->leftJoin('inscricoes_resumo_escolar', function($join)
+                                {
+                                    $join->on('inscricoes_resumo_escolar.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                    $join->on('inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar');
+                                })    
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->latest('resumo_escolar.finalResumoEscolar')
+                                ->first();
+        return $escolar;
+    }
+
     public static function obterIdiomaInscricao($codigoInscricao, $codigoIdioma = '')
     {
         if (empty($codigoIdioma))

@@ -60,11 +60,9 @@ class RecursoFinanceiroController extends Controller
             'codigoPessoaAlteracao'         => Auth::user()->codpes,
         ]);
 
-        
-        
         if(!empty($request->codigoInscricao))
         {
-            $inscricaoIdioma = InscricoesRecursosFinanceiros::create([
+            $inscricaoRecursoFinanceiro = InscricoesRecursosFinanceiros::create([
                 'codigoInscricao'           => $request->codigoInscricao,
                 'codigoRecursoFinanceiro'   => $financeiro->codigoRecursoFinanceiro,
                 'codigoPessoaAlteracao'     => Auth::user()->codpes,
@@ -118,7 +116,63 @@ class RecursoFinanceiroController extends Controller
      */
     public function update(Request $request, RecursoFinanceiro $recursoFinanceiro)
     {
-        //
+        $temp = '';
+        $voltar = '/financeiro';
+        $inscricaoFinanceiro = true;
+        
+        \DB::beginTransaction();
+
+        $financeiro = RecursoFinanceiro::find($request->codigoRecursoFinanceiro);
+
+        $financeiro->codigoUsuario                 = Auth::user()->id;
+        $financeiro->bolsaRecursoFinanceiro        = $request->inlineBolsa;
+        $financeiro->solicitarRecursoFinanceiro    = $request->inlineSolicitar;
+        $financeiro->orgaoRecursoFinanceiro        = (empty($request->orgaoRecursoFinanceiro) ? NULL : $request->orgaoRecursoFinanceiro);
+        $financeiro->tipoBolsaFinanceiro           = (empty($request->tipoBolsaFinanceiro) ? NULL : $request->tipoBolsaFinanceiro);
+        $financeiro->inicioRecursoFinanceiro       = (empty($request->inicioRecursoFinanceiro) ? NULL : $request->inicioRecursoFinanceiro);
+        $financeiro->finalRecursoFinanceiro        = (empty($request->finalRecursoFinanceiro) ? NULL : $request->finalRecursoFinanceiro);
+        $financeiro->anoTitulacaoRecursoFinanceiro = (empty($request->anoTitulacaoRecursoFinanceiro) ? NULL : $request->anoTitulacaoRecursoFinanceiro);
+        $financeiro->iesTitulacaoRecursoFinanceiro = (empty($request->iesTitulacaoRecursoFinanceiro) ? NULL : $request->iesTitulacaoRecursoFinanceiro);
+        $financeiro->agenciaRecursoFinanceiro      = (empty($request->agenciaRecursoFinanceiro) ? NULL : $request->agenciaRecursoFinanceiro);
+        $financeiro->contaRecursoFinanceiro        = (empty($request->contaRecursoFinanceiro) ? NULL : $request->contaRecursoFinanceiro);
+        $financeiro->localRecursoFinanceiro        = (empty($request->localRecursoFinanceiro) ? NULL : $request->localRecursoFinanceiro);
+        $financeiro->codigoPessoaAlteracao         = Auth::user()->codpes;
+        $financeiro->save();
+        
+        if(!empty($request->codigoInscricao))
+        {
+            if(empty($request->codigoInscricaoRecursoFinanceiro))
+            {
+                $inscricaoRecursoFinanceiro = InscricoesRecursosFinanceiros::create([
+                    'codigoInscricao'           => $request->codigoInscricao,
+                    'codigoRecursoFinanceiro'   => $financeiro->codigoRecursoFinanceiro,
+                    'codigoPessoaAlteracao'     => Auth::user()->codpes,
+                ]);
+            }
+            else
+            {
+                $inscricaoFinanceiro = InscricoesRecursosFinanceiros::find($request->codigoInscricaoIdioma);
+                $inscricaoFinanceiro->codigoInscricao         = $request->codigoInscricao;
+                $inscricaoFinanceiro->codigoRecursoFinanceiro = $request->codigoRecursoFinanceiro;
+                $inscricaoFinanceiro->codigoPessoaAlteracao   = Auth::user()->codpes;
+                $inscricaoFinanceiro->save();
+            }
+        }
+
+        $voltar = "inscricao/{$request->codigoInscricao}/financeiro";
+
+        if($financeiro && $inscricaoFinanceiro) 
+        {
+            \DB::commit();
+        } 
+        else 
+        {
+            \DB::rollBack();
+        }
+
+        request()->session()->flash('alert-success', 'Recurso Financeiro atualizado com sucesso.');
+        
+        return redirect($voltar); 
     }
 
     /**

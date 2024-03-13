@@ -21,10 +21,12 @@ class Documento extends Model
     protected $fillable = [
         'codigoDocumento',
         'codigoUsuario',
+        'tipoDocumento',
         'numeroRG',
         'ufEmissorRG',
         'orgaoEmissorRG',
         'dataEmissaoRG',
+        'numeroDocumento',
         'codigoPessoaAlteracao',
     ];
 

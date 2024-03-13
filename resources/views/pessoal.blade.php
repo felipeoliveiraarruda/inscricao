@@ -39,92 +39,58 @@
                             <div class="row">                             
                                 <div class="col-sm-12"> 
                                     @if (!empty($pessoais))
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr class="text-center">
-                                                <th scope="col">Nome</th>
-                                                <th scope="col">CPF</th>
-                                                <th scope="col">RG</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                        </thead>
-                                        <tr>
-                                            <td>{{ $pessoais->name }}</td>
-                                            <td class="text-center">{{ $pessoais->cpf }}</td>
-                                            <td class="text-center">{{ $pessoais->rg }}</td>                                          
-                                            <td class="text-center">
-                                                @if(Session::get('level') == 'user')
-                                                    @if ($status == 'N')
-                                                        <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                            <i class="far fa-edit"></i>
-                                                        </a> 
-                                                    @endif 
-                                                @endif                                             
-                                            </td>
-                                        </tr>
-                                    </table>
 
-                                    {{-- <div class="card bg-default">
-                                        <h5 class="card-header">Anexo(s) <span class="text-danger">*</span>
-                                            @if ($status == 'N') 
-                                                <a href="pessoal/anexo/{{$codigoInscricao}}" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                                                    <i class="fa fa-plus"></i>
-                                                </a> 
-                                            @endif
-                                        </h5>
-                                        <div class="card-body">
-                                            @if (count($arquivos) == 0)
-                                                <div class="alert alert-warning">Nenhum documento cadastrado</div>
-                                            @else                
-                                                <div class="table-responsive">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr class="text-center">
-                                                                <th scope="col">Arquivo</th>
-                                                                <th scope="col">Status</th>                                                                
-                                                                <th scope="col"></th>
-                                                            </tr>
-                                                        </thead>
-
-                                                    @foreach ($arquivos as $arquivo)
-                                                        <tr>
-                                                            <th>{{ $arquivo->tipoDocumento }}</th>
-                                                            <td class="text-center">                          
-                                                                @if (!empty($arquivo->codigoInscricaoArquivo))
-                                                                    <i class="fa fa-check text-success"></i>
-                                                                @else
-                                                                    <i class="fa fa-times text-danger"></i>
-                                                                @endif                                                                 
-                                                            </td>
-                                                            <td>
-                                                                @if (empty($arquivo->codigoInscricaoArquivo))
-                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/anexar/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Anexar arquivo a inscrição">
-                                                                        <i class="fas fa-paperclip"></i>
-                                                                    </a>                                                                    
-                                                                @endif
-
-                                                                <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
-
-                                                                @if ($status == 'N')
-                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                                                                        <i class="fa fa-wrench"></i>
-                                                                    </a>
-                                                                    <a href="arquivo/{{ $arquivo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </a>
-                                                                @endif                                                         
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach                   
-                                                    </table>  
-                                                </div>                
-                                            @endif
-
-                                            <p>Documentos obrigatórios que devem ser anexados: Foto (jpg, png, bmp), CPF (pdf), RG/RNE/Passaporte (pdf)</p>
-                                        </div>
-                                    </div>                                     --}}
+                                        @if($pessoais->tipoDocumento == "RG")
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th scope="col">Nome</th>
+                                                        <th scope="col">CPF</th>
+                                                        <th scope="col">RG</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <td>{{ $pessoais->name }}</td>
+                                                    <td class="text-center">{{ $pessoais->cpf }}</td>
+                                                    <td class="text-center">{{ $pessoais->rg }}</td>                                          
+                                                    <td class="text-center">
+                                                        @if(Session::get('level') == 'user')
+                                                            @if ($status == 'N')
+                                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                                    <i class="far fa-edit"></i>
+                                                                </a> 
+                                                            @endif 
+                                                        @endif                                             
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        @else
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr class="text-center">
+                                                        <th scope="col">Nome</th>
+                                                        <th scope="col">CPF</th>
+                                                        <th scope="col">{{ $pessoais->tipoDocumento }}</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tr>
+                                                    <td>{{ $pessoais->name }}</td>
+                                                    <td class="text-center">{{ $pessoais->cpf }}</td>
+                                                    <td class="text-center">{{ $pessoais->numeroDocumento }}</td>                                          
+                                                    <td class="text-center">
+                                                        @if(Session::get('level') == 'user')
+                                                            @if ($status == 'N')
+                                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                                    <i class="far fa-edit"></i>
+                                                                </a> 
+                                                            @endif 
+                                                        @endif                                             
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        @endif
                                     @endif
                                 </div>                                 
                             </div>                                                        
