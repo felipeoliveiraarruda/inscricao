@@ -25,7 +25,7 @@
     </thead> 
     <tbody>
         <tr>
-            <td>4.1 Foto</td>
+            <td>4.1 Foto (Somente arquivos de imagem como png, jpg, bmp)</td>
             <td class="text-center">
                 @if(!empty($foto->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -67,7 +67,7 @@
         </tr>
         <tr>
             <td>4.2 Ficha de Inscrição            
-                @if (Session::get('total')['especial'] >= 6 && $total >= 11)     
+                @if (Session::get('total')['especial'] >= 6 && $total >= 10)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @else
                 
@@ -95,7 +95,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['especial'] >= 6 && $total >= 11) 
+                    @if (Session::get('total')['especial'] >= 6 && $total >= 10) 
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>

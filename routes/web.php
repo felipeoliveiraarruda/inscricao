@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscricaoController;
+use App\Http\Controllers\ZipController;
 use App\Http\Controllers\ArquivoController;
 use App\Http\Controllers\Arquivo\ImagemController;
 use App\Http\Controllers\Arquivo\DocumentoController;
@@ -47,6 +48,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('recusar/{codigoInscricao}/',            [InscricaoController::class, 'recusar']);
         Route::get('{codigoInscricao}/matricula/',          [InscricaoController::class, 'matricula_create']);
         Route::post('{codigoInscricao}/matricula/',         [InscricaoController::class, 'matricula_store']);
+        Route::get('{codigoInscricao}/download',            [ZipController::class, 'createZip']);
 
         /* Processo Seletivo */
         Route::get('{codigoEdital}/processo-seletivo/',     [InscricaoController::class, 'processo_seletivo']);
@@ -104,7 +106,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('{codigoInscricao}/bolsista/store', [InscricaoController::class, 'bolsista_store']);
 
          /* Documentos Obrigatorios Inscricao */
-         Route::get('{codigoInscricao}/obrigatorio/',   [InscricaoController::class, 'obrigatorio']);
+         Route::get('{codigoInscricao}/obrigatorios/',   [InscricaoController::class, 'obrigatorio']);
 
         /* Anexar arquivos já existentes a inscrição */
         //Route::post('anexar',   [InscricaoController::class, 'anexar']);

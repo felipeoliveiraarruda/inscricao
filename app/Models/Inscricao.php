@@ -434,16 +434,23 @@ class Inscricao extends Model
     }
 
     public static function obterObrigatorioInscricao($codigoInscricao, $codigoTipoDocumento)
-    {        
-        $anexo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*, tipo_documentos.tipoDocumento'))
+    {  
+        $anexo = Arquivo::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, inscricoes.expectativasInscricao, inscricoes_arquivos.codigoInscricaoArquivo, arquivos.*, tipo_documentos.tipoDocumento, editais_tipo_documentos.ordemTipoDocumento'))
                         ->join('users', 'users.id', '=', 'arquivos.codigoUsuario')                                
                         ->join('inscricoes_arquivos', 'inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo')
-                        ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
+                        ->join('inscricoes', 'inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                         ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                        ->join('editais_tipo_documentos', function($join)
+                        {
+                            $join->on('editais_tipo_documentos.codigoEdital', '=', 'inscricoes.codigoEdital');
+                            $join->on('editais_tipo_documentos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento');
+                        })
                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
                         ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
                         ->whereNull('inscricoes_arquivos.deleted_at')
-                        ->get();
+                        ->orderBy('editais_tipo_documentos.codigoEditalTipoDocumento', 'asc')
+                        //->groupBy('inscricoes_arquivos.codigoInscricaoArquivo')
+                        ->get();  
 
         return $anexo;                                   
     }

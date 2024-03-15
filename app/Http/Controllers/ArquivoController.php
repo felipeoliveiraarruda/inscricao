@@ -252,5 +252,26 @@ class ArquivoController extends Controller
         request()->session()->flash('alert-success', 'Arquivo cadastrado com sucesso');    
         return redirect("/inscricao/{$request->codigoInscricao}");
     }
+
+    public function download($codigoInscricao)
+    {
+        $selected_file_ids = $request->input('selected_file_ids');
+        $selected_file_ids_arr = explode(',',$selected_file_ids);
+
+        $files = UploadedFile::whereIn('id',$selected_file_ids_arr)->get();
+        $zip      = new ZipArchive;
+        $fileName = 'downloads.zip';
+
+        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE) {
+            foreach ($files as $file){
+               $path =  public_path('storage/uploads/'.$file->user_id.'/'.$file->file_name);
+                $relativeName = basename($path);
+                $zip->addFile($path, $relativeName);
+            }
+            $zip->close();
+        }
+
+        return response()->download(public_path($fileName));
+    }
 }
 

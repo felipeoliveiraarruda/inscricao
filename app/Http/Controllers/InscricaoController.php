@@ -29,6 +29,7 @@ use App\Mail\ConfirmacaoMail;
 use App\Mail\ComprovanteMail;
 use App\Mail\MatriculaMail;
 use App\Models\InscricoesArquivos;
+use ZipArchive;
 
 class InscricaoController extends Controller
 {
@@ -2464,7 +2465,7 @@ class InscricaoController extends Controller
         
         */
 
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 1, 2, 3, 4, 29, 30, 9, 31, 32, 33, 34, 35, 28));;
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
@@ -2519,7 +2520,7 @@ class InscricaoController extends Controller
         return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
     }
 
-    public function maicula_create($codigoInscricao)
+    public function matricula_create($codigoInscricao)
     {
         $aprovado = ProcessoSeletivo::obterAprovado();
 
