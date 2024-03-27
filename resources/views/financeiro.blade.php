@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Recursos Financeiros
+                <h5 class="card-header">Recursos Financeiros @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
                     @if(Session::get('level') == 'user')
                         @if (empty($financeiros->codigoInscricaoRecursoFinanceiro))
                             <a href="inscricao/{{ $codigoInscricao }}/financeiro/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">

@@ -81,6 +81,7 @@ class Inscricao extends Model
     public static function obterInscricao($user_id, $codigoEdital)
     {
         $inscricao = Inscricao::join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                              ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
                               ->where('inscricoes.codigoUsuario', $user_id)
                               ->where('inscricoes.codigoEdital', $codigoEdital)
                               ->first();
@@ -106,6 +107,16 @@ class Inscricao extends Model
                               ->first();
 
         return $inscricao->codigoInscricao;
+    }
+
+    public static function obterNomeInscricao($codigoInscricao)
+    {
+        $inscricao = Inscricao::select('inscricoes.numeroInscricao', 'users.name')    
+                              ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')                        
+                              ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                              ->first();
+
+        return $inscricao;                              
     }
 
     public static function obterDadosPessoaisInscricao($codigoInscricao)

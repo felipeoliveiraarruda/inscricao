@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência
+                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
                     @if (empty($emergencia->codigoEmergencia))
                         <a href="inscricao/{{ $codigoInscricao }}/emergencia/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
                             <i class="fa fa-plus"></i>                        

@@ -4,14 +4,19 @@
 
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-3">
+        <div class="col-sm-3">
             @include('inscricao.visualizar.admin.menu')  
         </div>
-        <div class="col-md-9">
+        <div class="col-sm-9">
             <div class="card bg-default">
-                <h5 class="card-header">Documentos Obrigatórios</h5>
-               
-  
+                <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}
+                    @if ($status != 'N')
+                        <a href="inscricao/{{ $codigoInscricao }}/download" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Download">
+                            <i class="fas fa-file-download"></i>
+                        </a>
+                    @endif
+                </h5>
+
                 <div class="card-body">                    
                     <div class="row justify-content-center">
                         <table class="table table-striped">

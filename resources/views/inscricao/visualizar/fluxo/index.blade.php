@@ -547,7 +547,7 @@
             </td>  
         </tr>
         <tr>
-            <td>4.14. Carta de Aceite do Orientador</td> 
+            <td>4.14. Carta de Aceite do Coorientador</td> 
             <td class="text-center">
                 @if(!empty($carta_aceite->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>

@@ -2047,7 +2047,7 @@ class InscricaoController extends Controller
 
         $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
 
-        if (!empty($profissionais))
+        if (!empty($profissionais->codigoExperiencia))
         {
             foreach($profissionais as $profissional)
             {   
@@ -2265,7 +2265,7 @@ class InscricaoController extends Controller
                 ]);
             }*/
         }
-
+        
         $pdf->Output('I', "{$pessoais->numeroInscricao}.pdf");
     }
 
@@ -2465,6 +2465,7 @@ class InscricaoController extends Controller
         
         */
 
+        $dados     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
         $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
@@ -2484,6 +2485,7 @@ class InscricaoController extends Controller
             'total'             => $total,
             'status'            => $status,
             'count'             => count($inscricao),
+            'inscricao'         => $dados,
         ]); 
 
 

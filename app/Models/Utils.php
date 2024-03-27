@@ -314,6 +314,7 @@ class Utils extends Model
     {        
         $total = array();
         $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        $dados = Inscricao::obterNomeInscricao($codigoInscricao);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
         /*$curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
@@ -338,6 +339,7 @@ class Utils extends Model
         $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;*/
         $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + /*$total['curriculo'] +*/ $total['disciplina'];
+        $total['inscricao']    = "{$dados->numeroInscricao} - {$dados->name}";
 
         session(['total' => $total]);
     }   
