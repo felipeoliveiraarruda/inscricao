@@ -36,7 +36,7 @@
                                     <label class="form-check-label" for="inlineCoorientadorSim">Sim</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineBolsa" id="inlineCoorientadorNao" value="N" checked>
+                                    <input class="form-check-input" type="radio" name="inlineCoorientador" id="inlineCoorientadorNao" value="N" checked>
                                     <label class="form-check-label" for="inlineCoorientadorNao">Não</label>
                                 </div>
                             </div>

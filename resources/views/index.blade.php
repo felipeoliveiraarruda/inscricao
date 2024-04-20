@@ -26,11 +26,19 @@
                                         </td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }} 
                                         </td>
+                                        @if ($edital->codigoNivel == 5)
                                         <td> 
-                                            <a class="login_logout_link" href="{{ $login_url }}">
+                                            <a class="login_logout_link" href="login">
                                                 <i class="fas fa-sign-in-alt"></i> Entrar
                                             </a>
                                         </td>
+                                        @else
+                                        <td> 
+                                            <a class="login_logout_link" href="acesso2">
+                                                <i class="fas fa-sign-in-alt"></i> Entrar
+                                            </a>
+                                        </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             @endif
@@ -50,7 +58,7 @@
                     <table class="table">
                         <tbody>
                             @if (count($encerrados) == 0)
-                                Nenhuma inscrição encerradas
+                                Nenhuma inscrição encerrada
                             @else
                                 @foreach ($encerrados as $edital)
                                     @php

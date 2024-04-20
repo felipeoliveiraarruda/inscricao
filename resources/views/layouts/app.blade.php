@@ -136,7 +136,6 @@
               },
             }); 
 
-            console.log('Carrega estados');
 
             $.ajax({          
               url: "/cidades/"+$("#paisPessoal").val()+"/''",
@@ -475,7 +474,6 @@
             $("#numeroRG").prop('required',true);
             $("#ufEmissorRG").prop('required',true);
             $("#orgaoEmissorRG").prop('required',true);
-
           }
           else
           {
@@ -489,6 +487,7 @@
             $("#ufEmissorRG").prop('required',false);
             $("#orgaoEmissorRG").prop('required',false);
           }
+          
         });
 
         $("#telefonePessoaEmergencia").blur(function()

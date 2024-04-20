@@ -39,25 +39,27 @@
                     <thead>
                         <tr>    
                             <th scope="col">#</th>
-                            <th scope="col">Curso</th>
-                            <th scope="col">Nível</th>
+                            <th scope="col">Edital</th>
                             <th scope="col">Início</th> 
                             <th scope="col">Final</th>
-                            <!--<th scope="col">Ações</th>-->
+                            <th scope="col">Ações</th>
                         </tr>
                     </thead>
 
                 @foreach ($editais as $edital)
                     @php
-                        $curso = $utils->obterCurso($edital->codigoCurso);
+                        $curso = $utils->obterSiglaCurso($edital->codigoCurso);
+                        $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
                     @endphp   
+
                     <tr>
                         <th scope="row">{{ $edital->codigoEdital }}</th>
-                        <td><a href="{{ $edital->linkEdital }}" target="_new">{{ $curso['nomcur'] }}</a></td>
-                        <td>{{ $edital->descricaoNivel }}</td>
+                        <td>{{ $semestre }} - {{ $curso }} - {{ $edital->descricaoNivel }}</td>
                         <td>{{ $edital->dataInicioEdital->format('d/m/Y H:i:s') }}</td>
                         <td>{{ $edital->dataFinalEdital->format('d/m/Y H:i:s') }}</td>
-                        <!--<td>Editar - Ver</td>-->
+                        <td>
+                            Clonar
+                        </td>
                     </tr>
                 @endforeach
                 </table>

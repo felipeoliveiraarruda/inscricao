@@ -50,6 +50,9 @@ class ResumoEscolarController extends Controller
         $inscricaoHistorico = true;
         $inscricaoDiploma = true;
         $diploma = false;
+
+        $dt = Carbon::now();
+        $dt->year($request->finalResumoEscolar)->month(12)->day(31);
         
         \DB::beginTransaction();
 
@@ -57,8 +60,9 @@ class ResumoEscolarController extends Controller
             'codigoUsuario'                 => Auth::user()->id,
             'escolaResumoEscolar'           => $request->escolaResumoEscolar,
             'especialidadeResumoEscolar'    => $request->especialidadeResumoEscolar,
-            'inicioResumoEscolar'           => $request->inicioResumoEscolar,
-            'finalResumoEscolar'            => $request->finalResumoEscolar,
+            //'inicioResumoEscolar'           => $request->inicioResumoEscolar,
+            'tipoResumoEscolar'             => $request->tipoResumoEscolar,
+            'finalResumoEscolar'            => $dt->format('Y-m-d'),
             'codigoPessoaAlteracao'         => Auth::user()->codpes,
         ]);
 
@@ -162,15 +166,19 @@ class ResumoEscolarController extends Controller
         $inscricaoHistorico = true;
         $inscricaoDiploma = true;
         $diploma = false;
-        
+
+        $dt = Carbon::now();
+        $dt->year($request->finalResumoEscolar)->month(12)->day(31);
+
         \DB::beginTransaction();
 
         $escolar = ResumoEscolar::find($request->codigoResumoEscolar);
         $escolar->codigoUsuario                 = Auth::user()->id;
         $escolar->escolaResumoEscolar           = $request->escolaResumoEscolar;
         $escolar->especialidadeResumoEscolar    = $request->especialidadeResumoEscolar;
-        $escolar->inicioResumoEscolar           = $request->inicioResumoEscolar;
-        $escolar->finalResumoEscolar            = $request->finalResumoEscolar;
+        // $escolar->inicioResumoEscolar'       = $request->inicioResumoEscolar;
+        $escolar->tipoResumoEscolar             = $request->tipoResumoEscolar;
+        $escolar->finalResumoEscolar            = $dt->format('Y-m-d');
         $escolar->codigoPessoaAlteracao         = Auth::user()->codpes;
         $escolar->save();
 

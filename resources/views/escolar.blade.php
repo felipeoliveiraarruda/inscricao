@@ -49,21 +49,15 @@
                                             <tr>
                                                 <th scope="col">Escola</th>
                                                 <th scope="col">Título/Especialidade</th>
-                                                <th scope="col">Início</th>
-                                                <th scope="col">Fim</th>
+                                                <th scope="col">Ano Titulação</th>
                                                 <th scope="col"></th>
                                             </tr>
                                         </thead>
                                         @foreach($escolares as $escolar)                                
-                                            @php
-                                                $historico = \App\Models\Arquivo::obterArquivosHistorico($codigoInscricao);
-                                                $diploma   = \App\Models\Arquivo::obterArquivosDiploma($codigoInscricao);
-                                            @endphp
                                         <tr>
                                             <td>{{ $escolar->escolaResumoEscolar }}</td>
                                             <td>{{ $escolar->especialidadeResumoEscolar }}</td>
-                                            <td>{{ $escolar->inicioResumoEscolar->format('d/m/Y') }}</td>
-                                            <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('d/m/Y')) }}</td>
+                                            <td>{{ ($escolar->finalResumoEscolar == '' ? '' : $escolar->finalResumoEscolar->format('Y')) }}</td>
                                             <td>
                                                 @if(Session::get('level') == 'user')
                                                     @if ($status == 'N')  

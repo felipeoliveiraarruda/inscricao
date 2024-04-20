@@ -64,6 +64,9 @@ class EditalController extends Controller
     {    
         $validated = $request->validated();
 
+        $codigoEdital = Edital::obterUltimoEditalNivel($request->codigoNivel);
+        $temp = EditalTipoDocumento::where('codigoEdital', $codigoEdital)->get();
+        
         $edital = Edital::create([
             'codigoCurso'           => $request->codigoCurso,
             'codigoUsuario'         => Auth::user()->id,
@@ -75,14 +78,22 @@ class EditalController extends Controller
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
-        foreach($request->codigoTipoDocumento as $tipo)
+        foreach($temp as $dados)
+        {
+            $temp2 = EditalTipoDocumento::find($dados->codigoEditalTipoDocumento);
+
+            $documentos = $temp2->replicate()
+                                ->fill(['codigoEdital' => $edital->codigoEdital])
+                                ->save();
+        }
+        /*foreach($request->codigoTipoDocumento as $tipo)
         {
             EditalTipoDocumento::create([
                 'codigoEdital'          => $edital->codigoEdital,
                 'codigoTipoDocumento'   => $tipo,
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
-        }
+        }*/
 
         request()->session()->flash('alert-success','Edital criado com sucesso');
         return redirect("/admin/edital");

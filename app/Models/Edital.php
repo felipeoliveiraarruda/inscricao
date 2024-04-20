@@ -100,10 +100,18 @@ class Edital extends Model
                 $edital = Edital::select(\DB::raw('(YEAR(editais.dataDoeEdital) + 1) AS ano, IF(MONTH(editais.dataDoeEdital) > 7, 1, 2) AS semestre'))
                                 ->where('codigoEdital', $codigoEdital)->first();   
             }
-            else
+            else            
             {
-                $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
-                                ->where('codigoEdital', $codigoEdital)->first();   
+                if ($codigoEdital >= 5)
+                {
+                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre'))
+                                    ->where('codigoEdital', $codigoEdital)->first();  
+                }
+                else
+                {
+                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
+                                    ->where('codigoEdital', $codigoEdital)->first();
+                }
             }
         }
 
@@ -175,5 +183,13 @@ class Edital extends Model
                          ->get();
 
         return $editais;
+    }
+
+    public function obterUltimoEditalNivel($codigoNivel)
+    {
+        $edital = Edital::select(\DB::raw('MAX(codigoEdital) as ultimo'))
+                        ->where('codigoNivel', $codigoNivel)->first();  
+
+        return $edital->ultimo;
     }
 }

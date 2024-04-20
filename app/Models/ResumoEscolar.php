@@ -22,6 +22,7 @@ class ResumoEscolar extends Model
         'codigoUsuario',
         'escolaResumoEscolar',
         'especialidadeResumoEscolar',
+        'tipoResumoEscolar',
         'inicioResumoEscolar',
         'finalResumoEscolar',
         'codigoPessoaAlteracao',

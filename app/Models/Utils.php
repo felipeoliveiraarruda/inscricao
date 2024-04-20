@@ -51,8 +51,7 @@ class Utils extends Model
             'codcur' => $codcur
         ]);
 
-        $temp = $response->json(); 
- 
+        $temp = $response->json();  
         return $temp[0];
     }
 
@@ -71,7 +70,10 @@ class Utils extends Model
                 break;
             case 97004:
                 return 'PPGPE';
-                break;                                                
+                break;                     
+            case 97099:
+                return 'EEL/CPG';
+                break;                                            
         }
     } 
     
@@ -90,6 +92,9 @@ class Utils extends Model
                 break;
             case 'ppgpe@eel.usp.br':
                 return 97004;
+                break; 
+            case 'pae@eel.usp.br':
+                return 97099;
                 break;                                                
         }
     } 
@@ -313,33 +318,35 @@ class Utils extends Model
     public static function obterTotalInscricao($codigoInscricao)
     {        
         $total = array();
-        $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        //$expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
         $dados = Inscricao::obterNomeInscricao($codigoInscricao);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
         /*$curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
         $foto         = Arquivo::verificarArquivo($codigoInscricao, [27]); */
+        $coorientador = Inscricao::obterCoorientadorInscricao($codigoInscricao);
 
         $total['pessoal']      = InscricoesPessoais::obterTotal($codigoInscricao);
         $total['documento']    = InscricoesDocumentos::obterTotal($codigoInscricao);
         $total['endereco']     = InscricoesEnderecos::obterTotal($codigoInscricao);
         $total['arquivo']      = InscricoesArquivos::obterTotal($codigoInscricao);
-        $total['emergencia']   = InscricoesEnderecos::obterTotalEmergencia($codigoInscricao);
+        $total['emergencia']   = InscricoesEnderecos::obterTotal($codigoInscricao);
         $total['escolar']      = InscricoesResumoEscolar::obterTotal($codigoInscricao);
-        $total['idioma']       = InscricoesIdiomas::obterTotal($codigoInscricao);
-        $total['profissional'] = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
-        $total['ensino']       = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
+        //$total['idioma']       = InscricoesIdiomas::obterTotal($codigoInscricao);
+        //$total['profissional'] = InscricoesExperiencias::obterTotal($codigoInscricao, 2);
+        //$total['ensino']       = InscricoesExperiencias::obterTotal($codigoInscricao, 1);
         $total['financeiro']   = InscricoesRecursosFinanceiros::obterTotal($codigoInscricao);
         $total['disciplina']   = InscricoesDisciplinas::obterTotal($codigoInscricao);
-        $total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
+        //$total['expectativas'] = (empty($expectativas->expectativasInscricao) ? 0 : 1);
         $total['requerimento'] = $requerimento;
         /*$total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
         $total['foto']         = (empty($foto) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;*/
-        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + /*$total['curriculo'] +*/ $total['disciplina'];
+        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['financeiro'] + $total['disciplina'];
         $total['inscricao']    = "{$dados->numeroInscricao} - {$dados->name}";
+        $total['coorientador'] = $coorientador;
 
         session(['total' => $total]);
     }   

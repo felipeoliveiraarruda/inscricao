@@ -82,6 +82,7 @@ class Inscricao extends Model
     {
         $inscricao = Inscricao::join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                               ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                              ->leftJoin('pessoais', 'users.id', '=', 'pessoais.codigoUsuario')
                               ->where('inscricoes.codigoUsuario', $user_id)
                               ->where('inscricoes.codigoEdital', $codigoEdital)
                               ->first();
@@ -118,6 +119,16 @@ class Inscricao extends Model
 
         return $inscricao;                              
     }
+
+    public static function obterCoorientadorInscricao($codigoInscricao)
+    {
+        $inscricao = Inscricao::select('planoCoorientador')
+                              ->where('codigoInscricao', $codigoInscricao)
+                              ->first();
+
+        return $inscricao->planoCoorientador;                              
+    }
+
 
     public static function obterDadosPessoaisInscricao($codigoInscricao)
     {   
@@ -195,11 +206,11 @@ class Inscricao extends Model
                                         $join->on('inscricoes_resumo_escolar.codigoResumoEscolar', '=', 'resumo_escolar.codigoResumoEscolar');
                                     })    
                                     ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                                    ->get();
+                                    ->get(); 
         }
         else
         {
-            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar'))
+            $escolar = ResumoEscolar::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, resumo_escolar.*, inscricoes_resumo_escolar.codigoInscricaoResumoEscolar, inscricoes_resumo_escolar.codigoHistorico, inscricoes_resumo_escolar.codigoDiploma'))
                                     ->rightJoin('users', 'users.id', '=', 'resumo_escolar.codigoUsuario')                                                                    
                                     ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')
                                     ->leftJoin('inscricoes_resumo_escolar', function($join)
