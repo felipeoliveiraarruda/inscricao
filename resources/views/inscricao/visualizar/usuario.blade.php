@@ -5,6 +5,7 @@
         3 Fluxo
         4 Mestrado
         5 Pae
+        6 Proficiencia
 -->
 @if (Session::get('nivel') == 1)
     @include('inscricao.visualizar.especial.index')

@@ -58,7 +58,7 @@ class DocumentoController extends Controller
         $edital = Edital::obterEditalInscricao($request->codigoInscricao);
 
         request()->session()->flash('alert-success', 'Arquivo cadastrado com sucesso');    
-        return redirect("/inscricao/{$request->codigoInscricao}/obrigatorios");
+        return redirect("/inscricao/{$edital->codigoEdital}");
     }
 
     public function edit($codigoArquivo, $codigoInscricao)
@@ -97,7 +97,7 @@ class DocumentoController extends Controller
 
         $edital = Edital::obterEditalInscricao($request->codigoInscricao);
         request()->session()->flash('alert-success', 'Arquivo atualizado com sucesso');
-        return redirect("/inscricao/{$request->codigoInscricao}/obrigatorios");   
+        return redirect("/inscricao/{$edital->codigoEdital}");   
     }
 
     public function destroy($codigoArquivo, $codigoInscricao)
@@ -127,7 +127,7 @@ class DocumentoController extends Controller
         }
         
         $edital = Edital::obterEditalInscricao($codigoInscricao);
-        return redirect("/inscricao/{$request->codigoInscricao}/obrigatorios");   
+        return redirect("/inscricao/{$edital->codigoEdital}");   
     }
 
 
@@ -151,7 +151,7 @@ class DocumentoController extends Controller
         }
 
         $edital = Edital::obterEditalInscricao($codigoInscricao);
-        return redirect("/inscricao/{$request->codigoInscricao}/obrigatorios");   
+        return redirect("/inscricao/{$edital->codigoEdital}");   
     }
 
 }

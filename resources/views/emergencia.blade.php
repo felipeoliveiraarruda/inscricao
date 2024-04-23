@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência/Recados @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
+                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
                     @if (empty($emergencia->codigoEmergencia))
                         <a href="inscricao/{{ $codigoInscricao }}/emergencia/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
                             <i class="fa fa-plus"></i>                        
@@ -63,7 +63,24 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                    </table>                               
+                                    </table>
+
+                                    @if (!empty($emergencia->codigoEmergenciaInscricao))
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Logradrouro</th>
+                                                <th scope="col">Cidade/Uf</th>
+                                                <th scope="col">CEP</th>
+                                            </tr>
+                                        </thead>                                
+                                        <tr>
+                                            <td>{{ $endereco->logradouroEndereco }}, {{ $endereco->numeroEndereco }} {{ $endereco->bairroEndereco }}</td>
+                                            <td>{{ $endereco->localidadeEndereco }}/{{ $endereco->ufEndereco }}</td>
+                                            <td>{{ $endereco->cepEndereco }}</td>
+                                        </tr>
+                                    </table>  
+                                    @endif                                  
                                     @endif                                    
                                 </div>                                 
                             </div>                                                        

@@ -43,11 +43,11 @@
     </div>
 </div> 
 
-<!--<div class="form-group">  
+<div class="form-group">  
     <label for="codigoTipoDocumento">Documentos</label>
     <select multiple class="form-control" id="codigoTipoDocumento" name="codigoTipoDocumento[]" required>                
-        oreach ($tipos as $tipo)
-            <option value="{ $tipo->codigoTipoDocumento }}">{ $tipo->tipoDocumento }}</option>
-        ndforeach
+        @foreach ($tipos as $tipo)
+            <option value="{{ $tipo->codigoTipoDocumento }}">{{ $tipo->tipoDocumento }}</option>
+        @endforeach
     </select>
-</div>-->
+</div>

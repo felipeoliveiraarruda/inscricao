@@ -15,7 +15,7 @@
 
         <div class="col-sm-9">
             <div class="card bg-default">
-                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência/Recados</h5>
+                <h5 class="card-header">Pessoa a ser notificada em caso de Emergência</h5>
                 
                 <div class="card-body">
                     <!-- Validation Errors -->

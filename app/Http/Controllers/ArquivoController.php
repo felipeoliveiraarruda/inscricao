@@ -203,7 +203,7 @@ class ArquivoController extends Controller
 
         $edital = Edital::obterEditalInscricao($codigoInscricao);
 
-        return redirect("inscricao/{$edital->codigoEdital}/obrigatorios");
+        return redirect("inscricao/{$$edital->codigoEdital}");
 
         /*if ($arquivo->codigoTipoDocumento == 8 || $arquivo->codigoTipoDocumento == 9)
         {
@@ -250,7 +250,7 @@ class ArquivoController extends Controller
         }
 
         request()->session()->flash('alert-success', 'Arquivo cadastrado com sucesso');    
-        return redirect("/inscricao/{$request->codigoInscricao}/obrigatorios");
+        return redirect("/inscricao/{$request->codigoInscricao}");
     }
 
     public function download($codigoInscricao)

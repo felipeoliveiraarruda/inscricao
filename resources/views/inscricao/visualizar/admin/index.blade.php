@@ -10,14 +10,34 @@
         <div class="col-sm-9">
             <div class="card bg-default">
                 <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}
-                    @if ($status != 'N')
+                    @if ($status != 'N' && Session::get('nivel') != 6)
                         <a href="inscricao/{{ $codigoInscricao }}/download" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Download">
                             <i class="fas fa-file-download"></i>
                         </a>
                     @endif
                 </h5>
 
-                <div class="card-body">                    
+                <div class="card-body">   
+                    <div class="flash-message">
+                        @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                            @if(Session::has('alert-' . $msg))
+                                @if ($msg == 'success')
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ Session::get('alert-' . $msg) }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @else
+                                <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }}
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="fechar">&times;</a>
+                                </p>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                    
+
                     <div class="row justify-content-center">
                         <table class="table table-striped">
                             @foreach($arquivos as $arquivo)

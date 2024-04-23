@@ -126,6 +126,12 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('deferimento/destroy/{codigoInscricaoDisciplina}',   [DeferimentoController::class, 'destroy']);
         Route::get('deferimento/{codigoEdital}/primeira-matricula',     [DeferimentoController::class, 'primeira_matricula']);
 
+        /* Proficiencia */
+        Route::get('{codigoInscricao}/proficiencia/',           [InscricaoController::class, 'proficiencia']);
+        Route::get('{codigoInscricao}/proficiencia/create',     [InscricaoController::class, 'proficiencia_create']);
+        Route::post('{codigoInscricao}/proficiencia/store',     [InscricaoController::class, 'proficiencia_store']);
+        Route::get('{codigoInscricao}/proficiencia/imprimir',   [InscricaoController::class, 'proficiencia_imprimir']);
+
         /* PAE */
         Route::get('{codigoEdital}/pae',                                [PaeController::class, 'index']);
         Route::get('{codigoEdital}/pae/create',                         [PaeController::class, 'create']);

@@ -84,6 +84,7 @@
     </div>
 </div>
 
+
 <div class="form-group" id="mostrarDocumentoNacional">  
     <div class="form-row">
         <div class="col">
@@ -112,7 +113,7 @@
     </div>
 </div>
 
-<div class="form-group" id="mostrarDocumentoInternacional">
+<div class="form-group" id="mostrarDocumentoInternacional">  
     <div class="form-row">
         <div class="col">
             <label for="tipoDocumento" class="font-weight-bold">Tipo do Documento<span class="text-danger">*</span></label>
@@ -127,8 +128,8 @@
             <input type="text" class="form-control" id="numeroDocumento" name="numeroDocumento" value="{{ old('numeroDocumento') ?? $pessoais->numeroDocumento }}">
         </div>
         <div class="col">
-            <label for="dataEmissaoRG2" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
-            <input type="date" class="form-control" id="dataEmissaoRG2" name="dataEmissaoRG2" value="{{ old('dataEmissaoRG2') ?? $pessoais->dataEmissaoRG2 ?? '' }}">
+            <label for="dataEmissaoRG" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}">
         </div>
     </div>
 </div>      
@@ -162,6 +163,10 @@
                 @endforeach
             </select> 
         </div>
+        <div class="col">
+            <label for="dependentePessoal" class="font-weight-bold">Número de Dependentes</label>
+            <input type="number" class="form-control" id="dependentePessoal" name="dependentePessoal" value="{{ old('dependentePessoal') ?? $pessoais->dependentePessoal ?? '' }}" required>
+        </div>  
     </div>
 </div>
 

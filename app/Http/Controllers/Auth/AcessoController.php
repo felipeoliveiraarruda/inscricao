@@ -16,11 +16,6 @@ class AcessoController extends Controller
         return view('auth.acesso');
     }
 
-    public function create2()
-    {
-        return view('auth.login');
-    }
-
     public function index()
     {
         if (Auth::user()->cpf == '99999999999')

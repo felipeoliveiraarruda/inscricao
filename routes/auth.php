@@ -40,10 +40,7 @@ Route::middleware('guest')->group(function () {
                 ->name('password.update');
 
     Route::get('acesso', [AcessoController::class, 'create'])
-                ->name('acesso');    
-                
-    Route::get('acesso2', [AcessoController::class, 'create2'])
-            ->name('acesso2');   
+                ->name('acesso');                
 });
 
 Route::middleware('auth')->group(function () {

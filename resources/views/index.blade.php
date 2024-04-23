@@ -34,7 +34,7 @@
                                         </td>
                                         @else
                                         <td> 
-                                            <a class="login_logout_link" href="acesso2">
+                                            <a class="login_logout_link" href="acesso">
                                                 <i class="fas fa-sign-in-alt"></i> Entrar
                                             </a>
                                         </td>
@@ -58,7 +58,7 @@
                     <table class="table">
                         <tbody>
                             @if (count($encerrados) == 0)
-                                Nenhuma inscrição encerrada
+                                Nenhuma inscrição encerradas
                             @else
                                 @foreach ($encerrados as $edital)
                                     @php

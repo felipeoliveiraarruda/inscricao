@@ -13,6 +13,8 @@ class EditalController extends Controller
     public function index()
     {
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->get();
+
+        dd($editais);
         
         return view('admin.edital.index',
         [
@@ -48,7 +50,7 @@ class EditalController extends Controller
         return redirect("/admin/edital");
     }
 
-    public function clonar($codigoEdital)
+    public function update(EditalRequest $request, Edital $edital)
     {
         //
     }

@@ -1,5 +1,4 @@
-@if (Session::get('total')['especial'] >= 6 && $total >= 11 && !empty($requerimento) && $status == 'N') 
-    <div class="col-sm-12 mb-4">  
+@if (Session::get('total')['especial'] >= 7 && $total >= 11 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -137,7 +136,7 @@
                         </a>
                     @endif 
                 @else
-                    <a href="documento/{{$codigoInscricao}}/2" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                    <a href="documento/{{$codigoInscricao}}/1" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a> 
                 @endif

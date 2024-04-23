@@ -705,12 +705,12 @@ class Comprovante extends Fpdf
 		
         if ($siglaNivel == "AE")
         {
-            $titulo = "REQUERIMENTO DE INSCRIÇÃO ALUNO ESPECIAL - {$siglaPrograma}";
+            $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA ALUNO ESPECIAL - {$siglaPrograma}";
         }
 
 		if ($siglaNivel == "DF")
         {
-            $titulo = "REQUERIMENTO DE INSCRIÇÃO DOUTORADO FLUXO CONTINUO - {$siglaPrograma}";
+            $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA DOUTORADO FLUXO CONTINUO - {$siglaPrograma}";
         }
 
         return $titulo;

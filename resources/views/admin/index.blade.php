@@ -66,7 +66,9 @@
                                                     </a>
                                                 @endif
                                             @endif
+
                                         </td>
+       
                                      </tr>
                                 @endforeach
                             @endif

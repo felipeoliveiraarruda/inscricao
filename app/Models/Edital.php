@@ -184,12 +184,4 @@ class Edital extends Model
 
         return $editais;
     }
-
-    public function obterUltimoEditalNivel($codigoNivel)
-    {
-        $edital = Edital::select(\DB::raw('MAX(codigoEdital) as ultimo'))
-                        ->where('codigoNivel', $codigoNivel)->first();  
-
-        return $edital->ultimo;
-    }
 }

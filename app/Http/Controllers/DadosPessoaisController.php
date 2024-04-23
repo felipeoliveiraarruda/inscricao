@@ -99,7 +99,7 @@ class DadosPessoaisController extends Controller
             'naturalidadePessoal'   => $request->naturalidadePessoal,
             'estadoPessoal'         => $request->estadoPessoal,
             'paisPessoal'           => $request->paisPessoal,
-            //'dependentePessoal'     => $request->dependentePessoal,
+            'dependentePessoal'     => $request->dependentePessoal,
             'racaPessoal'           => $request->racaPessoal,
             'especialPessoal'       => $request->especialPessoal,
             'tipoEspecialPessoal'   => $request->tipoEspecialPessoal,
@@ -109,11 +109,11 @@ class DadosPessoaisController extends Controller
         /* Cadastra o documento */
         $documento = Documento::create([
             'codigoUsuario'         => Auth::user()->id,
-            'tipoDocumento'         => (empty($request->tipoDocumento) ? 'RG' : $request->tipoDocumento),
+            'tipoDocumento'         => $request->tipoDocumento,
             'numeroRG'              => $request->rg,
             'ufEmissorRG'           => $request->ufEmissorRG,
             'orgaoEmissorRG'        => $request->orgaoEmissorRG,
-            'dataEmissaoRG'         => (empty($request->tipoDocumento) ? $request->dataEmissaoRG : $request->dataEmissaoRG2),
+            'dataEmissaoRG'         => $request->dataEmissaoRG,
             'numeroDocumento'       => $request->numeroDocumento,
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
@@ -241,7 +241,7 @@ class DadosPessoaisController extends Controller
         $pessoal->naturalidadePessoal   = $request->naturalidadePessoal;
         $pessoal->estadoPessoal         = $request->estadoPessoal;
         $pessoal->paisPessoal           = $request->paisPessoal;
-       // $pessoal->dependentePessoal     = $request->dependentePessoal;
+        $pessoal->dependentePessoal     = $request->dependentePessoal;
         $pessoal->racaPessoal           = $request->racaPessoal;
         $pessoal->especialPessoal       = $request->especialPessoal;
         $pessoal->tipoEspecialPessoal   = $request->tipoEspecialPessoal;
@@ -249,15 +249,32 @@ class DadosPessoaisController extends Controller
         $pessoal->save();
 
         $documento = Documento::find($request->codigoDocumento);
-        $documento->codigoUsuario         = Auth::user()->id;
-        $documento->tipoDocumento         = $request->tipoDocumento;
-        $documento->numeroRG              = $request->rg;
-        $documento->ufEmissorRG           = $request->ufEmissorRG;
-        $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
-        $documento->dataEmissaoRG         = (empty($request->tipoDocumento) ? $request->dataEmissaoRG : $request->dataEmissaoRG2);
-        $documento->numeroDocumento       = $request->numeroDocumento;
-        $documento->codigoPessoaAlteracao = Auth::user()->codpes;
-        $documento->save();
+
+        if(empty($documento))
+        {
+            $documento = Documento::create([
+                'codigoUsuario'         => Auth::user()->id,
+                'tipoDocumento'         => $request->tipoDocumento,
+                'numeroRG'              => $request->rg,
+                'ufEmissorRG'           => $request->ufEmissorRG,
+                'orgaoEmissorRG'        => $request->orgaoEmissorRG,
+                'dataEmissaoRG'         => $request->dataEmissaoRG,
+                'numeroDocumento'       => $request->numeroDocumento,
+                'codigoPessoaAlteracao' => Auth::user()->codpes,
+            ]);
+        }
+        else
+        {
+            $documento->codigoUsuario         = Auth::user()->id;
+            $documento->tipoDocumento         = $request->tipoDocumento;
+            $documento->numeroRG              = $request->rg;
+            $documento->ufEmissorRG           = $request->ufEmissorRG;
+            $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
+            $documento->dataEmissaoRG         = $request->dataEmissaoRG;
+            $documento->numeroDocumento       = $request->numeroDocumento;
+            $documento->codigoPessoaAlteracao = Auth::user()->codpes;
+            $documento->save();
+        }
 
         if(!empty($request->codigoInscricao))
         {
