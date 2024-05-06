@@ -26,7 +26,7 @@
                                         </td>
                                         <td>de {{ $edital->dataInicioEdital->format('d/m/Y') }} a {{ $edital->dataFinalEdital->format('d/m/Y') }} 
                                         </td>
-                                        @if ($edital->codigoNivel == 5)
+                                        @if ($edital->codigoNivel == 5 || $edital->codigoNivel == 6)
                                         <td> 
                                             <a class="login_logout_link" href="login">
                                                 <i class="fas fa-sign-in-alt"></i> Entrar

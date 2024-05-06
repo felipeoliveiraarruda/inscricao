@@ -263,7 +263,7 @@ class Comprovante extends Fpdf
 
 	// Private Functions
 	function SetSpace() // Minimal space between words
-	{
+	{		
 		$tag=$this->Parser($this->Text);
 		
 		$this->FindStyle($tag[2],0);

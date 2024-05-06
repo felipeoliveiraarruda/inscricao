@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use App\Models\Inscricao;
+use App\Models\Arquivo;
+use App\Models\Edital;
 use File;
+use Webklex\PDFMerger\Facades\PDFMergerFacade as PDFMerger;
+use Codedge\Fpdf\Fpdf\Fpdf as Fpdf;
 
 class ZipController extends Controller
 {
@@ -43,5 +47,67 @@ class ZipController extends Controller
         File::deleteDirectory($diretorio);
 
         return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+    }
+
+    public function proficiencia_merge($codigoEdital)
+    {
+        $arquivos = Arquivo::select(\DB::raw('arquivos.*'))
+                            ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
+                            ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
+                            ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                            ->where('inscricoes.codigoEdital',  $codigoEdital)
+                            ->where('inscricoes.statusInscricao',  'C')
+                            ->orderBy('users.name')
+                            ->get();
+
+        $anosemestre = Edital::obterSemestreAno($codigoEdital);
+        $curso       = Edital::obterCursoEdital($codigoEdital);
+
+        if ($curso == 97002)
+        {
+            $documento = 'ppgem';
+        }
+
+        $oMerger = PDFMerger::init();
+
+        foreach($arquivos as $arquivo)
+        {
+            $temp = storage_path("app/public/{$arquivo->linkArquivo}");
+            
+            $filepdf = fopen($temp,"r");
+
+            if ($filepdf) 
+            {
+                $line_first = fgets($filepdf);
+                fclose($filepdf);
+            } 
+            else
+            {
+                echo "error opening the file.";
+            }
+            
+            // extract number such as 1.4 ,1.5 from first read line of pdf file
+            preg_match_all('!\d+!', $line_first, $matches);	
+           
+            // save that number in a variable
+            $pdfversion = implode('.', $matches[0]);
+            
+            if($pdfversion > "1.4")
+            {
+                $temp2 = storage_path("app/public/proficiencia/{$arquivo->codigoArquivo}_.pdf");
+                shell_exec('ghostscript -dBATCH -dNOPAUSE -q -dCompatibilityLevel=1.4 -sDEVICE=pdfwrite -sOutputFile="'.$temp2.'" "'.$temp.'"');
+                $oMerger->addPDF($temp2, 'all');                 
+                Storage::delete($temp2);
+            }
+            else
+            {
+                $oMerger->addPDF($temp, 'all');
+            }
+        }
+
+        $oMerger->merge();
+        $oMerger->save(storage_path("app/public/proficiencia/{$anosemestre}/{$documento}.pdf"));
+
+        return redirect(asset("storage/proficiencia/{$anosemestre}/{$documento}.pdf"));
     }
 }

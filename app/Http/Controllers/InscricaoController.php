@@ -2477,6 +2477,8 @@ class InscricaoController extends Controller
 
         $voltar = "inscricao/{$edital}";
 
+       // dd($inscricao);
+
         return view('inscricao.visualizar.admin.index',
         [
             'codigoInscricao'   => $codigoInscricao,
@@ -2912,8 +2914,17 @@ class InscricaoController extends Controller
             $mestrado = 'X';
         }
 
-        $texto = "<p>Eu ".Auth::user()->name.", - N.ºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nível de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientação do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de Proficiência em Língua Estrangeira, no idioma Inglês.</b></p>";
+        //
 
+        if(Auth::user()->codpes == 13556853)
+        {
+            $texto = "<p>Eu Ana Carolina B. da Silva, N.ºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nível de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientação do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de Proficiência em Língua Estrangeira, no idioma Inglês.</b></p>";
+        }
+        else
+        {
+            $texto = "<p>Eu ".Auth::user()->name.", - N.ºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nível de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientação do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de Proficiência em Língua Estrangeira, no idioma Inglês.</b></p>";
+        }
+       
         $pdf->setCabecalhoPresenca('ppgem');
         $pdf->setPresenca('ppgem');
       
@@ -2977,7 +2988,6 @@ class InscricaoController extends Controller
         $pdf->Cell(20, 8, utf8_decode(''), 0, 0, 'L');
         $pdf->Ln();
   
-
         $pdf->Output();
     }
 
@@ -3023,5 +3033,137 @@ class InscricaoController extends Controller
         } 
 
         return redirect("inscricao/{$edital->codigoEdital}"); 
+    }
+
+    public static function proficiencia_presenca(\App\Models\Comprovante $pdf, $codigoEdital)
+    {
+        //$inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+
+        $pdf->setCabecalhoPresenca('ppgem');
+        $pdf->setPresenca('ppgem');
+      
+        $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
+        $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+        $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B', 14);
+        $pdf->Ln(5);
+        $pdf->Cell(190, 8, utf8_decode('Alunos Inscritos para Exame de Proficiência em Língua - Inglês'), 0, 0, 'C');            
+        $pdf->Ln();
+        $pdf->Cell(190, 8, utf8_decode('09/05/2024 - 1º Exame 2024'), 0, 0, 'C'); 
+        $pdf->Ln(10);
+
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->WriteTag(175, 8, utf8_decode('<p><bu><i>MESTRADO</i></bu></p>'), 0, 'J'); 
+        $pdf->Cell(10, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Ln(1);
+
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(25, 8, utf8_decode('Nº USP'), 1, 0, 'C', true);
+        $pdf->Cell(80, 8, utf8_decode('Nome'), 1, 0, 'C', true);
+        $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Ln();
+
+        //\DB::enableQueryLog();
+
+        $inscricoes = Inscricao::select(\DB::raw('users.*'))
+                                ->join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                                ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->where('inscricoes.codigoEdital',  $codigoEdital)
+                                ->where('inscricoes.statusInscricao',  'C')
+                                ->where('inscricoes_proficiencia.nivelProficiencia',  'ME')
+                                ->orderBy('users.name')
+                                ->get();
+
+        //dd(\DB::getQueryLog());
+
+        $pdf->SetFont('Arial', '', 12);
+        $i = 1;
+
+        foreach($inscricoes as $inscricao)
+        {
+            $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+            $pdf->Cell(15, 8, utf8_decode($i), 1, 0, 'C');
+            $pdf->Cell(25, 8, utf8_decode($inscricao->codpes), 1, 0, 'C');
+            $pdf->Cell(80, 8, utf8_decode($inscricao->name), 1, 0, 'L');
+            $pdf->Cell(60, 8, utf8_decode(''), 1, 0, 'C');
+            $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+            $pdf->Ln();
+            $i++;
+        }
+
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->WriteTag(175, 8, utf8_decode('<p><bu><i>DOUTORADO</i></bu></p>'), 0, 'J'); 
+        $pdf->Cell(10, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Ln(1);
+
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(25, 8, utf8_decode('Nº USP'), 1, 0, 'C', true);
+        $pdf->Cell(80, 8, utf8_decode('Nome'), 1, 0, 'C', true);
+        $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
+        $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Ln();
+
+        //\DB::enableQueryLog();
+
+        $inscricoes = Inscricao::select(\DB::raw('users.*'))
+                                ->join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                                ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->where('inscricoes.codigoEdital',  $codigoEdital)
+                                ->where('inscricoes.statusInscricao',  'C')
+                                ->where('inscricoes_proficiencia.nivelProficiencia',  'DD')
+                                ->orderBy('users.name')
+                                ->get();
+
+        //dd(\DB::getQueryLog());
+
+        $pdf->SetFont('Arial', '', 12);
+        $i = 1;
+
+        foreach($inscricoes as $inscricao)
+        {
+            $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+            $pdf->Cell(15, 8, utf8_decode($i), 1, 0, 'C');
+            $pdf->Cell(25, 8, utf8_decode($inscricao->codpes), 1, 0, 'C');
+            $pdf->Cell(80, 8, utf8_decode($inscricao->name), 1, 0, 'L');
+            $pdf->Cell(60, 8, utf8_decode(''), 1, 0, 'C');
+            $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
+            $pdf->Ln();
+            $i++;
+        }
+
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Ln(10);
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode(''), 'B', 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();
+
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();
+
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode('Coordenador da CCP-PPGEM, EEL/USP'), 0, 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();
+
+
+        $pdf->Output();
     }
 }

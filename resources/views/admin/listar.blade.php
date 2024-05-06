@@ -69,9 +69,11 @@
                                     @elseif ($inscrito->statusInscricao == 'P')
                                         <th  scope="col" class="text-danger">Pendente</th>
                                     @elseif ($inscrito->statusInscricao == 'C')
-                                        <th scope="col" class="text-success">Confirmada</th>
+                                        <th scope="col" class="text-secondary">Confirmada</th>
                                     @elseif ($inscrito->statusInscricao == 'R')
                                         <th scope="col" class="text-danger">Rejeitada</th>
+                                    @elseif ($inscrito->statusInscricao == 'A')
+                                        <th scope="col" class="text-success">Aprovado</th>
                                     @else
                                         <th scope="col">-</th>
                                     @endif
@@ -91,10 +93,14 @@
                                                 @endif 
                                             @endif
                                         @else
-                                        <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
+                                            <a href="inscricao/visualizar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning">Visualizar</a>
 
                                             @if ($inscrito->statusInscricao == 'N')                                                
                                                 <a href="inscricao/recusar/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger">Recusar</a>
+                                            @endif
+
+                                            @if ($inscrito->statusInscricao == 'C' && $inscrito->codigoNivel == 3 && Session::get('level') == 'admin')                                                
+                                                <a href="inscricao/aprovado/{{ $inscrito->codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-success">Aprovado</a>
                                             @endif
                                         @endif
                                     </td>

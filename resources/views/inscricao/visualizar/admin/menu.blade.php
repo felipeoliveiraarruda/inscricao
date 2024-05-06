@@ -1,5 +1,5 @@
 <div class="list-group">
-    @if (Session::get('nivel') != 6)
+    @if ($codigoEdital != 8)
         <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">
             1.Dados Pessoais 
             <i class="fa @if (Session::get('total')['pessoal'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>

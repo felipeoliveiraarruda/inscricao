@@ -31,7 +31,8 @@
                                     @php
                                         $curso    = $utils->obterCurso($edital->codigoCurso);
                                         $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
-                                    @endphp       
+                                    @endphp
+
                                     <tr>
                                         <td>{{ $edital->descricaoNivel }} - {{ $semestre }} - {{ $curso['nomcur'] }}</td>
                                         <td>
@@ -53,6 +54,17 @@
                                                     <i class="fas fa-tasks"></i>
                                                 </a>
                                                 @endif
+
+                                                @if ($edital->codigoNivel == 6 && $edital->dataFinalEdital < date('Y-m-d'))
+                                                    <a href="inscricao/{{ $edital->codigoEdital }}/proficiencia/download" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download">
+                                                        <i class="fas fa-file-download"></i>
+                                                    </a>
+                                                    <a href="inscricao/{{ $edital->codigoEdital }}/proficiencia/lista" target="_new" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Lista de Presença">
+                                                        <i class="fas fa-list-ol"></i>
+                                                    </a>
+                                                @endif
+
+                                                
 
                                                 @if ($pae == true && $edital->codigoNivel == 5)
                                                     <!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>-->
