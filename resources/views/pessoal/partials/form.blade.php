@@ -84,8 +84,49 @@
     </div>
 </div>
 
+<div class="form-group">  
+    <div class="form-row">
+        <div class="col">
+            <label for="tipoDocumento" class="font-weight-bold">Tipo do Documento<span class="text-danger">*</span></label>
+            <select class="form-control" id="tipoDocumento" name="tipoDocumento">
+                <option value="">Selecione o tipo de documento</option>
+                <option value="RG" {{ old('tipoDocumento') == "RG" ? "selected" : $pessoais->tipoDocumento == "RG" ? "selected" : "" }}>RG</option>
+                <option value="RNE" {{ old('tipoDocumento') == "RNE" ? "selected" : $pessoais->tipoDocumento == "RNE" ? "selected" : "" }}>RNE</option>
+                <option value="Passaporte" {{ old('tipoDocumento') == "Passaporte" ? "selected" : $pessoais->tipoDocumento == "Passaporte" ? "selected" : "" }}>Passaporte</option>
+            </select>         
+        </div>
+        <div class="col">
+            <label for="numeroDocumento" class="font-weight-bold">Número do Documento<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="numeroDocumento" name="numeroDocumento" value="{{ old('numeroDocumento') ?? $pessoais->numeroDocumento }}">
+        </div>
 
-<div class="form-group" id="mostrarDocumentoNacional">  
+        <div class="col">                          
+            <label for="sexoPessoal" class="font-weight-bold">Sexo<span class="text-danger">*</span></label>
+            <select class="form-control" id="sexoPessoal" name="sexoPessoal" required>
+                <option value="">Selecione o Sexo</option>
+                @foreach($sexos as $sexo)
+                    <option value="{{ $sexo }}" {{ old('sexoPessoal') == $sexo ? "selected" : $pessoais->sexoPessoal == $sexo ? "selected" : "" }}>{{ $sexo }}</option>
+                @endforeach
+            </select>            
+        </div>
+        <div class="col">
+            <label for="racaPessoal" class="font-weight-bold">Raça/Cor<span class="text-danger">*</span></label>
+            <select class="form-control" id="racaPessoal" name="racaPessoal" required>
+                <option value="">Selecione a Raça/Cor</option>
+                @foreach($racas as $raca)
+                    <option value="{{ $raca }}" {{ old('racaPessoal') == $raca ? "selected" : $pessoais->racaPessoal == $raca ? "selected" : "" }}>{{ $raca }}</option>
+                @endforeach
+            </select>
+        </div>       
+        {{-- <div class="col">
+            <label for="dataEmissaoRG" class="font-weight-bold">Data de Emissão<span class="text-danger">*</span></label>
+            <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}">
+        </div> --}}
+    </div>
+</div>
+
+
+{{-- <div class="form-group" id="mostrarDocumentoNacional">  
     <div class="form-row">
         <div class="col">
             <label for="rg" class="font-weight-bold">{{ __('RG') }}<span class="text-danger">*</span></label>
@@ -132,29 +173,12 @@
             <input type="date" class="form-control" id="dataEmissaoRG" name="dataEmissaoRG" value="{{ old('dataEmissaoRG') ?? $pessoais->dataEmissaoRG ?? '' }}">
         </div>
     </div>
-</div>      
+</div> --}}
 
 <div class="form-group">  
     <div class="form-row">
-        <div class="col">                          
-            <label for="sexoPessoal" class="font-weight-bold">Sexo<span class="text-danger">*</span></label>
-            <select class="form-control" id="sexoPessoal" name="sexoPessoal" required>
-                <option value="">Selecione o Sexo</option>
-                @foreach($sexos as $sexo)
-                    <option value="{{ $sexo }}" {{ old('sexoPessoal') == $sexo ? "selected" : $pessoais->sexoPessoal == $sexo ? "selected" : "" }}>{{ $sexo }}</option>
-                @endforeach
-            </select>            
-        </div>
-        <div class="col">
-            <label for="racaPessoal" class="font-weight-bold">Raça/Cor<span class="text-danger">*</span></label>
-            <select class="form-control" id="racaPessoal" name="racaPessoal" required>
-                <option value="">Selecione a Raça/Cor</option>
-                @foreach($racas as $raca)
-                    <option value="{{ $raca }}" {{ old('racaPessoal') == $raca ? "selected" : $pessoais->racaPessoal == $raca ? "selected" : "" }}>{{ $raca }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col">
+
+        {{-- <div class="col">
             <label for="estadoCivilPessoal" class="font-weight-bold">Estado Civil<span class="text-danger">*</span></label>
             <select class="form-control" id="estadoCivilPessoal" name="estadoCivilPessoal" required>
                 <option value="">Selecione o Estado Cívil</option>
@@ -166,7 +190,7 @@
         <div class="col">
             <label for="dependentePessoal" class="font-weight-bold">Número de Dependentes</label>
             <input type="number" class="form-control" id="dependentePessoal" name="dependentePessoal" value="{{ old('dependentePessoal') ?? $pessoais->dependentePessoal ?? '' }}" required>
-        </div>  
+        </div>   --}}
     </div>
 </div>
 

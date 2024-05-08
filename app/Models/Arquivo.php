@@ -125,7 +125,8 @@ class Arquivo extends Model
         $lattes = Arquivo::listarArquivosPae($codigoPae, 9, true);
         $ficha  = Arquivo::listarArquivosPae($codigoPae, 22, true);
 
-        if ($lattes > 0 && $ficha > 0)
+        //if ($lattes > 0 && $ficha > 0)
+        if ($ficha > 0)
         {
             return true;
         }

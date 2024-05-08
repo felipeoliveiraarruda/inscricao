@@ -82,6 +82,7 @@ class Inscricao extends Model
     {
         $inscricao = Inscricao::join('editais', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                               ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                              ->leftJoin('pessoais', 'users.id', '=', 'pessoais.codigoUsuario')
                               ->where('inscricoes.codigoUsuario', $user_id)
                               ->where('inscricoes.codigoEdital', $codigoEdital)
                               ->first();

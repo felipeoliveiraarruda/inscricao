@@ -95,11 +95,11 @@ class DadosPessoaisController extends Controller
             'codigoUsuario'         => Auth::user()->id,
             'dataNascimentoPessoal' => $request->dataNascimentoPessoal,
             'sexoPessoal'           => $request->sexoPessoal,
-            'estadoCivilPessoal'    => $request->estadoCivilPessoal,
+            //'estadoCivilPessoal'    => $request->estadoCivilPessoal,
             'naturalidadePessoal'   => $request->naturalidadePessoal,
             'estadoPessoal'         => $request->estadoPessoal,
             'paisPessoal'           => $request->paisPessoal,
-            'dependentePessoal'     => $request->dependentePessoal,
+            //'dependentePessoal'     => $request->dependentePessoal,
             'racaPessoal'           => $request->racaPessoal,
             'especialPessoal'       => $request->especialPessoal,
             'tipoEspecialPessoal'   => $request->tipoEspecialPessoal,
@@ -110,9 +110,9 @@ class DadosPessoaisController extends Controller
         $documento = Documento::create([
             'codigoUsuario'         => Auth::user()->id,
             'tipoDocumento'         => $request->tipoDocumento,
-            'numeroRG'              => $request->rg,
-            'ufEmissorRG'           => $request->ufEmissorRG,
-            'orgaoEmissorRG'        => $request->orgaoEmissorRG,
+            //'numeroRG'              => $request->rg,
+            //'ufEmissorRG'           => $request->ufEmissorRG,
+            //'orgaoEmissorRG'        => $request->orgaoEmissorRG,
             'dataEmissaoRG'         => $request->dataEmissaoRG,
             'numeroDocumento'       => $request->numeroDocumento,
             'codigoPessoaAlteracao' => Auth::user()->codpes,
@@ -237,11 +237,11 @@ class DadosPessoaisController extends Controller
         $pessoal->codigoUsuario         = Auth::user()->id;
         $pessoal->dataNascimentoPessoal = $request->dataNascimentoPessoal;
         $pessoal->sexoPessoal           = $request->sexoPessoal;
-        $pessoal->estadoCivilPessoal    = $request->estadoCivilPessoal;
+        //$pessoal->estadoCivilPessoal    = $request->estadoCivilPessoal;
         $pessoal->naturalidadePessoal   = $request->naturalidadePessoal;
         $pessoal->estadoPessoal         = $request->estadoPessoal;
         $pessoal->paisPessoal           = $request->paisPessoal;
-        $pessoal->dependentePessoal     = $request->dependentePessoal;
+       // $pessoal->dependentePessoal     = $request->dependentePessoal;
         $pessoal->racaPessoal           = $request->racaPessoal;
         $pessoal->especialPessoal       = $request->especialPessoal;
         $pessoal->tipoEspecialPessoal   = $request->tipoEspecialPessoal;
@@ -255,9 +255,9 @@ class DadosPessoaisController extends Controller
             $documento = Documento::create([
                 'codigoUsuario'         => Auth::user()->id,
                 'tipoDocumento'         => $request->tipoDocumento,
-                'numeroRG'              => $request->rg,
-                'ufEmissorRG'           => $request->ufEmissorRG,
-                'orgaoEmissorRG'        => $request->orgaoEmissorRG,
+                //'numeroRG'              => $request->rg,
+                //'ufEmissorRG'           => $request->ufEmissorRG,
+                //'orgaoEmissorRG'        => $request->orgaoEmissorRG,
                 'dataEmissaoRG'         => $request->dataEmissaoRG,
                 'numeroDocumento'       => $request->numeroDocumento,
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
@@ -267,9 +267,9 @@ class DadosPessoaisController extends Controller
         {
             $documento->codigoUsuario         = Auth::user()->id;
             $documento->tipoDocumento         = $request->tipoDocumento;
-            $documento->numeroRG              = $request->rg;
-            $documento->ufEmissorRG           = $request->ufEmissorRG;
-            $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
+            //$documento->numeroRG              = $request->rg;
+           // $documento->ufEmissorRG           = $request->ufEmissorRG;
+           // $documento->orgaoEmissorRG        = $request->orgaoEmissorRG;
             $documento->dataEmissaoRG         = $request->dataEmissaoRG;
             $documento->numeroDocumento       = $request->numeroDocumento;
             $documento->codigoPessoaAlteracao = Auth::user()->codpes;

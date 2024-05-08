@@ -109,6 +109,7 @@ class InscricaoController extends Controller
     public function create($codigoEdital)
     {        
         $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoEdital);
+        //dd($inscricao);
 
         if (empty($inscricao))
         {            
@@ -123,9 +124,6 @@ class InscricaoController extends Controller
             ]); 
         }
 
-        Utils::obterTotalInscricao($inscricao->codigoInscricao);
-        $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 1, 2, 3, 4, 29, 9, 31, 32, 33, 34, 35, 28));
-
         $edital = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                         ->join('users', 'editais.codigoUsuario', '=', 'users.id')
                         ->where('editais.codigoEdital', $codigoEdital)->first();
@@ -133,30 +131,58 @@ class InscricaoController extends Controller
         $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre = Edital::obterSemestreAno($codigoEdital, true);
         $status      = Inscricao::obterStatusInscricao($inscricao->codigoInscricao);
-
         session(['nivel' => $inscricao->codigoNivel]);
 
-        $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
-        $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
-        $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
-        $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
-        $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
-        $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(29));
-        $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(30));
-        $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
-        $plano_estudo         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(31));
-        $projeto              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(32));
-        $carta                = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(33));
-        $curriculo_orientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(34));
-        $termo_orientacao     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(35));
-        $requerimento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(28));
-
-        if ($inscricao->planoCoorientador == 'S')
+        if ($inscricao->codigoNivel == 4)
         {
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 3, 4, 9));
+
+            $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
+            $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
+            $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
+            $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
+            $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
+            $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(5));
+            $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(6,7));
+            $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
+            $requerimento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(28));
+    
             $curriculo_coorientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(36));
             $credenciamento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(37));
             $carta_aceite           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(38));
+            $carta_coorientador     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(39));
         }
+
+        if ($inscricao->codigoNivel == 2 || $inscricao->codigoNivel == 3)
+        {
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38, 39));
+
+            $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
+            $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
+            $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
+            $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
+            $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
+            $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(29));
+            $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(30));
+            $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
+            $plano_estudo         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(31));
+            $projeto              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(32));
+            $carta                = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(33));
+            $curriculo_orientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(34));
+            $termo_orientacao     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(35));
+            $requerimento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(28));
+
+            if ($inscricao->planoCoorientador == 'S')
+            {
+                $curriculo_coorientador = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(36));
+                $credenciamento         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(37));
+                $carta_aceite           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(38));
+                $carta_coorientador     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(39));
+            }
+        }
+
+        Utils::obterTotalInscricao($inscricao->codigoInscricao);
+
 
         return view('inscricao',
         [
@@ -185,6 +211,8 @@ class InscricaoController extends Controller
             'credenciamento'         => (empty($credenciamento) ? '' : $credenciamento),
             'carta_aceite'           => (empty($carta_aceite) ? '' : $carta_aceite),
             'requerimento'           => (empty($requerimento) ? '' : $requerimento),
+            'carta_coorientador'     => (empty($carta_coorientador) ? '' : $carta_coorientador),
+            'pais'                   => $inscricao->paisPessoal,
         ]);
     }
 
@@ -232,7 +260,7 @@ class InscricaoController extends Controller
         $arquivos = Arquivo::listarArquivos(Auth::user()->id, array(1, 2, 3, 4, 27), $codigoInscricao);
         
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));;
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/pessoal";
 
@@ -464,9 +492,6 @@ class InscricaoController extends Controller
             $codigoInscricaoResumoEscolar = '';
         }
         
-        $status = Inscricao::obterStatusInscricao($codigoInscricao);
-        $edital = Inscricao::obterEditalInscricao($codigoInscricao);
-
         if (!empty($codigoInscricaoResumoEscolar))
         {
             $arquivos = InscricoesResumoEscolar::find($codigoInscricaoResumoEscolar);
@@ -478,6 +503,9 @@ class InscricaoController extends Controller
             $codigoHistorico = '';
             $codigoDiploma   = '';
         }
+
+        $status = Inscricao::obterStatusInscricao($codigoInscricao);
+        $edital = Inscricao::obterEditalInscricao($codigoInscricao);
 
         if ($status == 'P')
         {
@@ -494,6 +522,7 @@ class InscricaoController extends Controller
             'status'                        => $status,
             'codigoHistorico'               => $codigoHistorico,
             'codigoDiploma'                 => $codigoDiploma,
+            'ano'                           => date('Y'),
         ]); 
     } 
 

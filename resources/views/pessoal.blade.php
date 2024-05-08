@@ -45,15 +45,13 @@
                                                 <thead>
                                                     <tr class="text-center">
                                                         <th scope="col">Nome</th>
-                                                        <th scope="col">CPF</th>
-                                                        <th scope="col">RG</th>
+                                                        <th scope="col">E-mail</th>
                                                         <th scope="col"></th>
                                                     </tr>
                                                 </thead>
                                                 <tr>
                                                     <td>{{ $pessoais->name }}</td>
-                                                    <td class="text-center">{{ $pessoais->cpf }}</td>
-                                                    <td class="text-center">{{ $pessoais->rg }}</td>                                          
+                                                    <td class="text-center">{{ $pessoais->email }}</td>                                         
                                                     <td class="text-center">
                                                         @if(Session::get('level') == 'user')
                                                             @if ($status == 'N')

@@ -82,6 +82,8 @@ class AdminController extends Controller
         } 
         else 
         {
+           // \DB::enableQueryLog();
+
             if (((in_array("Docenteusp", session('vinculos')) == true) || (in_array("Docente", session('vinculos')) == true)) && (session('level') == 'manager'))
             {
                 $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae', 'avaliadores.codigoAvaliador'))
@@ -107,6 +109,7 @@ class AdminController extends Controller
                                             ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                             ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                             ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
+                                            ->where('inscricoes.deleted_at', NULL)
                                             ->where('editais.codigoEdital', $id)->paginate(10);
                     }
                     else
@@ -116,6 +119,7 @@ class AdminController extends Controller
                                             ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                             ->join('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao') 
                                             ->where('editais.codigoEdital', $id)
+                                            ->where('inscricoes.deleted_at', NULL)
                                             ->where('pae.codigoCurso', $codigoCurso)->paginate(10);
                     }
 
@@ -127,6 +131,7 @@ class AdminController extends Controller
                                         ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                         ->where('editais.codigoEdital', $id)
+                                        ->where('inscricoes.deleted_at', NULL)
                                         ->orderBy('users.name')
                                         ->paginate(30);
                 }
@@ -139,9 +144,12 @@ class AdminController extends Controller
                                    ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                    ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
                                    ->where('editais.codigoEdital', $id)
+                                   ->where('inscricoes.deleted_at', NULL)
                                    ->orderBy('users.name')
                                    ->paginate(30);
             }
+
+           // dd(\DB::getQueryLog());   
         }
                 
         return view('admin.listar',
