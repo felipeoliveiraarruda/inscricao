@@ -1796,480 +1796,788 @@ class InscricaoController extends Controller
             $eixofoto = 71;
         }
 
-        $pdf->SetFont('Arial','B', 10);
-        $pdf->SetFillColor(190,190,190);
-        $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
-        $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
-        $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
-        $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
-        $pdf->SetFont('Arial', 'B', 10);
-  
-        $pdf->SetY($eixoy);
-        $pdf->Cell(13,  8, utf8_decode('Nome:'), 'LB',  0, 'C', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(127, 8, utf8_decode($pessoais->name), 'B',  0, 'L', false);
-        $eixoy = $eixoy + 8;
-
-        $pdf->SetY($eixoy);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(12, 8, utf8_decode('Sexo:'), 'L',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(20, 8, utf8_decode($pessoais->sexoPessoal), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(23, 8, utf8_decode('Estado Civil:'), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(45, 8, utf8_decode($pessoais->estadoCivilPessoal), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(32, 8, utf8_decode('Nº Dependente(s):'), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(5, 8, utf8_decode($pessoais->dependentePessoal), 0,  0, 'L', false);
-        $eixoy = $eixoy + 8;   
-
-        $pdf->SetY($eixoy);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(12, 8, utf8_decode('CPF:'), 'L', 0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(25, 8, $pessoais->cpf, 0, 0, 'L', false);
-        
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 0,  0, 'L', false);    
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
-        $eixoy = $eixoy + 8;
-
-        $pais = Utils::obterPais($pessoais->paisPessoal);
-        $localidade = Utils::obterLocalidade($pessoais->naturalidadePessoal);
-
-        $pdf->SetY($eixoy);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(15, 8, utf8_decode('Cidade:'), 'L', 0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(40, 8, "{$localidade['sglest']}/{$pais['nompas']}", 0,  0, 'L', false);
-        $eixoy = $eixoy + 8;
-        
-        $pdf->SetY($eixoy);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(20, 8, utf8_decode('Identidade:'), 'L',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(25, 8, $pessoais->numeroRG, 0,  0, '', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(31, 8, utf8_decode('Data de Emissão:'), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(20, 8, $pessoais->dataEmissaoRG, 0,  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);
-        $eixoy = $eixoy + 8;
-
-        if ($pessoais->especialPessoal == 'S')
-        {
-            $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
-            $necessidades = utf8_decode("Sim - {$tipos}");
-        }
-        else
-        {
-            $necessidades = utf8_decode('Não');
-        }
-
-        $pdf->SetY($eixoy);
-        $pdf->Cell(140, 2, '', 'LB',  0, 'L', false);
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);        
-        $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
-        
-        if ((substr($pessoais->codpes, 0, 2) == 88))
-        {
-            $pdf->Ln();
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(177, 8, $pessoais->email, 'BR',  0, 'L', false);
-        }
-        else
-        {
-            $pdf->Ln();
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(100, 8, $pessoais->email, 'BR',  0, 'L', false);
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(25, 8, utf8_decode('Número USP:'), 'LB',  0, 'L', false);
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(52, 8, $pessoais->codpes, 'BR',  0, 'L', false);
-        }
-
-        $enderecos = Inscricao::obterEnderecoInscricao($codigoInscricao);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(172, 8, utf8_decode("{$enderecos->logradouroEndereco}, {$enderecos->numeroEndereco} {$enderecos->complementoEndereco}"), 'BR',  0, 'L', false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(60, 8, utf8_decode($enderecos->bairroEndereco), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(100, 8, $pessoais->telefone, 'BR',  0, 'L', false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(46, 8, $enderecos->cepEndereco, 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(52, 8, utf8_decode($enderecos->localidadeEndereco), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(40, 8, $enderecos->ufEndereco, 'BR',  0, 'L', false);
-
-        if ($nivel == 'AE')
-        {
-            $temp = Inscricao::find($codigoInscricao);
-
-            if ($temp->alunoEspecial == 'S')
-            {
-                $cursou = 'Sim - '.$temp->dataAlunoEspecial;
-            }
-            else
-            {
-                $cursou = utf8_decode('Não');
-            }
-
-            $pdf->Ln();
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
-        }
-
-        $pdf->Ln();
-        $pdf->SetFont("Arial","B", 10);
-        $pdf->Cell(10, 8, utf8_decode("2."), 1, 0, "L", true);
-        $pdf->Cell(180, 8, utf8_decode("PESSOA A SER NOTIFICADA EM CASO DE EMERGÊNCIA:"), "1", 0, "J", true);
-
-        $emergencias = Inscricao::obterEmergenciaInscricao($codigoInscricao);
-        $endereco = Endereco::find($emergencias->codigoEmergenciaEndereco);
-
-        $pdf->Ln();
-        $pdf->SetFont("Arial", "B", 10);
-        $pdf->Cell(13, 8, utf8_decode("Nome:"), "LB",  0, "L", false);
-        $pdf->SetFont("Arial", "", 10);
-        $pdf->Cell(177, 8, utf8_decode($emergencias->nomePessoaEmergencia), "BR",  0, "L", false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(172, 8, utf8_decode("{$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco}"), 'BR',  0, 'L', false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(60, 8, utf8_decode($endereco->bairroEndereco), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(100, 8, $emergencias->telefonePessoaEmergencia, 'BR',  0, 'L', false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(46, 8, $endereco->cepEndereco, 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(52, 8, utf8_decode($endereco->localidadeEndereco), 'B',  0, 'L', false);
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(40, 8, $endereco->ufEndereco, 'BR',  0, 'L', false);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
-        $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR'), '1', 0, 'J', true);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
-        $pdf->Cell(70, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
-        $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
-        $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
-        
-        $pdf->SetFont('Arial', '', 10);
-
-        $escolares = Inscricao::obterEscolarInscricao($codigoInscricao);
-
-        foreach($escolares as $escolar)
-        {
-            $pdf->Ln();
-            $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
-            $pdf->CellFitScale(70, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
-            $pdf->CellFitScale(25, 8, $escolar->inicioResumoEscolar->format('m/Y'), 1, 0, 'C', false);
-                        
-            if ($escolar->finalResumoEscolar == '')
-            {
-                $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
-            }
-            else
-            {
-                $pdf->CellFitScale(25, 8, $escolar->finalResumoEscolar->format('m/Y'), 1, 0, 'C', false);            
-            }
-        }
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(10, 8, utf8_decode('4.'), 1, 0, 'L', true);
-        $pdf->Cell(180, 8, utf8_decode('CONHECIMENTO DE IDIOMAS ESTRANGEIROS'), 1, 0, 'J', true);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(70, 8, utf8_decode('IDIOMA'), 1, 0, 'C', false);
-        $pdf->Cell(40, 8, utf8_decode('LEITURA'), 1, 0, 'C', false);
-        $pdf->Cell(40, 8, utf8_decode('REDAÇÃO'), 1, 0, 'C', false);
-        $pdf->Cell(40, 8, utf8_decode('CONVERSAÇÃO'), 1, 0, 'C', false);
-
-        $idiomas = Inscricao::obterIdiomaInscricao($codigoInscricao);
-
-        foreach($idiomas as $idioma)
-        {
-            $pdf->Ln();
-            $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(70, 8, utf8_decode($idioma->descricaoIdioma), 1, 0, 'C', false);
-            $pdf->Cell(40, 8, utf8_decode($idioma->leituraIdioma), 1, 0, 'C', false);
-            $pdf->Cell(40, 8, utf8_decode($idioma->redacaoIdioma), 1, 0, 'C', false);
-            $pdf->Cell(40, 8, utf8_decode($idioma->conversacaoIdioma), 1, 0, 'C', false);
-        }
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(10, 8, utf8_decode('5.'), 1, 0, 'L', true);
-        $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA PROFISSIONAL'), '1', 0, 'J', true);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
-        $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
-        $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
-        $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);            
-        $pdf->SetFont('Arial', '', 10);
-
-        $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
-
-        if (!empty($profissionais->codigoExperiencia))
-        {
-            foreach($profissionais as $profissional)
-            {   
-                $pdf->Ln();
-                $pdf->CellFitScale(70, 8, utf8_decode($profissional->entidadeExperiencia), 1, 0, 'J', false);
-                $pdf->CellFitScale(70, 8, utf8_decode($profissional->posicaoExperiencia), 1, 0, 'J', false);    
-                $pdf->CellFitScale(25, 8, $profissional->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
-               
-                if ($profissional->finalExperiencia == '')
-                {
-                    $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
-                }
-                else
-                {
-                    $pdf->CellFitScale(25, 8, $profissional->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
-                }
-            }
-        }
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(10, 8, utf8_decode('6.'), 1, 0, 'L', true);
-        $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA EM ENSINO'), '1', 0, 'J', true);
-
-        $pdf->Ln();
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
-        $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
-        $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
-        $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
-        $pdf->SetFont('Arial', '', 10);
-
-        $ensinos = Inscricao::obterEnsinoInscricao($codigoInscricao);
-
-        if (!empty($ensinos))
-        {
-            foreach($ensinos as $ensino)
-            {   
-                $pdf->Ln();
-                $pdf->CellFitScale(70, 8, utf8_decode($ensino->entidadeExperiencia), 1, 0, 'J', false);
-                $pdf->CellFitScale(70, 8, utf8_decode($ensino->posicaoExperiencia), 1, 0, 'J', false);    
-                $pdf->CellFitScale(25, 8, $ensino->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);    
-
-                if ($ensino->finalExperiencia == '')
-                {
-                    $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
-                }
-                else
-                {
-                    $pdf->CellFitScale(25, 8, $ensino->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
-                }
-            }
-        }
-
-        if ($nivel == 'AE')
-        {
-            $pdf->Ln();
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(10, 8, utf8_decode('7.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
-
-            $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-    
-            $pdf->Ln();
-            $pdf->SetFont("Arial","", 10);
-            $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
-
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(10, 8, utf8_decode('8.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
-            $pdf->SetFont('Arial', '', 10);  
-
-            $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
-
-            foreach($inscricao as $disciplina)
-            {
-                $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
-
-                $pdf->Ln();
-                $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
-            } 
-
-            $pdf->Ln(); 
-        }
-        else
-        {
-            $pdf->Ln();
-            $pdf->SetFont("Arial","B", 10);
-            $pdf->Cell(10, 8, utf8_decode("7."), 1, 0, "L", true);
-            $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
-        
-            $pdf->Ln();
-            $pdf->SetFont("Arial","", 10);
-            $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
-    
-            $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
-       
-            if ($financeiros->bolsaRecursoFinanceiro == 'S')
-            {
-                $bolsa = true;
-                $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
-                $pdf->Ln();
-        
-                $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
-                $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
-                $pdf->Ln();
-                $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
-                $pdf->Ln();
-        
-                $pdf->Cell(190, 8, "", "LR", 0, "L");
-                $pdf->Ln();
-            }
-            else
-            {
-                $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
-    
-                $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
-                $pdf->Ln();
-        
-                $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
-                $pdf->Ln();
-        
-                $pdf->Cell(190, 8, "", "LR", 0, "L");
-                $pdf->Ln();
-            }   
-    
-            $pdf->SetFont("Arial","B", 10);
-            $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
-            $pdf->SetFont("Arial","B", 10);
-            $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
-            $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
-    
-            $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-    
-            $pdf->Ln();
-            $pdf->SetFont("Arial","", 10);
-            $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
-        }
-
-        if ($nivel == 'ME')
-        {            
-            if ($edital->dataDoeEdital->format('m') < 7)
-            {
-                $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
-                $diretorio =  $edital->dataDoeEdital->format('Y').'2';
-            }
-            else
-            {
-                $ano       = $edital->dataDoeEdital->format('Y') + 1;
-                $semestre  = 'primero semestre de '.$ano;
-                $diretorio = $ano.'1'; 
-            }
-
-            $assunto      = "MESTRADO - {$sigla}";
-            $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-            $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
-        }
-
-        // if ($nivel == 'AE')
-        // {         
-        //     if ($edital->dataFinalEdital->format('m') < 7)
-        //     {
-        //         $semestre  = 'primero semestre de '.$edital->dataFinalEdital->format('Y');
-        //         $diretorio = $edital->dataFinalEdital->format('Y').'1'; 
-        //     }
-        //     else
-        //     {                
-        //         $semestre  = 'segundo semestre de '.$edital->dataFinalEdital->format('Y');
-        //         $diretorio =  $edital->dataFinalEdital->format('Y').'2';
-        //     }
-            
-        //     $assunto      = "MESTRADO - {$sigla}";
-        //     $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-        //     $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
-        // }
-
         if ($nivel == 'DF')
-        {            
-            $ano       = $edital->dataDoeEdital->format('Y') + 1;
-            $diretorio = $ano;
+        {
+            $pdf->SetFont('Arial','B', 10);
+            $pdf->SetFillColor(190,190,190);
+            $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
+            $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
+            $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
+            $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
+            $pdf->SetFont('Arial', 'B', 10);
+    
+            $pdf->SetY($eixoy);
+            $pdf->Cell(13,  8, utf8_decode('Nome:'), 'LB',  0, 'C', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(127, 8, utf8_decode($pessoais->name), 'B',  0, 'L', false);
+            $eixoy = $eixoy + 8;
 
-            $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
-            $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
-            $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(12, 8, utf8_decode('Sexo:'), 'L',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, utf8_decode($pessoais->sexoPessoal), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(23, 8, utf8_decode('Estado Civil:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(45, 8, utf8_decode($pessoais->estadoCivilPessoal), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(32, 8, utf8_decode('Nº Dependente(s):'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(5, 8, utf8_decode($pessoais->dependentePessoal), 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;   
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(12, 8, utf8_decode('CPF:'), 'L', 0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(25, 8, $pessoais->cpf, 0, 0, 'L', false);
+            
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 0,  0, 'L', false);    
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
+
+            $pais = Utils::obterPais($pessoais->paisPessoal);
+            $localidade = Utils::obterLocalidade($pessoais->naturalidadePessoal);
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(15, 8, utf8_decode('Cidade:'), 'L', 0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(40, 8, "{$localidade['sglest']}/{$pais['nompas']}", 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
+            
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, 8, utf8_decode('Identidade:'), 'L',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(25, 8, $pessoais->numeroRG, 0,  0, '', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(31, 8, utf8_decode('Data de Emissão:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, $pessoais->dataEmissaoRG, 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
+
+            if ($pessoais->especialPessoal == 'S')
+            {
+                $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
+                $necessidades = utf8_decode("Sim - {$tipos}");
+            }
+            else
+            {
+                $necessidades = utf8_decode('Não');
+            }
+
+            $pdf->SetY($eixoy);
+            $pdf->Cell(140, 2, '', 'LB',  0, 'L', false);
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);        
+            $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
+            
+            if ((substr($pessoais->codpes, 0, 2) == 88))
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(177, 8, $pessoais->email, 'BR',  0, 'L', false);
+            }
+            else
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(100, 8, $pessoais->email, 'BR',  0, 'L', false);
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(25, 8, utf8_decode('Número USP:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(52, 8, $pessoais->codpes, 'BR',  0, 'L', false);
+            }
+
+            $enderecos = Inscricao::obterEnderecoInscricao($codigoInscricao);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(172, 8, utf8_decode("{$enderecos->logradouroEndereco}, {$enderecos->numeroEndereco} {$enderecos->complementoEndereco}"), 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(60, 8, utf8_decode($enderecos->bairroEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(100, 8, $pessoais->telefone, 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(46, 8, $enderecos->cepEndereco, 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(52, 8, utf8_decode($enderecos->localidadeEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(40, 8, $enderecos->ufEndereco, 'BR',  0, 'L', false);
+
+            if ($nivel == 'AE')
+            {
+                $temp = Inscricao::find($codigoInscricao);
+
+                if ($temp->alunoEspecial == 'S')
+                {
+                    $cursou = 'Sim - '.$temp->dataAlunoEspecial;
+                }
+                else
+                {
+                    $cursou = utf8_decode('Não');
+                }
+
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont("Arial","B", 10);
+            $pdf->Cell(10, 8, utf8_decode("2."), 1, 0, "L", true);
+            $pdf->Cell(180, 8, utf8_decode("PESSOA A SER NOTIFICADA EM CASO DE EMERGÊNCIA:"), "1", 0, "J", true);
+
+            $emergencias = Inscricao::obterEmergenciaInscricao($codigoInscricao);
+            $endereco = Endereco::find($emergencias->codigoEmergenciaEndereco);
+
+            $pdf->Ln();
+            $pdf->SetFont("Arial", "B", 10);
+            $pdf->Cell(13, 8, utf8_decode("Nome:"), "LB",  0, "L", false);
+            $pdf->SetFont("Arial", "", 10);
+            $pdf->Cell(177, 8, utf8_decode($emergencias->nomePessoaEmergencia), "BR",  0, "L", false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(172, 8, utf8_decode("{$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco}"), 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(60, 8, utf8_decode($endereco->bairroEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(100, 8, $emergencias->telefonePessoaEmergencia, 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(46, 8, $endereco->cepEndereco, 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(52, 8, utf8_decode($endereco->localidadeEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(40, 8, $endereco->ufEndereco, 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR'), '1', 0, 'J', true);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
+            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
+            
+            $pdf->SetFont('Arial', '', 10);
+
+            $escolares = Inscricao::obterEscolarInscricao($codigoInscricao);
+
+            foreach($escolares as $escolar)
+            {
+                $pdf->Ln();
+                $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
+                $pdf->CellFitScale(70, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
+                $pdf->CellFitScale(25, 8, $escolar->inicioResumoEscolar->format('m/Y'), 1, 0, 'C', false);
+                            
+                if ($escolar->finalResumoEscolar == '')
+                {
+                    $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                }
+                else
+                {
+                    $pdf->CellFitScale(25, 8, $escolar->finalResumoEscolar->format('m/Y'), 1, 0, 'C', false);            
+                }
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('4.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('CONHECIMENTO DE IDIOMAS ESTRANGEIROS'), 1, 0, 'J', true);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(70, 8, utf8_decode('IDIOMA'), 1, 0, 'C', false);
+            $pdf->Cell(40, 8, utf8_decode('LEITURA'), 1, 0, 'C', false);
+            $pdf->Cell(40, 8, utf8_decode('REDAÇÃO'), 1, 0, 'C', false);
+            $pdf->Cell(40, 8, utf8_decode('CONVERSAÇÃO'), 1, 0, 'C', false);
+
+            $idiomas = Inscricao::obterIdiomaInscricao($codigoInscricao);
+
+            foreach($idiomas as $idioma)
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(70, 8, utf8_decode($idioma->descricaoIdioma), 1, 0, 'C', false);
+                $pdf->Cell(40, 8, utf8_decode($idioma->leituraIdioma), 1, 0, 'C', false);
+                $pdf->Cell(40, 8, utf8_decode($idioma->redacaoIdioma), 1, 0, 'C', false);
+                $pdf->Cell(40, 8, utf8_decode($idioma->conversacaoIdioma), 1, 0, 'C', false);
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('5.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA PROFISSIONAL'), '1', 0, 'J', true);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);            
+            $pdf->SetFont('Arial', '', 10);
+
+            $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
+
+            if (!empty($profissionais->codigoExperiencia))
+            {
+                foreach($profissionais as $profissional)
+                {   
+                    $pdf->Ln();
+                    $pdf->CellFitScale(70, 8, utf8_decode($profissional->entidadeExperiencia), 1, 0, 'J', false);
+                    $pdf->CellFitScale(70, 8, utf8_decode($profissional->posicaoExperiencia), 1, 0, 'J', false);    
+                    $pdf->CellFitScale(25, 8, $profissional->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
+                
+                    if ($profissional->finalExperiencia == '')
+                    {
+                        $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                    }
+                    else
+                    {
+                        $pdf->CellFitScale(25, 8, $profissional->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
+                    }
+                }
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('6.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA EM ENSINO'), '1', 0, 'J', true);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
+            $pdf->SetFont('Arial', '', 10);
+
+            $ensinos = Inscricao::obterEnsinoInscricao($codigoInscricao);
+
+            if (!empty($ensinos))
+            {
+                foreach($ensinos as $ensino)
+                {   
+                    $pdf->Ln();
+                    $pdf->CellFitScale(70, 8, utf8_decode($ensino->entidadeExperiencia), 1, 0, 'J', false);
+                    $pdf->CellFitScale(70, 8, utf8_decode($ensino->posicaoExperiencia), 1, 0, 'J', false);    
+                    $pdf->CellFitScale(25, 8, $ensino->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);    
+
+                    if ($ensino->finalExperiencia == '')
+                    {
+                        $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                    }
+                    else
+                    {
+                        $pdf->CellFitScale(25, 8, $ensino->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
+                    }
+                }
+            }
+
+            if ($nivel == 'AE')
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(10, 8, utf8_decode('7.'), 1, 0, 'L', true);
+                $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
+
+                $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
+
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(10, 8, utf8_decode('8.'), 1, 0, 'L', true);
+                $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
+                $pdf->SetFont('Arial', '', 10);  
+
+                $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+                foreach($inscricao as $disciplina)
+                {
+                    $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
+
+                    $pdf->Ln();
+                    $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                } 
+
+                $pdf->Ln(); 
+            }
+            else
+            {
+                $pdf->Ln();
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->Cell(10, 8, utf8_decode("7."), 1, 0, "L", true);
+                $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
+            
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
+        
+                $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
+        
+                if ($financeiros->bolsaRecursoFinanceiro == 'S')
+                {
+                    $bolsa = true;
+                    $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                    $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
+                    $pdf->Ln();
+                    $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, "", "LR", 0, "L");
+                    $pdf->Ln();
+                }
+                else
+                {
+                    $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+        
+                    $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, "", "LR", 0, "L");
+                    $pdf->Ln();
+                }   
+        
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
+                $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
+        
+                $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
+            }
+
+            if ($nivel == 'ME')
+            {            
+                if ($edital->dataDoeEdital->format('m') < 7)
+                {
+                    $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
+                    $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $semestre  = 'primero semestre de '.$ano;
+                    $diretorio = $ano.'1'; 
+                }
+
+                $assunto      = "MESTRADO - {$sigla}";
+                $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            }
+
+            // if ($nivel == 'AE')
+            // {         
+            //     if ($edital->dataFinalEdital->format('m') < 7)
+            //     {
+            //         $semestre  = 'primero semestre de '.$edital->dataFinalEdital->format('Y');
+            //         $diretorio = $edital->dataFinalEdital->format('Y').'1'; 
+            //     }
+            //     else
+            //     {                
+            //         $semestre  = 'segundo semestre de '.$edital->dataFinalEdital->format('Y');
+            //         $diretorio =  $edital->dataFinalEdital->format('Y').'2';
+            //     }
+                
+            //     $assunto      = "MESTRADO - {$sigla}";
+            //     $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+            //     $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
+            // }
+
+            if ($nivel == 'DF')
+            {            
+                $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                $diretorio = $ano;
+
+                $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
+                $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            }
+
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->MultiCell(190, 8, utf8_decode($requerimento), 'LR', 'J', false);
+            $pdf->Cell(190, 8, utf8_decode(''), 'LR', 0, 'L', false);
+            $pdf->Ln();
+            $pdf->Cell(140, 8, 'Assinatura do candidato:', 'LB', 0, 'L', false);
+            $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
         }
 
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->MultiCell(190, 8, utf8_decode($requerimento), 'LR', 'J', false);
-        $pdf->Cell(190, 8, utf8_decode(''), 'LR', 0, 'L', false);
-        $pdf->Ln();
-        $pdf->Cell(140, 8, 'Assinatura do candidato:', 'LB', 0, 'L', false);
-        $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
+        if ($nivel == 'ME' || $nivel == 'DD')
+        {
+            $pdf->SetFont('Arial','B', 10);
+            $pdf->SetFillColor(190,190,190);
+            $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
+            $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
+            $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
+            $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
+            $pdf->SetFont('Arial', 'B', 10);
+    
+            $pdf->SetY($eixoy);
+            $pdf->Cell(13,  8, utf8_decode('Nome:'), 'LB',  0, 'C', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(127, 8, utf8_decode($pessoais->name), 'B',  0, 'L', false);
+            $eixoy = $eixoy + 8;
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(12, 8, utf8_decode('Sexo:'), 'L',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(125, 8, utf8_decode($pessoais->sexoPessoal), 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;   
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(12, 8, utf8_decode('CPF:'), 'L', 0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(25, 8, $pessoais->cpf, 0, 0, 'L', false);
+            
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 0,  0, 'L', false);    
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, 8, utf8_decode('Identidade ('.$pessoais->tipoDocumento.'):'), 'L',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(117, 8, $pessoais->numeroRG, 0,  0, '', false);
+
+            $pais = Utils::obterPais($pessoais->paisPessoal);
+            $localidade = Utils::obterLocalidade($pessoais->naturalidadePessoal);
+
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(15, 8, utf8_decode('Cidade:'), 'L', 0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(40, 8, "{$localidade['sglest']}/{$pais['nompas']}", 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
+
+            if ($pessoais->especialPessoal == 'S')
+            {
+                $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
+                $necessidades = utf8_decode("Sim - {$tipos}");
+            }
+            else
+            {
+                $necessidades = utf8_decode('Não');
+            }
+
+            $pdf->SetY($eixoy);
+            $pdf->Cell(140, 2, '', 'LB',  0, 'L', false);
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);        
+            $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
+            
+            if ((substr($pessoais->codpes, 0, 2) == 88))
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(177, 8, $pessoais->email, 'BR',  0, 'L', false);
+            }
+            else
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(13, 8, utf8_decode('E-mail:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(100, 8, $pessoais->email, 'BR',  0, 'L', false);
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(25, 8, utf8_decode('Número USP:'), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(52, 8, $pessoais->codpes, 'BR',  0, 'L', false);
+            }
+
+            $enderecos = Inscricao::obterEnderecoInscricao($codigoInscricao);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(172, 8, utf8_decode("{$enderecos->logradouroEndereco}, {$enderecos->numeroEndereco} {$enderecos->complementoEndereco}"), 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(13, 8, utf8_decode('Bairro:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(60, 8, utf8_decode($enderecos->bairroEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(17, 8, utf8_decode('Telefone:'), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(100, 8, $pessoais->telefone, 'BR',  0, 'L', false);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(9, 8, utf8_decode('CEP:'), 'LB',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(46, 8, $enderecos->cepEndereco, 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(18, 8, utf8_decode('Cidade:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(52, 8, utf8_decode($enderecos->localidadeEndereco), 'B',  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(25, 8, utf8_decode('Estado:'), 'B',  0, 'R', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(40, 8, $enderecos->ufEndereco, 'BR',  0, 'L', false);
+
+            if ($nivel == 'AE')
+            {
+                $temp = Inscricao::find($codigoInscricao);
+
+                if ($temp->alunoEspecial == 'S')
+                {
+                    $cursou = 'Sim - '.$temp->dataAlunoEspecial;
+                }
+                else
+                {
+                    $cursou = utf8_decode('Não');
+                }
+
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
+                $pdf->SetFont('Arial', '', 10);
+                $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
+            }
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(10, 8, utf8_decode('2.'), 1, 0, 'L', true);
+            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR'), '1', 0, 'J', true);
+
+            $pdf->Ln();
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
+            $pdf->Cell(25, 8, utf8_decode('TIPO'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('SITUAÇÃO'), 1, 0, 'C', false);
+            
+            $pdf->SetFont('Arial', '', 10);
+
+            $escolares = Inscricao::obterEscolarInscricao($codigoInscricao);
+
+            foreach($escolares as $escolar)
+            {
+                $pdf->Ln();
+                $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
+                $pdf->CellFitScale(70, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
+                $pdf->CellFitScale(25, 8, $escolar->tipoResumoEscolar, 1, 0, 'C', false);
+                            
+                if ($escolar->inicioResumoEscolar == '')
+                {
+                    $pdf->Cell(25, 8, 'Em andamento', 1, 0, 'C', false);        
+                }
+                else
+                {
+                    $pdf->CellFitScale(25, 8, $escolar->inicioResumoEscolar->format('Y'), 1, 0, 'C', false);            
+                }
+            }
+
+            if ($nivel == 'AE')
+            {
+                $pdf->Ln();
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(10, 8, utf8_decode('7.'), 1, 0, 'L', true);
+                $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
+
+                $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
+
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(10, 8, utf8_decode('8.'), 1, 0, 'L', true);
+                $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
+                $pdf->SetFont('Arial', '', 10);  
+
+                $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+                foreach($inscricao as $disciplina)
+                {
+                    $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
+
+                    $pdf->Ln();
+                    $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                } 
+
+                $pdf->Ln(); 
+            }
+            else
+            {
+                $pdf->Ln();
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->Cell(10, 8, utf8_decode("3."), 1, 0, "L", true);
+                $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
+            
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
+        
+                $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
+        
+                if ($financeiros->bolsaRecursoFinanceiro == 'S')
+                {
+                    $bolsa = true;
+                    $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                    $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
+                    $pdf->Ln();
+                    $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, "", "LR", 0, "L");
+                    $pdf->Ln();
+                }
+                else
+                {
+                    $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+        
+                    $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
+                    $pdf->Ln();
+            
+                    $pdf->Cell(190, 8, "", "LR", 0, "L");
+                    $pdf->Ln();
+                }   
+        
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                $pdf->SetFont("Arial","B", 10);
+                $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
+                $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
+        
+                $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        
+                $pdf->Ln();
+                $pdf->SetFont("Arial","", 10);
+                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
+            }
+
+            if ($nivel == 'ME')
+            {            
+                if ($edital->dataDoeEdital->format('m') < 7)
+                {
+                    $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
+                    $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $semestre  = 'primero semestre de '.$ano;
+                    $diretorio = $ano.'1'; 
+                }
+
+                $assunto      = "MESTRADO - {$sigla}";
+                $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            }
+
+            if ($nivel == 'DF')
+            {            
+                $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                $diretorio = $ano;
+
+                $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
+                $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            }
+
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->MultiCell(190, 8, utf8_decode($requerimento), 'LR', 'J', false);
+            $pdf->Cell(190, 8, utf8_decode(''), 'LR', 0, 'L', false);
+            $pdf->Ln();
+            $pdf->Cell(140, 8, 'Assinatura do candidato:', 'LB', 0, 'L', false);
+            $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
+        }
 
         $sigla   = Str::lower($sigla);
         $arquivo = storage_path("app/public/{$sigla}/comprovante/{$diretorio}/{$pessoais->numeroInscricao}.pdf");
@@ -2278,22 +2586,6 @@ class InscricaoController extends Controller
         if (!file_exists($arquivo))
         {
             $pdf->Output('F', $arquivo);
-
-            /*if (file_exists($arquivo))
-            {
-                $arquivo = Arquivo::create([
-                    'codigoUsuario'         => Auth::user()->id,
-                    'codigoTipoDocumento'   => 26,
-                    'linkArquivo'           => $nome,
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]);
-        
-                $inscricaoDocumentos = InscricoesArquivos::create([
-                    'codigoInscricao'       => $codigoInscricao,
-                    'codigoArquivo'         => $arquivo->codigoArquivo,
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]);
-            }*/
         }
         
         $pdf->Output('I', "{$pessoais->numeroInscricao}.pdf");
