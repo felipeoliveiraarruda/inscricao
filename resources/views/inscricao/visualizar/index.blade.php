@@ -7,13 +7,13 @@
         <div class="col-md-3">
             <div class="card bg-default">
                 @if ($inscricao->statusInscricao == 'P')
-                <!-- Validation Errors -->
-                <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                   
-                <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/validar/{{ $codigoInscricao }}">                                    
-                    @csrf                   
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Validar Inscrição</button>
-                </form>
+                    <!-- Validation Errors -->
+                    <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+                                    
+                    <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/validar/{{ $codigoInscricao }}">                                    
+                        @csrf
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Validar Inscrição</button>
+                    </form>
 
                     <!-- Modal -->
                     @include('utils.loader')                        

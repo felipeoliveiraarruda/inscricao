@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 4 && $total >= 5 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['mestrado'] >= 4 && $total >= 5 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -65,8 +65,8 @@
             </td>
         </tr>
         <tr>
-            <td>3.1.2 Ficha de Inscrição<span class="text-danger">*</span>            
-                @if (Session::get('total')['especial'] >= 6 && $total >= 10)     
+            <td>3.1.2 Ficha de Inscrição (Arquivo será gerado após a submissão dos documento obrigatórios)<span class="text-danger">*</span>            
+                @if (Session::get('total')['mestrado'] >= 4 && $total >= 5)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @else
                 
@@ -94,7 +94,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['especial'] >= 6 && $total >= 10) 
+                    @if (Session::get('total')['mestrado'] >= 4 && $total >= 6)  
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -247,7 +247,7 @@
         </tr>
         @endif
         <tr>
-            <td>3.1.6 Diploma da Graduação ou Certificado de Conclusão da Graduação</td> 
+            <td>3.1.6 Diploma da Graduação ou Certificado de Conclusão da Graduação<br/> (é imprescindível a apresentação no ato da matrícula, em caso de aprovação do candidato)</td> 
             <td class="text-center">
                 @if(!empty($diploma->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -277,7 +277,7 @@
             </td>
         </tr>
         <tr>
-            <td>3.1.7 Histórico Escolar da Graduação</td> 
+            <td>3.1.7 Histórico Escolar da Graduação<br/> (Histórico Escolar da Graduação concluída ou em andamento, bem como das transferências de cursos, se houver)</td> 
             <td class="text-center">
                 @if(!empty($historico->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -307,7 +307,7 @@
             </td>
         </tr>        
         <tr>
-            <td>3.1.8 Currículo<span class="text-danger">*</span></td> 
+            <td>3.1.8 Currículo Lattes<span class="text-danger">*</span><br/> (anexar no currículo todos os documentos comprobatórios para avaliação conforme item 3.1.8 e 6.1 do Edital)</td> 
             <td class="text-center">
                 @if(!empty($curriculo->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -335,127 +335,6 @@
                     </a> 
                 @endif
             </td>
-        </tr>
-        <tr>
-            <td>3.1.9a) Carta do Orientador propondo credenciamento do Coorientador</td> 
-            <td class="text-center">
-                @if(!empty($carta_coorientador->codigoInscricaoArquivo))
-                    <i class="fa fa-check text-success"></i>
-                @else
-                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
-                @endif 
-            </td>
-            <td class="text-center">
-                @if (!empty($carta_coorientador->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$carta_coorientador->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    @if ($status == 'N')
-                        <a href="documento/{{ $carta_coorientador->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <a href="documento/{{ $carta_coorientador->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    @endif 
-                @else
-                    <a href="documento/{{$codigoInscricao}}/39" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>
-                    </a> 
-                @endif                
-            </td>  
-        </tr>
-        <tr>
-            <td>3.1.9b) Carta de Aceite do Coorientador</td> 
-            <td class="text-center">
-                @if(!empty($carta_aceite->codigoInscricaoArquivo))
-                    <i class="fa fa-check text-success"></i>
-                @else
-                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
-                @endif 
-            </td>
-            <td class="text-center">
-                @if (!empty($carta_aceite->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$carta_aceite->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    @if ($status == 'N')
-                        <a href="documento/{{ $carta_aceite->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <a href="documento/{{ $carta_aceite->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    @endif 
-                @else
-                    <a href="documento/{{$codigoInscricao}}/39" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>
-                    </a> 
-                @endif                
-            </td>  
-        </tr>
-        <tr>
-            <td>3.1.9c) Currículo Lattes digital do futuro coorientador</td> 
-            <td class="text-center">
-                @if(!empty($curriculo_coorientador->codigoInscricaoArquivo))
-                    <i class="fa fa-check text-success"></i>
-                @else
-                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
-                @endif 
-            </td>
-            <td class="text-center">
-                @if (!empty($curriculo_coorientador->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$curriculo_coorientador->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    @if ($status == 'N')
-                        <a href="documento/{{ $curriculo_coorientador->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <a href="documento/{{ $curriculo_coorientador->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    @endif 
-                @else
-                    <a href="documento/{{$codigoInscricao}}/36" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>
-                    </a> 
-                @endif                
-            </td>  
-        </tr>  
-        
-        <tr>
-            <td>3.1.9d) Formulário de Credenciamento do Coorientador - <a href="https://cpg.eel.usp.br/sites/files/cpg/arquivos/formulario_de_credendiamentorecredenciamento_de_orientadores.docx" target="_new">Modelo</a></td> 
-            <td class="text-center">
-                @if(!empty($credenciamento->codigoInscricaoArquivo))
-                    <i class="fa fa-check text-success"></i>
-                @else
-                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
-                @endif 
-            </td>
-            <td class="text-center">
-                @if (!empty($credenciamento->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$credenciamento->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
-                        <i class="fas fa-eye"></i>
-                    </a>
-
-                    @if ($status == 'N')
-                        <a href="documento/{{ $credenciamento->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <a href="documento/{{ $credenciamento->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    @endif 
-                @else
-                    <a href="documento/{{$codigoInscricao}}/37" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
-                        <i class="fa fa-plus"></i>
-                    </a> 
-                @endif                
-            </td>  
         </tr>
     </tbody> 
 </table>

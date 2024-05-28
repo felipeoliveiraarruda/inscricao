@@ -10,27 +10,18 @@
         <div class="col-sm-9">
             <div class="card bg-default">
                 <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}
+
                     @if ($status != 'N' && $codigoEdital != 8)
                         <a href="inscricao/{{ $codigoInscricao }}/download" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Download">
                             <i class="fas fa-file-download"></i>
                         </a>
                     @endif
-
-                    @if ($status == 'P')
-                        <!-- Validation Errors -->
-                        <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
-                                        
-                        <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/validar/{{ $codigoInscricao }}">                                    
-                            @csrf                   
-                            <button type="submit" class="btn btn-primary btn-sm float-right" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Validar Inscrição</button>
-                        </form>
-
-                        <!-- Modal -->
-                        @include('utils.loader')
-                    @endif
                 </h5>
 
                 <div class="card-body">   
+                    <!-- Validation Errors -->
+                    <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
+
                     <div class="flash-message">
                         @foreach (['danger', 'warning', 'success', 'info'] as $msg)
                             @if(Session::has('alert-' . $msg))
@@ -49,10 +40,38 @@
                             @endif
                         @endforeach
                     </div>
-                    
-
+                
                     <div class="row justify-content-center">
                         <table class="table table-striped">
+
+                            @if ($status == 'P')
+                            <tr>
+                                <td colspan="2">
+
+                                    <div class="container">
+                                        <div class="row">
+                                          <div class="col">
+                                            <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/validar/{{ $codigoInscricao }}">                                    
+                                                @csrf                   
+                                                    <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Validar Inscrição</button>
+                                                </form>
+                                            </div>
+                                            <div class="col">
+
+                                                <a href="inscricao/{{ $codigoInscricao }}/devolver" role="button" aria-pressed="true" class="btn btn-primary btn-lg btn-block">
+                                                    Devolver Inscrição
+                                                </a>
+                                            </div>
+                                        </div>
+                                      </div>
+                                </td>
+                            </tr>
+
+                                <!-- Modal -->
+                                @include('utils.loader')
+                            @endif
+
+
                             @foreach($arquivos as $arquivo)
                             <tr>
                                 <td>{{ $arquivo->ordemTipoDocumento}} {{ $arquivo->tipoDocumento }}</td>

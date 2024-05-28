@@ -76,7 +76,7 @@ class RecursoPaeController extends Controller
             request()->session()->flash('alert-success', "Recurso enviado com sucesso.");
         } 
 
-        return redirect("inscricao/{$request->codigoEdital}/pae/recurso");
+        return redirect("inscricao/{$request->codigoEdital}/pae/resultado");
     }
 
     /**

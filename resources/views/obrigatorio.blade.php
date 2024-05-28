@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Documentos Obrigatórios @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif</h5>
+                <h5 class="card-header">Documentos Obrigatórios</h5>
 
                 <div class="card-body">                    
                     <div class="row justify-content-center">

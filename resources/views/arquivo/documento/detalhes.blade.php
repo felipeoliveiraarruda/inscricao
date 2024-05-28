@@ -12,7 +12,7 @@
 
 @if ($codigoTipoDocumento == 28)
 <small id="arquivoAjudaBlock" class="form-text text-muted">
-    Disponível no link <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>, para ser preenchida e assinada original ou eletronicamente por assinatura qualificada (por exemplo, Imprensa Oficial, Docusign etc.)
+    Disponível no link <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>, para ser preenchida e assinada eletronicamente por assinatura qualificada (por exemplo, Imprensa Oficial, Docusign etc.)
 </small>   
 @endif
 

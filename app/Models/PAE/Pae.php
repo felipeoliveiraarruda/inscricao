@@ -86,6 +86,7 @@ class Pae extends Model
         {
             $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                       ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                      ->where('inscricoes.codigoEdital', $codigoEdital)
                       ->whereNotNull('pae.classificacaoPae')
                       ->count();
         }
@@ -95,6 +96,7 @@ class Pae extends Model
             {
                 $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                     ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id' )
+                    ->where('inscricoes.codigoEdital', $codigoEdital)
                     ->whereNotNull('pae.classificacaoPae')
                     ->orderBy('pae.classificacaoPae')
                     ->get();
@@ -103,6 +105,7 @@ class Pae extends Model
             {
                 $pae = Pae::join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                     ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                    ->where('inscricoes.codigoEdital', $codigoEdital)
                     ->where('pae.remuneracaoPae', $remuneracao)
                     ->whereNotNull('pae.classificacaoPae')
                     ->orderBy('pae.classificacaoPae')

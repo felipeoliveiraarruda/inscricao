@@ -35,7 +35,10 @@
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
                             <td>
                                 <a href='{{ asset("storage/{$ficha->linkArquivo}") }}' target="_new" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ficha do Aluno"><i class="fas fa-university"></i></a>
-                                <a href='{{ asset("storage/{$lattes->linkArquivo}") }}' target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
+                                
+                                @if (!empty($lattes))
+                                <a href="{{ asset("storage/{$lattes->linkArquivo}")}}" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{ $lattes->tipoDocumento}}"><i class="far fa-file"></i></a>
+                                @endif
                             </td>
                         </tr>
                     </table>

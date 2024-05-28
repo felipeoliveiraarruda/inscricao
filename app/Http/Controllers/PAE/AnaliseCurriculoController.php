@@ -55,7 +55,7 @@ class AnaliseCurriculoController extends Controller
             'vinculo'      => $vinculo,
             'arquivos'     => $arquivos,
             'ficha'        => $ficha[0],
-            'lattes'       => $lattes[0],
+            'lattes'       => (empty($lattes[0]) ? '' : $lattes[0]),
             'nota'         => 0,
             'docente'      => (in_array("Docenteusp", session('vinculos'))),
             'pae'          => (Auth::user()->id == 4 ? true : false),
@@ -213,7 +213,7 @@ class AnaliseCurriculoController extends Controller
             'vinculo'               => $vinculo,
             'arquivos'              => $arquivos,
             'ficha'                 => $ficha[0],
-            'lattes'                => $lattes[0],
+            'lattes'                => (empty($lattes[0]) ? '' : $lattes[0]),
         ]);
     }
 
@@ -246,7 +246,7 @@ class AnaliseCurriculoController extends Controller
             'vinculo'               => $vinculo,
             'arquivos'              => $arquivos,
             'ficha'                 => $ficha[0],
-            'lattes'                => $lattes[0],
+            'lattes'                => (empty($lattes[0]) ? '' : $lattes[0]),
         ]);
     }
 
@@ -334,7 +334,7 @@ class AnaliseCurriculoController extends Controller
             'vinculo'               => $vinculo,
             'arquivos'              => $arquivos,
             'ficha'                 => $ficha[0],
-            'lattes'                => $lattes[0],
+            'lattes'                => (empty($lattes[0]) ? '' : $lattes[0]),
         ]);
     }
 }

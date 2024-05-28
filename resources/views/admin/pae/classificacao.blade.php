@@ -24,6 +24,7 @@
                                 <th scope="col">Nº USP</th>
                                 <th scope="col">Nome</th>                                
                                 <th scope="col">Classificação</th>
+                                <th scope="col">Nota</th>
                             </tr>
                         </thead>
                         @foreach($inscritos as $inscrito)

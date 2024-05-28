@@ -28,6 +28,7 @@ use Mail;
 use App\Mail\ConfirmacaoMail;
 use App\Mail\ComprovanteMail;
 use App\Mail\MatriculaMail;
+use App\Mail\DevolucaoMail;
 use App\Models\InscricoesArquivos;
 use App\Models\InscricoesProficiencia;
 use ZipArchive;
@@ -88,7 +89,7 @@ class InscricaoController extends Controller
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                          ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
                          ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
-                         ->get();      
+                         ->get();     
 
         if (empty(session('level')))
         {
@@ -135,7 +136,7 @@ class InscricaoController extends Controller
 
         if ($inscricao->codigoNivel == 4)
         {
-            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 3, 4, 9));
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 3, 4, 5, 6, 7, 9));
 
             $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
             $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
@@ -1062,13 +1063,13 @@ class InscricaoController extends Controller
 
     public function obrigatorio($codigoInscricao)
     {         
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $voltar = "inscricao/{$edital}/disciplina";
     
@@ -2311,9 +2312,10 @@ class InscricaoController extends Controller
 
             $pdf->SetY($eixoy);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(20, 8, utf8_decode('Identidade ('.$pessoais->tipoDocumento.'):'), 'L',  0, 'L', false);
+            $pdf->Cell(30, 8, utf8_decode('Identidade ('.$pessoais->tipoDocumento.'):'), 'L',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(117, 8, $pessoais->numeroRG, 0,  0, '', false);
+            $pdf->Cell(107, 8, $pessoais->numeroDocumento, 0,  0, '', false);
+            $eixoy = $eixoy + 8;
 
             $pais = Utils::obterPais($pessoais->paisPessoal);
             $localidade = Utils::obterLocalidade($pessoais->naturalidadePessoal);
@@ -2432,9 +2434,9 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
-            $pdf->Cell(70, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
-            $pdf->Cell(25, 8, utf8_decode('TIPO'), 1, 0, 'C', false);
-            $pdf->Cell(25, 8, utf8_decode('SITUAÇÃO'), 1, 0, 'C', false);
+            $pdf->Cell(85, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
+            $pdf->Cell(35, 8, utf8_decode('ANO TITULAÇÃO'), 1, 0, 'C', false);
+            //$pdf->Cell(25, 8, utf8_decode('SITUAÇÃO'), 1, 0, 'C', false);
             
             $pdf->SetFont('Arial', '', 10);
 
@@ -2442,10 +2444,10 @@ class InscricaoController extends Controller
 
             foreach($escolares as $escolar)
             {
-                $pdf->Ln();
+                /*$pdf->Ln();
                 $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
                 $pdf->CellFitScale(70, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
-                $pdf->CellFitScale(25, 8, $escolar->tipoResumoEscolar, 1, 0, 'C', false);
+                $pdf->CellFitScale(25, 8, utf8_decode($escolar->tipoResumoEscolar), 1, 0, 'C', false);
                             
                 if ($escolar->inicioResumoEscolar == '')
                 {
@@ -2454,7 +2456,25 @@ class InscricaoController extends Controller
                 else
                 {
                     $pdf->CellFitScale(25, 8, $escolar->inicioResumoEscolar->format('Y'), 1, 0, 'C', false);            
+                }*/
+
+                $pdf->Ln();
+                $pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
+                $pdf->CellFitScale(85, 8, utf8_decode($escolar->especialidadeResumoEscolar), 1, 0, 'J', false);
+                //$pdf->CellFitScale(25, 8, utf8_decode($escolar->tipoResumoEscolar), 1, 0, 'C', false);
+                
+                if ($escolar->finalResumoEscolar == '')
+                {
+                    $pdf->Cell(35, 8, 'Em andamento', 1, 0, 'C', false);        
                 }
+                else
+                {
+                    $pdf->CellFitScale(35, 8, $escolar->finalResumoEscolar->format('Y'), 1, 0, 'C', false);            
+                }
+
+                //$pdf->CellFitScale(70, 8, '', 1, 0, 'J', false);
+                //$pdf->CellFitScale(25, 8, '', 1, 0, 'C', false);
+                //$pdf->CellFitScale(25, 8, '', 1, 0, 'C', false);
             }
 
             if ($nivel == 'AE')
@@ -2531,15 +2551,6 @@ class InscricaoController extends Controller
         
                 $pdf->SetFont("Arial","B", 10);
                 $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
-                $pdf->SetFont("Arial","B", 10);
-                $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
-                $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
-        
-                $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-        
-                $pdf->Ln();
-                $pdf->SetFont("Arial","", 10);
-                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
             }
 
             if ($nivel == 'ME')
@@ -2788,13 +2799,13 @@ class InscricaoController extends Controller
         */
 
         $dados     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(27, 28, 1, 2, 4, 3, 5, 6, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $voltar = "inscricao/{$edital}";
 
@@ -2844,6 +2855,39 @@ class InscricaoController extends Controller
         request()->session()->flash('alert-success', "Inscrição Nº {$codigoInscricao} recusada com sucesso.");
 
         return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
+    }
+
+    public function devolver_create($codigoInscricao)
+    {
+        $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        
+        return view('inscricao.devolver',
+        [
+            'codigoInscricao'   => $codigoInscricao,
+            'id'                => $inscricao->codigoEdital,
+            'inscricao'         => $inscricao,
+        ]);
+
+    }
+
+    public function devolver(Request $request, $codigoInscricao)
+    {
+        $inscricao = Inscricao::join('users', 'inscricoes.codigoUsuario', '=', 'users.id')->where('codigoInscricao', $codigoInscricao)->first();
+
+        Mail::to($inscricao->email)->send(new DevolucaoMail($codigoInscricao, $request->body));
+        
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', "Ocorreu um erro na devolução da inscrição Nº {$inscricao->numeroInscricao}.");
+        }    
+        else
+        {
+            Inscricao::where('codigoInscricao', $codigoInscricao)->where('statusInscricao', 'P')->update(['statusInscricao' => 'N']);
+
+            request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} devolvida com sucesso.");
+        } 
+
+        return redirect("/inscricao/visualizar/{$codigoInscricao}");
     }
 
     public function matricula_create($codigoInscricao)
@@ -3375,7 +3419,7 @@ class InscricaoController extends Controller
         $pdf->Ln(5);
         $pdf->Cell(190, 8, utf8_decode('Alunos Inscritos para Exame de Proficiência em Língua - Inglês'), 0, 0, 'C');            
         $pdf->Ln();
-        $pdf->Cell(190, 8, utf8_decode('09/05/2024 - 1º Exame 2024'), 0, 0, 'C'); 
+        $pdf->Cell(190, 8, utf8_decode('16/05/2024 - 1º Exame 2024'), 0, 0, 'C'); 
         $pdf->Ln(10);
 
         $pdf->SetFont('Arial','B', 12);

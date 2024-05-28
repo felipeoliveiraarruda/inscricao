@@ -41,7 +41,7 @@ class DocumentacaoController extends Controller
             'codigoPae' => $inscricao->codigoPae,
             'inscricao' => $inscricao,
             'arquivos'  => $arquivos,
-            'total'        => $total,
+            'total'     => $total,
             'temp'      => '',
         ]);
     }

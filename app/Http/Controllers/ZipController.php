@@ -18,7 +18,7 @@ class ZipController extends Controller
     {
         $zip = new ZipArchive;
         $inscricao    = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $obrigatorios = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $obrigatorios = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $zipFileName = "app/public/download/{$inscricao->name}.rar";
         $diretorio   = storage_path("app/public/download/{$inscricao->name}");

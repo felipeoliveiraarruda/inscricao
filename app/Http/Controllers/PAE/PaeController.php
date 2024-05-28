@@ -446,7 +446,16 @@ class PaeController extends Controller
                 {
                     $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
                     $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
-                    $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                    
+                    if ($quantidadeDesempenho == 0)
+                    {
+                        $notaDesempenho = 0;
+                    }
+                    else
+                    {
+                        $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                    }
+
                     $finalDesempenho      = $notaDesempenho * $notaConceito;
 
                     $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
@@ -501,7 +510,16 @@ class PaeController extends Controller
                 {
                     $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
                     $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
-                    $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+
+                    if ($quantidadeDesempenho == 0)
+                    {
+                        $notaDesempenho = 0;
+                    }
+                    else
+                    {
+                        $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                    }
+
                     $finalDesempenho      = $notaDesempenho * $notaConceito;
 
                     $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
@@ -743,7 +761,18 @@ class PaeController extends Controller
 
         $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscricao->codigoPae);
         $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscricao->codigoPae);
-        $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+
+        if ($quantidadeDesempenho == 0)
+        {
+            $notaDesempenho = 0;
+        }
+        else
+        {
+            $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+        }
+
+
+        //$notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
         $finalDesempenho      = $notaDesempenho * $notaConceito;
 
         $ic          = Avaliacao::obterSomaAvaliacao($inscricao->codigoPae, [24]);

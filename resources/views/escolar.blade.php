@@ -11,7 +11,7 @@
             <div class="card bg-default">
                 <h5 class="card-header">Resumo Escolar @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
                     @if(Session::get('level') == 'user')
-                        @if ($status == 'N')
+                        @if ($status == 'N' && (empty($escolares[0]->codigoResumoEscolar)))
                         <a href="inscricao/{{ $codigoInscricao }}/escolar/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
                             <i class="fa fa-plus"></i>                        
                         </a>

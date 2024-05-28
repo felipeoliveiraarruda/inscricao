@@ -72,8 +72,10 @@
                                                     <a href="admin/{{ $edital->codigoEdital }}/pae/classificacao" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Classificação">
                                                         <i class="fas fa-check-double"></i>
                                                     </a>
+                                                @endif
 
-                                                    <a href="admin/{{ $edital->codigoEdital }}/pae/classificacao" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Recursos">
+                                                @if ($edital->codigoNivel == 5)
+                                                    <a href="admin/{{ $edital->codigoEdital }}/pae/recurso" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Recursos">
                                                         <i class="fas fa-exchange-alt"></i>
                                                     </a>
                                                 @endif

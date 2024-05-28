@@ -65,7 +65,7 @@
             </td>
         </tr>
         <tr>
-            <td>3.1.2 Ficha de Inscrição<span class="text-danger">*</span>            
+            <td>3.1.2 Ficha de Inscrição (Arquivo será gerado após a submissão dos documento obrigatórios)<span class="text-danger">*</span>            
                 @if (Session::get('total')['especial'] >= 6 && $total >= 10)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @else

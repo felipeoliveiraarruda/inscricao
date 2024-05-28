@@ -43,7 +43,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoEdital}/store',                  [InscricaoController::class, 'store']);
         Route::get('comprovante/{codigoInscricao}',         [InscricaoController::class, 'comprovante']);
         Route::get('visualizar/{codigoInscricao}/{tipo?}',  [InscricaoController::class, 'show']);
-        Route::post('validar/{codigoInscricao}',            [InscricaoController::class, 'validar']);
+        Route::post('validar/{codigoInscricao}',            [InscricaoController::class, 'validar']);                 
+        Route::get('{codigoInscricao}/devolver/',           [InscricaoController::class, 'devolver_create']);
+        Route::post('devolver/{codigoInscricao}',           [InscricaoController::class, 'devolver']); 
         Route::get('requerimento/{codigoInscricao}',        [InscricaoController::class, 'comprovante']);
         Route::get('recusar/{codigoInscricao}/',            [InscricaoController::class, 'recusar']);
         Route::get('{codigoInscricao}/matricula/',          [InscricaoController::class, 'matricula_create']);
