@@ -42,9 +42,6 @@
                     endif-->
                 </div>
             </div>
-
-            <!-- Modal -->
-            @include('utils.loader')
         </div>
 
         <div class="col-md-9">

@@ -32,7 +32,7 @@
                         @endforeach
                     </div>                    
                     
-                    <form class="needs-validation" novalidate method="POST" action="inscricao/devolver/{{ $codigoInscricao }}" id="formEmail">
+                    <form id="formEnviar" class="needs-validation" novalidate method="POST" action="inscricao/devolver/{{ $codigoInscricao }}">
                         @csrf
                         
                         <div class="form-group">
@@ -42,6 +42,9 @@
 
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Devolver</button>
                     </form>
+
+                    <!-- Modal -->
+                    @include('utils.loader')
                 </div>
             </div>
         </div>
