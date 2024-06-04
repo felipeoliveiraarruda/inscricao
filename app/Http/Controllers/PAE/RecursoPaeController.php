@@ -132,8 +132,8 @@ class RecursoPaeController extends Controller
         $recurso->analiseRecurso        = $request->analiseRecurso; 
         $recurso->codigoPessoaAlteracao = Auth::user()->codpes;      
         $recurso->save();
-
-       /* Mail::to('dev.ci.eel@usp.br')->send(new RecursoMail($request->codigoEdital, $pae->codigoUsuario));
+        
+       /* Mail::to('pae@eel.usp.br')->send(new RecursoMail($request->codigoEdital, Auth::user()->id));
         
         if (Mail::failures()) 
         {
@@ -142,7 +142,7 @@ class RecursoPaeController extends Controller
         else
         {
             request()->session()->flash('alert-success', "Recurso avaliado com sucesso.");
-        } */
+        }*/
 
         request()->session()->flash('alert-success', "Recurso avaliado com sucesso.");
 

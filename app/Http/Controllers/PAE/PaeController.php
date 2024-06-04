@@ -540,7 +540,7 @@ class PaeController extends Controller
                     $notaFinal = $finalDesempenho + $finalEstagio + $finalPublicacao;
 
                     $pae  = Pae::find($inscrito->codigoPae);
-                    $pae->notaFinalPAe = $notaFinal;
+                    $pae->notaFinalPae = $notaFinal;
                     $pae->save();
 
                     $comRemuneracao["{$inscrito->codigoPae}"] = $notaFinal;

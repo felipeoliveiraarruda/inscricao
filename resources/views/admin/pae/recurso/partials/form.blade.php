@@ -18,7 +18,7 @@
 
 <div class="form-group">
     <label for="analiseRecurso" class="font-weight-bold">Análise</label><span class="text-danger">*</span></label>
-    <textarea class="form-control" id="analiseRecurso" name="analiseRecurso" rows="5" required></textarea>
+    <textarea class="form-control" id="analiseRecurso" name="analiseRecurso" rows="5" required>{{ $recurso->analiseRecurso }}</textarea>
 </div>
 
 <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
@@ -44,4 +44,14 @@
     <label for="analiseRecurso" class="font-weight-bold">Análise</label><span class="text-danger">*</span></label>
     <p class="text-justify">{{ $recurso->analiseRecurso }}</p>
 </div>
+
+<div class="form-group">
+    <label for="analiseRecurso" class="font-weight-bold">Análise</label><span class="text-danger">*</span></label>
+    <textarea class="form-control" id="analiseRecurso" name="analiseRecurso" rows="5" required>{{ $recurso->analiseRecurso }}</textarea>
+</div>
+
+<button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
+
+<input type="hidden" name="codigoRecurso" value="{{ $recurso->codigoRecurso }}">
+<input type="hidden" name="codigoEdital" value="{{ $recurso->codigoEdital }}">
 @endif  
