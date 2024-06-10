@@ -1,3 +1,15 @@
+@if ($codigoTipoDocumento == 5)
+<small id="arquivoAjudaBlock" class="form-text text-muted">
+    Histórico Escolar de Conclusão de Graduação ou Mestrado
+</small>   
+@endif
+
+@if ($codigoTipoDocumento == 6)
+<small id="arquivoAjudaBlock" class="form-text text-muted">
+    Diploma ou Declaração de conclusão do curso de Graduação ou Mestrado
+</small>   
+@endif
+
 @if ($codigoTipoDocumento == 30)
 <small id="arquivoAjudaBlock" class="form-text text-muted">
     Cópia Digital do Diploma de Mestrado ou Declaração de homologação da dissertação de Mestrado, contendo a data da defesa da dissertação. Somente os (as) candidatos (as) cursando o último período do Mestrado estão desobrigados (as) de apresentar o Diploma de Mestrado ou a Declaração de homologação da dissertação de Mestrado no ato da inscrição, porém serão imprescindíveis para a efetivação da matrícula, caso o (a) candidato (a) seja classificado (a)

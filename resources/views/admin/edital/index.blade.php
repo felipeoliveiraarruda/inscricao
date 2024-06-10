@@ -43,7 +43,7 @@
                             <th scope="col">Nível</th>
                             <th scope="col">Início</th> 
                             <th scope="col">Final</th>
-                            <!--<th scope="col">Ações</th>-->
+                            <th scope="col"></th>
                         </tr>
                     </thead>
 
@@ -57,7 +57,9 @@
                         <td>{{ $edital->descricaoNivel }}</td>
                         <td>{{ $edital->dataInicioEdital->format('d/m/Y H:i:s') }}</td>
                         <td>{{ $edital->dataFinalEdital->format('d/m/Y H:i:s') }}</td>
-                        <!--<td>Editar - Ver</td>-->
+                        <td>
+                            
+                        </td>
                     </tr>
                 @endforeach
                 </table>

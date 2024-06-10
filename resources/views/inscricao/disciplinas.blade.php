@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="inscricao/{{ $codigoInscricao }}/disciplinas" class="list-group-item list-group-item-action ">Voltar</a>
+                <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>
 
@@ -54,24 +54,26 @@
                             <label for="expectativasInscricao" class="font-weight-bold">Selecione a(s) Disciplina(s)<span class="text-danger">*</span></label>
                             @if($limite == 0)
                                 @foreach($disciplinas as $disciplina)
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}">
-                                    <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
-                                        {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }}
-                                    </label>
-                                </div>
+                                    @if($disciplina['numvagespofe'] > 0)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}">
+                                            <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
+                                                {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }}
+                                            </label>
+                                        </div>
+                                    @endif
                                 @endforeach
                             @else
-                            @foreach($disciplinas as $disciplina)
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}">
-                                <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
-                                    {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }}</label>
-                                </label>
-                            </div>
-                            @endforeach
+                                @foreach($disciplinas as $disciplina)
+                                    @if($disciplina['numvagespofe'] > 0)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}">
+                                            <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
+                                                {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }}</label>
+                                            </label>
+                                        </div>
+                                    @endif
+                                @endforeach
                             @endif
                         </div>
 

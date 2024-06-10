@@ -43,8 +43,8 @@
                         </div>
                         @endif
 
-                        <input type="hidden" name="codigoInscricao"     value="{{ $codigoInscricao }}">
-                        <input type="hidden" name="codigoTipoDocumento" value="{{ $codigoTipoDocumento }}">
+                        <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">
+                        <input type="hidden" name="codigoTipoDocumento" value="{{ $codigoTipoDocumento }}">                      
 
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
                         
