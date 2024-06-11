@@ -1030,7 +1030,7 @@ class InscricaoController extends Controller
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));;
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $codigoCurso = Edital::obterCursoEdital($edital);
         
@@ -1078,13 +1078,13 @@ class InscricaoController extends Controller
 
     public function obrigatorio($codigoInscricao)
     {             
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 6, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao, array(26, 27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));;
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(26, 27, 28, 1, 2, 4, 3, 5, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $voltar = "inscricao/{$edital}/disciplina";
     
@@ -2841,13 +2841,16 @@ class InscricaoController extends Controller
         */
 
         $dados     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(27, 28, 1, 2, 4, 3, 5, 6, 9, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(26, 27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(26, 27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+
+        $nivel = Edital::obterNivelEdital($edital);
+        session(['nivel' => $nivel]);
 
         $voltar = "inscricao/{$edital}";
 
@@ -2879,7 +2882,7 @@ class InscricaoController extends Controller
             $arquivo = Arquivo::create([
                             'codigoUsuario'         => $inscricao->codigoUsuario,
                             'codigoTipoDocumento'   => 26,
-                            'linkArquivo'           => $requerimento,
+                            'linkArquivo'           => "ppgem/comprovante/{$inscricao->numeroInscricao}.pdf",
                             'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
 

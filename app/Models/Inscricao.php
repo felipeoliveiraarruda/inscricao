@@ -1169,9 +1169,6 @@ class Inscricao extends Model
             $pdf->Output('F', $arquivo);
         }
         
-        return public_path($arquivo);
+        return $arquivo;
     }
-
-
-
 }

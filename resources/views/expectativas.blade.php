@@ -5,7 +5,11 @@
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-3">
-            @include('inscricao.menu')  
+            @if (Session('level') == 'user')
+                @include('inscricao.menu')
+            @else
+                @include('inscricao.visualizar.admin.menu')
+            @endif
         </div>
         <div class="col-md-9">
             <div class="card bg-default">

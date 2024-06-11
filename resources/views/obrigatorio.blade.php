@@ -5,11 +5,15 @@
 <main role="main" class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-3">
-            @include('inscricao.menu')  
+            @if (Session('level') == 'user')
+                @include('inscricao.menu')
+            @else
+                @include('inscricao.visualizar.admin.menu')
+            @endif
         </div>
         <div class="col-md-9">
             <div class="card bg-default">
-                <h5 class="card-header">Documentos Obrigatórios</h5>
+                <h5 class="card-header">Documentos Obrigatórios @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif</h5>
 
                 <div class="card-body">                    
                     <div class="row justify-content-center">
