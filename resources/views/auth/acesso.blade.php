@@ -49,9 +49,9 @@
                             </a>
                         </div>
                         <hr>
-
-                        {{-- <p class="text-center"><img width="110px" height="auto" src="https://cursosextensao.usp.br/dashboard/images/logo-usp.svg"></p>
-                        <a href="login" class="btn btn-primary btn-block" role="button" aria-pressed="true">Acessar Via Senha USP</a> --}}
+<!-- 
+                        <p class="text-center"><img width="110px" height="auto" src="https://cursosextensao.usp.br/dashboard/images/logo-usp.svg"></p>
+                        <a href="login" class="btn btn-primary btn-block" role="button" aria-pressed="true">Acessar Via Senha USP</a> -->
                     </form>
                 </div>
             </div>

@@ -22,16 +22,16 @@
         </a>
         @endif
 
-        @if (Session::get('nivel') == 1)
-        <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
-            <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+        @if ($codigoEdital == 12)
+        <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Por que cursar disciplina como aluno especial?
+            <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a> 
+        @endif
 
-            @if (Session::get('level') == 1)
-            <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Por que cursar disciplina como aluno especial?
-                <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+        @if (Session::get('nivel') == 1)
+            <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
+                <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a> 
-            @endif
         @endif
 
         @if ($status == 'P')

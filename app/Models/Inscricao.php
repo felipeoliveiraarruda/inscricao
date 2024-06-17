@@ -847,7 +847,7 @@ class Inscricao extends Model
             $pdf->SetFillColor(190,190,190);
             $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
             $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
-            //$pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
+            $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
             $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
             $pdf->SetFont('Arial', 'B', 10);
     
