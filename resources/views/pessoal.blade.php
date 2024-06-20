@@ -43,56 +43,86 @@
                             <div class="row">                             
                                 <div class="col-sm-12"> 
                                     @if (!empty($pessoais))
+                                        @php
+                                            $pais = App\Models\Utils::obterPais($pessoais->paisPessoal);
+                                            $localidade = App\Models\Utils::obterLocalidade($pessoais->naturalidadePessoal);
+                                        @endphp
 
-                                        @if($pessoais->tipoDocumento == "RG")
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th scope="col">Nome</th>
-                                                        <th scope="col">E-mail</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tr>
-                                                    <td>{{ $pessoais->name }}</td>
-                                                    <td class="text-center">{{ $pessoais->email }}</td>                                         
-                                                    <td class="text-center">
-                                                        @if(Session::get('level') == 'user')
-                                                            @if ($status == 'N')
-                                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                                    <i class="far fa-edit"></i>
-                                                                </a> 
-                                                            @endif 
-                                                        @endif                                             
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                        @if ($pessoais->especialPessoal == 'S')  
+                                            @php                                          
+                                                $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
+                                                $necessidades = "Sim - {$tipos}";
+                                            @endphp   
                                         @else
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th scope="col">Nome</th>
-                                                        <th scope="col">CPF</th>
-                                                        <th scope="col">{{ $pessoais->tipoDocumento }}</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tr>
-                                                    <td>{{ $pessoais->name }}</td>
-                                                    <td class="text-center">{{ $pessoais->cpf }}</td>
-                                                    <td class="text-center">{{ $pessoais->numeroDocumento }}</td>                                          
-                                                    <td class="text-center">
-                                                        @if(Session::get('level') == 'user')
-                                                            @if ($status == 'N')
-                                                                <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
-                                                                    <i class="far fa-edit"></i>
-                                                                </a> 
-                                                            @endif 
-                                                        @endif                                             
-                                                    </td>
-                                                </tr>
-                                            </table>
+                                            @php
+                                                $necessidades = 'Não';
+                                            @endphp 
                                         @endif
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th scope="col">Nome</th>
+                                                    <th scope="col">E-mail</th>
+                                                    <th scope="col">CPF</th>
+                                                    <th scope="col">{{ $pessoais->tipoDocumento }}</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tr>
+                                                <td>{{ $pessoais->name }}</td>
+                                                <td class="text-center">{{ $pessoais->email }}</td>
+                                                <td class="text-center">{{ $pessoais->cpf }}</td>
+                                                <td class="text-center">{{ $pessoais->numeroDocumento }}</td>                                          
+                                                <td class="text-center">
+                                                    @if(Session::get('level') == 'user')
+                                                        @if ($status == 'N')
+                                                            <a href="inscricao/{{ $codigoInscricao }}/pessoal/create" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Atualizar">
+                                                                <i class="far fa-edit"></i>
+                                                            </a> 
+                                                        @endif 
+                                                    @endif                                             
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    @if (substr($pessoais->codpes, 0, 2) != 88)
+                                                    <th scope="col">Número USP</th>
+                                                    @endif
+                                                    <th scope="col">Sexo</th>
+                                                    <th scope="col">Data de Nascimento</th>
+                                                    <th scope="col">Cidade</th>
+                                                    <th scope="col">Estado/Pais</th>
+                                                    <th scope="col"></th>
+                                                </tr>                                                    
+                                            </thead>
+                                            <tr>
+                                                @if (substr($pessoais->codpes, 0, 2) != 88)
+                                                <td class="text-center">{{ $pessoais->codpes }}</td>
+                                                @endif
+                                                <td class="text-center">{{ $pessoais->sexoPessoal }}</td>
+                                                <td class="text-center">{{ $pessoais->dataNascimentoPessoal->format('d/m/Y') }}</td>
+                                                <td class="text-center">{{ $localidade["cidloc"] }}</td>
+                                                <td class="text-center">{{ $localidade['sglest'] }}/{{ $pais['nompas'] }}</td>                                          
+                                                <td class="text-center"></td>
+                                            </tr>                                                
+                                        </table>
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th scope="col">Raça/Cor</th>
+                                                    <th scope="col">É portador de Necessidades Especiais?</th>
+                                                </tr>                                                    
+                                            </thead>
+                                            <tr>
+                                                <td class="text-center">{{ $pessoais->racaPessoal }}</td>
+                                                <td class="text-center">{{ $necessidades }}</td>
+                                            </tr>                                                
+                                        </table>
                                     @endif
                                 </div>                                 
                             </div>                                                        
