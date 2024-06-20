@@ -135,7 +135,7 @@ class InscricaoController extends Controller
         $status      = Inscricao::obterStatusInscricao($inscricao->codigoInscricao);
         session(['nivel' => $inscricao->codigoNivel]);
 
-        if ($inscricao->codigoNivel == 4)
+        if ($inscricao->codigoNivel == 4 || $inscricao->codigoNivel == 2)
         {
             $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 3, 4, 5, 6, 7, 9));
 
@@ -155,7 +155,7 @@ class InscricaoController extends Controller
             $carta_coorientador     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(39));
         }
 
-        if ($inscricao->codigoNivel == 2 || $inscricao->codigoNivel == 3)
+        if ($inscricao->codigoNivel == 3)
         {
             $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38, 39));
 
@@ -203,6 +203,7 @@ class InscricaoController extends Controller
         return view('inscricao',
         [
             'codigoInscricao'        => $inscricao->codigoInscricao,
+            'codigoCurso'            => $inscricao->codigoCurso,
             'status'                 => $status,
             'codigoEdital'           => $codigoEdital, 
             'total'                  => $total,
@@ -1035,6 +1036,12 @@ class InscricaoController extends Controller
         $codigoCurso = Edital::obterCursoEdital($edital);
         
         $disciplinas = Utils::listarOferecimentoPos($codigoCurso, '05/08/2024', '17/11/2024');
+
+        if ($codigoCurso == '97002')
+        {
+            $temp = array('sgldis' => 'PEM5121', 'nomdis' => 'Supercondutividade Aplicada e Experimental', 'numseqdis' => 4, 'numcretotdis' => 12, 'numofe' => 4, 'numvagespofe' => 10);
+            array_push($disciplinas, $temp);
+        }
 
         $status = Inscricao::obterStatusInscricao($codigoInscricao);
 
