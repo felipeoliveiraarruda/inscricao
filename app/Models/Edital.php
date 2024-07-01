@@ -175,7 +175,7 @@ class Edital extends Model
 
         foreach($editais as $edital)                         
         {
-           $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+           $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '05/08/2024', '17/11/2024', 'S');
 
            if (!empty($temp))
            {

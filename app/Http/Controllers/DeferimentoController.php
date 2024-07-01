@@ -41,7 +41,7 @@ class DeferimentoController extends Controller
             ]);
         }
 
-        $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '04/03/2024', '16/06/2024', 'S');
+        $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '05/08/2024', '17/11/2024', 'S');
 
         if (!empty($temp))
         {
@@ -53,7 +53,7 @@ class DeferimentoController extends Controller
                                             ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                             ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
                                             ->where('inscricoes_disciplinas.statusDisciplina', 'N')
-                                            ->where('inscricoes.statusInscricao', 'P')
+                                            ->where('inscricoes.statusInscricao', 'C')
                                             ->orderBy('users.name')
                                             ->get();
 
@@ -62,7 +62,7 @@ class DeferimentoController extends Controller
                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                         ->whereIn('inscricoes_disciplinas.codigoDisciplina', $disciplina)
                                         ->where('inscricoes_disciplinas.statusDisciplina', 'D')
-                                        ->where('inscricoes.statusInscricao', 'P')
+                                        ->where('inscricoes.statusInscricao', 'C')
                                         ->orderBy('users.name')
                                         ->get();                                            
                                                                                 
