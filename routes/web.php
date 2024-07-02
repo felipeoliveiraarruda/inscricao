@@ -54,6 +54,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoEdital}/proficiencia/download',  [ZipController::class, 'proficiencia_merge']);
         Route::get('{codigoEdital}/proficiencia/lista',     [InscricaoController::class, 'proficiencia_presenca']);
 
+        Route::get('{codigoEdital}/mestrado/lista',     [InscricaoController::class, 'mestrado_presenca']);
+
         /* Processo Seletivo */
         Route::get('{codigoEdital}/processo-seletivo/',     [InscricaoController::class, 'processo_seletivo']);
         

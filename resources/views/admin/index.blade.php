@@ -63,6 +63,12 @@
                                                         <i class="fas fa-list-ol"></i>
                                                     </a>
                                                 @endif
+                                                
+                                                @if ($edital->codigoNivel == 4 && $edital->dataExameEdital > date('Y-m-d'))
+                                                    <a href="inscricao/{{ $edital->codigoEdital }}/mestrado/lista" target="_new" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Lista de Presença">
+                                                        <i class="fas fa-list-ol"></i>
+                                                    </a>
+                                                @endif
 
                                                 
 

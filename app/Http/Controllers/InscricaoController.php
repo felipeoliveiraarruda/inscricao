@@ -1764,7 +1764,7 @@ class InscricaoController extends Controller
         ]); 
     } 
 
-    public static function comprovante(\App\Models\Comprovante $pdf, $codigoInscricao)
+    public static function comprovante(\App\Models\Comprovante $pdf, $codigoInscricao, $especial = 'N')
     {
         /*$editais = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')        
                          ->where('editais.dataFinalEdital', '>', Carbon::now())
@@ -3601,6 +3601,88 @@ class InscricaoController extends Controller
         $pdf->Cell(100, 8, utf8_decode('Coordenador da CCP-PPGEM, EEL/USP'), 0, 0, 'C');
         $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
         $pdf->Ln();
+
+
+        $pdf->Output();
+    }
+
+    public static function mestrado_presenca(\App\Models\Comprovante $pdf, $codigoEdital)
+    {
+        //$inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+
+        $pdf->setCabecalhoPresenca('ppgem');
+        $pdf->setPresenca('ppgem');
+      
+        $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
+        $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+        $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B', 14);
+        $pdf->Ln(5);
+        $pdf->Cell(190, 8, utf8_decode('Processo Seletivo Mestrado em Engenharia de Materiais'), 0, 0, 'C');            
+        $pdf->Ln();
+        $pdf->Cell(190, 8, utf8_decode('02/07/2024'), 0, 0, 'C'); 
+        $pdf->Ln();
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial','B', 12);
+        $pdf->SetFillColor(190,190,190);
+        $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
+        $pdf->Cell(15, 10, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(80, 10, utf8_decode('Nome'), 1, 0, 'C', true);
+        $pdf->Cell(35, 10, utf8_decode('Documento'), 1, 0, 'C', true);
+        $pdf->Cell(55, 10, utf8_decode('Assinatura'), 1, 0, 'C', true);
+        $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
+        $pdf->Ln();
+
+        //\DB::enableQueryLog();
+
+        $inscricoes = Inscricao::select(\DB::raw('users.*, documentos.*'))
+                                ->join('inscricoes_documentos', 'inscricoes.codigoInscricao', '=', 'inscricoes_documentos.codigoInscricao')
+                                ->join('documentos', 'documentos.codigoDocumento', '=', 'inscricoes_documentos.codigoDocumento')
+                                ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                                ->where('inscricoes.codigoEdital',  $codigoEdital)
+                                ->where('inscricoes.statusInscricao',  'C')
+                                ->orderBy('users.name')
+                                ->get();
+
+        //dd(\DB::getQueryLog());
+
+        $pdf->SetFont('Arial', '', 12);
+        $i = 1;
+
+        foreach($inscricoes as $inscricao)
+        {
+            $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
+            $pdf->Cell(15, 10, utf8_decode($i), 1, 0, 'C');
+            $pdf->Cell(80, 10, utf8_decode($inscricao->name), 1, 0, 'L');
+            $pdf->Cell(35, 10, utf8_decode($inscricao->numeroDocumento), 1, 0, 'L');
+            $pdf->Cell(55, 10, utf8_decode(''), 1, 0, 'C');
+            $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
+            $pdf->Ln();
+            $i++;
+        }
+
+       /* $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Ln(10);
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode(''), 'B', 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();
+
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();
+
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode('Coordenador da CCP-PPGEM, EEL/USP'), 0, 0, 'C');
+        $pdf->Cell(50, 8, utf8_decode(''), 0, 0, 'L');
+        $pdf->Ln();*/
 
 
         $pdf->Output();
