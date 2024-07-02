@@ -43,22 +43,6 @@
                             <div class="row">                             
                                 <div class="col-sm-12"> 
                                     @if (!empty($pessoais))
-                                        @php
-                                            $pais = App\Models\Utils::obterPais($pessoais->paisPessoal);
-                                            $localidade = App\Models\Utils::obterLocalidade($pessoais->naturalidadePessoal);
-                                        @endphp
-
-                                        @if ($pessoais->especialPessoal == 'S')  
-                                            @php                                          
-                                                $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
-                                                $necessidades = "Sim - {$tipos}";
-                                            @endphp   
-                                        @else
-                                            @php
-                                                $necessidades = 'Não';
-                                            @endphp 
-                                        @endif
-
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr class="text-center">
@@ -86,6 +70,22 @@
                                             </tr>
                                         </table>
 
+                                        @if (!empty($pessoais->paisPessoal))
+                                            @php
+                                                $pais = App\Models\Utils::obterPais($pessoais->paisPessoal);
+                                                $localidade = App\Models\Utils::obterLocalidade($pessoais->naturalidadePessoal);
+                                            @endphp
+
+                                            @if ($pessoais->especialPessoal == 'S')  
+                                                @php                                          
+                                                    $tipos = str_replace('|', ', ', $pessoais->tipoEspecialPessoal);
+                                                    $necessidades = "Sim - {$tipos}";
+                                                @endphp   
+                                            @else
+                                                @php
+                                                    $necessidades = 'Não';
+                                                @endphp 
+                                            @endif
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr class="text-center">
@@ -123,6 +123,7 @@
                                                 <td class="text-center">{{ $necessidades }}</td>
                                             </tr>                                                
                                         </table>
+                                        @endif
                                     @endif
                                 </div>                                 
                             </div>                                                        

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\User;
+use App\Models\Inscricao;
 use Mail;
 use App\Mail\InscritosMail;
 use App\Mail\ClassificadosMail;
@@ -611,5 +612,28 @@ class AdminController extends Controller
         $pdf->Cell(190, 8, utf8_decode('Coordenador da CCP-PPGEM'), 0, 0, 'C');
 
         $pdf->Output('I', 'presenca.pdf');
+    }
+
+    public function lista_disciplina($codigoEdital)
+    {
+        if (empty(session('level')))
+        {
+            Utils::setSession(Auth::user()->id);
+        }
+
+        $inscritos = Inscricao::select(\DB::raw('inscricoes_disciplinas.codigoDisciplina, COUNT(inscricoes_disciplinas.codigoDisciplina) AS total'))
+                              ->join('inscricoes_disciplinas', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
+                              //->where('inscricoes.statusInscricao', 'C')
+                              ->groupBy('inscricoes_disciplinas.codigoDisciplina')
+                              ->orderBy('inscricoes_disciplinas.codigoDisciplina')
+                              ->get();
+
+        return view('admin.especial.disciplinas',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $inscritos,
+            'level'   => session('level'),
+        ]);
     }
 }

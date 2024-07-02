@@ -25,6 +25,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::post('final',                            [AdminController::class, 'final']);
         Route::get('confirmados/{id}',                  [AdminController::class, 'confirmados']);
         Route::get('lista-presenca/{id}',               [AdminController::class, 'presenca']);
+        Route::get('lista-disciplina/{id}',             [AdminController::class, 'lista_disciplina']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');

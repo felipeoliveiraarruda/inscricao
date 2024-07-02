@@ -46,13 +46,17 @@
                                                 </a>
                                                 
                                                 @if ($edital->codigoNivel == 1)
-                                                <a href="admin/deferimento/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Deferimento">
-                                                    <i class="fas fa-list-ol"></i>
-                                                </a>
+                                                    <a href="admin/deferimento/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Deferimento">
+                                                        <i class="fas fa-list-ol"></i>
+                                                    </a>
+
+                                                    <a href="admin/lista-disciplina/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Inscritos por Disciplina">
+                                                        <i class="fas fa-graduation-cap"></i>
+                                                    </a>
                                                 @else
-                                                <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
-                                                    <i class="fas fa-tasks"></i>
-                                                </a>
+                                                    <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
+                                                        <i class="fas fa-tasks"></i>
+                                                    </a>
                                                 @endif
 
                                                 @if ($edital->codigoNivel == 6 && $edital->dataFinalEdital < date('Y-m-d'))
@@ -69,8 +73,6 @@
                                                         <i class="fas fa-list-ol"></i>
                                                     </a>
                                                 @endif
-
-                                                
 
                                                 @if ($pae == true && $edital->codigoNivel == 5)
                                                     <!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>-->
