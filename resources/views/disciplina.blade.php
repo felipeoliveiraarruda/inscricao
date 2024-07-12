@@ -14,7 +14,7 @@
         <div class="col-md-9">
             <div class="card bg-default">
                 <h5 class="card-header">Disciplinas @if(Session::get('level') == 'manager') - {{ Session::get('total')['inscricao'] }} @endif
-                    @if ($status == 'N')
+                    @if ($status == 'C' && Session::get('aprovado') == 1)
                         @if (count($disciplinas) == 0)
                             <a href="inscricao/{{ $codigoInscricao }}/disciplina/create/" role="button" aria-pressed="true" class="btn btn-success btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Novo">
                                 <i class="fa fa-plus"></i>                        

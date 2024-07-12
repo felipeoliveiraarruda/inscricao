@@ -575,6 +575,15 @@ class Inscricao extends Model
 
         if ($tipo == 'ppgpe')
         {
+            if (empty($dados->numeroRG))
+            {
+                $documento = $dados->numeroDocumento;
+            }
+            else
+            {
+                $documento = $dados->numeroRG;
+            }
+
             if ($nivel == 'ME')
             {
                 if ($edital->dataInicioEdital->format('m') < 7)
@@ -597,19 +606,19 @@ class Inscricao extends Model
 
             if($nivel == 'AE')
             {
-                if ($edital->dataInicioEdital->format('m') < 7)
+                if ($edital->dataInicioEdital->format('m') < 6)
                 {
                     $diretorio = $edital->dataInicioEdital->format('Y').'1/especial';
                     $semestre  = '1º Semestre de '. $edital->dataInicioEdital->format('Y');
                 }
                 else
                 {
-                    $ano       = $edital->dataInicioEdital->format('Y') + 1;
+                    $ano       = $edital->dataInicioEdital->format('Y');
                     $diretorio = $ano.'2/especial'; 
                     $semestre  = '2º Semestre de '.$ano;
                 }
-                
-                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Projetos Educacionais de Ciências</p>";
+
+                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Projetos Educacionais de Ciências</p>";
 
                 $pdf->SetFont('Arial','B', 16);
                 $pdf->SetFillColor(190,190,190);
@@ -717,8 +726,8 @@ class Inscricao extends Model
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->SetFillColor(190,190,190);
             $pdf->Cell(25,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
-            $pdf->Cell(105, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
-            $pdf->Cell(60,  8, utf8_decode('RESPONSÁVEL'), 1, 0, 'C', true);
+            $pdf->Cell(90, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+            $pdf->Cell(75,  8, utf8_decode('RESPONSÁVEL'), 1, 0, 'C', true);
             $pdf->Ln();         
             
             $pdf->SetFont('Arial', '', 10);
@@ -727,12 +736,12 @@ class Inscricao extends Model
 
             foreach($disciplinas as $disciplina)
             {   
-                $temp = Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '04/03/2024', '16/06/2024');                
+                $temp = Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '05/08/2024', '30/11/2024');                
                 $docente = User::where('codpes', $disciplina->codigoPessoaDeferimento)->first();
                 
                 $pdf->Cell(25,  8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}/{$temp['numofe']}"), 1, 0, 'C', false);
-                $pdf->Cell(105, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
-                $pdf->Cell(60,  8, utf8_decode($docente->name), 1, 0, 'C', false);
+                $pdf->Cell(90, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
+                $pdf->Cell(75,  8, utf8_decode($docente->name), 1, 0, 'C', false);
                 $pdf->Ln();  
             }
 

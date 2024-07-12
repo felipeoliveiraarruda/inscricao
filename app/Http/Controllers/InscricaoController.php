@@ -66,7 +66,6 @@ class InscricaoController extends Controller
                             ->get();
         }
 
-
         if (empty(session('level')))
         {
             Utils::setSession(Auth::user()->id);
@@ -110,8 +109,18 @@ class InscricaoController extends Controller
 
     public function create($codigoEdital)
     {        
+        $aprovados = array(211, 212, 213, 214, 219, 244, 272);
+        
         $inscricao = Inscricao::obterInscricao(Auth::user()->id, $codigoEdital);
-        //dd($inscricao);
+
+        if (in_array($inscricao->codigoInscricao, $aprovados))
+        {
+            session(['aprovado' => 1]);
+        }
+        else
+        {
+            session(['aprovado' => 0]);
+        }
 
         if (empty($inscricao))
         {            
@@ -229,7 +238,7 @@ class InscricaoController extends Controller
             'carta_aceite'           => (empty($carta_aceite) ? '' : $carta_aceite),
             'requerimento'           => (empty($requerimento) ? '' : $requerimento),
             'carta_coorientador'     => (empty($carta_coorientador) ? '' : $carta_coorientador),
-            'pais'                   => $inscricao->paisPessoal,
+            'pais'                   => $inscricao->paisPessoal,     
         ]);
     }
 

@@ -186,7 +186,7 @@ class DeferimentoController extends Controller
                                         ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
                                         ->where('inscricoes.codigoEdital', $codigoEdital)
                                         ->where('inscricoes_disciplinas.statusDisciplina', 'D')
-                                        ->where('inscricoes.statusInscricao', 'P')
+                                        ->where('inscricoes.statusInscricao', 'C')
                                         ->groupBy('inscricoes.codigoInscricao')
                                         ->orderBy('users.name')
                                         ->get();

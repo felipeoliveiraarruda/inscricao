@@ -24,6 +24,8 @@
                     <form class="needs-validation" novalidate method="POST" action="inscricao/{{ $codigoInscricao }}/disciplina/store">                                    
                         @csrf
 
+
+                        @if (Session::get('nivel') == 1)
                         <div class="form-group">
                             <div class="form-row">
                                 <div class="col">  
@@ -47,8 +49,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         
                         <div class="form-group">
                             <label for="expectativasInscricao" class="font-weight-bold">Selecione a(s) Disciplina(s)<span class="text-danger">*</span></label>
@@ -76,6 +76,21 @@
                                 @endforeach
                             @endif
                         </div>
+                        @endif
+
+                        @if (Session::get('aprovado') == 1)
+                            <div class="form-group">
+                                <label for="expectativasInscricao" class="font-weight-bold">Selecione a(s) Disciplina(s)<span class="text-danger">*</span></label>
+                                @foreach($disciplinas as $disciplina)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}">
+                                        <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
+                                            {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }}</label>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
 
                         <input type="hidden" name="codigoInscricao" value="{{ $codigoInscricao }}">                        
                         <input type="hidden" name="codigoEdital" value="{{ $codigoEdital }}">
