@@ -1,7 +1,7 @@
 <div class="list-group">
     @if (Session::get('nivel') == 1 || Session::get('nivel') == 2 || Session::get('nivel') == 4 || Session::get('level') == 'manager')
         <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">
-            Dados Pessoais 
+            Dados Pessoais
             <i class="fa @if (Session::get('total')['pessoal'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
 
@@ -16,22 +16,22 @@
         </a>
 
         @if ( Session::get('nivel') == 2 || Session::get('nivel') == 4 || Session::get('level') == 'manager')
-        <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
-            Recursos Financeiros
-            <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-        </a>
+            <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
+                Recursos Financeiros
+                <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+
+            @if (Session::get('aprovado') == 1)
+                    <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
+                        <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+                    </a> 
+                @endif
         @endif
 
         @if ($codigoEdital == 12)
         <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Por que cursar disciplina como aluno especial?
             <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a> 
-        @endif
-
-        @if (Session::get('aprovado') == 1)
-            <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
-                <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-            </a> 
         @endif
 
         @if (Session::get('nivel') == 1)
@@ -73,6 +73,13 @@
             <a href="inscricao/{{ $codigoInscricao }}/ensino" class="list-group-item list-group-item-action">6.Experiência Em Ensino
                 <i class="fa @if (Session::get('total')['ensino'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a> 
+            <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
+                7.Recursos Financeiros
+                <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+            <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">8.Expectativas
+                    <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+                </a>
             
             {{--@if (Session::get('nivel') == 1)
                 <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">7.Por que cursar disciplina como aluno especial?

@@ -19,9 +19,7 @@
                             <div class="accordion" id="accordionDisciplinas">
                                 @foreach($disciplinas as $disciplina)
                                     @php
-                                        $temp = App\Models\Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '04/03/2024', '16/06/2024');
-
-                                        //dd($temp);
+                                        $temp = App\Models\Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '05/08/2024', '17/11/2024');
 
                                         $inscritos = App\Models\InscricoesDisciplinas::listarInscritosDisciplinas($codigoEdital, $disciplina->codigoDisciplina);
                                     @endphp

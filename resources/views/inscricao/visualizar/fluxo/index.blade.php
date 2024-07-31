@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 7 && $total >= 11 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['especial'] >= 9 && $total >= 10 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -66,10 +66,8 @@
         </tr>
         <tr>
             <td>4.2 Ficha de Inscrição            
-                @if (Session::get('total')['especial'] >= 6 && $total >= 10)     
+                @if (Session::get('total')['especial'] >= 9 && $total >= 10)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
-                @else
-                
                 @endif
             </td>   
             <td class="text-center">
@@ -379,10 +377,10 @@
                     </a>
 
                     @if ($status == 'N')
-                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                        <a href="documento/{{ $projeto->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
                             <i class="fa fa-wrench"></i>
                         </a>
-                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                        <a href="documento/{{ $projeto->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
                             <i class="fa fa-trash"></i>
                         </a>
                     @endif 

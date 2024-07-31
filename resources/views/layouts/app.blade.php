@@ -66,13 +66,13 @@
         //Quando o campo cep perde o foco.
         $("#cep").blur(function() 
         {        
-          //Nova variável "cep" somente com dígitos.
+          //Nova variavel "cep" somente com dígitos.
           var cep = $(this).val().replace(/\D/g, '');
 
           //Verifica se campo cep possui valor informado.
           if (cep != "") 
           {            
-              //Expressão regular para validar o CEP.
+              //Expressao regular para validar o CEP.
               var validacep = /^[0-9]{8}$/;
 
               //Valida o formato do CEP.
@@ -94,16 +94,16 @@
                           $("#ibge").val(dados.ibge);
                       } //end if.
                       else {
-                          //CEP pesquisado não foi encontrado.
+                          //CEP pesquisado nao foi encontrado.
                           limpa_formulario_cep();
                           alert("CEP não encontrado.");
                       }
                   });
               } //end if.
               else {
-                  //cep é inválido.
+                  //cep invalido
                   limpa_formulario_cep();
-                  alert("Formato de CEP inválido.");
+                  alert("Formato de CEP inv�lido.");
               }
           } //end if.
           else {

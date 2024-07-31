@@ -33,6 +33,7 @@ use App\Mail\DevolucaoMail;
 use App\Models\InscricoesArquivos;
 use App\Models\InscricoesProficiencia;
 use ZipArchive;
+use App\Models\Pdf\Matricula;
 
 class InscricaoController extends Controller
 {
@@ -1847,15 +1848,15 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(12, 8, utf8_decode('Sexo:'), 'L',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(20, 8, utf8_decode($pessoais->sexoPessoal), 0,  0, 'L', false);
+            $pdf->Cell(53, 8, utf8_decode($pessoais->sexoPessoal), 0,  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(23, 8, utf8_decode('Estado Civil:'), 0,  0, 'L', false);
+            /*$pdf->Cell(23, 8, utf8_decode('Estado Civil:'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(45, 8, utf8_decode($pessoais->estadoCivilPessoal), 0,  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(32, 8, utf8_decode('Nº Dependente(s):'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(5, 8, utf8_decode($pessoais->dependentePessoal), 0,  0, 'L', false);
+            $pdf->Cell(5, 8, utf8_decode($pessoais->dependentePessoal), 0,  0, 'L', false);*/
             $eixoy = $eixoy + 8;   
 
             $pdf->SetY($eixoy);
@@ -1888,15 +1889,15 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(20, 8, utf8_decode('Identidade:'), 'L',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(25, 8, $pessoais->numeroRG, 0,  0, '', false);
+            $pdf->Cell(25, 8, $pessoais->numeroDocumento, 0,  0, '', false);
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(31, 8, utf8_decode('Data de Emissão:'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(20, 8, $pessoais->dataEmissaoRG, 0,  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
+            /*$pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);
+            $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);*/
             $eixoy = $eixoy + 8;
 
             if ($pessoais->especialPessoal == 'S')
@@ -2235,7 +2236,13 @@ class InscricaoController extends Controller
             
                     $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
                     $pdf->Ln();
-            
+
+                    if ($financeiros->solicitarRecursoFinanceiro == 'S')
+                    {
+                        $pdf->Cell(190, 8, utf8_decode("Agência: {$financeiros->agenciaRecursoFinanceiro} C/C: {$financeiros->agenciaRecursoFinanceiro} Local: {$financeiros->localRecursoFinanceiro}"), "LR", 0, "L");
+                        $pdf->Ln();
+                    }
+
                     $pdf->Cell(190, 8, "", "LR", 0, "L");
                     $pdf->Ln();
                 }   
@@ -2870,7 +2877,16 @@ class InscricaoController extends Controller
 
         $voltar = "inscricao/{$edital}";
 
-       // dd($inscricao);
+        $aprovados = array(211, 212, 213, 214, 219, 244, 272);
+
+        if (in_array($codigoInscricao, $aprovados))
+        {
+            session(['aprovado' => 1]);
+        }
+        else
+        {
+            session(['aprovado' => 0]);
+        }
 
         return view('inscricao.visualizar.admin.index',
         [
@@ -3695,5 +3711,27 @@ class InscricaoController extends Controller
 
 
         $pdf->Output();
+    }
+
+    public function primeira_matricula($codigoEdital)
+    {
+        $aprovados = array(211, 212, 213, 214, 219, 244, 272);
+
+        foreach($aprovados as $aprovado)
+        {
+            $edital = Edital::obterEditalInscricao($aprovado);
+
+            $pdf = new Matricula();
+
+            if ($edital->codigoCurso == 97002)
+            {
+                $anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $aprovado);
+            }
+
+            if ($edital->codigoCurso == 97004)
+            {
+                $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $aprovado);
+            }
+        }
     }
 }

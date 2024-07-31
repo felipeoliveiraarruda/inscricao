@@ -552,14 +552,14 @@ class Inscricao extends Model
             
             if($nivel == 'AE')
             {
-                if ($edital->dataInicioEdital->format('m') < 7)
+                if ($edital->dataFinalEdital->format('m') < 7)
                 {
                     $diretorio = $edital->dataInicioEdital->format('Y').'1/especial';
                     $semestre  = '1º Semestre de '. $edital->dataInicioEdital->format('Y');
                 }
                 else
                 {
-                    $ano       = $edital->dataInicioEdital->format('Y') + 1;
+                    $ano       = $edital->dataInicioEdital->format('Y');
                     $diretorio = $ano.'2/especial'; 
                     $semestre  = '2º Semestre de '.$ano;
                 }
@@ -650,9 +650,11 @@ class Inscricao extends Model
                 $temp1 = explode('-', $disciplina->codigoDisciplina);
 
                 $temp = Posgraduacao::disciplina($temp1[0]);
+
+                //$pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
                 
                 $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
-                $pdf->Cell(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+                $pdf->CellFitScale(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
                 $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
                 $pdf->Ln();  
             }
@@ -678,7 +680,7 @@ class Inscricao extends Model
             $pdf->SetFont('Arial', '', 12);
             $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
             $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
-            $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode('"OAc"'), 0, 0, 'C', false);
             $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
             $pdf->Ln();
     
@@ -710,8 +712,8 @@ class Inscricao extends Model
             $pdf->Ln();
 
             $sigla   = Str::lower($sigla);
-            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf");
-            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->numeroInscricao}.pdf";
+            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
+            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf";
     
             if (!file_exists($arquivo))
             {

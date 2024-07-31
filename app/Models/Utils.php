@@ -338,7 +338,7 @@ class Utils extends Model
         $total['foto']         = (empty($foto) ? 0 : 1);
         $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;*/
-        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + /*$total['curriculo'] +*/ $total['disciplina'];
+        $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['financeiro'] + $total['disciplina'];
         $total['mestrado']     = $total['pessoal'] + $total['endereco'] + $total['escolar'] + $total['financeiro'];
         $total['inscricao']    = "{$dados->numeroInscricao} - {$dados->name}";
 

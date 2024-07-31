@@ -47,7 +47,7 @@ class InscricoesDisciplinas extends Model
         $disciplinas = InscricoesDisciplinas::select('users.*', 'inscricoes_disciplinas.*')
                                             ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
                                             ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                                            ->where('inscricoes.statusInscricao', 'P')
+                                            //->where('inscricoes.statusInscricao', 'P')
                                             ->where('inscricoes.codigoEdital', $codigoEdital)
                                             ->where('inscricoes_disciplinas.codigoDisciplina', $codigoDisciplina)
                                             ->orderBy('users.name')

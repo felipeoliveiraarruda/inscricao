@@ -53,6 +53,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoInscricao}/download',            [ZipController::class, 'createZip']);
         Route::get('{codigoEdital}/proficiencia/download',  [ZipController::class, 'proficiencia_merge']);
         Route::get('{codigoEdital}/proficiencia/lista',     [InscricaoController::class, 'proficiencia_presenca']);
+        Route::get('{codigoEdital}/primeira-matricula',     [InscricaoController::class, 'primeira_matricula']);
 
         Route::get('{codigoEdital}/mestrado/lista',     [InscricaoController::class, 'mestrado_presenca']);
 
