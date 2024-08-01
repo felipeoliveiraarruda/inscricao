@@ -54,6 +54,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoEdital}/proficiencia/download',  [ZipController::class, 'proficiencia_merge']);
         Route::get('{codigoEdital}/proficiencia/lista',     [InscricaoController::class, 'proficiencia_presenca']);
         Route::get('{codigoEdital}/primeira-matricula',     [InscricaoController::class, 'primeira_matricula']);
+        Route::get('{codigoInscricao}/imprimir-bolsista',   [InscricaoController::class, 'imprimir_bolsista']);
+        Route::get('{codigoInscricao}/imprimir-termo',      [InscricaoController::class, 'imprimir_termo']);
 
         Route::get('{codigoEdital}/mestrado/lista',     [InscricaoController::class, 'mestrado_presenca']);
 

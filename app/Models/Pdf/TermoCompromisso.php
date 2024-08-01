@@ -45,7 +45,6 @@ class TermoCompromisso extends Comprovante
         $this->Ln();
 
         $this->WriteTag(190, 8, utf8_decode('<i>Carimbo e assinatura</i>'), 0, 'C');
-
     }
 
 }

@@ -2239,7 +2239,7 @@ class InscricaoController extends Controller
 
                     if ($financeiros->solicitarRecursoFinanceiro == 'S')
                     {
-                        $pdf->Cell(190, 8, utf8_decode("Agência: {$financeiros->agenciaRecursoFinanceiro} C/C: {$financeiros->agenciaRecursoFinanceiro} Local: {$financeiros->localRecursoFinanceiro}"), "LR", 0, "L");
+                        $pdf->Cell(190, 8, utf8_decode("Agência: {$financeiros->agenciaRecursoFinanceiro} C/C: {$financeiros->contaRecursoFinanceiro} Local: {$financeiros->localRecursoFinanceiro}"), "LR", 0, "L");
                         $pdf->Ln();
                     }
 
@@ -3734,4 +3734,6 @@ class InscricaoController extends Controller
             }
         }
     }
+
+
 }
