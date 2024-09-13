@@ -32,6 +32,8 @@ class HomeController extends Controller
                 'encerrados' => $encerrados,
                 'utils'      => new Utils,        
             ]);
+
+            
         }
         else
         {

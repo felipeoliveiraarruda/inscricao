@@ -16,10 +16,13 @@ class ImagemController extends Controller
 {
     public function create($codigoInscricao, $codigoTipoDocumento)
     {
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+
         return view('arquivo.imagem.create',
         [
             'codigoInscricao'     => $codigoInscricao,
             'codigoTipoDocumento' => $codigoTipoDocumento,
+            'codigoEdital'        => $codigoEdital
         ]);
     }
 

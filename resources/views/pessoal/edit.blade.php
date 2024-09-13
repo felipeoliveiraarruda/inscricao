@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="/pessoal/edit" class="list-group-item list-group-item-action active">Editar</a>
+                <a href="{{ url('pessoal') }}/edit" class="list-group-item list-group-item-action active">Editar</a>
                 <a href="{{ $link_voltar }}" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>
@@ -22,7 +22,7 @@
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
-                    <form class="needs-validation" novalidate method="POST" action="/pessoal/{{ $pessoais->codigoPessoal }}" enctype="multipart/form-data"" enctype="multipart/form-data">
+                    <form class="needs-validation" novalidate method="POST" action="{{ url('pessoal') }}/{{ $pessoais->codigoPessoal }}" enctype="multipart/form-data"" enctype="multipart/form-data">
                         @csrf
                         @method('patch')
                         @include('pessoal.partials.form')

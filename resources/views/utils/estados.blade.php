@@ -14,7 +14,7 @@
             $("#estadoPessoal").change(function() 
             {  
                 $.ajax({          
-                    url: "/cidades/"+$("#paisPessoal").val()+"/"+ $("#estadoPessoal").val(),
+                    url: "cidades/"+$("#paisPessoal").val()+"/"+ $("#estadoPessoal").val(),
                     type: "get",          
                     success: function(response)
                     {

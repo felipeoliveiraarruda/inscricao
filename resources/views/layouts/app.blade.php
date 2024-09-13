@@ -103,7 +103,7 @@
               else {
                   //cep invalido
                   limpa_formulario_cep();
-                  alert("Formato de CEP inv·lido.");
+                  alert("Formato de CEP inv√°lido.");
               }
           } //end if.
           else {
@@ -117,7 +117,7 @@
           if ($("#paisPessoal").val() == 1)
           {
             $.ajax({          
-              url: "/estados/"+$("#paisPessoal").val(),
+              url: "estados/"+$("#paisPessoal").val(),
               type: "get",          
               success: function(response)
               {
@@ -128,7 +128,7 @@
           else
           {
             $.ajax({          
-              url: "/estados/"+$("#paisPessoal").val(),
+              url: "estados/"+$("#paisPessoal").val(),
               type: "get",          
               success: function(response)
               {
@@ -139,7 +139,7 @@
             console.log('Carrega estados');
 
             $.ajax({          
-              url: "/cidades/"+$("#paisPessoal").val()+"/''",
+              url: "cidades/"+$("#paisPessoal").val()+"/''",
               type: "get",          
               success: function(response)
               {
@@ -154,7 +154,7 @@
         $("#estadoPessoal").change(function() 
         {  
           $.ajax({          
-            url: "/cidades/"+$("#paisPessoal").val()+"/"+ $("#estadoPessoal").val(),
+            url: "cidades/"+$("#paisPessoal").val()+"/"+ $("#estadoPessoal").val(),
             type: "get",          
             success: function(response)
             {

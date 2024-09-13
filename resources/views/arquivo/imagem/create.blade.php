@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="/inscricao/{{ $codigoInscricao }}" class="list-group-item list-group-item-action ">Voltar</a>
+                <a href="{{ url('inscricao') }}/{{ $codigoEdital }}" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>
         <div class="col-sm-9">
@@ -20,7 +20,7 @@
                     <!-- Validation Errors -->
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
-                    <form method="POST" action="/imagem/{{$codigoInscricao}}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ url('imagem') }}/{{ $codigoInscricao }}" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <input type="file" class="form-control-file" id="arquivo" name="arquivo" required>
@@ -37,7 +37,7 @@
         </div>
     </div>
 </main>
-@endsection                 
+@endsection                 s
 
 
 

@@ -2321,7 +2321,7 @@ class InscricaoController extends Controller
             $pdf->SetFillColor(190,190,190);
             $pdf->Cell(10, 8, utf8_decode('1.'), 1, 0, 'L', true);
             $pdf->Cell(130, 8, utf8_decode('DADOS PESSOAIS:'), '1', 0, 'J', true);
-            //$pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
+            $pdf->Image(asset("storage/{$foto->linkArquivo}"), 156, $eixofoto, 37, 50); 
             $pdf->Cell(50, 50, utf8_decode(''), 1, 0, 'R');
             $pdf->SetFont('Arial', 'B', 10);
     
@@ -2551,11 +2551,46 @@ class InscricaoController extends Controller
             {
                 if($edital->codigoEdital == 13)
                 {
+                    $pdf->Ln();
+                    $pdf->SetFont('Arial', 'B', 10);
+                    $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
+                    $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA PROFISSIONAL'), '1', 0, 'J', true);
+        
+                    $pdf->Ln();
+                    $pdf->SetFont('Arial', 'B', 10);
+                    $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
+                    $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
+                    $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+                    $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);            
+                    $pdf->SetFont('Arial', '', 10);
+        
+                    $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
+        
+                    if (!empty($profissionais->codigoExperiencia))
+                    {
+                        foreach($profissionais as $profissional)
+                        {   
+                            $pdf->Ln();
+                            $pdf->CellFitScale(70, 8, utf8_decode($profissional->entidadeExperiencia), 1, 0, 'J', false);
+                            $pdf->CellFitScale(70, 8, utf8_decode($profissional->posicaoExperiencia), 1, 0, 'J', false);    
+                            $pdf->CellFitScale(25, 8, $profissional->inicioExperiencia->format('m/Y'), 1, 0, 'C', false);
+                        
+                            if ($profissional->finalExperiencia == '')
+                            {
+                                $pdf->Cell(25, 8, '-', 1, 0, 'C', false);        
+                            }
+                            else
+                            {
+                                $pdf->CellFitScale(25, 8, $profissional->finalExperiencia->format('m/Y'), 1, 0, 'C', false);            
+                            }
+                        }
+                    }
+
                     $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);  
 
                     $pdf->Ln();
                     $pdf->SetFont("Arial","B", 10);
-                    $pdf->Cell(10, 8, utf8_decode("3."), 1, 0, "L", true);
+                    $pdf->Cell(10, 8, utf8_decode("4."), 1, 0, "L", true);
                     $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS EM RELAÇÃO AO CURSO"), "1", 0, "J", true);
 
                     $pdf->Ln();

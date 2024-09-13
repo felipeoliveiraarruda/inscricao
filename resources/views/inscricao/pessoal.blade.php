@@ -22,9 +22,9 @@
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
                     
                     @if ($pessoais->codigoPessoal == '')
-                    <form class="needs-validation" novalidate method="POST" action="pessoal">
+                    <form class="needs-validation" novalidate method="POST" action="{{ url('pessoal') }}">
                     @else
-                    <form class="needs-validation" novalidate method="POST" action="/pessoal/{{ $pessoais->codigoPessoal }}">
+                    <form class="needs-validation" novalidate method="POST" action="{{ url('pessoal') }}/{{ $pessoais->codigoPessoal }}">
                         @method('patch')
                     @endif
                         @csrf
