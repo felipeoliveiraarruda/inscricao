@@ -50,6 +50,28 @@ class ImpressaoController extends Controller
         $nivel  = Edital::obterNivelEdital($dados->codigoEdital);
         $codigo = Edital::obterCursoEdital($dados->codigoEdital);
         $curso  = Utils::obterCurso($codigo);
+        
+        $matricula = $dados->codpes;
+        
+        if ($codigoInscricao == 211)
+        {
+            $matricula = 11268500;
+        }
+
+        if ($codigoInscricao == 213)
+        {
+            $matricula = 15622381;
+        }
+
+        if ($codigoInscricao == 244)
+        {
+            $matricula = 11294674;
+        }
+
+        if ($codigoInscricao == 272)
+        {
+            $matricula = 16263622;
+        }
 
         if ($nivel == 'ME')
         {
@@ -74,7 +96,7 @@ class ImpressaoController extends Controller
         $pdf->Cell(190, 8, '', 0, 0, "C");
         $pdf->Ln(10);
 
-        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula 99999999, em nível de {$nivel}, em atenção à Portaria no 133, de 10 de julho de 2023, informo que possuo vínculo empregatício ou outros rendimentos, conforme declarado abaixo:";
+        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula {$matricula}, em nível de {$nivel}, em atenção à Portaria no 133, de 10 de julho de 2023, informo que possuo vínculo empregatício ou outros rendimentos, conforme declarado abaixo:";
             
         $pdf->SetFont('Times', '', 12);
         $pdf->MultiCell(190, 8, utf8_decode($texto), 0, 'J'); 
@@ -148,8 +170,8 @@ class ImpressaoController extends Controller
             $pdf->Ln();
         }
 
-        $pdf->SetY(-30);
-        $pdf->Cell(0, 9, $pdf->PageNo().'/{nb}', 0, 0, 'R');
+       /* $pdf->SetY(-30);
+        $pdf->Cell(0, 9, $pdf->PageNo().'/{nb}', 0, 0, 'R');*/
 
         $pdf->AddPage();
 
@@ -201,7 +223,6 @@ class ImpressaoController extends Controller
         $pdf->MultiCell(190, 8, utf8_decode("(   ) Os acúmulos registrados acima estão de acordo com os critérios de acúmulo previstos no regulamento da Instituição de ensino e pesquisa ou PPG."), 0, 'J'); 
         $pdf->Ln();
 
-
         $pdf->SetFont('Arial', '', 10);
         $pdf->WriteTag(190, 15, utf8_decode('<i>Coordenador(a) do Programa de Pós-Graduação</i>'), 0, 'C');
         $pdf->Ln();
@@ -213,9 +234,9 @@ class ImpressaoController extends Controller
 
         $pdf->WriteTag(190, 8, utf8_decode('<i>Carimbo e assinatura</i>'), 0, 'C');
 
-        $pdf->SetY(-30);
+        /*$pdf->SetY(-30);
         $pdf->SetFont('Times', '', 11);
-        $pdf->Cell(0, 9, $pdf->PageNo().'/{nb}', 0, 0, 'R');
+        $pdf->Cell(0, 9, $pdf->PageNo().'/{nb}', 0, 0, 'R');*/
 
         $pdf->Output();
     }
@@ -226,6 +247,28 @@ class ImpressaoController extends Controller
         $nivel  = Edital::obterNivelEdital($dados->codigoEdital);
         $codigo = Edital::obterCursoEdital($dados->codigoEdital);
         $curso  = Utils::obterCurso($codigo);
+
+        $matricula = $dados->codpes;
+        
+        if ($codigoInscricao == 211)
+        {
+            $matricula = 11268500;
+        }
+
+        if ($codigoInscricao == 213)
+        {
+            $matricula = 15622381;
+        }
+
+        if ($codigoInscricao == 244)
+        {
+            $matricula = 11294674;
+        }
+
+        if ($codigoInscricao == 272)
+        {
+            $matricula = 16263622;
+        }
 
         if ($nivel == 'ME')
         {
@@ -243,7 +286,7 @@ class ImpressaoController extends Controller
         $pdf->AliasNbPages();   
         $pdf->AddPage();
 
-        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula 99999999, em nível de {$nivel}, tenho ciência das obrigações inerentes à qualidade de beneficiário de bolsa, conforme regulamento vigente do Programa de Demanda Social - DS, anexo à Portaria nº 76, de 14 de abril de 2010, e da Portaria nº 133, de 10 de julho de 2023, e nesse sentido, COMPROMETO-ME a respeitar as seguintes cláusulas:";
+        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula {$matricula}, em nível de {$nivel}, tenho ciência das obrigações inerentes à qualidade de beneficiário de bolsa, conforme regulamento vigente do Programa de Demanda Social - DS, anexo à Portaria nº 76, de 14 de abril de 2010, e da Portaria nº 133, de 10 de julho de 2023, e nesse sentido, COMPROMETO-ME a respeitar as seguintes cláusulas:";
             
         $pdf->SetFont('Times', '', 12);
         $pdf->MultiCell(190, 8, utf8_decode($texto), 0, 'J'); 
@@ -313,8 +356,8 @@ class ImpressaoController extends Controller
         $pdf->Ln();
 
         /* Nivel */
-        $mestrado = 'X';
-        $doutorado = '';
+        $mestrado = '';
+        $doutorado = 'X';
 
         /*if ($dados->tipoNivel = 'Mestrado')
         {
@@ -348,11 +391,12 @@ class ImpressaoController extends Controller
         $masculino = '';
         $feminino  = '';
 
-        if ($inscricao->sexoPessoal = 'Masculino')
+        if ($inscricao->sexoPessoal == 'Masculino')
         {
             $masculino = 'X';
         }
-        else if ($inscricao->sexoPessoal == 'Feminino')
+        
+        if ($inscricao->sexoPessoal == 'Feminino')
         {
             $feminino = 'X';
         }
@@ -400,7 +444,16 @@ class ImpressaoController extends Controller
         $pdf->Cell(29, 9, '', 0, 0, 'L');
         
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(31, 9, utf8_decode($nacionalidade['nompas']), 0, 0, 'L');
+
+        if ($inscricao->paisPessoal == 218)
+        {
+            $pdf->Cell(31, 9, utf8_decode('EAU'), 0, 0, 'L');
+        }
+        else
+        {
+            $pdf->Cell(31, 9, utf8_decode($nacionalidade['nompas']), 0, 0, 'L');
+        }
+
         $pdf->Ln();
 
         $pdf->Cell(190, 3, '', 0, 0, 'C');
@@ -556,13 +609,25 @@ class ImpressaoController extends Controller
         
         $resumo = Inscricao::obterEscolarInscricao($codigoInscricao);
 
+        if ($resumo[0]->tipoResumoEscolar == '')
+        {
+            $maior = 'Graduação';
+        }
+        else
+        {
+            $maior = $resumo[0]->tipoResumoEscolar;
+        }
+
+        $maior = 'Mestrado';
+
         $pdf->Cell(190, 5, '', 0, 0, 'C');
         $pdf->Ln();
         
         $pdf->Cell(78, 6, '', 0, 0, 'L');
-        $pdf->Cell(58, 6, utf8_decode($resumo[0]->tipoResumoEscolar), 0, 0, 'L');
+        $pdf->Cell(58, 6, utf8_decode($maior), 0, 0, 'L');
         $pdf->Cell(27, 6, '', 0, 0, 'L');
-        $pdf->Cell(18, 6, utf8_decode($resumo[0]->finalResumoEscolar->format('Y')), 0, 0, 'L');
+        //$pdf->Cell(18, 6, utf8_decode($resumo[0]->finalResumoEscolar->format('Y')), 0, 0, 'L');
+        $pdf->Cell(18, 6, utf8_decode('2024'), 0, 0, 'L');
         $pdf->Cell(9, 6, '', 0, 0, 'L');
         $pdf->Ln();
 
@@ -628,7 +693,17 @@ class ImpressaoController extends Controller
         $pdf->Cell(40, 5, utf8_decode($financeiro->contaRecursoFinanceiro), 0, 0, 'L');
         $pdf->Ln();
 
+        /* Marcar Mestrado/24 meses */
+        $pdf->Cell(190, 26.5, '', 0, 0, 'C');
+        $pdf->Ln();
+
+        $pdf->Cell(33, 6, '', 0, 0, 'C');
+        $pdf->Cell(4, 6, utf8_decode($mestrado), 0, 0, 'L');
+        $pdf->Cell(45, 6, '', 0, 0, 'C');
+        $pdf->Cell(5, 6, utf8_decode($doutorado), 0, 0, 'C');
+        $pdf->Cell(103, 6, '', 0, 0, 'C');
+        $pdf->Ln();
+
         $pdf->Output();
     }
-
 }

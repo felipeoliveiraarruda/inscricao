@@ -22,30 +22,14 @@ class DeclaracaoAcumulo extends Fpdf
         $this->Ln();
         $this->Cell(190, 8, '', 0, 0, "C");
         $this->Ln(15);
-    }
+    }*/
 
     function Footer()
     {
-        $this->SetFont('Arial', '', 10);
-        $this->SetY(-70);
-
-        $this->WriteTag(22, 5, utf8_decode('<i>Local e data:</i>'), 0, 'J');
-        $this->Cell(168, 8, '', 'T', 0, 'C');
-        $this->Ln();
-        $this->WriteTag(62, 5, utf8_decode('<i>Assinatura do(a) beneficiário da bolsa:</i>'), 0, 'J');
-        $this->Cell(128, 8, '', 'T', 0, 'C');
-        $this->Ln();
-        
-        $this->WriteTag(190, 15, utf8_decode('<i>Coordenador(a) do Programa de Pós-Graduação</i>'), 0, 'C');
-        $this->Ln();
-            
-        $this->Cell(55, 10, '', 0, 0, 'C');
-        $this->Cell(80, 10, '', 'B', 0, 'C');
-        $this->Cell(55, 10, '', 0, 0, 'C');
-        $this->Ln();
-
-        $this->WriteTag(190, 8, utf8_decode('<i>Carimbo e assinatura</i>'), 0, 'C');
-    }*/
+		$this->SetY(-15);
+        $this->SetFont('Times', '', 11);
+        $this->Cell(0, 9, $this->PageNo().'/{nb}', 0, 0, 'R');
+    }
 
     //Cell with horizontal scaling if text is too wide
     function CellFit($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='', $scale=false, $force=true)

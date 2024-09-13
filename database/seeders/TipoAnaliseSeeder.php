@@ -14,7 +14,7 @@ class TipoAnaliseSeeder extends Seeder
         DB::table('tipo_analise')->insert(
             [
                 [
-                    'tipoAnalise'           => 'Iniciação Científica',
+                    'tipoAnalise'           => 'IniciaÃ§Ã£o CientÃ­fica',
                     'calculoTipoAnalise'    => '[IC] * 0.5',
                     'pontuacaoTipoAnalise'  => 'Meses',
                     'maximoTipoAnalise'     => 12,
@@ -24,7 +24,7 @@ class TipoAnaliseSeeder extends Seeder
                     'codigoPessoaAlteracao' => 5840128,
                 ],
                 [
-                    'tipoAnalise'           => 'Monitoria / Estágio',
+                    'tipoAnalise'           => 'Monitoria / EstÃ¡gio',
                     'calculoTipoAnalise'    => '[Me] * 0.5',
                     'pontuacaoTipoAnalise'  => 'Meses',
                     'maximoTipoAnalise'     => 8,
@@ -34,7 +34,7 @@ class TipoAnaliseSeeder extends Seeder
                     'codigoPessoaAlteracao' => 5840128,
                 ], 
                 [
-                    'tipoAnalise'           => 'Artigo em Periódico Internacional',
+                    'tipoAnalise'           => 'Artigo em PeriÃ³dico Internacional',
                     'calculoTipoAnalise'    => '[Pi] * 2.00',
                     'pontuacaoTipoAnalise'  => 'Quantidade',
                     'maximoTipoAnalise'     => 0,
@@ -44,7 +44,7 @@ class TipoAnaliseSeeder extends Seeder
                     'codigoPessoaAlteracao' => 5840128,
                 ],  
                 [
-                    'tipoAnalise'           => 'Artigo em Periódico Nacional',
+                    'tipoAnalise'           => 'Artigo em PeriÃ³dico Nacional',
                     'calculoTipoAnalise'    => '[Pn] * 1.00',
                     'pontuacaoTipoAnalise'  => 'Quantidade',
                     'maximoTipoAnalise'     => 0,
@@ -114,7 +114,7 @@ class TipoAnaliseSeeder extends Seeder
                     'codigoPessoaAlteracao' => 5840128,
                 ],
                 [
-                    'tipoAnalise'           => 'Capí­tulo de livros',
+                    'tipoAnalise'           => 'CapÃ­Â­tulo de livros',
                     'calculoTipoAnalise'    => '[Cl] * 1.50',
                     'pontuacaoTipoAnalise'  => 'Quantidade',
                     'maximoTipoAnalise'     => 0,

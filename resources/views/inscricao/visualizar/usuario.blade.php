@@ -20,5 +20,9 @@
 @endif
 
 @if (Session::get('nivel') == 4)
-    @include('inscricao.visualizar.mestrado.index')
+    @if ($codigoEdital == 13)
+        @include('inscricao.visualizar.mestrado.ppgpe')
+    @else
+        @include('inscricao.visualizar.mestrado.index')
+    @endif
 @endif

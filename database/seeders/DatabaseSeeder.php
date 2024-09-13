@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SysUtilsSeeder::class);
         $this->call(ConceitoSeeder::class);
         $this->call(TipoAnaliseSeeder::class);
-        $this->call(TipoEntidade::class);
-        $this->call(TipoExperiencia::class);
+        $this->call(TipoEntidadeSeeder::class);
+        $this->call(TipoExperienciaSeeder::class);
     }
 }

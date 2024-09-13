@@ -97,7 +97,7 @@
         </div>
         <div class="col">
             <label for="numeroDocumento" class="font-weight-bold">Número do Documento<span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="numeroDocumento" name="numeroDocumento" value="{{ old('numeroDocumento') ?? $pessoais->numeroDocumento ?? $pessoais->numeroDocumento }}">
+            <input type="text" class="form-control" id="numeroDocumento" name="numeroDocumento" value="{{ old('numeroDocumento') ?? ($pessoais->numeroDocumento == '') ? $pessoais->numeroRG : $pessoais->numeroDocumento ?? $pessoais->numeroDocumento }}">
         </div>
 
         <div class="col">

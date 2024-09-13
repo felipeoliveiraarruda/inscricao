@@ -316,8 +316,9 @@ class Utils extends Model
         $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
         $dados = Inscricao::obterNomeInscricao($codigoInscricao);
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
-        /*$curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
         $pre_projeto  = Arquivo::verificarArquivo($codigoInscricao, [10]);
+        /*$curriculo    = Inscricao::obterCurriculoInscricao($codigoInscricao);
+        
         $requerimento = Arquivo::verificarArquivo($codigoInscricao, [28]);
         $foto         = Arquivo::verificarArquivo($codigoInscricao, [27]); */
 
@@ -336,10 +337,11 @@ class Utils extends Model
         $total['requerimento'] = $requerimento;
         /*$total['curriculo']    = (empty($curriculo->codigoArquivo) ? 0 : 1);
         $total['foto']         = (empty($foto) ? 0 : 1);
-        $total['pre-projeto']  = $pre_projeto;
         $total['requerimento'] = $requerimento;*/
+
+        $total['pre-projeto']  = $pre_projeto;
         $total['especial']     = $total['pessoal'] + $total['endereco'] + $total['emergencia'] + $total['escolar'] + $total['idioma'] + $total['profissional'] + $total['ensino'] + $total['expectativas'] + $total['financeiro'] + $total['disciplina'];
-        $total['mestrado']     = $total['pessoal'] + $total['endereco'] + $total['escolar'] + $total['financeiro'];
+        $total['mestrado']     = $total['pessoal'] + $total['endereco'] + $total['escolar'] + $total['financeiro'] + $total['expectativas'] + $total['pre-projeto'];
         $total['inscricao']    = "{$dados->numeroInscricao} - {$dados->name}";
 
         session(['total' => $total]);

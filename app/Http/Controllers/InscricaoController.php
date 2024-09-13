@@ -195,7 +195,7 @@ class InscricaoController extends Controller
 
         if ($inscricao->codigoNivel == 1)
         {
-            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(1, 2, 3, 4, 5, 6, 9, 27, 28));
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(1, 2, 3, 4, 5, 6, 9, 10, 27, 28));
 
             $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
             $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
@@ -959,7 +959,7 @@ class InscricaoController extends Controller
     {         
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
 
-        if ($status == 'P')
+        if ($inscricao->statusInscricao == 'P')
         {
             return redirect("inscricao/{$inscricao->codigoEdital}"); 
         }
@@ -1800,7 +1800,7 @@ class InscricaoController extends Controller
         $arquivo      = Inscricao::obterRequerimentoInscricao($codigoInscricao);
         $nivel        = Edital::obterNivelEdital($pessoais->codigoEdital);
 
-        $pdf->setCabecalho($sigla);
+        $pdf->setCabecalho('ppgem');
       
         $pdf->SetDisplayMode('real');
         $pdf->AliasNbPages();
@@ -2354,7 +2354,7 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(30, 8, utf8_decode('Identidade ('.$pessoais->tipoDocumento.'):'), 'L',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(107, 8, $pessoais->numeroDocumento, 0,  0, '', false);
+            $pdf->Cell(107, 8, (empty($pessoais->numeroDocumento) ? $pessoais->numeroRG : $pessoais->numeroDocumento), 0,  0, '', false);
             $eixoy = $eixoy + 8;
 
             $pais = Utils::obterPais($pessoais->paisPessoal);
@@ -2469,7 +2469,7 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(10, 8, utf8_decode('2.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR'), '1', 0, 'J', true);
+            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (Graduação ou Mestrado, concluído ou em andamento'), '1', 0, 'J', true);
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
@@ -2549,48 +2549,64 @@ class InscricaoController extends Controller
             }
             else
             {
-                $pdf->Ln();
-                $pdf->SetFont("Arial","B", 10);
-                $pdf->Cell(10, 8, utf8_decode("3."), 1, 0, "L", true);
-                $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
-            
-                $pdf->Ln();
-                $pdf->SetFont("Arial","", 10);
-                $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
-        
-                $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
-        
-                if ($financeiros->bolsaRecursoFinanceiro == 'S')
+                if($edital->codigoEdital == 13)
                 {
-                    $bolsa = true;
-                    $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                    $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);  
+
                     $pdf->Ln();
-            
-                    $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
-                    $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
+                    $pdf->SetFont("Arial","B", 10);
+                    $pdf->Cell(10, 8, utf8_decode("3."), 1, 0, "L", true);
+                    $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS EM RELAÇÃO AO CURSO"), "1", 0, "J", true);
+
                     $pdf->Ln();
-                    $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
-                    $pdf->Ln();
-            
-                    $pdf->Cell(190, 8, "", "LR", 0, "L");
-                    $pdf->Ln();
+                    $pdf->SetFont("Arial","", 10);
+                    $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false);
                 }
                 else
                 {
-                    $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
-        
-                    $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
                     $pdf->Ln();
+                    $pdf->SetFont("Arial","B", 10);
+                    $pdf->Cell(10, 8, utf8_decode("3."), 1, 0, "L", true);
+                    $pdf->Cell(180, 8, utf8_decode("RECURSOS FINANCEIROS"), "1", 0, "J", true);
+                
+                    $pdf->Ln();
+                    $pdf->SetFont("Arial","", 10);
+                    $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
             
-                    $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
-                    $pdf->Ln();
+                    $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
             
-                    $pdf->Cell(190, 8, "", "LR", 0, "L");
-                    $pdf->Ln();
-                }   
-        
-                $pdf->SetFont("Arial","B", 10);
-                $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                    if ($financeiros->bolsaRecursoFinanceiro == 'S')
+                    {
+                        $bolsa = true;
+                        $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                        $pdf->Ln();
+                
+                        $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                        $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
+                        $pdf->Ln();
+                        $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                        $pdf->Ln();
+                
+                        $pdf->Cell(190, 8, "", "LR", 0, "L");
+                        $pdf->Ln();
+                    }
+                    else
+                    {
+                        $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+            
+                        $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                        $pdf->Ln();
+                
+                        $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
+                        $pdf->Ln();
+                
+                        $pdf->Cell(190, 8, "", "LR", 0, "L");
+                        $pdf->Ln();
+                    }   
+            
+                    $pdf->SetFont("Arial","B", 10);
+                    $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                }
             }
 
             if ($nivel == 'ME')
@@ -2607,9 +2623,18 @@ class InscricaoController extends Controller
                     $diretorio = $ano.'1'; 
                 }
 
-                $assunto      = "MESTRADO - {$sigla}";
-                $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                if($edital->codigoEdital == 13)
+                {
+                    $assunto      = "MESTRADO - {$sigla}";
+                    $curso        = 'Seleção de Aluno Regular no Programa de Pós-graduação em Projetos Educacionais ('.$sigla.')';
+                    $requerimento = 'Venho requerer minha inscrição para '.$curso.', conforme regulamenta o edital publicado na página da Comissão de Pós-graduação (CPG).';                
+                }
+                else
+                {
+                    $assunto      = "MESTRADO - {$sigla}";
+                    $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
+                    $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                }
             }
 
             if ($nivel == 'DF')
@@ -2644,7 +2669,7 @@ class InscricaoController extends Controller
                 $pdf->Cell(190, 8, utf8_decode(''), 'LR', 0, 'L', false);
 
                 $pdf->Ln();
-                $pdf->Cell(140, 8, 'Assinatura do candidato:', 'LB', 0, 'L', false);
+                $pdf->Cell(140, 8, 'Assinatura original/certificada do candidato:', 'LB', 0, 'L', false);
                 $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
             }
 
