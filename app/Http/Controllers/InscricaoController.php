@@ -2565,8 +2565,8 @@ class InscricaoController extends Controller
                     $pdf->SetFont('Arial', '', 10);
         
                     $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
-        
-                    if (!empty($profissionais->codigoExperiencia))
+    
+                    if (!empty($profissionais))
                     {
                         foreach($profissionais as $profissional)
                         {   
