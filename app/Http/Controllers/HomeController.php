@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Edital;
 use App\Models\Utils;
+use App\Models\User;
 use App\Models\TipoDocumento;
 use App\Models\ProcessoSeletivo;
 use Carbon\Carbon;

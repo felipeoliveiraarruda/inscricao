@@ -523,7 +523,7 @@
         {
           $.ajax(
           {          
-            url: "/processo_seletivo/public/verificacao/"+$("#cpfVerificar").val(),
+            url: "/verificacao/"+$("#cpfVerificar").val(),
             type: "get",
 
             success: function(response)
