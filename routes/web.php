@@ -24,6 +24,7 @@ use App\Http\Controllers\PAE\RecursoPaeController;
 Route::get('/', [HomeController::class, 'index']);
 //Route::get('email', [ArquivoController::class, 'email']);
 Route::get('requerimento/{codigoInscricao}', [InscricaoController::class, 'comprovante']);
+Route::get('/verificacao/{cpf}',    [HomeController::class, 'verificacao']);
 
 Route::middleware(['auth','verified'])->group(function () 
 {

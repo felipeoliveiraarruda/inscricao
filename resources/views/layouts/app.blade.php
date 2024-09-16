@@ -514,6 +514,37 @@
             });
           }
         });
+
+        $("#exibirCampos").hide();
+
+      $("#btnProsseguir").click(function() 
+      {
+        if ($("#cpfVerificar").val() != '')
+        {
+          $.ajax(
+          {          
+            url: "/processo_seletivo/public/verificacao/"+$("#cpfVerificar").val(),
+            type: "get",
+
+            success: function(response)
+            { 
+              $("#btnProsseguir").hide();
+              $("#cpfVerificar").prop('disabled', true);
+              
+              if (response == 0)
+              {
+                $("#exibirCampos").show();   
+                $("#cpf").prop('value', $("#cpfVerificar").val());
+              }
+              else
+              {
+                $("#exibirCampos").html('<div class="mb-4 text-sm text-danger text-center">CPF '+$("#cpfVerificar").val()+' já está cadastrado.</div><div class="mb-4 text-sm text-justify text-gray-600">Acesse o sistema através do menu "Entrar" no canto superior direito com seu e-mail e senha cadastrados.</div><div class="mb-4 text-sm text-justify text-gray-600">Ao criar a sua conta em nosso sistema um e-mail de verificação foi enviado ao e-mail cadastrado. Verifique se sua caixa de e-mail não está cheia ou se o e-mail enviado caiu em sua caixa de "SPAM"</div>');
+                $("#exibirCampos").show();
+              }
+            },
+          });
+        }
+      });
     })  
 
     /*tinymce.init({

@@ -84,6 +84,12 @@ class HomeController extends Controller
         }
     }
 
+    public function verificacao($cpf)
+    {
+        $user = User::select('cpf')->where('cpf', '=', preg_replace('/[^0-9]/', '', $cpf))->count();
+        return json_encode($user);
+    }
+
     /*public function modelo()
     {
         $tipos = TipoDocumento::all();
