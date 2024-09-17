@@ -65,6 +65,16 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['cpf'] = preg_replace('/[^0-9]/', '', $value);
     }
 
+    public function setNameAttribute($value) 
+    {
+        $this->attributes['name'] = Utils::tratarNome($value);
+    }
+
+    public function setEmailAttribute($value) 
+    {
+        $this->attributes['email'] = strtolower(trim($value));
+    }
+
     public function inscricoes()
     {
         return $this->hasMany(\App\Models\Inscricao::class);
