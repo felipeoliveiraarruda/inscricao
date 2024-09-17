@@ -41,6 +41,16 @@
                             </div>
 
                             <div class="form-group">                            
+                                <label for="rg" class="font-weight-bold">{{ __('RG') }}</label>
+                                <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') }}" required>
+                            </div>
+
+                            <div class="form-group">                            
+                                <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}</label>
+                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('rg') }}"  required>
+                            </div>
+
+                            <div class="form-group">                            
                                 <label for="password" class="font-weight-bold">{{ __('Password') }}<span class="text-danger">*</span></label>
                                 <input id="password" class="form-control" type="password" name="password" required autocomplete="new-password">
                             </div>

@@ -57,7 +57,7 @@
                                                                                   
                                             @if ($edital->codigoNivel == 5)
                                                     @if ($status == 'P')
-                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Em Análise</a></td>
                                                     @elseif ($status == 'N')
                                                         <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
                                                     @elseif ($status == 'C')
@@ -72,7 +72,7 @@
                                                     @endif
                                                 @else
                                                     @if ($status == 'P')
-                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                        <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Em Análise</a></td>
                                                     @elseif ($status == 'N')
                                                         <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
                                                     @elseif ($status == 'C')
@@ -97,7 +97,7 @@
                                                 @else
                                                     @if ($edital->codigoNivel == 5)
                                                         @if ($status == 'P')
-                                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-info">Em Análise</a></td>
                                                         @elseif ($status == 'N')
                                                             <td><a href="inscricao/{{ $edital->codigoEdital }}/pae" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
                                                         @elseif ($status == 'C')
@@ -112,7 +112,7 @@
                                                         @endif
                                                     @else
                                                         @if ($status == 'P')
-                                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Inscrição Pendente</a></td>
+                                                            <td><a href="inscricao/{{ $edital->codigoEdital }}/" role="button" aria-pressed="true" class="btn btn-info">Em Análise</a></td>
                                                         @elseif ($status == 'N')
                                                             <td><a href="inscricao/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-warning">Continuar inscrição</a></td>
                                                         @elseif ($status == 'C')

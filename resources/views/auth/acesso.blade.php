@@ -23,11 +23,11 @@
                     <form method="POST" action="{{ route('login2') }}">
                         @csrf
                         <div class="form-group">                            
-                            <label for="email">{{ __('Email') }}</label>
+                            <label for="email" class="font-weight-bold">{{ __('Email') }}</label>
                             <input type="email" class="form-control" name="email" value="" required autofocus>
                         </div>
 
-                        <div class="form-group">                            
+                        <div class="form-group" class="font-weight-bold">                            
                             <label for="email">{{ __('Password') }}</label>
                             <input type="password" class="form-control" name="password" value="" required>
                         </div>
