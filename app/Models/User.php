@@ -139,5 +139,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $vinculos;
     }
 
+    public static function acertarNomes($codigoEdital)
+    {
+        $users = User::join('inscricoes', 'inscricoes.codigoUsuario', '=', 'users.id')
+                     ->where('inscricoes.codigoEdital', $codigoEdital)
+                     //->where('inscricoes.statusInscricao', 'C')
+                     ->get();
+        
+        foreach($users as $user)
+        {
+            /*$temp = User::find($user->id);
+            $temp->name = Utils::tratarNome($user->name);
+            $temp->save();*/
 
+            echo $user->name." - ".Utils::tratarNome($user->name)."<br/>";
+        }
+    }
 }
