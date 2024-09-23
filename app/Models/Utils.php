@@ -425,25 +425,4 @@ class Utils extends Model
             //Posgraduacao::ministrante();
         }
     }
-    
-    function tratarNome($nome)
-    {
-        $saida = '';
-        $nome = strtolower($nome); // Converter o nome todo para minúsculo
-        $nome = explode(" ", $nome); // Separa o nome por espaços
-        
-        for ($i=0; $i < count($nome); $i++) 
-        {
-    
-            // Tratar cada palavra do nome
-            if ($nome[$i] == "de" or $nome[$i] == "da" or $nome[$i] == "e" or $nome[$i] == "dos" or $nome[$i] == "do") {
-                $saida .= $nome[$i].' '; // Se a palavra estiver dentro das complementares mostrar toda em minúsculo
-            }else {
-                $saida .= ucfirst($nome[$i]).' '; // Se for um nome, mostrar a primeira letra maiúscula
-            }
-    
-        }
-
-        return $saida;
-    }
 }

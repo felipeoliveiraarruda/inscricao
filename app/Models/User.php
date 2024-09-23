@@ -65,16 +65,6 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->attributes['cpf'] = preg_replace('/[^0-9]/', '', $value);
     }
 
-    public function setNameAttribute($value) 
-    {
-        $this->attributes['name'] = Utils::tratarNome($value);
-    }
-
-    public function setEmailAttribute($value) 
-    {
-        $this->attributes['email'] = strtolower(trim($value));
-    }
-
     public function inscricoes()
     {
         return $this->hasMany(\App\Models\Inscricao::class);
@@ -139,20 +129,5 @@ class User extends Authenticatable implements MustVerifyEmail
         return $vinculos;
     }
 
-    public static function acertarNomes($codigoEdital)
-    {
-        $users = User::join('inscricoes', 'inscricoes.codigoUsuario', '=', 'users.id')
-                     ->where('inscricoes.codigoEdital', $codigoEdital)
-                     //->where('inscricoes.statusInscricao', 'C')
-                     ->get();
-        
-        foreach($users as $user)
-        {
-            /*$temp = User::find($user->id);
-            $temp->name = Utils::tratarNome($user->name);
-            $temp->save();*/
 
-            echo $user->name." - ".Utils::tratarNome($user->name)."<br/>";
-        }
-    }
 }

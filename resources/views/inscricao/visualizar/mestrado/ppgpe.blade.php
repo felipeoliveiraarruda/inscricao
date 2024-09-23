@@ -267,7 +267,7 @@
         </tr>
         @endif
         <tr>
-            <td>1.6 Currículo Lattes<span class="text-danger">*</span><br/> (anexar no currículo todos os documentos comprobatórios para avaliação conforme item 3.1.8 e 6.1 do Edital)</td> 
+            <td>1.6 Currículo Vittae/Lattes<span class="text-danger">*</span><br/> (anexar no currículo todos os documentos comprobatórios para avaliação conforme Edital)</td> 
             <td class="text-center">
                 @if(!empty($curriculo->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>

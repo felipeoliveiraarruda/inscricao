@@ -2924,13 +2924,13 @@ class InscricaoController extends Controller
         */
 
         $dados     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(26, 27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(1, 2, 3, 4, 5, 6, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(26, 27, 28, 1, 2, 4, 3, 5, 9, 6, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(1, 2, 3, 4, 5, 6, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $nivel = Edital::obterNivelEdital($edital);
         session(['nivel' => $nivel]);

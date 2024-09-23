@@ -16,16 +16,18 @@
         </a>
 
         @if ($codigoEdital == 12)
+            <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
+                Recursos Financeiros
+                <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+
         <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Por que cursar disciplina como aluno especial?
             <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a> 
         @endif
 
         @if (Session::get('nivel') == 'ME' || Session::get('nivel') == 'DD')
-            <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
-                Recursos Financeiros
-                <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
-            </a>
+
 
             @if (Session::get('aprovado') == 1)
                     <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
@@ -38,6 +40,20 @@
             <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
                 <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a> 
+        @endif
+
+        @if ($codigoEdital == 13)
+            <a href="inscricao/{{ $codigoInscricao }}/profissional" class="list-group-item list-group-item-action">Experiência Profissional
+                <i class="fa @if (Session::get('total')['profissional'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+
+            <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Expectativas
+                <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+
+            <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">Pré-projeto
+                <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
         @endif
 
         <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">

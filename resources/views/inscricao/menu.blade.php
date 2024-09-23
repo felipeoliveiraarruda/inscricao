@@ -39,13 +39,6 @@
                 <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a> 
         @endif
-
-        @if ($status == 'P')
-            <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">
-                Documentos Obrigatórios
-                <i class="fa fa-check text-success float-right"></i>
-            </a> 
-        @endif
         
         @if ($codigoEdital == 13)
             <a href="inscricao/{{ $codigoInscricao }}/profissional" class="list-group-item list-group-item-action">Experiência Profissional
@@ -59,6 +52,13 @@
             <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action">Pré-projeto
                 <i class="fa @if (Session::get('total')['pre-projeto'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a>
+        @endif
+
+        @if ($status == 'P')
+            <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">
+                Documentos Obrigatórios
+                <i class="fa fa-check text-success float-right"></i>
+            </a> 
         @endif
     @else
 
