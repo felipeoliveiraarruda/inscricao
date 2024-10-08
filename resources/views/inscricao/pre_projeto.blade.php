@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="inscricao/{{ $codigoInscricao }}/curriculo" class="list-group-item list-group-item-action ">Voltar</a>
+                <a href="inscricao/{{ $codigoInscricao }}/pre-projeto" class="list-group-item list-group-item-action ">Voltar</a>
             </div>
         </div>
 

@@ -34,6 +34,7 @@ use App\Models\InscricoesArquivos;
 use App\Models\InscricoesProficiencia;
 use ZipArchive;
 use App\Models\Pdf\Matricula;
+use App\Http\Requests\PreProjetoRequest;
 
 class InscricaoController extends Controller
 {
@@ -980,8 +981,10 @@ class InscricaoController extends Controller
         ]); 
     } 
     
-    public function projeto_store(Request $request)
+    public function projeto_store(PreProjetoRequest $request)
     { 
+        $validated = $request->validated();
+
         $path = $request->file('arquivo')->store('arquivos', 'public');
 
         $arquivo = Arquivo::create([
