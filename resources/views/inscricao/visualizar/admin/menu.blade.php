@@ -14,6 +14,13 @@
             Resumo Escolar
             <i class="fa @if (Session::get('total')['escolar'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>
+        
+        @if ($codigoEdital == 15 || $codigoEdital == 16)
+            <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
+                Recursos Financeiros
+                <i class="fa @if (Session::get('total')['financeiro'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+        @endif
 
         @if ($codigoEdital == 12)
             <a href="inscricao/{{ $codigoInscricao }}/financeiro" class="list-group-item list-group-item-action">
@@ -25,6 +32,8 @@
             <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a> 
         @endif
+
+        
 
         @if (Session::get('nivel') == 'ME' || Session::get('nivel') == 'DD')
 

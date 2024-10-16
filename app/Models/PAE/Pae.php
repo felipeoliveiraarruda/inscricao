@@ -116,4 +116,18 @@ class Pae extends Model
         return $pae;                  
     }
 
+    public function obterUltimoPae($codigoUsuario, $codigoEdital)
+    {
+        $pae = Pae::selectRaw('MAX(pae.codigoPae) AS codigoPae')
+                  ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                  ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                  ->join('editais', 'inscricoes.codigoEdital', '=', 'editais.codigoEdital')
+                  ->where('inscricoes.codigoUsuario', $codigoUsuario)
+                  ->where('editais.codigoEdital', '<>', $codigoEdital)
+                  ->first();
+
+        return $pae;
+    }
+
+
 }

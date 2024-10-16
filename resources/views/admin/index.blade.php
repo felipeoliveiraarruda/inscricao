@@ -59,7 +59,7 @@
                                                     </a>
                                                 @endif
 
-                                                @if ($edital->codigoNivel == 6 && $edital->dataFinalEdital < date('Y-m-d'))
+                                                @if ($edital->codigoNivel == 6)
                                                     <a href="inscricao/{{ $edital->codigoEdital }}/proficiencia/download" target="_new" role="button" aria-pressed="true" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Download">
                                                         <i class="fas fa-file-download"></i>
                                                     </a>

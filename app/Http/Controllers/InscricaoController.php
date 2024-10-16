@@ -209,6 +209,11 @@ class InscricaoController extends Controller
             $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
         }
 
+        if ($inscricao->codigoNivel == 6)
+        {
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(28));
+        }
+
         Utils::obterTotalInscricao($inscricao->codigoInscricao);
 
         return view('inscricao',
@@ -2707,7 +2712,8 @@ class InscricaoController extends Controller
                 $pdf->Cell(190, 8, utf8_decode(''), 'LR', 0, 'L', false);
 
                 $pdf->Ln();
-                $pdf->Cell(140, 8, 'Assinatura original/certificada do candidato:', 'LB', 0, 'L', false);
+                //$pdf->Cell(140, 8, 'Assinatura original/certificada do candidato:', 'LB', 0, 'L', false);
+                $pdf->Cell(140, 8, 'Assinatura eletrônica certificada do candidato(a):', 'LB', 0, 'L', false);
                 $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
             }
 

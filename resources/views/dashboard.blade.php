@@ -49,6 +49,8 @@
                                         $final  = $edital->dataFinalEdital;
 
                                         $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
+
+                                         $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
                                     @endphp
 
                                     <tr>                                                                               
@@ -86,14 +88,31 @@
                                             @elseif ($hoje >= $inicio && $hoje <= $final)
                                                 @if ($inscrito == 0)
                                                     @if ($edital->codigoNivel == 5)
-                                                    <td>                                                                                                                
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}/pae/create" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
-                                                    </td>
+                                                        <td>                                                                                                                
+                                                            <a href="inscricao/{{ $edital->codigoEdital }}/pae/create" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
+                                                        </td>
                                                     @else
-                                                    <td>                                                                                                                
-                                                        <a href="inscricao/{{ $edital->codigoEdital }}/store" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
-                                                    </td>
-                                                @endif
+                                                        @if ($edital->codigoNivel == 6)
+
+                                                            @if (empty($pos))                                                                                                        
+                                                                <td>-</td>
+                                                            @else                                                                
+                                                                @if ($pos['tiping'] == 'REGULAR')
+                                                                <td>                                                                                                                
+                                                                    <a href="inscricao/{{ $edital->codigoEdital }}/store" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
+                                                                </td>
+                                                                @else
+                                                                    <td>Aluno não regular</td>
+                                                                @endif
+                                                            @endif
+
+                                                        @else
+
+                                                        <td>                                                                                                                
+                                                            <a href="inscricao/{{ $edital->codigoEdital }}/store" role="button" aria-pressed="true" class="btn btn-info">Inscreva-se</a>
+                                                        </td>
+                                                        @endif
+                                                    @endif
                                                 @else
                                                     @if ($edital->codigoNivel == 5)
                                                         @if ($status == 'P')
@@ -120,7 +139,7 @@
                                                         @endif
                                                     @endif
                                                 @endif
-                                            @else
+                                            @else 
                                                 <td>Inscrições encerradas</td>
                                             @endif
                                     @endif

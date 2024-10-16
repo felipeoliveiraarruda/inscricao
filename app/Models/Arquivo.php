@@ -95,7 +95,7 @@ class Arquivo extends Model
        {
             if ($codigoTipoDocumento == '')
             {
-                $analise = Arquivo::selectRaw('tipo_documentos.codigoTipoDocumento, tipo_documentos.tipoDocumento, COUNT(tipo_documentos.codigoTipoDocumento) AS total')
+                $analise = Arquivo::selectRaw('arquivos.*, tipo_documentos.codigoTipoDocumento, tipo_documentos.tipoDocumento, COUNT(tipo_documentos.codigoTipoDocumento) AS total')
                                   ->join('inscricoes_arquivos', 'arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo')
                                   ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'inscricoes_arquivos.codigoInscricao')
                                   ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')

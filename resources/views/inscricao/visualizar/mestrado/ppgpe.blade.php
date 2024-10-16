@@ -216,7 +216,7 @@
             </td>
             <td class="text-center">
                 @if (!empty($rne->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$rg->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                    <a href="{{ asset('storage/'.$rne->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                         <i class="fas fa-eye"></i>
                     </a>
 

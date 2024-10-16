@@ -58,7 +58,7 @@
                             <p class="text-justify">Não serão aceitos fotos, "prints" ou digitalização do documento assinado eletronicamente.</p>                                    
                         @endif-->
 
-                        @if ($codigoEdital == 8)
+                        @if ($codigoEdital == 14)
                             @php
                                 $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
                             @endphp

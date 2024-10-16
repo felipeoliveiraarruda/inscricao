@@ -43,7 +43,7 @@ class PaeController extends Controller
         $vinculo     = Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
         $arquivos    = Arquivo::listarArquivosPae($inscricao->codigoPae);
         $total       = Arquivo::verificaArquivosPae($inscricao->codigoPae);
-       
+      
         return view('pae.index',
         [
             'utils'        => new Utils,
@@ -65,13 +65,15 @@ class PaeController extends Controller
         }
 
         $anosemestre = Edital::obterSemestreAno($codigoEdital);
+        $ultimo      = Pae::obterUltimoPae(Auth::user()->id, $codigoEdital);
 
         return view('pae.create',
         [
             'utils'        => new Utils,
             'user_id'      => Auth::user()->id,
             'anosemestre'  => $anosemestre,
-            'codigoEdital' => $codigoEdital
+            'codigoEdital' => $codigoEdital,
+            'ultimo'       => $ultimo,
         ]);
     }
 
@@ -102,7 +104,26 @@ class PaeController extends Controller
                 'remuneracaoPae'        => $request->remuneracaoPae[0],
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
             ]);
-    
+
+            if($request->importarPae[0] == 'S')
+            {
+                $excluir = array(22, 26);
+
+                $arquivos = Arquivo::listarArquivosPae($request->codigoPae);
+                
+                foreach($arquivos as $arquivo)
+                {
+                    if (!in_array($arquivo->codigoTipoDocumento, $excluir))
+                    {
+                        $InscricoesArquivos = InscricoesArquivos::create([
+                            'codigoInscricao'       => $inscricao->codigoInscricao,
+                            'codigoArquivo'         => $arquivo->codigoArquivo,
+                            'codigoPessoaAlteracao' => Auth::user()->codpes,
+                        ]);
+                    }
+                }
+            }
+
             request()->session()->flash('alert-success', 'Dados cadastrado com sucesso. Continue com o preenchimento da inscrição.');    
             return redirect("inscricao/{$request->codigoEdital}/pae");
         }
