@@ -90,16 +90,19 @@ class Edital extends Model
 
         if($edital->codigoNivel == 1 || $edital->codigoNivel == 6)
         {            
-            if($edital->codigoNivel == 1)
+            /*if($edital->codigoNivel == 1)
             {
-                $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) >= 1 AND MONTH(editais.dataInicioEdital) < 6, 1, 2) AS semestre'))
+                $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 6, 1, 2) AS semestre'))
                                 ->where('codigoEdital', $codigoEdital)->first();
             }
             else            
             {
                 $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 1, 2) AS semestre'))
                                 ->where('codigoEdital', $codigoEdital)->first();  
-            }
+            }*/
+
+            $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 6, 1, 2) AS semestre'))
+                            ->where('codigoEdital', $codigoEdital)->first();
         }
         else
         {
@@ -110,14 +113,14 @@ class Edital extends Model
             }
             else            
             {
-                if ($codigoEdital >= 5)
+                if ($edital->codigoNivel == 5)
                 {
-                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre'))
+                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre'))
                                     ->where('codigoEdital', $codigoEdital)->first();  
                 }
                 else
                 {
-                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) > 7, 1, 2) AS semestre'))
+                    $edital = Edital::select(\DB::raw('(IF(MONTH(editais.dataInicioEdital) < 7, YEAR(editais.dataInicioEdital), YEAR(editais.dataInicioEdital) + 1)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre, editais.dataInicioEdital'))
                                     ->where('codigoEdital', $codigoEdital)->first();
                 }
             }
