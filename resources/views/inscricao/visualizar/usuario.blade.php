@@ -22,6 +22,8 @@
 @if (Session::get('nivel') == 4)
     @if ($codigoEdital == 13)
         @include('inscricao.visualizar.mestrado.ppgpe')
+    @elseif ($codigoEdital == 18)
+        @include('inscricao.visualizar.mestrado.ppgmad')
     @else
         @include('inscricao.visualizar.mestrado.index')
     @endif

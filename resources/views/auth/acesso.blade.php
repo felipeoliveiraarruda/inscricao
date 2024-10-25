@@ -27,8 +27,8 @@
                             <input type="email" class="form-control" name="email" value="" required autofocus>
                         </div>
 
-                        <div class="form-group" class="font-weight-bold">                            
-                            <label for="email">{{ __('Password') }}</label>
+                        <div class="form-group">                            
+                            <label for="password" class="font-weight-bold">{{ __('Password') }}</label>
                             <input type="password" class="form-control" name="password" value="" required>
                         </div>
                                                                     

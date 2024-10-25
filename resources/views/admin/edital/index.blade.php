@@ -8,7 +8,7 @@
 <main role="main" class="container-fluid">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Inscrições</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/') }}">Inscrições</a></li>
             <li class="breadcrumb-item" aria-current="page">Edital</li>
         </ol>
     </nav>
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="list-group">
-                <a href="/admin/edital/novo" class="list-group-item list-group-item-action">Novo Edital</a>
+                <a href="{{ url('admin/edital/novo') }}" class="list-group-item list-group-item-action">Novo Edital</a>
             </div>
         </div>      
         

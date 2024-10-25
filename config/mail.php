@@ -45,6 +45,50 @@ return [
             'auth_mode' => null,
         ],
 
+        '97002' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_PPGEM_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PPGEM_PORT', 587),
+            'encryption' => env('MAIL_PPGEM_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_PPGEM_USERNAME'),
+            'password' => env('MAIL_PPGEM_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
+
+        '97004' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_PPGPE_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PPGPE_PORT', 587),
+            'encryption' => env('MAIL_PPGPE_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_PPGPE_USERNAME'),
+            'password' => env('MAIL_PPGPE_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
+
+        '97005' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_PPGMAD_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PPGMAD_PORT', 587),
+            'encryption' => env('MAIL_PPGMAD_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_PPGMAD_USERNAME'),
+            'password' => env('MAIL_PPGMAD_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
+
+        '97099' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_PAE_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PAE_PORT', 587),
+            'encryption' => env('MAIL_PAE_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_PAE_USERNAME'),
+            'password' => env('MAIL_PAE_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

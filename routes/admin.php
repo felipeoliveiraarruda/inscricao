@@ -26,6 +26,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('confirmados/{id}',                  [AdminController::class, 'confirmados']);
         Route::get('lista-presenca/{id}',               [AdminController::class, 'presenca']);
         Route::get('lista-disciplina/{id}',             [AdminController::class, 'lista_disciplina']);
+        Route::get('lista-ppgpe/{id}',                  [AdminController::class, 'lista_ppgpe']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');
@@ -83,6 +84,8 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('{codigoEdital}/pae/analise/{codigoPae}/edit',  [PaeController::class, 'analise_edit']);
         Route::patch('{codigoPae}/pae/analise',                    [PaeController::class, 'analise_update']);
         Route::get('pae/analise/{codigoAnaliseCurriculo}/destroy', [PaeController::class, 'analise_destroy']);*/
+
+        Route::get('{codigoEdital}/nomes',            [AdminController::class, 'nomes']);
         
     });
 });

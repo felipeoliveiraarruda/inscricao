@@ -803,7 +803,7 @@ class Comprovante extends Fpdf
 
         if ($siglaNivel == "ME")
         {
-			if ($codigoCurso = 97004)
+			if ($codigoCurso == 97004)
 			{
 				$titulo = "REQUERIMENTO DE INSCRIÇÃO PARA EXAME DE SELEÇÃO MESTRADO PROFISSIONAL - {$siglaPrograma}";
 			}

@@ -62,10 +62,12 @@
             </a>
         @endif
 
+        @if ($status == 'P')    
         <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">
             Documentos Obrigatórios
             <i class="fa fa-check text-success float-right"></i>
-        </a>             
+        </a> 
+        @endif            
     @else
 
         @if (Session::get('nivel') == 3)

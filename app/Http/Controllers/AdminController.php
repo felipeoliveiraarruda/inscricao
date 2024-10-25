@@ -54,6 +54,8 @@ class AdminController extends Controller
             }
         } 
 
+        dd(Hash::make('#Debas24'));
+
         return view('admin.index',
         [
             'editais' => $editais,
@@ -245,13 +247,15 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
+            $codigoCurso = Edital::obterCursoEdital($request->codigoEdital);
+
             if ($request->codigoEdital == 1)
             {                
-                Mail::to(mb_strtolower($inscrito->email))->send(new InscritosPaeMail($request->codigoEdital, $request->assunto, $request->body));
+                Mail::mailer($codigoCurso)->to(mb_strtolower($inscrito->email))->send(new InscritosPaeMail($request->codigoEdital, $request->assunto, $request->body));
             }
             else
             {
-                Mail::to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
+                Mail::mailer($codigoCurso)->to(mb_strtolower($inscrito->email))->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
             }
             
             //Mail::to('felipeoa@usp.br')->send(new InscritosMail($request->codigoEdital, $request->assunto, $request->body));
@@ -343,7 +347,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::to(mb_strtolower($inscrito->email))->send(new ClassificadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ClassificadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
             //Mail::to('felipeoa@usp.br')->send(new ClassificadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
 
             if (Mail::failures()) 
@@ -368,7 +372,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::to(mb_strtolower($inscrito->email))->send(new EliminadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new EliminadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
             //Mail::to('felipeoa@usp.br')->send(new EliminadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
 
             if (Mail::failures()) 
@@ -394,7 +398,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::to(mb_strtolower($inscrito->email))->send(new AusentesMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new AusentesMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
             //Mail::to('felipeoa@usp.br')->send(new EliminadosMail($id, "Resultado da primeira fase do Processo Seletivo do PPGPE-Edital 2022-2023 "));
 
             if (Mail::failures()) 
@@ -431,7 +435,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "Convocação para 2 fase do Processo Seletivo do PPGPE"));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "Convocação para 2 fase do Processo Seletivo do PPGPE"));
             
             if (Mail::failures()) 
             {
@@ -636,4 +640,33 @@ class AdminController extends Controller
             'level'   => session('level'),
         ]);
     }
+
+    public function lista_ppgpe($codigoEdital)
+    {
+        if (empty(session('level')))
+        {
+            Utils::setSession(Auth::user()->id);
+        }
+
+        $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                            ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                            ->join('inscricoes_documentos', 'inscricoes.codigoInscricao', '=', 'inscricoes_documentos.codigoInscricao')
+                            ->join('documentos', 'inscricoes_documentos.codigoDocumento', '=', 'documentos.codigoDocumento')
+                            ->where('editais.codigoEdital', $codigoEdital)
+                            ->where('inscricoes.statusInscricao', 'C')
+                            ->orderBy('users.name')
+                            ->get();    
+
+        return view('admin.ppgpe.lista',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $inscritos,
+            'level'   => session('level'),
+        ]);
+    }
+
+    public function nomes($codigoEdital)
+    {
+        \App\Models\User::acertarNomes($codigoEdital);
+    } 
 }
