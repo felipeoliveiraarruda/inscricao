@@ -1,4 +1,4 @@
-@if (Session::get('total')['mestrado'] >= 3 && $total >= 5 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['mestrado'] >= 5 && $total >= 5 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -25,7 +25,7 @@
     <tbody>
         <tr>
             <td>1.1 Requerimento de Inscrição (Arquivo será gerado após a submissão dos documento obrigatórios)<span class="text-danger">*</span>            
-                @if (Session::get('total')['mestrado'] >= 3 && $total >= 5)     
+                @if (Session::get('total')['mestrado'] >= 5 && $total >= 5)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>                
                 @endif
             </td>   
@@ -51,7 +51,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['mestrado'] >= 3 && $total >= 5)
+                    @if (Session::get('total')['mestrado'] >= 5 && $total >= 5)
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -90,7 +90,7 @@
             </td>
         </tr>
         <tr>
-            <td>1.3 Currículo Vittae/Lattes<span class="text-danger">*</span><br/> (anexar no currículo todos os documentos comprobatórios para avaliação conforme Edital)</td> 
+            <td>1.3 Currículo Vittae/Lattes<span class="text-danger">*</span><br/> (anexar no currículo todos os documentos comprobatórios para avaliação conforme Edital)</td> 
             <td class="text-center">
                 @if(!empty($curriculo->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>

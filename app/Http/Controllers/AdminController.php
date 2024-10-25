@@ -54,8 +54,6 @@ class AdminController extends Controller
             }
         } 
 
-        dd(Hash::make('#Debas24'));
-
         return view('admin.index',
         [
             'editais' => $editais,

@@ -73,7 +73,7 @@ class Utils extends Model
                 return 'PPGPE';
                 break; 
             case 97005:
-                return 'PPGAMD';
+                return 'PPGMAD';
                 break;                                                                
         }
     } 
@@ -94,7 +94,7 @@ class Utils extends Model
             case 'ppgpe@eel.usp.br':
                 return 97004;
                 break;
-            case 'ppgamd@eel.usp.br':
+            case 'ppgmad@eel.usp.br':
                 return 97005;
                 break;                
         }
