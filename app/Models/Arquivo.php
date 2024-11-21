@@ -148,26 +148,43 @@ class Arquivo extends Model
                                    $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
                                })    
                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                               ->where('arquivos.codigoTipoDocumento', '5')
+                               ->where('arquivos.codigoTipoDocumento', 5)
                                ->get();
         }
         else
         {
-            $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes.*, inscricoes_arquivos.codigoInscricaoArquivo'))
-                               ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
-                               ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
-                               ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                               
-                               ->leftJoin('inscricoes_arquivos', function($join)
-                               {
-                                   $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
-                                   $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
-                               })    
-                               ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                               ->where('arquivos.codigoTipoDocumento', '5')
-                               ->where('arquivos.codigoArquivo', $codigoArquivo)
-                               ->first();
+            if ($codigoArquivo == '')
+            {
+                $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes.*, inscricoes_arquivos.codigoInscricaoArquivo'))
+                                ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                                ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
+                                ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                               
+                                ->leftJoin('inscricoes_arquivos', function($join)
+                                {
+                                    $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                    $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
+                                })    
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->where('arquivos.codigoTipoDocumento', 5)
+                                ->first();
+            }
+            else
+            {
+                $arquivos = Arquivo::select(\DB::raw('arquivos.*, tipo_documentos.*, inscricoes.*, inscricoes_arquivos.codigoInscricaoArquivo'))
+                                ->join('tipo_documentos', 'arquivos.codigoTipoDocumento', '=', 'tipo_documentos.codigoTipoDocumento')
+                                ->leftJoin('users', 'users.id', '=', 'arquivos.codigoUsuario')
+                                ->leftJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                               
+                                ->leftJoin('inscricoes_arquivos', function($join)
+                                {
+                                    $join->on('inscricoes_arquivos.codigoInscricao', '=', 'inscricoes.codigoInscricao');
+                                    $join->on('inscricoes_arquivos.codigoArquivo', '=', 'arquivos.codigoArquivo');
+                                })    
+                                ->where('inscricoes.codigoInscricao', $codigoInscricao)
+                                ->where('arquivos.codigoTipoDocumento', 5)
+                                ->where('arquivos.codigoArquivo', $codigoArquivo)
+                                ->first();
+            }
         }
-
 
         return $arquivos;           
     }

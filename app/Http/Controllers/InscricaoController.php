@@ -3083,6 +3083,17 @@ class InscricaoController extends Controller
     {
         //$inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
 
+        $edital = Edital::find($codigoEdital);
+
+        if ($edital->dataExameEdital->format('m') < 7)
+        {
+            $data = $edital->dataExameEdital->format('d/m/Y')." - 1º Exame ".$edital->dataExameEdital->format('Y');
+        }
+        else
+        {
+            $data = $edital->dataExameEdital->format('d/m/Y')." - 2º Exame ".$edital->dataExameEdital->format('Y');
+        }
+
         $pdf->setCabecalhoPresenca('ppgem');
         $pdf->setPresenca('ppgem');
       
@@ -3098,7 +3109,7 @@ class InscricaoController extends Controller
         $pdf->Ln(5);
         $pdf->Cell(190, 8, utf8_decode('Alunos Inscritos para Exame de Proficiência em Língua - Inglês'), 0, 0, 'C');            
         $pdf->Ln();
-        $pdf->Cell(190, 8, utf8_decode('16/05/2024 - 1º Exame 2024'), 0, 0, 'C'); 
+        $pdf->Cell(190, 8, utf8_decode($data), 0, 0, 'C'); 
         $pdf->Ln(10);
 
         $pdf->SetFont('Arial','B', 12);

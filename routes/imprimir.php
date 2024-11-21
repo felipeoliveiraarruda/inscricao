@@ -11,5 +11,6 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('termo-compromisso/{codigoInscricao}',       [ImpressaoController::class, 'termo_compromisso']);
         Route::get('cadastamento-bolsista/{codigoInscricao}',   [ImpressaoController::class, 'cadastamento_bolsista']);
         Route::get('declaracao-acumulo/{codigoInscricao}',      [ImpressaoController::class, 'declaracao_acumulos']);
+        Route::get('certificado-proficiencia/{codigoEdital}',   [ImpressaoController::class, 'certificado_proficiencia']);
     });
 });

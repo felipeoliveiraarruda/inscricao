@@ -27,6 +27,9 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('lista-presenca/{id}',               [AdminController::class, 'presenca']);
         Route::get('lista-disciplina/{id}',             [AdminController::class, 'lista_disciplina']);
         Route::get('lista-ppgpe/{id}',                  [AdminController::class, 'lista_ppgpe']);
+        Route::get('{id}/exame',                        [AdminController::class, 'exame']);
+        Route::get('{id}/exame/create',                 [AdminController::class, 'exame_create']);
+        Route::post('exame/store',                      [AdminController::class, 'exame_store']);
 
         Route::get('edital',         [EditalController::class, 'index'])->name('edital');
         Route::get('edital/novo',    [EditalController::class, 'create'])->name('novo');

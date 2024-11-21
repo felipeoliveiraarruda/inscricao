@@ -18,12 +18,14 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
+                                        <th scope="col">Número de Inscrição</th>
                                         <th scope="col">Nome</th>
                                         <th scope="col">E-mail</th>
                                         <th scope="col">RG</th>
                                         <th scope="col">Ficha de Inscrição</th>
                                         <th scope="col">Currículo Lattes</th>
                                         <th scope="col">Pré-projeto</th>
+                                        <th scope="col">Histórico</th>
                                     </tr>
                                 </thead>
 
@@ -32,8 +34,10 @@
                                         $curriculo    = \App\Models\Arquivo::obterArquivosCurriculo($inscrito->codigoInscricao);
                                         $requerimento = \App\Models\Arquivo::obterArquivosRequerimento($inscrito->codigoInscricao);
                                         $projeto      = \App\Models\Arquivo::obterArquivosPreProjeto($inscrito->codigoInscricao);
+                                        $historico    = \App\Models\Arquivo::obterArquivosHistorico($inscrito->codigoInscricao);
                                     @endphp
                                 <tr>
+                                    <td>{{ $inscrito->numeroInscricao }}</td>
                                     <td>{{ $inscrito->name }}</td>
                                     <td>{{ $inscrito->email }}</td>
                                     <td>{{ $inscrito->numeroDocumento }}</td>
@@ -49,6 +53,11 @@
                                     </td>
                                     <td>
                                         <a href="{{ asset('storage/'.$projeto->linkArquivo) }}" role="button" aria-pressed="true"  target="_new">
+                                            Visualizar
+                                        </a>                                        
+                                    </td>
+                                    <td>
+                                        <a href="{{ asset('storage/'.$historico->linkArquivo) }}" role="button" aria-pressed="true"  target="_new">
                                             Visualizar
                                         </a>                                        
                                     </td>

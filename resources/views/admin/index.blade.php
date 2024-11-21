@@ -87,6 +87,12 @@
                                                         <i class="fas fa-exchange-alt"></i>
                                                     </a>
                                                 @endif
+
+                                                @if ($edital->codigoNivel == 6 && $edital->dataExameEdital <= date('Y-m-d'))                                                
+                                                    <a href="admin/{{ $edital->codigoEdital }}/exame" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Exame">
+                                                        <i class="fas fa-book-open"></i>
+                                                    </a>
+                                                @endif
                                             @endif
 
                                         </td>

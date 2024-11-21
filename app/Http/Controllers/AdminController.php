@@ -9,6 +9,7 @@ use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\User;
 use App\Models\Inscricao;
+use App\Models\InscricoesProficiencia;
 use Mail;
 use App\Mail\InscritosMail;
 use App\Mail\ClassificadosMail;
@@ -667,4 +668,65 @@ class AdminController extends Controller
     {
         \App\Models\User::acertarNomes($codigoEdital);
     } 
+
+    public function exame($codigoEdital)
+    {
+        $editais = Edital::find($codigoEdital);
+        $curso   = Utils::obterCurso($editais->codigoCurso);
+
+        $inscritos = Inscricao::join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
+                              ->where('inscricoes.statusInscricao', 'C')
+                              ->orderBy('users.name')
+                              ->get();
+
+        $aprovados = Inscricao::join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
+                              ->where('inscricoes_proficiencia.statusProficiencia', 'S')
+                              ->count();                              
+
+        return view('admin.exame.index',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $inscritos,
+            'curso'         => $curso['nomcur'],
+            'aprovados'     => $aprovados,
+        ]);                              
+    } 
+
+    public function exame_create($codigoEdital)
+    {
+        $editais = Edital::find($codigoEdital);
+        $curso   = Utils::obterCurso($editais->codigoCurso);
+
+        $inscritos = Inscricao::join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                              ->where('inscricoes.codigoEdital', $codigoEdital)
+                              ->where('inscricoes.statusInscricao', 'C')
+                              ->orderBy('users.name')
+                              ->get();
+
+        return view('admin.exame.create',
+        [
+            'codigoEdital'  => $codigoEdital,
+            'inscritos'     => $inscritos,
+            'curso'         => $curso['nomcur'],
+        ]);                              
+    } 
+
+    public function exame_store(Request $request)
+    {
+        foreach($request->inlineResultado as $key => $value) 
+        {
+            $proficiencia = InscricoesProficiencia::find($key);
+            $proficiencia->statusProficiencia = $value;
+            $proficiencia->save();
+        }
+
+        request()->session()->flash('alert-success', 'Resultado do Exame de Proficiência cadastrado com sucesso.');
+        
+        return redirect(url("admin/{$request->codigoEdital}/exame"));        
+    }
 }

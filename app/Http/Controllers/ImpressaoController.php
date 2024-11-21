@@ -706,4 +706,67 @@ class ImpressaoController extends Controller
 
         $pdf->Output();
     }
+
+    public function certificado_proficiencia($codigoEdital)
+    {
+        $inscricoes = Inscricao::select(\DB::raw('users.*, inscricoes.codigoEdital, inscricoes_proficiencia.nivelProficiencia'))
+                               ->join('inscricoes_proficiencia', 'inscricoes.codigoInscricao', '=', 'inscricoes_proficiencia.codigoInscricao')
+                               ->join('users', 'users.id', '=', 'inscricoes.codigoUsuario')
+                               ->where('inscricoes.codigoEdital',  $codigoEdital)
+                               ->where('inscricoes_proficiencia.statusProficiencia', 'S')
+                               ->get();
+        
+        $pdf = new \App\Models\Pdf\Proficiencia;
+        
+        foreach($inscricoes as $inscricao)
+        {
+            if ($inscricao->nivelProficiencia == 'ME')
+            {
+                $nivel = 'Mestrado';
+            }
+            else
+            {
+                $nivel = 'Doutorado';
+            }
+
+            $edital = Edital::find($inscricao->codigoEdital);
+            $exame = Carbon::parse($edital->dataExameEdital)->locale('pt-BR');
+
+            $hoje = Carbon::now()->locale('pt-BR');
+
+            $pdf->SetStyle('p', 'arial', 'N', 10, '0,0,0');
+            $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+            $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+            $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+
+            $pdf->SetDisplayMode('real');
+            $pdf->AliasNbPages();
+            $pdf->AddPage('L');
+
+            $pdf->SetFont('Arial', '', 22);
+            $pdf->SetY(65);
+            $pdf->WriteTag(280, 15, utf8_decode('<p>Certifico que o(a) aluno(a) <b>'.Str::upper($inscricao->name).' - N.º USP: '.$inscricao->codpes.'</b>, regularmente matriculado no curso de '.$nivel.' do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> da Escola de Engenharia de Lorena - EEL/USP, foi <b>"APROVADO"</b> no Exame de Proficiência em Língua Estrangeira - Inglês, realizado  no dia '.$exame->format('d').' de '.$exame->translatedFormat('F').' de '.$exame->format('Y').'.</p>'), 0, 'J');
+            $pdf->Ln(10);
+
+            $pdf->Cell(280, 8, utf8_decode('Lorena/SP, '.$hoje->format('d').' de '.$hoje->translatedFormat('F').' de '.$hoje->format('Y').'.'), 0, 0, 'C');
+                
+            $sigla   = Utils::obterSiglaCurso($edital->codigoCurso);
+            $sigla   = Str::lower($sigla);
+
+            /*$arquivo = storage_path("app/public/{$sigla}/proficiencia/{$inscricao->name}.pdf");
+            $nome    = "{$sigla}/proficiencia/{$inscricao->name}.pdf";
+
+            $pdf->Output('F', $arquivo);
+
+            /*if (!file_exists($arquivo))
+            {
+                $pdf->Output('F', $arquivo);
+            }
+            
+            echo $arquivo."<br/>";*/
+        }
+
+        $pdf->Output();
+
+    }
 }

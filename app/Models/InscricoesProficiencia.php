@@ -18,7 +18,9 @@ class InscricoesProficiencia extends Model
 
     protected $fillable = [
         'codigoInscricao',
-        'codigoPessoaOrientador',        
+        'nivelProficiencia', 
+        'statusProficiencia',  
+        'codigoPessoaOrientador',   
         'codigoPessoaAlteracao'
     ];
 

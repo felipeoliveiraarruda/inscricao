@@ -40,6 +40,10 @@ class Comprovante extends Fpdf
 		if ($this->sigla == 'bolsista')
 		{
 			$this->Image($this->cabecalho, 0, 0, 210);
+		}		
+		else if ($this->sigla == 'proficiencia')
+		{
+			$this->Image($this->cabecalho, 0, 5, 290);
 		}
 		else
 		{
