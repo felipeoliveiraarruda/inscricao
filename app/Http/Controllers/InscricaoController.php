@@ -147,7 +147,7 @@ class InscricaoController extends Controller
         $status      = Inscricao::obterStatusInscricao($inscricao->codigoInscricao);
         session(['nivel' => $inscricao->codigoNivel]);
 
-        if ($inscricao->codigoNivel == 4 || $inscricao->codigoNivel == 2)
+        if ($inscricao->codigoNivel == 4/*|| $inscricao->codigoNivel == 2*/)
         {
             $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 3, 4, 5, 6, 7, 9));
 
@@ -167,17 +167,17 @@ class InscricaoController extends Controller
             $carta_coorientador     = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(39));
         }
 
-        if ($inscricao->codigoNivel == 3)
+        if ($inscricao->codigoNivel == 3 || $inscricao->codigoNivel == 2)
         {
-            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38, 39));
+            $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(27, 28, 1, 2, 4, 5, 6, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38, 39));
 
             $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
             $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
             $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
             $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
             $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
-            $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(29));
-            $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(30));
+            $historico            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(5, 29, 40));
+            $diploma              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(6, 7, 30, 41));
             $curriculo            = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(9));
             $plano_estudo         = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(31));
             $projeto              = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(32));
@@ -2189,6 +2189,25 @@ class InscricaoController extends Controller
                 }
             }
 
+            if ($nivel == 'DD')
+            {            
+                if ($edital->dataDoeEdital->format('m') < 7)
+                {
+                    $semestre  = 'segundo semestre de '.$edital->dataDoeEdital->format('Y');
+                    $diretorio =  $edital->dataDoeEdital->format('Y').'2';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $semestre  = 'primero semestre de '.$ano;
+                    $diretorio = $ano.'1'; 
+                }
+
+                $assunto      = "DOUTORADO DIRETO - {$sigla}";
+                $curso        = 'Seleção do Curso de Doutorado Direto para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+            }
+
             if ($nivel == 'DF')
             {            
                 $ano       = $edital->dataDoeEdital->format('Y') + 1;
@@ -2440,15 +2459,14 @@ class InscricaoController extends Controller
         ]);
         
         */
-
         $dados     = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
-        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(1, 2, 3, 4, 5, 6, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38));
+        $inscricao = Inscricao::obterObrigatorioInscricao($codigoInscricao,  array(1, 2, 3, 4, 5, 6, 7, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40));
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(1, 2, 3, 4, 5, 6, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38));
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(1, 2, 3, 4, 5, 6, 7, 9, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40));
 
         $nivel = Edital::obterNivelEdital($edital);
         session(['nivel' => $nivel]);

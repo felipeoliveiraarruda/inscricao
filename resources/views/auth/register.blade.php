@@ -47,7 +47,7 @@
 
                             <div class="form-group">                            
                                 <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}</label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('rg') }}"  required>
+                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('telefone') }}"  required>
                             </div>
 
                             <div class="form-group">                            

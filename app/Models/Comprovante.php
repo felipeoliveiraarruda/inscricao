@@ -827,6 +827,11 @@ class Comprovante extends Fpdf
             $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA DOUTORADO FLUXO CONTINUO - {$siglaPrograma}";
         }
 
+		if ($siglaNivel == "DD")
+        {
+            $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA DOUTORADO DIRETO - {$siglaPrograma}";
+        }
+
         return $titulo;
     }
 
@@ -836,7 +841,14 @@ class Comprovante extends Fpdf
 
         if ($siglaNivel == "ME")
         {
-            $temp['titulo']     = "PROVA DE SELEÇÃO MESTRADO - {$siglaPrograma}";
+            //$temp['titulo']     = "PROVA DE SELEÇÃO MESTRADO - {$siglaPrograma}";
+			$temp['titulo']     = "PROVA DE SELEÇÃO - {$siglaPrograma}";
+            $temp['sub_titulo'] = "PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - {$siglaPrograma}";
+        }
+
+		if ($siglaNivel == "DD")
+        {
+            $temp['titulo']     = "PROVA DE SELEÇÃO DOUTORADO DIRETO - {$siglaPrograma}";
             $temp['sub_titulo'] = "PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - {$siglaPrograma}";
         }
 

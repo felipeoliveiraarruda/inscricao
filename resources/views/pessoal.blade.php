@@ -50,6 +50,7 @@
                                                     <th scope="col">E-mail</th>
                                                     <th scope="col">CPF</th>
                                                     <th scope="col">{{ $pessoais->tipoDocumento }}</th>
+                                                    <th scope="col">Telefone</th>
                                                     <th scope="col"></th>
                                                 </tr>
                                             </thead>
@@ -57,7 +58,8 @@
                                                 <td>{{ $pessoais->name }}</td>
                                                 <td class="text-center">{{ $pessoais->email }}</td>
                                                 <td class="text-center">{{ $pessoais->cpf }}</td>
-                                                <td class="text-center">{{ ($pessoais->numeroDocumento == '') ? $pessoais->numeroRG : $pessoais->numeroDocumento }}</td>                                          
+                                                <td class="text-center">{{ ($pessoais->numeroDocumento == '') ? $pessoais->numeroRG : $pessoais->numeroDocumento }}</td>
+                                                <td class="text-center">{{ $pessoais->telefone }}</td>                                          
                                                 <td class="text-center">
                                                     @if(Session::get('level') == 'user')
                                                         @if ($status == 'N')

@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 7 && $total >= 11 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['especial'] >= 4 && $total >= 11 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td>3.1.2 Ficha de Inscrição (Arquivo será gerado após a submissão dos documento obrigatórios)<span class="text-danger">*</span>            
-                @if (Session::get('total')['especial'] >= 6 && $total >= 10)     
+                @if (Session::get('total')['especial'] >= 4 && $total >= 10)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @else
                 
@@ -94,7 +94,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['especial'] >= 6 && $total >= 10) 
+                    @if (Session::get('total')['especial'] >= 4 && $total >= 10) 
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -247,7 +247,7 @@
         </tr>
         @endif
         <tr>
-            <td>3.1.6 Diploma da Graduação ou Certificado de Conclusão da Graduação</td> 
+            <td>3.1.5 Diploma da Graduação ou Certificado de Conclusão da Graduação</td> 
             <td class="text-center">
                 @if(!empty($diploma->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -277,7 +277,7 @@
             </td>
         </tr>
         <tr>
-            <td>3.1.7 Histórico Escolar da Graduação</td> 
+            <td>3.1.6 Histórico Escolar da Graduação</td> 
             <td class="text-center">
                 @if(!empty($historico->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -307,7 +307,7 @@
             </td>
         </tr>        
         <tr>
-            <td>3.1.8 Currículo<span class="text-danger">*</span></td> 
+            <td>3.1.7 Currículo<span class="text-danger">*</span></td> 
             <td class="text-center">
                 @if(!empty($curriculo->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
@@ -337,8 +337,6 @@
             </td>
         </tr>
         @if ($coorientador == 'S')
-
-
         <tr>
             <td>3.1.9a) Carta do Orientador propondo credenciamento do Coorientador</td> 
             <td class="text-center">

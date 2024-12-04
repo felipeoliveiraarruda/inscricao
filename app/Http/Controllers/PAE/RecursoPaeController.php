@@ -30,7 +30,11 @@ class RecursoPaeController extends Controller
     {
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital);
 
-        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')->get();
+        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
+                              ->join('avaliadores_pae', 'avaliadores_pae.codigoPae', '=', 'pae.codigoPae')
+                              ->join('avaliacao_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
+                              ->get();
+
 
         return view('admin.pae.recurso',
         [

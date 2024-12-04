@@ -745,7 +745,7 @@ class ImpressaoController extends Controller
 
             $pdf->SetFont('Arial', '', 22);
             $pdf->SetY(65);
-            $pdf->WriteTag(280, 15, utf8_decode('<p>Certifico que o(a) aluno(a) <b>'.Str::upper($inscricao->name).' - N.º USP: '.$inscricao->codpes.'</b>, regularmente matriculado no curso de '.$nivel.' do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> da Escola de Engenharia de Lorena - EEL/USP, foi <b>"APROVADO"</b> no Exame de Proficiência em Língua Estrangeira - Inglês, realizado  no dia '.$exame->format('d').' de '.$exame->translatedFormat('F').' de '.$exame->format('Y').'.</p>'), 0, 'J');
+            $pdf->WriteTag(280, 15, utf8_decode('<p>Certifico que o(a) aluno(a) <b>'.Str::upper($inscricao->name).' - N.º USP: '.$inscricao->codpes.'</b>, regularmente matriculado(a) no curso de '.$nivel.' do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> da Escola de Engenharia de Lorena - EEL/USP, foi <b>"APROVADO(A)"</b> no Exame de Proficiência em Língua Estrangeira - Inglês, realizado  no dia '.$exame->format('d').' de '.$exame->translatedFormat('F').' de '.$exame->format('Y').'.</p>'), 0, 'J');
             $pdf->Ln(10);
 
             $pdf->Cell(280, 8, utf8_decode('Lorena/SP, '.$hoje->format('d').' de '.$hoje->translatedFormat('F').' de '.$hoje->format('Y').'.'), 0, 0, 'C');

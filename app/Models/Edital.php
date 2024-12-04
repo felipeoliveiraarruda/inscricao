@@ -115,7 +115,7 @@ class Edital extends Model
             {
                 if ($edital->codigoNivel == 5)
                 {
-                    $edital = Edital::select(\DB::raw('(YEAR(editais.dataInicioEdital) + 1) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre'))
+                    $edital = Edital::select(\DB::raw('(IF(MONTH(editais.dataInicioEdital) < 7, YEAR(editais.dataInicioEdital), YEAR(editais.dataInicioEdital) + 1)) AS ano, IF(MONTH(editais.dataInicioEdital) < 7, 2, 1) AS semestre'))
                                     ->where('codigoEdital', $codigoEdital)->first();  
                 }
                 else

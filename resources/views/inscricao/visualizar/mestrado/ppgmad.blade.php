@@ -1,4 +1,4 @@
-@if (Session::get('total')['mestrado'] >= 5 && $total >= 5 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['mestrado'] >= 5 && $total >= 6 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 

@@ -438,6 +438,8 @@ class PaeController extends Controller
         $classificacao = Pae::obterClassificacao($codigoEdital, '', true);
         $anosemestre   = Edital::obterSemestreAno($codigoEdital);
 
+        $classificacao = 0;
+
         if ($classificacao == 0)
         {
             $i = 1;
@@ -463,8 +465,8 @@ class PaeController extends Controller
 
             foreach($inscritos as $inscrito)
             {
-                if ($inscrito->notaFinalPae == 0.00)
-                {
+               // if ($inscrito->notaFinalPae == 0.00)
+                //{
                     $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
                     $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
                     
@@ -501,7 +503,7 @@ class PaeController extends Controller
                     $pae->save();
 
                     $semRemuneracao["{$inscrito->codigoPae}"] = $notaFinal;
-                }
+                //}
             }
 
             /*===========FAZ A ORDENAÇÃO E A CLASSIFICAÇÃO DOS QUE NUNCA RECEBRERM BOLSA PAE==============*/
@@ -527,8 +529,8 @@ class PaeController extends Controller
 
             foreach($inscritos as $inscrito)
             {
-                if ($inscrito->notaFinalPae == 0.00)
-                {
+                //if ($inscrito->notaFinalPae == 0.00)
+                //{
                     $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
                     $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
 
@@ -565,7 +567,7 @@ class PaeController extends Controller
                     $pae->save();
 
                     $comRemuneracao["{$inscrito->codigoPae}"] = $notaFinal;
-                }
+                //}
             }
 
             /*===========FAZ A ORDENAÇÃO E A CLASSIFICAÇÃO DOS QUE NUNCA RECEBRERM BOLSA PAE==============*/
@@ -676,7 +678,16 @@ class PaeController extends Controller
         {
             $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
             $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
-            $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+                        
+            if ($quantidadeDesempenho == 0)
+            {
+                $notaDesempenho = 0;
+            }
+            else
+            {
+                $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+            }
+            
             $finalDesempenho      = $notaDesempenho * $notaConceito;
 
             $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
@@ -699,9 +710,9 @@ class PaeController extends Controller
             $tabela .= "<tr>
                         <td>".$inscrito->codpes."</td>
                         <td>".$inscrito->name."</td>
-                        <td>".$finalDesempenho."</td>
-                        <td>".($finalEstagio + $finalPublicacao)."</td>
-                        <td>".$notaFinal."</td>
+                        <td>".number_format($finalDesempenho, 2, ',', '')."</td>
+                        <td>".number_format(($finalEstagio + $finalPublicacao), 2, ',', '')."</td>
+                        <td>".number_format($notaFinal, 2, ',', '')."</td>
                         <td>".$inscrito->classificacaoPae."</td>
                     </tr>";
 
@@ -730,7 +741,16 @@ class PaeController extends Controller
         {
             $totalDesempenho      = DesempenhoAcademico::obterSomaTotalDesempenho($inscrito->codigoPae);
             $quantidadeDesempenho = DesempenhoAcademico::obterSomaQuantidadeDesempenho($inscrito->codigoPae);
-            $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+
+            if ($quantidadeDesempenho == 0)
+            {
+                $notaDesempenho = 0;
+            }
+            else
+            {
+                $notaDesempenho       = $totalDesempenho / $quantidadeDesempenho;
+            }
+
             $finalDesempenho      = $notaDesempenho * $notaConceito;
 
             $ic          = Avaliacao::obterSomaAvaliacao($inscrito->codigoPae, [24]);
@@ -753,15 +773,15 @@ class PaeController extends Controller
             $tabela .= "<tr>
                         <td>".$inscrito->codpes."</td>
                         <td>".$inscrito->name."</td>
-                        <td>".$finalDesempenho."</td>
-                        <td>".($finalEstagio + $finalPublicacao)."</td>
-                        <td>".$notaFinal."</td>
+                        <td>".number_format($finalDesempenho, 2, ',', '')."</td>
+                        <td>".number_format(($finalEstagio + $finalPublicacao), 2, ',', '')."</td>
+                        <td>".number_format($notaFinal, 2, ',', '')."</td>
                         <td>".$inscrito->classificacaoPae."</td>
                     </tr>";
 
         }
 
-        echo $tabela;
+        echo utf8_decode($tabela);
     }
 
     public function resultado($codigoEdital)
@@ -830,12 +850,14 @@ class PaeController extends Controller
     public function recurso($codigoEdital)
     {
         $anosemestre = Edital::obterSemestreAno($codigoEdital);
-        $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
-                              ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
-                              ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
-                              ->where('inscricoes.codigoEdital', $codigoEdital)
-                              ->get();
 
+
+            $recursos = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
+                                        ->join('inscricoes', 'pae.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                        ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                        ->where('inscricoes.codigoEdital', $codigoEdital)
+                                        ->get();
+                                    
         return view('admin.pae.recurso',
         [
             'utils'         => new Utils,

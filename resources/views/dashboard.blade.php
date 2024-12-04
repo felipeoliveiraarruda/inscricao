@@ -50,7 +50,7 @@
 
                                         $semestre = App\Models\Edital::obterSemestreAno($edital->codigoEdital, true);
 
-                                         $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
+                                        $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
                                     @endphp
 
                                     <tr>                                                                               

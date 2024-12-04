@@ -570,6 +570,9 @@ class AdminController extends Controller
         $pdf->Ln(15);
         
         $pdf->SetFont('Arial','B', 10);
+        $pdf->Cell(190, 8, utf8_decode('MESTRADO'), 1, 0, 'C', true);
+        $pdf->Ln();
+
         $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
         $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
@@ -592,14 +595,23 @@ class AdminController extends Controller
         {
             $pdf->Cell(15, 8, utf8_decode($inscrito->numeroInscricao), 1, 0, 'C');
             $pdf->Cell(75, 8, utf8_decode($inscrito->name), 1, 0, 'J');
-            $pdf->Cell(40, 8, utf8_decode($inscrito->numeroRG), 1, 0, 'C');
+
+            if (empty($inscrito->numeroRG))
+            {
+                $pdf->Cell(40, 8, utf8_decode($inscrito->numeroDocumento), 1, 0, 'C');
+            }
+            else
+            {
+                $pdf->Cell(40, 8, utf8_decode($inscrito->numeroRG), 1, 0, 'C');
+            }
+
             $pdf->Cell(60, 8, utf8_decode(''), 1, 0, 'C');
             $pdf->Ln();
 
             $total++;
         }
 
-        $pdf->Ln(15);
+        $pdf->Ln(10);
         $pdf->SetFont('Arial','B', 10);
         $pdf->Cell(30, 8, utf8_decode(" Total: {$total}"), 1, 0, 'L');
 
@@ -607,7 +619,65 @@ class AdminController extends Controller
         $pdf->Cell(30, 8, utf8_decode(' Presentes:'), 1, 0, 'L');
         $pdf->Cell(30, 8, utf8_decode(' Ausentes:'), 1, 0, 'L');
         $pdf->Cell(100, 8, utf8_decode(' Aplicador:'), 1, 0, 'L');
-        $pdf->Ln(50);
+        $pdf->Ln(15);
+
+        $edital       = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('editais.codigoEdital', $codigoEdital + 1)->first();
+        $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
+        $anosemestre  = Edital::obterSemestreAno($codigoEdital, true, true);
+       
+        $pdf->SetFont('Arial','B', 10);
+
+        $pdf->Cell(190, 8, utf8_decode('DOUTORADO DIRETO'), 1, 0, 'C', true);
+        $pdf->Ln();
+
+        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
+        $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
+        $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
+        $pdf->Ln();
+
+        $pdf->SetFont('Arial', '', 10);
+
+        $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                           ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                           ->join('documentos', 'documentos.codigoUsuario', '=', 'users.id')
+                           ->where('editais.codigoEdital', $codigoEdital + 1)
+                           ->where('inscricoes.statusInscricao', 'C')
+                           ->orderBy('users.name')
+                           ->get();
+
+        $total = 0;
+
+        foreach($inscritos as $inscrito)
+        {
+            $pdf->Cell(15, 8, utf8_decode($inscrito->numeroInscricao), 1, 0, 'C');
+            $pdf->Cell(75, 8, utf8_decode($inscrito->name), 1, 0, 'J');
+            
+            if (empty($inscrito->numeroRG))
+            {
+                $pdf->Cell(40, 8, utf8_decode($inscrito->numeroDocumento), 1, 0, 'C');
+            }
+            else
+            {
+                $pdf->Cell(40, 8, utf8_decode($inscrito->numeroRG), 1, 0, 'C');
+            }
+
+            $pdf->Cell(60, 8, utf8_decode(''), 1, 0, 'C');
+            $pdf->Ln();
+
+            $total++;
+        }
+
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial','B', 10);
+        $pdf->Cell(30, 8, utf8_decode(" Total: {$total}"), 1, 0, 'L');
+
+        $pdf->SetFont('Arial','', 10);
+        $pdf->Cell(30, 8, utf8_decode(' Presentes:'), 1, 0, 'L');
+        $pdf->Cell(30, 8, utf8_decode(' Ausentes:'), 1, 0, 'L');
+        $pdf->Cell(100, 8, utf8_decode(' Aplicador:'), 1, 0, 'L');
+        $pdf->Ln(25);
+
         
         $pdf->SetFont('Arial','B', 12);
         $pdf->Cell(190, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C');
