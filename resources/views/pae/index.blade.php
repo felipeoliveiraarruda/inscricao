@@ -50,7 +50,6 @@
 
                     <div class="row">
                         <div class="col"> 
-
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -94,6 +93,48 @@
                             </table>                     
                         </div>
                     </div>
+
+                    @if ($recurso->codigoRecurso > 0)
+                    <div class="row">
+                        <div class="col"> 
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="3">Recurso</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <th scope="col">Justificativa</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-justify">{{ $recurso->justificativaRecurso }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Status</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-justify">
+                                        @if ($recurso->statusRecurso == 'N')
+                                            Aberta
+                                        @elseif ($recurso->statusRecurso == 'D')
+                                            Deferido
+                                        @else
+                                            Indeferido
+                                        @endif 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Análise</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-justify">
+                                    {{ $recurso->analiseRecurso }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

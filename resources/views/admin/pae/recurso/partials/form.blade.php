@@ -40,7 +40,7 @@
     </p>
 </div>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <label for="statusRecurso" class="font-weight-bold">Status</label><span class="text-danger">*</span></label><br/>
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="statusRecurso[]" id="inlineStatusD" value="D" checked required>
@@ -50,20 +50,20 @@
         <input class="form-check-input" type="radio" name="statusRecurso[]" id="inlineStatusI" value="I" required>
         <label class="form-check-label" for="inlineRadio2">Indeferido</label>
     </div>
-</div>
+</div> -->
 
 <div class="form-group">
     <label for="analiseRecurso" class="font-weight-bold">Análise</label><span class="text-danger">*</span></label>
     <p class="text-justify">{{ $recurso->analiseRecurso }}</p>
 </div>
 
-<div class="form-group">
+<!--<div class="form-group">
     <label for="analiseRecurso" class="font-weight-bold">Análise</label><span class="text-danger">*</span></label>
     <textarea class="form-control" id="analiseRecurso" name="analiseRecurso" rows="5" required>{{ $recurso->analiseRecurso }}</textarea>
 </div>
 
-<button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
-
+ <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Cadastrar</button>
+ -->
 <input type="hidden" name="codigoRecurso" value="{{ $recurso->codigoRecurso }}">
 <input type="hidden" name="codigoEdital" value="{{ $recurso->codigoEdital }}">
 @endif  
