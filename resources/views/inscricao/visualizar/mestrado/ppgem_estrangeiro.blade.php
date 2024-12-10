@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td>4.2 Ficha de Inscrição (Arquivo será gerado após a submissão dos documento obrigatórios)<span class="text-danger">*</span>            
-                @if (Session::get('total')['mestrado'] >= 4 && $total >= 11)     
+                @if (Session::get('total')['mestrado'] >= 3 && $total >= 6)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @else
                 
@@ -94,7 +94,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['mestrado'] >= 4 && $total >= 6)  
+                    @if (Session::get('total')['mestrado'] >= 3 && $total >= 6)  
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -126,7 +126,7 @@
                         </a>
                     @endif 
                 @else
-                    <a href="documento/{{$codigoInscricao}}/3" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                    <a href="documento/{{$codigoInscricao}}/4" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a> 
                 @endif
@@ -268,10 +268,10 @@
                     </a>
 
                     @if ($status == 'N')
-                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                        <a href="documento/{{ $projeto->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
                             <i class="fa fa-wrench"></i>
                         </a>
-                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                        <a href="documento/{{ $projeto->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
                             <i class="fa fa-trash"></i>
                         </a>
                     @endif 
@@ -344,23 +344,23 @@
         <tr>
             <td>4.11 Currículo Lattes do orientador<span class="text-danger">*</span></td> 
             <td class="text-center">
-                @if(!empty($lattes_orientador->codigoInscricaoArquivo))
+                @if(!empty($curriculo_orientador->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>
                 @else
                     <i class="fa fa-exclamation-triangle text-warning"></i>                                  
                 @endif 
             </td>
             <td class="text-center">
-                @if (!empty($lattes_orientador->codigoInscricaoArquivo))
-                    <a href="{{ asset('storage/'.$termo_orientacao->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                @if (!empty($curriculo_orientador->codigoInscricaoArquivo))
+                    <a href="{{ asset('storage/'.$curriculo_orientador->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
                         <i class="fas fa-eye"></i>
                     </a>
 
                     @if ($status == 'N')
-                        <a href="documento/{{ $termo_orientacao->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                        <a href="documento/{{ $curriculo_orientador->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
                             <i class="fa fa-wrench"></i>
                         </a>
-                        <a href="documento/{{ $termo_orientacao->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                        <a href="documento/{{ $curriculo_orientador->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
                             <i class="fa fa-trash"></i>
                         </a>
                     @endif 

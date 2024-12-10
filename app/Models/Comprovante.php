@@ -832,6 +832,11 @@ class Comprovante extends Fpdf
             $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA DOUTORADO DIRETO - {$siglaPrograma}";
         }
 
+		if ($siglaNivel == "MF")
+        {
+            $titulo = "REQUERIMENTO DE INSCRIÇÃO PARA MESTRADO (RESIDENTES FORA DO BRASIL) - {$siglaPrograma}";
+        }
+
         return $titulo;
     }
 

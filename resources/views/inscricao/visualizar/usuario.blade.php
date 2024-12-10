@@ -28,3 +28,7 @@
         @include('inscricao.visualizar.mestrado.index')
     @endif
 @endif
+
+@if (Session::get('nivel') == 7)
+    @include('inscricao.visualizar.mestrado.ppgem_estrangeiro')
+@endif

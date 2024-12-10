@@ -28,13 +28,18 @@ Route::get('/verificacao/{cpf}',    [HomeController::class, 'verificacao']);
 
 Route::middleware(['auth','verified'])->group(function () 
 {
-    Route::get('dashboard',     [InscricaoController::class, 'index']);
-    Route::get('realizadas',    [InscricaoController::class, 'realizadas']);
+    Route::get('dashboard',                     [InscricaoController::class, 'index']);
+    Route::get('realizadas',                    [InscricaoController::class, 'realizadas']);
+    Route::get('regulamentacao/create',         [HomeController::class, 'regulamentacao_create']);
+    Route::post('regulamentacao/store',         [HomeController::class, 'regulamentacao_store']);
+    Route::get('regulamentacao/imprimir/{id}',  [HomeController::class, 'regulamentacao_create']);
 
     /* Consultas a API */
     Route::get('estados/{codpas}',              [UtilsController::class, 'estados']);
     Route::get('cidades/{codpas}/{sglest}',     [UtilsController::class, 'cidades']);
     Route::get('telefone/{telefone}/',          [UtilsController::class, 'verificaTelefoneEmergencia']);
+
+
 
     /* Inscrição */
     Route::group(['prefix' => 'inscricao'], function()

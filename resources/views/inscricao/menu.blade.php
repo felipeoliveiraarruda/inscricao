@@ -1,5 +1,5 @@
 <div class="list-group">
-    @if (Session::get('nivel') == 4 || Session::get('nivel') == 2 || Session::get('nivel') == 1)
+    @if (Session::get('nivel') == 4 || Session::get('nivel') == 2 || Session::get('nivel') == 1 || Session::get('nivel') == 7)
 
         <a href="inscricao/{{ $codigoInscricao }}/pessoal" class="list-group-item list-group-item-action">
             Dados Pessoais 

@@ -33,8 +33,6 @@ class HomeController extends Controller
                 'encerrados' => $encerrados,
                 'utils'      => new Utils,        
             ]);
-
-            
         }
         else
         {
@@ -89,6 +87,21 @@ class HomeController extends Controller
     {
         $user = User::select('cpf')->where('cpf', '=', preg_replace('/[^0-9]/', '', $cpf))->count();
         return json_encode($user);
+    }
+
+    public function regulamentacao_create()
+    {
+        return view('regulamentacao.create');
+    }
+
+    public function regulamentacao_store(Request $request)
+    {
+       dd($request);
+    }
+
+    public function regulamentacao_imprimir($codigoRegulamentacao)
+    {
+        //return view('regulamentacao.create');
     }
 
     /*public function modelo()
