@@ -28,7 +28,7 @@ class HomeController extends Controller
             $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')            
                                 ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);     
                                 
-            $regulamentos = Regulamento::where('dataFinalRegulamento', '>=',  Carbon::now())->get();
+            $regulamentos = Regulamento::where('dataFinalRegulamento', '>=', Carbon::now())->get();
             
             return view('index', 
             [

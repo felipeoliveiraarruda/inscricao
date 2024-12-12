@@ -18,7 +18,8 @@ class InscricoesDisciplinas extends Model
 
     protected $fillable = [
         'codigoInscricao',
-        'codigoDisciplina',        
+        'codigoDisciplina',    
+        'statusDisciplina',
         'codigoPessoaAlteracao'
     ];
 

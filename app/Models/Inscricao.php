@@ -516,7 +516,7 @@ class Inscricao extends Model
         $sigla        = Utils::obterSiglaCurso($edital->codigoCurso);
         $nivel        = Edital::obterNivelEdital($dados->codigoEdital);
 
-        $pdf->setCabecalho($tipo);
+        $pdf->setCabecalho('ppgem');
 
         $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
         $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
@@ -530,19 +530,30 @@ class Inscricao extends Model
 
         if ($tipo == 'ppgem')
         {
-            if ($nivel == 'ME')
+            if ($nivel == 'ME' || $nivel == 'DD')
             {
+                if (empty($dados->numeroRG))
+                {
+                    $documento = $dados->numeroDocumento;
+                }
+                else
+                {
+                    $documento = $dados->numeroRG;
+                }
+
                 if ($edital->dataDoeEdital->format('m') < 7)
                 {
-                    $diretorio = $edital->dataDoeEdital->format('Y').'2/mestrado';
+                    //$diretorio = $edital->dataDoeEdital->format('Y').'2/mestrado';
+                    $diretorio = $edital->dataDoeEdital->format('Y').'2';
                 }
                 else
                 {
                     $ano       = $edital->dataDoeEdital->format('Y') + 1;
-                    $diretorio = $ano.'1/mestrado'; 
+                    //$diretorio = $ano.'1/mestrado'; 
+                    $diretorio = $ano.'1'; 
                 }
 
-                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <bu>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
 
                 $pdf->SetFont('Arial','B', 16);
                 $pdf->SetFillColor(190,190,190);
@@ -596,11 +607,11 @@ class Inscricao extends Model
                     $diretorio = $ano.'1'; 
                 }
 
-                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <bu>REGULAR</bu> de <bu>MESTRADO PROFISSIONAL</bu> do <b>Programa de Pós-Graduação em Projetos Educacionais de Ciências</b>, na área de concentração: <b>97138 - Projetos Educacionais de Ciências</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
 
-                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFont('Arial','B', 14);
                 $pdf->SetFillColor(190,190,190);
-                $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGPE REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+                $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM PROJETOS EDUCACIONAIS DE CIÊNCIAS - PPGPE REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
                 $pdf->Ln();
             }
 
@@ -632,7 +643,7 @@ class Inscricao extends Model
         $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
         $pdf->Ln(5);
 
-        if($nivel == 'ME')
+        if ($nivel == 'ME' || $nivel == 'DD')
         { 
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->SetFillColor(190,190,190);
@@ -700,10 +711,21 @@ class Inscricao extends Model
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'L', false);
             
-            $pdf->SetFont('Arial', '', 14);
-            $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
-            $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
-            $pdf->Ln();
+            if ($tipo == 'ppgem')
+            {
+                $pdf->SetFont('Arial', '', 14);
+                $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
+                $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
+            }
+
+            if ($tipo == 'ppgpe')
+            {
+                $pdf->SetFont('Arial', '', 14);
+                $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Carlos Alberto Moreira dos Santos'), 0, 0, 'C', false);
+                $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
+            }
     
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
@@ -803,14 +825,16 @@ class Inscricao extends Model
             $pdf->Ln(); 
             $pdf->Ln();
     
-            $sigla   = Str::lower($sigla);
+            /*$sigla   = Str::lower($sigla);
             $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
             $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf";
     
             if (!file_exists($arquivo))
             {
                 $pdf->Output('F', $arquivo);
-            }
+            }*/
+
+            $pdf->Output();
         }
     }
 

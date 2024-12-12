@@ -39,26 +39,30 @@
                                     $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
                                 @endphp
 
-                                <!-- if ($pos["tiping"] == 'REGULAR' && $pos["nomcur"] == "Projetos Educacionais de Ciências") -->
-                                @if (count($regulamentos) > 0)
-                                    @php                                        
-                                        $regulamento = \App\Models\RegulamentosUsers::join('regulamentos', 'regulamentos_users.codigoRegulamento', '=', 'regulamentos.codigoRegulamento')
-                                                                                    ->where('codigoUsuario', '=', Auth::user()->id)
-                                                                                    ->first();
-                                    @endphp
-                                    <tr>
-                                        <td>Regulamentação do Programa de Pós-Graduação em Projetos Educacionais de Ciências</td>
-                                        <td>
-                                            @if ($regulamento == '')
-                                                <a href="regulamentacao/1/create" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
-                                            @else
-                                                <a href="regulamentacao/index" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @else
-                                    Nenhuma inscrição aberta
-                                @endif                                
+                                @if ($pos)
+                                    @if ($pos["tiping"] == 'REGULAR' && $pos["nomcur"] == "Projetos Educacionais de Ciências" && count($regulamentos) > 0)
+                                        @php                                        
+                                            $total = \App\Models\RegulamentosUsers::join('regulamentos', 'regulamentos_users.codigoRegulamento', '=', 'regulamentos.codigoRegulamento')
+                                                                                        ->where('codigoUsuario', '=', Auth::user()->id)
+                                                                                        ->first();
+                                        @endphp
+
+                                        @foreach ($regulamentos as $regulamento)
+                                        <tr>                                        
+                                            <td>{{ $regulamento->descricaoRegulamento }}</td>                                        
+                                            <td>
+                                                @if ($total == '')
+                                                    <a href="regulamentacao/{{ $regulamento->codigoRegulamento }}/create" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
+                                                @else
+                                                    <a href="regulamentacao/index" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        Nenhuma inscrição aberta
+                                    @endif   
+                                @endif
                             @else
                                 @foreach ($editais as $edital)
                                     @php

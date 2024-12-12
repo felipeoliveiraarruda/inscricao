@@ -75,7 +75,7 @@ class InscricaoController extends Controller
             Utils::setSession(Auth::user()->id);
         }
 
-        $regulamentos = Regulamento::where('dataFinalRegulamento', '>=',  Carbon::now())->get();
+        $regulamentos = Regulamento::whereRaw('NOW() > `dataInicioRegulamento` AND NOW() < `dataFinalRegulamento`')->get();
 
         return view('dashboard',
         [
@@ -2653,12 +2653,34 @@ class InscricaoController extends Controller
             }
         }
 
-        $disciplinas = Utils::listarOferecimentoPos(97002, '04/03/2024', '16/06/2024');                        
+        $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $edital    = Edital::find($inscricao->codigoEdital);
+
+        $data = Carbon::now();
+
+        if ($edital->codigoCurso == 97002)
+        {            
+            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-20 23:59:59')
+            {
+                return redirect("dashboard");
+            }
+        }
+
+        if ($edital->codigoCurso == 97004)
+        {            
+            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-24 23:59:59')
+            {
+                return redirect("dashboard");
+            }
+        }
+
+        $disciplinas = Utils::listarOferecimentoPos($edital->codigoCurso, '17/03/2025', '29/06/2025');   
 
         return view('inscricao.matricula',
         [
             'codigoInscricao' => $codigoInscricao,
-            'disciplinas'     => $disciplinas
+            'disciplinas'     => $disciplinas,
+            'sigla'           => Utils::obterSiglaCurso($edital->codigoCurso),
         ]);
     }
 
@@ -2669,6 +2691,16 @@ class InscricaoController extends Controller
 
         if ($disciplinas == 0)
         {
+            if ($edital->codigoCurso == 97004)
+            {
+                $inscricaoDisciplinas = InscricoesDisciplinas::create([
+                    'codigoInscricao'       => $request->codigoInscricao,
+                    'codigoDisciplina'      => 'PPE6402-4/5',
+                    'statusDisciplina'      => 'A',
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);   
+            }
+
             foreach($request->disciplinasGcub as $disciplina)
             {
                 $inscricaoDisciplinas = InscricoesDisciplinas::create([
@@ -2684,8 +2716,14 @@ class InscricaoController extends Controller
         {
             $anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $request->codigoInscricao);
         }
+
+        if ($edital->codigoCurso == 97004)
+        {
+            $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $request->codigoInscricao);
+        }
         
-        Mail::mailer($edital->codigoCurso)->to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
+        //Mail::mailer($edital->codigoCurso)->to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
+        Mail::to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
         
         if (Mail::failures()) 
         {
@@ -3386,7 +3424,10 @@ class InscricaoController extends Controller
 
     public function primeira_matricula($codigoEdital)
     {
-        $aprovados = array(211, 212, 213, 214, 219, 244, 272);
+        dd($codigoEdital);
+
+
+        /*$aprovados = array(211, 212, 213, 214, 219, 244, 272);
 
         foreach($aprovados as $aprovado)
         {
@@ -3404,6 +3445,8 @@ class InscricaoController extends Controller
                 $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $aprovado);
             }
         }
+
+        //echo $anexo;*/
     }
 
 
