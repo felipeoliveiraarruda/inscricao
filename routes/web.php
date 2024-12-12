@@ -16,6 +16,7 @@ use App\Http\Controllers\ExperienciaController;
 use App\Http\Controllers\RecursoFinanceiroController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\DeferimentoController;
+use App\Http\Controllers\RegulamentoController;
 use App\Http\Controllers\PAE\PaeController;
 use App\Http\Controllers\PAE\DocumentacaoController;
 use App\Http\Controllers\PAE\DesempenhoController;
@@ -30,16 +31,17 @@ Route::middleware(['auth','verified'])->group(function ()
 {
     Route::get('dashboard',                     [InscricaoController::class, 'index']);
     Route::get('realizadas',                    [InscricaoController::class, 'realizadas']);
-    Route::get('regulamentacao/create',         [HomeController::class, 'regulamentacao_create']);
-    Route::post('regulamentacao/store',         [HomeController::class, 'regulamentacao_store']);
-    Route::get('regulamentacao/imprimir/{id}',  [HomeController::class, 'regulamentacao_create']);
+
+    Route::get('regulamentacao/index',          [RegulamentoController::class, 'index']);
+    Route::get('regulamentacao/{id}/create',    [RegulamentoController::class, 'create']);
+    Route::post('regulamentacao/store',         [RegulamentoController::class, 'store']);
+    Route::patch('regulamentacao/{id}',         [RegulamentoController::class, 'update']);
+    //Route::get('regulamentacao/imprimir/{id}',  [RegulamentacaoController::class, 'regulamentacao_create']);
 
     /* Consultas a API */
     Route::get('estados/{codpas}',              [UtilsController::class, 'estados']);
     Route::get('cidades/{codpas}/{sglest}',     [UtilsController::class, 'cidades']);
     Route::get('telefone/{telefone}/',          [UtilsController::class, 'verificaTelefoneEmergencia']);
-
-
 
     /* Inscrição */
     Route::group(['prefix' => 'inscricao'], function()

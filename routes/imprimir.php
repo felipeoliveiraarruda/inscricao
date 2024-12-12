@@ -12,5 +12,6 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('cadastamento-bolsista/{codigoInscricao}',   [ImpressaoController::class, 'cadastamento_bolsista']);
         Route::get('declaracao-acumulo/{codigoInscricao}',      [ImpressaoController::class, 'declaracao_acumulos']);
         Route::get('certificado-proficiencia/{codigoEdital}',   [ImpressaoController::class, 'certificado_proficiencia']);
+        Route::get('regulamentacao/{codigoRegulamentacao}',     [ImpressaoController::class, 'regulamentacao']);
     });
 });

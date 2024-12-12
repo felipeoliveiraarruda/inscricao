@@ -36,6 +36,7 @@ use ZipArchive;
 use App\Models\Pdf\Matricula;
 use App\Http\Requests\PreProjetoRequest;
 use App\Jobs\ComprovanteEmailJob;
+use App\Models\Regulamento;
 
 class InscricaoController extends Controller
 {
@@ -67,12 +68,14 @@ class InscricaoController extends Controller
                             ->whereRaw('NOW() > `dataInicioEdital` AND NOW() < `dataFinalEdital`')
                             //->whereRaw('`dataInicioEdital` > NOW()')
                             ->get();
-        }
+        }        
 
         if (empty(session('level')))
         {
             Utils::setSession(Auth::user()->id);
         }
+
+        $regulamentos = Regulamento::where('dataFinalRegulamento', '>=',  Carbon::now())->get();
 
         return view('dashboard',
         [
@@ -84,6 +87,7 @@ class InscricaoController extends Controller
             'liberado'      => (in_array(Auth::user()->id, $liberados) ? true : false),
             'level'         => session('level'),
             'total'         => count($editais),
+            'regulamentos'  => $regulamentos,
         ]);
     }
 

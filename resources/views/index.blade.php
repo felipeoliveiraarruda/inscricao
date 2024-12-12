@@ -48,6 +48,46 @@
             </div>
         </div>
     </div>
+
+    @if (count($regulamentos) > 0)
+    <div class="row justify-content-center">
+        <div class="col-sm-12">
+            <br/>        
+            <div class="card bg-default">
+                <h5 class="card-header">Regulamentação</h5>
+                
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            @if (count($regulamentos) == 0)
+                                Nenhuma inscrição aberta
+                            @else
+                                @foreach ($regulamentos as $regulamento)
+                                    @php
+                                        $curso = $utils->obterCurso($regulamento->codigoCurso);
+                                    @endphp       
+                                    <tr>
+                                        <td>{{ $regulamento->descricaoRegulamento }}</td>
+                                        <td>
+                                            <a href="{{ $regulamento->linkRegulamento }}" target="_new">Resolução</a>
+                                        </td>
+                                        <td>de {{ $regulamento->dataInicioRegulamento->format('d/m/Y') }} a {{ $regulamento->dataFinalRegulamento->format('d/m/Y') }} </td>
+                                        <td> 
+                                            <a class="login_logout_link" href="login">
+                                                <i class="fas fa-sign-in-alt"></i> Entrar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <br/>        

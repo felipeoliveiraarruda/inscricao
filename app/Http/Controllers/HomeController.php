@@ -11,6 +11,7 @@ use App\Models\Utils;
 use App\Models\User;
 use App\Models\TipoDocumento;
 use App\Models\ProcessoSeletivo;
+use App\Models\Regulamento;
 use Carbon\Carbon;
 use Mail;
 use App\Mail\ConfirmacaoMail;
@@ -24,14 +25,17 @@ class HomeController extends Controller
             $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
                              ->where('dataFinalEdital', '>=',  Carbon::now())->get();
 
-            $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                                ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);      
+            $encerrados = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')            
+                                ->where('dataFinalEdital', '<',  Carbon::now())->paginate(5);     
+                                
+            $regulamentos = Regulamento::where('dataFinalRegulamento', '>=',  Carbon::now())->get();
             
             return view('index', 
             [
-                'editais'    => $editais,
-                'encerrados' => $encerrados,
-                'utils'      => new Utils,        
+                'editais'       => $editais,
+                'encerrados'    => $encerrados,
+                'regulamentos'  => $regulamentos,
+                'utils'         => new Utils,        
             ]);
         }
         else
@@ -88,70 +92,4 @@ class HomeController extends Controller
         $user = User::select('cpf')->where('cpf', '=', preg_replace('/[^0-9]/', '', $cpf))->count();
         return json_encode($user);
     }
-
-    public function regulamentacao_create()
-    {
-        return view('regulamentacao.create');
-    }
-
-    public function regulamentacao_store(Request $request)
-    {
-       dd($request);
-    }
-
-    public function regulamentacao_imprimir($codigoRegulamentacao)
-    {
-        //return view('regulamentacao.create');
-    }
-
-    /*public function modelo()
-    {
-        $tipos = TipoDocumento::all();
-
-        return view('modelo',
-        [
-            'arquivo'         => new Arquivo,
-            'codigoInscricao' => 1,
-            'tipos'           => $tipos,  
-        ]);
-    }
-
-    public function teste(Request $request)
-    {
-        $path = $request->file('arquivo')->store('arquivos', 'public');
-
-        $arquivo = Arquivo::create([
-            'codigoUsuario'         => Auth::user()->id,
-            'codigoTipoDocumento'   => $request->codigoTipoDocumento,
-            'linkArquivo'           => $path,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);
-
-        InscricoesArquivos::create([
-            'codigoInscricao'       => $request->codigoInscricao,
-            'codigoArquivo'         => $arquivo->codigoArquivo,
-            'codigoPessoaAlteracao' => Auth::user()->codpes,
-        ]);
-
-        request()->session()->flash('alert-success', 'Documento cadastrado com sucesso');    
-        return redirect("/modelo");
-    }
-
-    function email()
-    {
-        Mail::to('dev.ci.eel@usp.br')->send(new ConfirmacaoMail(1));
-
-        if (Mail::failures()) 
-        {
-            request()->session()->flash('alert-danger', 'Ocorreu um erro no envio do e-mail.');
-        }    
-        else
-        {
-            request()->session()->flash('alert-success', 'E-mail enviado com sucesso.');
-        } 
-
-        return redirect("/modelo");
-    }*/
-
-
 }

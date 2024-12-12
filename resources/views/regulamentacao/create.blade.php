@@ -38,11 +38,12 @@
                                         <label class="form-check-label" for="opcaoResolucao2">Não Opto</label>
                                     </div>
 
-                                    <p class="mt-3">pelo <b><i>Regulamento do Programa de Pós-Graduação em Projetos Educacionais de Ciências</i></b>, aprovado na Câmara de Normas e Recursos da CoPGr em 11/11/2024. <b>RESOLUÇÃO CoPGr nº 8720, de 07/11/2024</b></p>
+                                    <p class="mt-3">pelo {!! $regulamento->textoRegulamento !!}</p>
                                 </div>
                             </div>
                         </div>
 
+                        <input type="hidden" name="codigoRegulamento" value="{{ $regulamento->codigoRegulamento }}">
                         <button type="submit" class="btn btn-primary btn-lg btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Enviar</button>
                     </form>
                 </div>

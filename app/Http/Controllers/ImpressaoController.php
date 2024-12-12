@@ -767,6 +767,70 @@ class ImpressaoController extends Controller
         }
 
         $pdf->Output();
+    }
 
+    public function regulamentacao($codigoRegulamento)
+    {
+        $regulamento = \App\Models\RegulamentosUsers::join('regulamentos', 'regulamentos_users.codigoRegulamento', '=', 'regulamentos.codigoRegulamento')
+                                                    ->where('regulamentos.codigoRegulamento', '=', $codigoRegulamento)
+                                                    ->where('codigoUsuario', '=', Auth::user()->id)
+                                                    ->first();
+
+        if ($regulamento->statusRegulamento == 'S')
+        {
+            $opto       = "  X  ";
+            $nao_opto   = "     ";
+        }
+        else
+        {
+            $opto       = "     ";
+            $nao_opto   = "  X  ";
+        }
+
+        $pdf = new \App\Models\Pdf\Regulamentacao;
+
+        $hoje = Carbon::now()->locale('pt-BR');
+
+        $pdf->SetStyle('p', 'arial', 'N', 14, '0,0,0');
+        $pdf->SetStyle('b', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('b2', 'arial', 'B', 0, '0,0,0');
+        $pdf->SetStyle('bu', 'arial', 'BU', 0, '0,0,0');
+        $pdf->SetStyle('i', 'arial', 'I', 0, '0,0,0');
+        
+        $pdf->SetDisplayMode('real');
+        $pdf->AliasNbPages();   
+        $pdf->AddPage();
+
+        $pdf->SetFont('Arial', '', 14);
+        
+        $pdf->Cell(190, 8, utf8_decode('Ao'), 0, 0, "L");
+        $pdf->Ln(15);
+        
+        $pdf->Cell(190, 8, utf8_decode('Presidente da Comissão de Pós-Graduação da EEL'), 0, 0, "L");
+        $pdf->Ln(20);
+
+        $pdf->WriteTag(190, 10, utf8_decode('<p> Eu, '.Str::upper(Auth::user()->name).' Nº USP: '.Auth::user()->codpes.', aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Projetos Educacionais de Ciências - PPGPE, <b>DECLARO</b> para os devidos fins que: </p>'), 0, 'J');
+        $pdf->Ln(10);
+
+        $pdf->WriteTag(190, 8, utf8_decode('<p>('.$opto.') <bu><i>OPTO</bu></i>            ('.$nao_opto.') <bu><i>NÃO OPTO</bu></i></p>'), 0, 'C');
+        $pdf->Ln(10);
+
+        $pdf->WriteTag(190, 10, utf8_decode('<p>pelo '.$regulamento->textoRegulamento.'.</p>'), 0, 'J');
+        $pdf->Ln(20);
+
+        $pdf->Cell(190, 8, utf8_decode('Lorena-SP, '.$hoje->format('d').'/'.$hoje->format('m').'/'.$hoje->format('Y').'.'), 0, 0, 'C');
+        $pdf->Ln(20);
+
+        $pdf->Cell(80, 8, utf8_decode(''), 'B', 0, 'C');
+        $pdf->Cell(30, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Cell(80, 8, utf8_decode(''), 'B', 0, 'C');
+        $pdf->Ln();
+
+        $pdf->Cell(80, 8, utf8_decode('Assinatura do Pós-Graduando'), 0, 0, 'C');
+        $pdf->Cell(30, 8, utf8_decode(''), 0, 0, 'C');
+        $pdf->Cell(80, 8, utf8_decode('Assinatura do Orientador'), 0, 0, 'C');
+        $pdf->Ln();
+
+        $pdf->Output();
     }
 }
