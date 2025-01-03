@@ -72,7 +72,11 @@ class RegulamentoController extends Controller
      */
     public function show(Regulamento $regulamento)
     {
-        //
+        //alunosPrograma(int $codundclgi, int $codcur, int $codare = null)
+    
+        // se $codare é null, seleciona todas
+
+        
     }
 
     /**

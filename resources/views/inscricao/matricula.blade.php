@@ -52,9 +52,13 @@
                                     $total = count($temp['ministrante']) 
                                 @endphp
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }}" @if ($disciplina['sgldis'] == 'PPE6402') disabled checked @endif >
+                                <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }}">
                                 <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
-                                    <p>{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }} - {{ $turma['diasmnofe'] }} das {{ $turma['horiniofe'] }} as {{ $turma['horfimofe'] }}</p>
+                                    <p>{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }} - {{ $turma['diasmnofe'] }} das {{ $turma['horiniofe'] }} as {{ $turma['horfimofe'] }}
+                                        @if ($disciplina['sgldis'] == 'PPE6402') 
+                                        Disciplina obrigatória para alunos que ainda não cursaram
+                                        @endif
+                                    </p>
                                     <p><b>Ministrante(s): </b>
 
                                     @foreach($temp['ministrante'] as $ministrante)

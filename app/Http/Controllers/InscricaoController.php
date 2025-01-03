@@ -77,6 +77,8 @@ class InscricaoController extends Controller
 
         $regulamentos = Regulamento::whereRaw('NOW() > `dataInicioRegulamento` AND NOW() < `dataFinalRegulamento`')->get();
 
+        
+
         return view('dashboard',
         [
             'editais'       => $editais,
@@ -210,7 +212,7 @@ class InscricaoController extends Controller
             $total = Utils::obterTotalArquivos($inscricao->codigoInscricao, array(1, 2, 3, 4, 5, 6, 9, 10, 27, 28));
 
             $foto                 = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(27));
-            $cpf                  = Inscricao::obterAnexoInscrica1o($inscricao->codigoInscricao, array(1));
+            $cpf                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(1));
             $rg                   = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(2));
             $rne                  = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(3));
             $passaporte           = Inscricao::obterAnexoInscricao($inscricao->codigoInscricao, array(4));
@@ -2660,7 +2662,7 @@ class InscricaoController extends Controller
 
         if ($edital->codigoCurso == 97002)
         {            
-            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-20 23:59:59')
+            if ($data < '2025-01-06 00:00:00' || $data > '2025-01-20 23:59:59')
             {
                 return redirect("dashboard");
             }
@@ -2691,16 +2693,6 @@ class InscricaoController extends Controller
 
         if ($disciplinas == 0)
         {
-            if ($edital->codigoCurso == 97004)
-            {
-                $inscricaoDisciplinas = InscricoesDisciplinas::create([
-                    'codigoInscricao'       => $request->codigoInscricao,
-                    'codigoDisciplina'      => 'PPE6402-4/5',
-                    'statusDisciplina'      => 'A',
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]);   
-            }
-
             foreach($request->disciplinasGcub as $disciplina)
             {
                 $inscricaoDisciplinas = InscricoesDisciplinas::create([

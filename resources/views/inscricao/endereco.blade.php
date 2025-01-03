@@ -22,7 +22,7 @@
                     <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
                     @if ($update)
-                        <form class="needs-validation" novalidate method="POST" action="/endereco/{{ $enderecos->codigoEndereco }}">
+                        <form class="needs-validation" novalidate method="POST" action="endereco/{{ $enderecos->codigoEndereco }}">
                         @method('patch')
                     @else
                         <form class="needs-validation" novalidate method="POST" action="endereco">

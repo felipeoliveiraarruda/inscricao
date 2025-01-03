@@ -62,6 +62,7 @@ class AdminController extends Controller
             'docente' => (in_array("Docente", session('vinculos')) || in_array("Docenteusp", session('vinculos')) ? true : false),
             'level'   => session('level'),
             'pae'     => ((Auth::user()->id == 1 || Auth::user()->id == 4 || Auth::user()->id == 26) ? true : false),
+            'regulamentacao' => (Auth::user()->id == 2  ? true : false),
         ]);
     }
 
@@ -434,7 +435,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "Convocação para 2 fase do Processo Seletivo do PPGPE"));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "ConvocaÃ§Ã£o para 2 fase do Processo Seletivo do PPGPE"));
             
             if (Mail::failures()) 
             {
@@ -573,7 +574,7 @@ class AdminController extends Controller
         $pdf->Cell(190, 8, utf8_decode('MESTRADO'), 1, 0, 'C', true);
         $pdf->Ln();
 
-        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
         $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
@@ -630,7 +631,7 @@ class AdminController extends Controller
         $pdf->Cell(190, 8, utf8_decode('DOUTORADO DIRETO'), 1, 0, 'C', true);
         $pdf->Ln();
 
-        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
         $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
@@ -795,8 +796,63 @@ class AdminController extends Controller
             $proficiencia->save();
         }
 
-        request()->session()->flash('alert-success', 'Resultado do Exame de Proficiência cadastrado com sucesso.');
+        request()->session()->flash('alert-success', 'Resultado do Exame de ProficiÃªncia cadastrado com sucesso.');
         
         return redirect(url("admin/{$request->codigoEdital}/exame"));        
     }
+
+    public function aprovados(Request $request, $id)
+    {  
+        $codigoCurso = '';
+        $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')->where('codigoEdital', $id)->first();
+        $curso   = Utils::obterCurso($editais->codigoCurso);
+
+        if(isset($request->search)) 
+        {
+            $inscritos = Edital::select(\DB::raw('inscricoes.*, editais.*, users.*, pae.codigoPae'))
+                               ->join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                               ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                               ->leftJoin('pae', 'inscricoes.codigoInscricao', '=', 'pae.codigoInscricao')
+                               ->where('editais.codigoEdital', $id)
+                               ->where('users.name', 'LIKE', "%{$request->search}%")
+                               ->orWhere('users.email', 'LIKE', "%{$request->search}%")
+                               ->get();
+
+
+        } 
+        else 
+        {
+
+            $inscritos = Edital::join('inscricoes', 'editais.codigoEdital', '=', 'inscricoes.codigoEdital')
+                                ->join('users', 'inscricoes.codigoUsuario', '=', 'users.id')
+                                ->join('processo_seletivo', 'inscricoes.codigoInscricao', '=', 'processo_seletivo.codigoInscricao')
+                                ->where('editais.codigoEdital', $id)
+                                ->where('inscricoes.statusInscricao', 'C')
+                                ->orderBy('users.name')
+                                ->paginate(15);    
+
+        }
+                
+        return view('admin.aprovados',
+        [
+            'id'        => $id,
+            'inscritos' => $inscritos,
+            'curso'     => $curso['nomcur'],
+            'docente'   => (in_array("Docenteusp", session('vinculos'))),
+            'pae'       => (Auth::user()->id == 4  ? true : false),
+        ]);
+    }
+
+    public function regulamentacao($codigoRegulamentacao)
+    {
+        $inscritos = \Uspdev\Replicado\Posgraduacao::alunosPrograma(97, 97004);
+        $curso   = Utils::obterCurso(97004);
+
+        return view('admin.regulamentacao.index',
+        [
+            'inscritos' => $inscritos,
+            'curso'     => $curso['nomcur'],
+        ]);
+    }
+
 }

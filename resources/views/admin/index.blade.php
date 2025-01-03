@@ -74,6 +74,12 @@
                                                     </a>
                                                 @endif
 
+                                                @if (($edital->codigoNivel == 4 || $edital->codigoNivel == 2) && date('Y-m-d') > $edital->dataExameEdital)
+                                                    <a href="admin/{{ $edital->codigoEdital }}/aprovados" target="_new" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Aprovados">
+                                                        <i class="fas fa-clipboard-check"></i>
+                                                    </a>
+                                                @endif
+
                                                 @if ($pae == true && $edital->codigoNivel == 5)
                                                     <!--<a href="admin/{{ $edital->codigoEdital }}/pae/distribuicao">Distribuir Avaliação</a>-->
 
@@ -93,12 +99,30 @@
                                                         <i class="fas fa-book-open"></i>
                                                     </a>
                                                 @endif
+                                                
                                             @endif
 
-                                        </td>
-       
+                                        </td>       
                                      </tr>
                                 @endforeach
+
+                                @if($regulamentacao)
+                                    @php
+                                        $regulamentos = App\Models\Regulamento::all()
+                                    @endphp
+
+                                    @foreach ($regulamentos as $regulamento)
+                                        <tr>                                        
+                                            <td>{{ $regulamento->descricaoRegulamento }}</td>                                        
+                                            <td>
+                                                <a href="admin/{{ $regulamento->codigoRegulamento }}/regulamentacao" role="button" aria-pressed="true" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Inscritos">
+                                                    <i class="fas fa-list"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+
                             @endif
                         </tbody>
                     </table>               

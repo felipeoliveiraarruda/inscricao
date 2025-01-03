@@ -23,12 +23,22 @@ class ProcessoSeletivo extends Model
         'codigoPessoaAlteracao'
     ];
 
-    public static function obterAprovado()
+    public static function obterAprovado($codigoUsuario = '')
     {
-        $aprovado = ProcessoSeletivo::join('inscricoes', 'inscricoes.codigoInscricao', '=', 'processo_seletivo.codigoInscricao')
-                                    ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
-                                    ->where('processo_seletivo.statusProcessoSeletivo', '=', 'A')
-                                    ->max('processo_seletivo.codigoProcessoSeletivo');  
+        if (empty($codigoUsuario))
+        {
+            $aprovado = ProcessoSeletivo::join('inscricoes', 'inscricoes.codigoInscricao', '=', 'processo_seletivo.codigoInscricao')
+                                        ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
+                                        ->where('processo_seletivo.statusProcessoSeletivo', '=', 'A')
+                                        ->max('processo_seletivo.codigoProcessoSeletivo');  
+        }
+        else
+        {
+            $aprovado = ProcessoSeletivo::join('inscricoes', 'inscricoes.codigoInscricao', '=', 'processo_seletivo.codigoInscricao')
+                                        ->where('inscricoes.codigoUsuario', '=', $codigoUsuario)
+                                        ->where('processo_seletivo.statusProcessoSeletivo', '=', 'A')
+                                        ->max('processo_seletivo.codigoProcessoSeletivo');  
+        }
 
         return $aprovado;
     }
@@ -38,7 +48,7 @@ class ProcessoSeletivo extends Model
         $edital = ProcessoSeletivo::select('inscricoes.codigoInscricao', 'inscricoes_disciplinas.codigoInscricaoDisciplina')
                                   ->join('inscricoes', 'inscricoes.codigoInscricao', '=', 'processo_seletivo.codigoInscricao')
                                   ->leftJoin('inscricoes_disciplinas', 'inscricoes.codigoInscricao', '=', 'inscricoes_disciplinas.codigoInscricao')
-                                  ->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
+                                  //->where('inscricoes.codigoUsuario', '=', Auth::user()->id)
                                   ->where('processo_seletivo.codigoProcessoSeletivo', '=', $codigoProcessoSeletivo)
                                   ->first();  
 
