@@ -55,6 +55,11 @@
                                 <input class="form-check-input" type="radio" name="tipoDestinatario[]" id="tipoDestinatarioC" value="C">
                                 <label class="form-check-label" for="tipoDestinatarioC">Confirmada</label>
                             </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="tipoDestinatario[]" id="tipoDestinatarioR" value="R">
+                                <label class="form-check-label" for="tipoDestinatarioR">Rejeitada</label>
+                            </div>
                         </div>
 
                         <div class="form-group">

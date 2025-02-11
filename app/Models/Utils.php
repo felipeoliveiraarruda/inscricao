@@ -291,7 +291,7 @@ class Utils extends Model
     public static function listarOferecimentoPosDocente($codcur, $codpes, $dtainiofe, $dtafimofe, $especial = 'N')
     {
         $link = env('URL_API_EEL')."posgraduacao/oferecimento/docente";
-
+        
         $response = Http::asForm()->withHeaders(
         [
             'x-api-key' => env('KEY_API_EEL')

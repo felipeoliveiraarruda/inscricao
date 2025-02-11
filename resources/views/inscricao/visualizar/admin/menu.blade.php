@@ -33,8 +33,6 @@
         </a> 
         @endif
 
-        
-
         @if (Session::get('nivel') == 'ME' || Session::get('nivel') == 'DD')
 
 
@@ -49,6 +47,12 @@
             <a href="inscricao/{{ $codigoInscricao }}/disciplina" class="list-group-item list-group-item-action">Disciplinas
                 <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
             </a> 
+
+            @if ($codigoEdital == 22)
+                <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Carta de Motivação
+                    <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+                </a>
+            @endif
         @endif
 
         @if ($codigoEdital == 13)
@@ -67,7 +71,7 @@
 
         <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">
             Documentos Obrigatórios
-            <i class="fa fa-check text-success float-right"></i>
+            <i class="fa @if (Session::get('total')['arquivo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a>             
     @else
 
@@ -112,7 +116,7 @@
                 
                 @if ($status == 'P')
                 <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">10.Documentos Obrigatórios
-                    <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+                    <i class="fa @if (Session::get('total')['arquivo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
                 </a> 
                 @endif
             @else
@@ -126,7 +130,7 @@
 
                 @if ($status == 'P')
                 <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">9.Documentos Obrigatórios
-                    <i class="fa fa-check text-success float-right"></i>
+                    <i class="fa @if (Session::get('total')['arquivo'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
                 </a> 
                 @endif
             @endif

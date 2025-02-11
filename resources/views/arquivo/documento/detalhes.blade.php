@@ -18,7 +18,7 @@
 
 @if ($codigoTipoDocumento == 9)
 <small id="arquivoAjudaBlock" class="form-text text-muted">
-    Currículo digital detalhado e documentado. Preferencialmente o Currículo Lattes. Anexar somente os documentos contemplados no item 6 deste edital, caso possua. Documentos não listados no referido item, não serão considerados na avaliação
+    Currículo digital detalhado e documentado. Preferencialmente o Currículo Lattes. <!-- Anexar somente os documentos contemplados no item 6 deste edital, caso possua. Documentos não listados no referido item, não serão considerados na avaliação -->
 </small>   
 @endif
 

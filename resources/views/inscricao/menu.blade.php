@@ -72,10 +72,16 @@
             </a>
         @endif
 
+        @if ($codigoEdital == 22)
+            <a href="inscricao/{{ $codigoInscricao }}/expectativas" class="list-group-item list-group-item-action">Carta de Motivação
+                <i class="fa @if (Session::get('total')['expectativas'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
+            </a>
+        @endif
+
         @if ($status == 'P')    
         <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">
             Documentos Obrigatórios
-            <i class="fa fa-check text-success float-right"></i>
+            <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
         </a> 
         @endif            
     @else
@@ -135,7 +141,7 @@
 
                 @if ($status == 'P')
                 <a href="inscricao/{{ $codigoInscricao }}/obrigatorios" class="list-group-item list-group-item-action">9.Documentos Obrigatórios
-                    <i class="fa fa-check text-success float-right"></i>
+                    <i class="fa @if (Session::get('total')['disciplina'] > 0) fa-check text-success @else fa-exclamation-triangle text-warning @endif float-right"></i>
                 </a> 
                 @endif
             @endif

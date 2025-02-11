@@ -26,6 +26,10 @@ class Inscricao extends Model
         'numeroInscricao',    
         'statusInscricao',
         'expectativasInscricao',
+        'alunoEspecial',
+        'dataAlunoEspecial',
+        'planoCoorientador',
+        'cartaMotivacao',
         'codigoPessoaAlteracao'
     ];
 
@@ -152,7 +156,7 @@ class Inscricao extends Model
                             ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                         
                             ->leftJoin('inscricoes_enderecos', 'inscricoes_enderecos.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                             ->where('inscricoes.codigoInscricao', $codigoInscricao)
-                            ->first();                         
+                            ->first();
         return $endereco;                                 
     }
 
@@ -638,6 +642,60 @@ class Inscricao extends Model
             }   
         }
 
+        if ($tipo == 'ppgmad')
+        {
+            if (empty($dados->numeroRG))
+            {
+                $documento = $dados->numeroDocumento;
+            }
+            else
+            {
+                $documento = $dados->numeroRG;
+            }
+
+            if ($nivel == 'ME')
+            {
+                if ($edital->dataInicioEdital->format('m') < 7)
+                {
+                    $diretorio = $edital->dataDoeEdital->format('Y').'2';
+                }
+                else
+                {
+                    $ano       = $edital->dataDoeEdital->format('Y') + 1;
+                    $diretorio = $ano.'1'; 
+                }
+
+                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <bu>REGULAR</bu> de <bu>MESTRADO</bu> do <b>Programa de Pós-Graduação em Meio Ambiente e Desenvolvimento</b>, na área de concentração: <b>97141 - Meio Ambiente e Sociedade</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+
+                $pdf->SetFont('Arial','B', 14);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM MEIO AMBIENTE E DESENVOLVIMENTO - PPGMAD REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+                $pdf->Ln();
+            }
+
+            if($nivel == 'AE')
+            {
+                if ($edital->dataInicioEdital->format('m') < 6)
+                {
+                    $diretorio = $edital->dataInicioEdital->format('Y').'1/especial';
+                    $semestre  = '1º Semestre de '. $edital->dataInicioEdital->format('Y');
+                }
+                else
+                {
+                    $ano       = $edital->dataInicioEdital->format('Y');
+                    $diretorio = $ano.'2/especial'; 
+                    $semestre  = '2º Semestre de '.$ano;
+                }
+
+                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Meio Ambiente e Desenvolvimento</p>";
+
+                $pdf->SetFont('Arial','B', 16);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->MultiCell(190, 8, utf8_decode('REQUERIMENTO DE MATRÍCULA ALUNO ESPECIAL'), 1, 'C', true);
+                $pdf->Ln();   
+            }   
+        }        
+
         $pdf->SetFont('Arial', '', 14);
         $pdf->SetFillColor(255,255,255);
         $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
@@ -645,29 +703,34 @@ class Inscricao extends Model
 
         if ($nivel == 'ME' || $nivel == 'DD')
         { 
-            $pdf->SetFont('Arial', 'B', 10);
-            $pdf->SetFillColor(190,190,190);
-            $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
-            $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
-            $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
-            $pdf->Ln();           
-            
-            $pdf->SetFont('Arial', '', 10);
-
             $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
 
-            foreach($disciplinas as $disciplina)
+            if (!empty($disciplinas))
             {
-                $temp1 = explode('-', $disciplina->codigoDisciplina);
-
-                $temp = Posgraduacao::disciplina($temp1[0]);
-
-                //$pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->SetFillColor(190,190,190);
+                $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+                $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
+                $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
+                $pdf->Ln();           
                 
-                $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
-                $pdf->CellFitScale(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
-                $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
-                $pdf->Ln();  
+                $pdf->SetFont('Arial', '', 10);
+    
+                $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+    
+                foreach($disciplinas as $disciplina)
+                {
+                    $temp1 = explode('-', $disciplina->codigoDisciplina);
+    
+                    $temp = Posgraduacao::disciplina($temp1[0]);
+    
+                    //$pdf->CellFitScale(70, 8, utf8_decode($escolar->escolaResumoEscolar), 1, 0, 'J', false);
+                    
+                    $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
+                    $pdf->CellFitScale(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+                    $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);
+                    $pdf->Ln();  
+                }   
             }
 
             $pdf->Ln(5);
@@ -717,6 +780,13 @@ class Inscricao extends Model
                 $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
                 $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
                 $pdf->Ln();
+
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+                $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
+
             }
 
             if ($tipo == 'ppgpe')
@@ -725,13 +795,35 @@ class Inscricao extends Model
                 $pdf->Cell(80, 8, utf8_decode('Prof. Dr. Carlos Alberto Moreira dos Santos'), 0, 0, 'C', false);
                 $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
                 $pdf->Ln();
+
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+                $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
+            }
+
+            if ($tipo == 'ppgmad')
+            {
+                $pdf->SetFont('Arial', '', 14);
+                //$pdf->Cell(80, 8, utf8_decode('Prof. Dr. Eduardo Ferro dos Santos'), 0, 0, 'C', false);
+                $pdf->Cell(80, 8, utf8_decode('Profa. Dra. Ana Lúcia Gabas Ferreira'), 0, 0, 'C', false);
+                $pdf->Cell(60,  8, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
+
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
+                $pdf->Cell(80, 5, utf8_decode('Coordenadora do PPGMAD em exercício'), 'T', 0, 'C', false);
+                //$pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
+                $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
+                $pdf->Ln();
             }
     
-            $pdf->SetFont('Arial', 'B', 10);
+            /*$pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'L', false);
             $pdf->Cell(80, 5, utf8_decode('Coordenador do Programa'), 'T', 0, 'C', false);
             $pdf->Cell(60,  5, utf8_decode(''), 0, 0, 'C', false);
-            $pdf->Ln();
+            $pdf->Ln();*/
 
             $sigla   = Str::lower($sigla);
             $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
@@ -1166,12 +1258,12 @@ class Inscricao extends Model
             {
                 if ($edital->dataFinalEdital->format('m') <= 7)
                 {
-                    $diretorio =  $edital->dataFinalEdital->format('Y').'2';
+                    $diretorio =  $edital->dataFinalEdital->format('Y').'1';
                 }
                 else
                 {
-                    $ano       = $edital->dataFinalEdital->format('Y') + 1;
-                    $diretorio = $ano.'1'; 
+                    $ano       = $edital->dataFinalEdital->format('Y');
+                    $diretorio = $ano.'2'; 
                 }
 
                 $requerimento = 'Venho requerer minha inscrição como Aluno Especial, conforme regulamenta os procedimentos publicados na página da Comissão de Pós-graduação (CPG).';

@@ -35,34 +35,9 @@
                     <table class="table">
                         <tbody>
                             @if (count($editais) == 0)
-                                @php                                        
-                                    $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
-                                @endphp
-
-                                @if ($pos)
-                                    @if ($pos["tiping"] == 'REGULAR' && $pos["nomcur"] == "Projetos Educacionais de Ciências" && count($regulamentos) > 0)
-                                        @php                                        
-                                            $total = \App\Models\RegulamentosUsers::join('regulamentos', 'regulamentos_users.codigoRegulamento', '=', 'regulamentos.codigoRegulamento')
-                                                                                        ->where('codigoUsuario', '=', Auth::user()->id)
-                                                                                        ->first();
-                                        @endphp
-
-                                        @foreach ($regulamentos as $regulamento)
-                                        <tr>                                        
-                                            <td>{{ $regulamento->descricaoRegulamento }}</td>                                        
-                                            <td>
-                                                @if ($total == '')
-                                                    <a href="regulamentacao/{{ $regulamento->codigoRegulamento }}/create" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
-                                                @else
-                                                    <a href="regulamentacao/index" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    @else
-                                        Nenhuma inscrição aberta
-                                    @endif   
-                                @endif
+                                <tr> 
+                                    <td>Nenhuma inscrição aberta</td>
+                                </tr> 
                             @else
                                 @foreach ($editais as $edital)
                                     @php
@@ -172,6 +147,33 @@
                                     @endif
                                     </tr>
                                 @endforeach
+                            @endif
+
+                            @php                                        
+                                $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
+                            @endphp
+
+                            @if ($pos)
+                                @if ($pos["tiping"] == 'REGULAR' && $pos["nomcur"] == "Projetos Educacionais de Ciências" && count($regulamentos) > 0)
+                                    @php                                        
+                                        $total = \App\Models\RegulamentosUsers::join('regulamentos', 'regulamentos_users.codigoRegulamento', '=', 'regulamentos.codigoRegulamento')
+                                                                                    ->where('codigoUsuario', '=', Auth::user()->id)
+                                                                                    ->first();
+                                    @endphp
+
+                                    @foreach ($regulamentos as $regulamento)
+                                    <tr>                                        
+                                        <td>{{ $regulamento->descricaoRegulamento }}</td>                                        
+                                        <td>
+                                            @if ($total == '')
+                                                <a href="regulamentacao/{{ $regulamento->codigoRegulamento }}/create" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
+                                            @else
+                                                <a href="regulamentacao/index" role="button" aria-pressed="true" class="btn btn-info">Acessar</a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
                             @endif
                         </tbody>
                     </table>

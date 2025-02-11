@@ -46,9 +46,9 @@
                                                 </a>
                                                 
                                                 @if ($edital->codigoNivel == 1)
-                                                    <a href="admin/deferimento/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Deferimento">
+                                                    <!-- <a href="admin/deferimento/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Deferimento">
                                                         <i class="fas fa-list-ol"></i>
-                                                    </a>
+                                                    </a> -->
 
                                                     <a href="admin/lista-disciplina/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Inscritos por Disciplina">
                                                         <i class="fas fa-graduation-cap"></i>

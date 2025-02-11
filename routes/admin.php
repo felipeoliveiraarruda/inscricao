@@ -90,7 +90,6 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::patch('{codigoPae}/pae/analise',                    [PaeController::class, 'analise_update']);
         Route::get('pae/analise/{codigoAnaliseCurriculo}/destroy', [PaeController::class, 'analise_destroy']);*/
 
-        //Route::get('inscricao/{codigoEdital}/nomes',            [AdminController::class, 'nomes']);
-        
+        //Route::get('inscricao/{codigoEdital}/nomes',            [AdminController::class, 'nomes']);        
     });
 });

@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 4 && $total >= 6 && $status == 'N')
+@if (Session::get('total')['especial'] >= 5 && $total >= 6 && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -24,7 +24,7 @@
     </thead> 
     <tbody>
         <tr>
-            <td>a) Requerimento de Matrícula – Aluno Especial que o candidato pré-aprovado receberá por e-mail<span class="text-danger">*</span></td>   
+            <td>a) Requerimento de Matrícula – Aluno Especial (o candidato pré-aprovado receberá por e-mail<span class="text-danger">*</span>)</td>   
             <td class="text-center">
                 @if(!empty($requerimento->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>

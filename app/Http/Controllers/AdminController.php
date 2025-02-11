@@ -435,7 +435,7 @@ class AdminController extends Controller
         
         foreach($inscritos as $inscrito)
         {
-            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "ConvocaÃ§Ã£o para 2 fase do Processo Seletivo do PPGPE"));
+            Mail::mailer($inscrito->codigoCurso)->to(mb_strtolower($inscrito->email))->send(new ApresentacaoMail($id, "ConvocaÃÂ§ÃÂ£o para 2 fase do Processo Seletivo do PPGPE"));
             
             if (Mail::failures()) 
             {
@@ -574,7 +574,7 @@ class AdminController extends Controller
         $pdf->Cell(190, 8, utf8_decode('MESTRADO'), 1, 0, 'C', true);
         $pdf->Ln();
 
-        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÃÂº'), 1, 0, 'C', true);
         $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
@@ -631,7 +631,7 @@ class AdminController extends Controller
         $pdf->Cell(190, 8, utf8_decode('DOUTORADO DIRETO'), 1, 0, 'C', true);
         $pdf->Ln();
 
-        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÃÂº'), 1, 0, 'C', true);
         $pdf->Cell(75, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(40, 8, utf8_decode('Documento'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
@@ -796,7 +796,7 @@ class AdminController extends Controller
             $proficiencia->save();
         }
 
-        request()->session()->flash('alert-success', 'Resultado do Exame de ProficiÃªncia cadastrado com sucesso.');
+        request()->session()->flash('alert-success', 'Resultado do Exame de ProficiÃÂªncia cadastrado com sucesso.');
         
         return redirect(url("admin/{$request->codigoEdital}/exame"));        
     }

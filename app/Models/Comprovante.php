@@ -478,6 +478,8 @@ class Comprovante extends Fpdf
 			$tab[1]="t";
 			$tab[2]=trim($regs[1]);
 		}
+		
+		//dd(strlen($regs[1]));
 
 		$begin=strlen($regs[1]);
  		$end=strlen($text);

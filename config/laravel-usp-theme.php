@@ -100,7 +100,7 @@ return [
     # login e logout
     'logout_method' => 'POST',
     'logout_url' => 'logout',
-    'login_url' => 'acesso',
+    'login_url' => 'login',
 
     # menus
     'menu' => $menu,

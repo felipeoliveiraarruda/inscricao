@@ -28,23 +28,23 @@
             </div>
 
             <div class="card bg-default">
-                <h5 class="card-header">PAE - Processo Seletivo - Estágio Supervisonado em Docência - {{ $anosemestre }}</h5>
+                <h5 class="card-header">PAE - Processo Seletivo - EstÃ¡gio Supervisonado em DocÃªncia - {{ $anosemestre }}</h5>
                 
                 <div class="card-body">                    
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Nome</th>
-                                <th scope="col">Nº USP</th>
+                                <th scope="col">NÂº USP</th>
                                 <th scope="col">Programa</th>
-                                <th scope="col">Já recebeu remuneração do PAE?</th>
+                                <th scope="col">JÃ¡ recebeu remuneraÃ§Ã£o do PAE?</th>
                             </tr>
                         </thead>
                         <tr>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->codpes }}</td>
                             <td>{{ $vinculo['nomcur'] }}-{{ $vinculo['nivpgm'] }}</td>
-                            <td>{{ ($inscricao->remuneracaoPae == "S") ? "Sim" : "Não" }}</td>
+                            <td>{{ ($inscricao->remuneracaoPae == "S") ? "Sim" : "NÃ£o" }}</td>
                         </tr>
                     </table>
 
@@ -53,7 +53,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col" colspan="3">Documentos Comprobatórios
+                                        <th scope="col" colspan="3">Documentos ComprobatÃ³rios
                                             @if (count($arquivos) > 0)
                                             <a href="inscricao/{{ $inscricao->codigoEdital }}/pae/documentacao" role="button" aria-pressed="true" class="btn btn-primary btn-sm float-right ml-1" target="_new" title="Visualizar">
                                                 <i class="far fa-eye"></i>
@@ -124,7 +124,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="col">Análise</th>
+                                    <th scope="col">AnÃ¡lise</th>
                                 </tr>
                                 <tr>
                                     <td class="text-justify">

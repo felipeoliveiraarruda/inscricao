@@ -77,8 +77,6 @@ class InscricaoController extends Controller
 
         $regulamentos = Regulamento::whereRaw('NOW() > `dataInicioRegulamento` AND NOW() < `dataFinalRegulamento`')->get();
 
-        
-
         return view('dashboard',
         [
             'editais'       => $editais,
@@ -791,15 +789,22 @@ class InscricaoController extends Controller
         $inscricao = Inscricao::obterExpectativaInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
-        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));;
+        $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));
 
         $voltar = "inscricao/{$inscricao->codigoEdital}/expectativas";
 
         $nivel = Edital::obterNivelEdital($inscricao->codigoEdital);
 
         if ($nivel == 'AE')
-        {
-            $titulo = 'Por que cursar disciplina como aluno especial?';
+        {            
+            if ($inscricao->codigoEdital == 22)
+            {
+                $titulo = 'Carta de Motivação';
+            }
+            else
+            {
+                $titulo = 'Por que cursar disciplina como aluno especial?';
+            }            
         }
         else
         {
@@ -837,7 +842,14 @@ class InscricaoController extends Controller
 
         if ($nivel == 'AE')
         {
-            $titulo = 'Por que cursar disciplina como aluno especial?';
+            if ($inscricao->codigoEdital == 22)
+            {
+                $titulo = 'Carta de Motivação';
+            }
+            else
+            {
+                $titulo = 'Por que cursar disciplina como aluno especial?';
+            }   
         }
         else
         {
@@ -1066,13 +1078,13 @@ class InscricaoController extends Controller
 
         $codigoCurso = Edital::obterCursoEdital($edital);
         
-        $disciplinas = Utils::listarOferecimentoPos($codigoCurso, '05/08/2024', '17/11/2024');
+        $disciplinas = Utils::listarOferecimentoPos($codigoCurso, '17/03/2025', '29/06/2025');
 
-        if ($codigoCurso == '97002')
+        /*if ($codigoCurso == '97002')
         {
             $temp = array('sgldis' => 'PEM5121', 'nomdis' => 'Supercondutividade Aplicada e Experimental', 'numseqdis' => 4, 'numcretotdis' => 12, 'numofe' => 4, 'numvagespofe' => 10);
             array_push($disciplinas, $temp);
-        }
+        }*/
 
         $status = Inscricao::obterStatusInscricao($codigoInscricao);
 
@@ -1086,7 +1098,7 @@ class InscricaoController extends Controller
             'disciplinas'       => $inscricao,
             'total'             => $total,
             'disciplinas'       => $disciplinas,
-            'limite'            => ($codigoCurso == 97002 ? 1 : 0),
+            'limite'            => ($codigoCurso == 97002 || $codigoCurso == 97005 ? 1 : 0),
             'status'            => $status,
         ]); 
     } 
@@ -1601,36 +1613,39 @@ class InscricaoController extends Controller
 
             if ($nivel == 'AE')
             {        
-                $pdf->Ln();
-                $pdf->SetFont("Arial","", 10);
-                $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
-
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
-                $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
-                $pdf->SetFont('Arial', '', 10);  
-
-                $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
-
-                foreach($inscricao as $disciplina)
-                {
-                    $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
-
-                    $pdf->Ln();
-                    $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
-                } 
-
-                if ($inscricao->codigoCurso == 97004)
+                if ($pessoais->codigoEdital != 22)
                 {
                     $pdf->Ln();
+                    $pdf->SetFont("Arial","", 10);
+                    $pdf->MultiCell(190, 8, utf8_decode($expectativas->expectativasInscricao), 1, "J", false); 
+
                     $pdf->SetFont('Arial', 'B', 10);
-                    $pdf->Cell(10, 8, utf8_decode('4.'), 1, 0, 'L', true);
-                    $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
-    
-                    $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
-    
-                    $pdf->Ln();
-                } 
+                    $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
+                    $pdf->Cell(180, 8, utf8_decode('QUAL DISCIPLINA QUER CURSAR COMO ALUNO ESPECIAL?'), 1, 0, 'J', true);         
+                    $pdf->SetFont('Arial', '', 10);  
+
+                    $inscricao = Inscricao::obterDisciplinaInscricao($codigoInscricao);
+
+                    foreach($inscricao as $disciplina)
+                    {
+                        $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
+
+                        $pdf->Ln();
+                        $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                    } 
+
+                    if ($inscricao->codigoCurso == 97004)
+                    {
+                        $pdf->Ln();
+                        $pdf->SetFont('Arial', 'B', 10);
+                        $pdf->Cell(10, 8, utf8_decode('4.'), 1, 0, 'L', true);
+                        $pdf->Cell(180, 8, utf8_decode("POR QUE CURSAR DISCIPLINA COMO ALUNO ESPECIAL?"), '1', 0, 'J', true);
+        
+                        $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
+        
+                        $pdf->Ln();
+                    } 
+                }
             }
             else
             {
@@ -2258,12 +2273,12 @@ class InscricaoController extends Controller
             {
                 if ($edital->dataFinalEdital->format('m') <= 7)
                 {
-                    $diretorio =  $edital->dataFinalEdital->format('Y').'2';
+                    $diretorio =  $edital->dataFinalEdital->format('Y').'1';
                 }
                 else
                 {
                     $ano       = $edital->dataFinalEdital->format('Y') + 1;
-                    $diretorio = $ano.'1'; 
+                    $diretorio = $ano.'2'; 
                 }
 
                 $requerimento = 'Venho requerer minha inscrição como Aluno Especial, conforme regulamenta os procedimentos publicados na página da Comissão de Pós-graduação (CPG).';
@@ -2544,14 +2559,27 @@ class InscricaoController extends Controller
             $pdf = new Comprovante;
             $requerimento = Inscricao::gerarComprovante($pdf, '', $codigoInscricao);
 
-            $arquivo = Arquivo::create([
-                            'codigoUsuario'         => $inscricao->codigoUsuario,
-                            'codigoTipoDocumento'   => 26,
-                            'linkArquivo'           => "ppgem/comprovante/{$inscricao->numeroInscricao}.pdf",
-                            'codigoPessoaAlteracao' => Auth::user()->codpes,
-            ]);
+            if ($inscricao->codigoEdital == 20)
+            {
+                $arquivo = Arquivo::create([
+                    'codigoUsuario'         => $inscricao->codigoUsuario,
+                    'codigoTipoDocumento'   => 26,
+                    'linkArquivo'           => "ppgem/comprovante/20251/{$inscricao->numeroInscricao}.pdf",
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
 
-            InscricoesArquivos::create([
+            if ($inscricao->codigoEdital == 21)
+            {
+                $arquivo = Arquivo::create([
+                    'codigoUsuario'         => $inscricao->codigoUsuario,
+                    'codigoTipoDocumento'   => 26,
+                    'linkArquivo'           => "ppgpe/comprovante/20251/{$inscricao->numeroInscricao}.pdf",
+                    'codigoPessoaAlteracao' => Auth::user()->codpes,
+                ]);
+            }
+            
+           InscricoesArquivos::create([
                 'codigoInscricao'       => $codigoInscricao,
                 'codigoArquivo'         => $arquivo->codigoArquivo,
                 'codigoPessoaAlteracao' => Auth::user()->codpes,
@@ -2670,13 +2698,21 @@ class InscricaoController extends Controller
 
         if ($edital->codigoCurso == 97004)
         {            
-            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-24 23:59:59')
+            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-30 23:59:59')
             {
                 return redirect("dashboard");
             }
         }
 
-        $disciplinas = Utils::listarOferecimentoPos($edital->codigoCurso, '17/03/2025', '29/06/2025');   
+        if ($edital->codigoCurso == 97005)
+        {
+            if ($data < '2024-12-13 00:00:00' || $data > '2025-01-31 23:59:59')
+            {
+                return redirect("dashboard");
+            }
+        }
+
+        $disciplinas = Utils::listarOferecimentoPos($edital->codigoCurso, '17/03/2025', '29/06/2025');        
 
         return view('inscricao.matricula',
         [
@@ -2693,14 +2729,17 @@ class InscricaoController extends Controller
 
         if ($disciplinas == 0)
         {
-            foreach($request->disciplinasGcub as $disciplina)
+            if (count($request->disciplinasGcub) > 0)
             {
-                $inscricaoDisciplinas = InscricoesDisciplinas::create([
-                    'codigoInscricao'       => $request->codigoInscricao,
-                    'codigoDisciplina'      => $disciplina,
-                    'statusDisciplina'      => 'A',
-                    'codigoPessoaAlteracao' => Auth::user()->codpes,
-                ]);
+                foreach($request->disciplinasGcub as $disciplina)
+                {
+                    $inscricaoDisciplinas = InscricoesDisciplinas::create([
+                        'codigoInscricao'       => $request->codigoInscricao,
+                        'codigoDisciplina'      => $disciplina,
+                        'statusDisciplina'      => 'A',
+                        'codigoPessoaAlteracao' => Auth::user()->codpes,
+                    ]);
+                }               
             }
         }
 
@@ -2713,9 +2752,14 @@ class InscricaoController extends Controller
         {
             $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $request->codigoInscricao);
         }
+
+        if ($edital->codigoCurso == 97005)
+        {
+            $anexo = Inscricao::gerarMatricula($pdf, 'ppgmad', $request->codigoInscricao);
+        }
         
-        //Mail::mailer($edital->codigoCurso)->to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
-        Mail::to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
+        Mail::mailer($edital->codigoCurso)->to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
+        //Mail::to($edital->email)->send(new MatriculaMail($request->codigoInscricao, $anexo));
         
         if (Mail::failures()) 
         {

@@ -64,7 +64,10 @@ class HomeController extends Controller
             }
             else
             {
-                $aprovado = ProcessoSeletivo::obterAprovado();
+                //$pdf   = new \App\Models\Pdf\Matricula;
+                //$anexo = \App\Models\Inscricao::gerarMatricula($pdf, 'ppgpe', 547);
+
+                $aprovado = ProcessoSeletivo::obterAprovado();                                
 
                 if (!empty($aprovado))
                 {

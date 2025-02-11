@@ -34,8 +34,7 @@ class MatriculaMail extends Mailable
         $sigla       = Utils::obterSiglaCurso($edital->codigoCurso);
         $anosemestre = Edital::obterSemestreAno($inscricao->codigoEdital, true);
 
-        return $this->subject("[INSCRIÇÃO EEL/USP] - REQUERIMENTO PRIMEIRA MATRÍCULA {$sigla} - ".Str::upper($edital->descricaoNivel)." - {$anosemestre}")
-                    ->replyTo('ppgem-eel@usp.br', 'PPGEM EEL/USP')                    
+        return $this->subject("[INSCRIÇÃO EEL/USP] - REQUERIMENTO PRIMEIRA MATRÍCULA {$sigla} - ".Str::upper($edital->descricaoNivel)." - {$anosemestre}")                
                     ->attach($this->anexo)
                     ->view('emails.matricula')
                     ->with([

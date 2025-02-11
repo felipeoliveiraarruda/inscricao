@@ -49,6 +49,11 @@
         $("#mostrarEnderecoEmergencia").hide();
         $("#mostraAnoEspecial").hide();
 
+        $("#mostraAnoEspecial").hide();
+
+        $("#exibirRegular").hide();
+        $("#exibirNaoRegular").hide();
+
         $("#success-alert").fadeTo(2000, 500).slideUp(500, function()
         {
             $("#success-alert").slideUp(500);
@@ -544,6 +549,20 @@
             },
           });
         }
+      });
+
+      $("#egressoRegularSim").click(function() 
+      {
+        $("#exibirRegular").show();
+        $("#exibirNaoRegular").hide();
+        $("#egressoAtividade").prop('required', true);
+      });
+
+      $("#egressoRegularNao").click(function() 
+      {
+        $("#exibirRegular").hide();
+        $("#exibirNaoRegular").show();
+        $("#egressoAtividade").prop('required', false);
       });
     })  
 

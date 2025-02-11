@@ -173,12 +173,12 @@ class Edital extends Model
         $disciplina = array();
 
         $editais = Edital::join('niveis', 'editais.codigoNivel', '=', 'niveis.codigoNivel')
-                         ->whereRaw('NOW() BETWEEN editais.dataInicioRecurso AND editais.dataFinalRecurso')
-                         ->get();
+                          ->whereRaw('NOW() BETWEEN editais.dataInicioRecurso AND editais.dataFinalRecurso')
+                          ->get();
 
         foreach($editais as $edital)                         
         {
-           $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '05/08/2024', '17/11/2024', 'S');
+           $temp = Utils::listarOferecimentoPosDocente($edital->codigoCurso, Auth::user()->codpes, '17/03/2025', '29/06/2025', 'S');
 
            if (!empty($temp))
            {

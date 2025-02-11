@@ -26,8 +26,14 @@
 
                         @if ($sigla == 'PPGEM')
                             <p>Para a efetivação da matrícula entre os dias 11 e 13 de fevereiro de 2025, observar a documentação exigida indicada no Edital.</p>
-                        @else ($sigla == 'PPGPE')
+                        @endif                            
+                        
+                        @if ($sigla == 'PPGPE')
                             <p>Para a efetivação da matrícula entre os dias 17 e 19 de fevereiro de 2025, observar a documentação exigida indicada no Edital.</p>
+                        @endif
+                        
+                        @if ($sigla == 'PPGMAD')
+                            <p>Para a efetivação da matrícula entre os dias 04 e 05 de fevereiro de 2025, observar a documentação exigida indicada no Edital.</p>                            
                         @endif
 
                         <p class="text-center">Local: Secretaria da Comissão de Pós-Graduação (CPG) - Área I</p>
@@ -54,8 +60,14 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="disciplinasGcub[]" id="disciplinasGcub{{$disciplina['sgldis']}}" value="{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }}">
                                 <label class="form-check-label" for="disciplinasGcub{{$disciplina['sgldis']}}">
-                                    <p>{{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }} - {{ $turma['diasmnofe'] }} das {{ $turma['horiniofe'] }} as {{ $turma['horfimofe'] }}
-                                        @if ($disciplina['sgldis'] == 'PPE6402') 
+                                    <p>
+                                        @if ($disciplina['sgldis'] == 'PMD5508')
+                                            {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }} - quarta-feira das {{ $turma['horiniofe'] }} as {{ $turma['horfimofe'] }}
+                                        @else
+                                            {{ $disciplina['sgldis'] }}-{{ $disciplina['numseqdis'] }}/{{ $disciplina['numofe'] }} {{ $disciplina['nomdis'] }} - {{ $turma['diasmnofe'] }} das {{ $turma['horiniofe'] }} as {{ $turma['horfimofe'] }}
+                                        @endif
+                                        
+                                        @if ($disciplina['sgldis'] == 'PPE6402' && $sigla == 'PPGPE') 
                                         Disciplina obrigatória para alunos que ainda não cursaram
                                         @endif
                                     </p>
