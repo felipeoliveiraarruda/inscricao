@@ -89,6 +89,16 @@ return [
             'auth_mode' => null,
         ],
 
+        'cpq' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_CPQ_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_CPQ_PORT', 587),
+            'encryption' => env('MAIL_CPQ_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_CPQ_USERNAME'),
+            'password' => env('MAIL_CPQ_PASSWORD'),
+            'timeout' => null,
+            'auth_mode' => null,
+        ],
         'ses' => [
             'transport' => 'ses',
         ],

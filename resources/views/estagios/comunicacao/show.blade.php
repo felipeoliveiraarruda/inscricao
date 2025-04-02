@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-3">
             <div class="list-group">
-                <a href="{{ url('/') }}" class="list-group-item list-group-item-action">Home</a>
+                <a href="{{ url('/estagios/comunicacao/listar') }}" class="list-group-item list-group-item-action">Voltar</a>
             </div>
         </div>
 
@@ -217,7 +217,15 @@
                             <div class="card bg-default">
                                 <h5 class="card-header">Currículo</h5>
                 
-                                <div class="card-body"></div>
+                                <div class="card-body">
+                                    @if ($estagio->curriculoEstagio != '')
+                                    <a href="{{ asset('storage/'.$estagio->curriculoEstagio) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                        <i class="far fa-eye"></i> Visualizar
+                                    </a>
+                                    @else
+                                        -
+                                    @endif  
+                                </div>
                             </div>
                         </div>
                     
@@ -225,7 +233,15 @@
                             <div class="card bg-default">
                                 <h5 class="card-header">Trabalho(s)</h5>
                 
-                                <div class="card-body"></div>
+                                <div class="card-body">
+                                    @if ($estagio->trabalhoEstagio != '')
+                                    <a href="{{ asset('storage/'.$estagio->trabalhoEstagio) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" title="Visualizar">
+                                        <i class="far fa-eye"></i> Visualizar
+                                    </a>
+                                    @else
+                                        -
+                                    @endif  
+                                </div>
                             </div>
                         </div>
                     </div>
