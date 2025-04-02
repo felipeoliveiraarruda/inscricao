@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Models\Edital;
 use App\Models\Utils;
 use App\Models\Inscricao;
@@ -23,14 +24,21 @@ class ImpressaoController extends Controller
     public function primeira_matricula($codigoInscricao, \App\Models\Pdf\Matricula $pdf)
     {
         $edital = Edital::obterEditalInscricao($codigoInscricao);
+        $anexo = '';
 
         if ($edital->codigoCurso == 97002)
         {
-            $anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $codigoInscricao);
+            Inscricao::gerarMatricula($pdf, 'ppgem', $codigoInscricao);
+            //$anexo = Inscricao::gerarMatricula($pdf, 'ppgem', $codigoInscricao);
         }
+
+        /*if ($edital->codigoCurso == 97004)
+        {
+            $anexo = Inscricao::gerarMatricula($pdf, 'ppgpe', $codigoInscricao);
+        }*/
         
-        Mail::to($edital->email)->send(new MatriculaMail($codigoInscricao, $anexo));
-        //Mail::to('dev.ci.eel@usp.br')->send(new MatriculaMail($codigoInscricao, $anexo));
+        //Mail::to($edital->email)->send(new MatriculaMail($codigoInscricao, $anexo));
+        /*Mail::to('dev.ci.eel@usp.br')->send(new MatriculaMail($codigoInscricao, $anexo));
         
         if (Mail::failures()) 
         {
@@ -39,9 +47,26 @@ class ImpressaoController extends Controller
         else
         {
             request()->session()->flash('alert-success', 'Requerimento de Primeira Matrícula cadastrado com sucesso. Aguarde informações no seu e-mail cadastrado.'); 
-        } 
+        }
     
-        return redirect('dashboard');
+        return redirect('dashboard');*/
+    }
+
+    public function gerar_primeira_matricula($codigoEdital)
+    {
+        $deferidos = DB::table('VW_DEFERIMENTOS')
+                       ->where('codigoEdital', $codigoEdital)
+                       ->where('statusInscricao', 'C')
+                       ->where('statusDisciplina', 'D')
+                       ->orderByRaw('codigoDisciplina, name')
+                       ->get();
+
+        foreach($deferidos as $deferido)
+        {
+            $pdf = new \App\Models\Pdf\Matricula;
+            ImpressaoController::primeira_matricula($deferido->codigoInscricao, $pdf);
+        }
+
     }
 
     public function declaracao_acumulos($codigoInscricao, \App\Models\Pdf\DeclaracaoAcumulo $pdf)
@@ -53,29 +78,35 @@ class ImpressaoController extends Controller
         
         $matricula = $dados->codpes;
         
-        if ($codigoInscricao == 211)
+        if ($codigoInscricao == 402)
         {
-            $matricula = 11268500;
+            $matricula = 11797532;
         }
 
-        if ($codigoInscricao == 213)
+        if ($codigoInscricao == 519)
         {
-            $matricula = 15622381;
+            $matricula = 11014211;
         }
 
-        if ($codigoInscricao == 244)
+        if ($codigoInscricao == 569)
         {
-            $matricula = 11294674;
+            $matricula = 16912942;
         }
 
-        if ($codigoInscricao == 272)
+        if ($codigoInscricao == 567)
         {
-            $matricula = 16263622;
+            $matricula = 16912935;
         }
 
-        if ($nivel == 'ME')
+
+        if ($nivel == 'ME' || $nivel == 'MF')
         {
             $nivel = 'Mestrado';
+        }
+
+        if ($nivel == 'DD')
+        {
+            $nivel = 'Doutorado';
         }
 
         $pdf->SetStyle('p', 'arial', 'N', 10, '0,0,0');
@@ -96,7 +127,7 @@ class ImpressaoController extends Controller
         $pdf->Cell(190, 8, '', 0, 0, "C");
         $pdf->Ln(10);
 
-        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula {$matricula}, em nível de {$nivel}, em atenção à Portaria no 133, de 10 de julho de 2023, informo que possuo vínculo empregatício ou outros rendimentos, conforme declarado abaixo:";
+        $texto = "Declaro, para os devidos fins, que eu, {$dados->name}, CPF {$dados->cpf}, aluno (a) devidamente matriculado (a) na Escola de Engenharia de Lorena no Programa de Pós-Graduação {$curso['nomcur']} sob o número de matrícula {$matricula}, em nível de {$nivel}, em atenção à Portaria no 133, de 10 de julho de 2023, informo que possuo vínculo empregatício ou outros rendimentos, conforme declarado abaixo:";        
             
         $pdf->SetFont('Times', '', 12);
         $pdf->MultiCell(190, 8, utf8_decode($texto), 0, 'J'); 
@@ -250,29 +281,34 @@ class ImpressaoController extends Controller
 
         $matricula = $dados->codpes;
         
-        if ($codigoInscricao == 211)
+        if ($codigoInscricao == 402)
         {
-            $matricula = 11268500;
+            $matricula = 11797532;
         }
 
-        if ($codigoInscricao == 213)
+        if ($codigoInscricao == 519)
         {
-            $matricula = 15622381;
+            $matricula = 11014211;
         }
 
-        if ($codigoInscricao == 244)
+        if ($codigoInscricao == 569)
         {
-            $matricula = 11294674;
+            $matricula = 16912942;
         }
 
-        if ($codigoInscricao == 272)
+        if ($codigoInscricao == 567)
         {
-            $matricula = 16263622;
+            $matricula = 16912935;
         }
 
-        if ($nivel == 'ME')
+        if ($nivel == 'ME' || $nivel == 'MF')
         {
             $nivel = 'Mestrado';
+        }
+
+        if ($nivel == 'DD')
+        {
+            $nivel = 'Doutorado';
         }
 
         $pdf->setCabecalho('capes');
@@ -321,7 +357,9 @@ class ImpressaoController extends Controller
 
     public function cadastamento_bolsista(\App\Models\Pdf\Bolsista $pdf, $codigoInscricao)
     {
-        $inscricao = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $inscricao    = Inscricao::obterDadosPessoaisInscricao($codigoInscricao);
+        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
+        $edital       = Edital::obterEditalInscricao($codigoEdital);
       
         $pdf->setCabecalho('bolsista');
 
@@ -359,13 +397,28 @@ class ImpressaoController extends Controller
         $mestrado = '';
         $doutorado = 'X';
 
-        /*if ($dados->tipoNivel = 'Mestrado')
+        /*if ($edital->codigoNivel == 4)
         {
             $mestrado = 'X';
+            $doutorado = '';
+            echo 'Mestrado';
+            exit;
         }
-        else if ($dados->tipoNivel == 'Doutorado')
+
+        if ($edital->codigoNivel == 2)
         {
+            $mestrado = '';
             $doutorado = 'X';
+            echo 'Doutorado';
+            exit;
+        }
+        
+        if ($edital->codigoNivel == 3)
+        {
+            $mestrado = '';
+            $doutorado = 'X';
+            echo 'Doutorado Fluxo';
+            exit;
         }*/
 
         $pdf->Cell(46, 11, '', 0, 0, 'C');
@@ -417,11 +470,13 @@ class ImpressaoController extends Controller
         {
             $nacional = 'X';
             $visto    = '';
+            $passaporte  = '';
         }
         else
         {
             $estrangeiro = 'X';
-            $visto       = 'X';
+            $visto       = '';
+            $passaporte  = $inscricao->numeroDocumento;
         }
 
         $nacionalidade = Utils::obterPais($inscricao->paisPessoal);
@@ -438,10 +493,10 @@ class ImpressaoController extends Controller
         $pdf->Cell(5, 9, utf8_decode($visto), 0, 0, 'C');
         $pdf->Cell(9, 9, '', 0, 0, 'C');
         $pdf->Cell(5, 9, '', 0, 0, 'L');
-        $pdf->Cell(29, 9, '', 0, 0, 'C');
+        $pdf->Cell(30, 9, '', 0, 0, 'C');
         
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(29, 9, '', 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(28, 9, $passaporte, 0, 0, 'L');
         
         $pdf->SetFont('Arial', '', 10);
 
@@ -618,7 +673,7 @@ class ImpressaoController extends Controller
             $maior = $resumo[0]->tipoResumoEscolar;
         }
 
-        $maior = 'Mestrado';
+        //$maior = 'Mestrado';
 
         $pdf->Cell(190, 5, '', 0, 0, 'C');
         $pdf->Ln();
@@ -626,8 +681,10 @@ class ImpressaoController extends Controller
         $pdf->Cell(78, 6, '', 0, 0, 'L');
         $pdf->Cell(58, 6, utf8_decode($maior), 0, 0, 'L');
         $pdf->Cell(27, 6, '', 0, 0, 'L');
-        //$pdf->Cell(18, 6, utf8_decode($resumo[0]->finalResumoEscolar->format('Y')), 0, 0, 'L');
-        $pdf->Cell(18, 6, utf8_decode('2024'), 0, 0, 'L');
+
+        
+        $pdf->Cell(18, 6, utf8_decode($resumo[0]->finalResumoEscolar->format('Y')), 0, 0, 'L');
+        //$pdf->Cell(18, 6, utf8_decode('2024'), 0, 0, 'L');
         $pdf->Cell(9, 6, '', 0, 0, 'L');
         $pdf->Ln();
 
@@ -642,6 +699,7 @@ class ImpressaoController extends Controller
 
         if ($tamanho > 75)
         {
+            $pdf->SetFont('Arial', '', 8);
             $resto = $tamanho - 75;
 
             $parte1 = Str::substr($resumo[0]->escolaResumoEscolar, 0, 75);
@@ -649,10 +707,12 @@ class ImpressaoController extends Controller
         }
         else
         {
+            $pdf->SetFont('Arial', '', 10);
             $parte1 = $resumo[0]->escolaResumoEscolar;
             $parte2 = '';
         }
 
+        
         /* Até 75 caractecres */
         $pdf->Cell(59, 5, '', 0, 0, 'L');
         $pdf->Cell(122, 5, utf8_decode($parte1), 0, 0, 'L');
@@ -666,6 +726,7 @@ class ImpressaoController extends Controller
         $pdf->Cell(54, 5, utf8_decode($paisTitulacao['nompas']), 0, 0, 'L');
         $pdf->Ln();
 
+        $pdf->SetFont('Arial', '', 10);
         /* Dados Financeiros */
         $pdf->Cell(190, 4, '', 0, 0, 'C');
         $pdf->Ln();
@@ -691,10 +752,32 @@ class ImpressaoController extends Controller
         $pdf->Cell(54, 5, utf8_decode($financeiro->localRecursoFinanceiro), 0, 0, 'L');
         $pdf->Cell(50, 5, utf8_decode($financeiro->agenciaRecursoFinanceiro), 0, 0, 'L');
         $pdf->Cell(40, 5, utf8_decode($financeiro->contaRecursoFinanceiro), 0, 0, 'L');
+
+        /*$pdf->Cell(54, 5, utf8_decode('Lorena/SP'), 0, 0, 'L');
+        $pdf->Cell(50, 5, utf8_decode('0857-5'), 0, 0, 'L');
+        $pdf->Cell(40, 5, utf8_decode('62821-2'), 0, 0, 'L');*/
         $pdf->Ln();
 
+         /* Marcar Mestrado/24 meses */
+        $pdf->Cell(190, 5.5, '', 0, 0, 'C');
+        $pdf->Ln();
+
+        $pdf->Cell(92, 6, '', 0, 0, 'C');
+        $pdf->Cell(23, 6, utf8_decode('03/2025'), 0, 0, 'L');
+        $pdf->Cell(44, 6, '', 0, 0, 'L');
+        $pdf->Cell(31, 6, utf8_decode('03/2025'), 0, 0, 'L');
+        $pdf->Ln();
+
+        $pdf->Cell(190, 1.5, '', 0, 0, 'C');
+        $pdf->Ln();
+
+        $pdf->Cell(92, 6, '', 0, 0, 'C');
+        $pdf->Cell(98, 6, utf8_decode('24 meses'), 0, 0, 'L');
+        $pdf->Ln();
+
+
         /* Marcar Mestrado/24 meses */
-        $pdf->Cell(190, 26.5, '', 0, 0, 'C');
+        $pdf->Cell(190, 7.5, '', 0, 0, 'C');
         $pdf->Ln();
 
         $pdf->Cell(33, 6, '', 0, 0, 'C');

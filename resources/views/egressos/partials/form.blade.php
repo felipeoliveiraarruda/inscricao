@@ -45,7 +45,7 @@
 	</div>
 
 	<div class="form-group">
-		<label for="egressoLocal" class="font-weight-bold">Local e atividade de atuação no momento</label>
+		<label for="egressoLocal" class="font-weight-bold">Instituição/Empresa e Atividade de Atuação</label>
 		<input type="text" class="form-control" id="egressoLocal" name="egressoLocal" value="{{ old('egressoLocal') }}" >
 	</div>
 

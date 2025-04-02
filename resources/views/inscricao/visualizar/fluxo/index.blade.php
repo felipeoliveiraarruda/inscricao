@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 9 && $total >= 10 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['especial'] >= 12 && $total >= 11 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td>4.2 Ficha de Inscrição            
-                @if (Session::get('total')['especial'] >= 9 && $total >= 10)     
+                @if (Session::get('total')['especial'] >= 12 && $total >= 11)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @endif
             </td>   
@@ -92,7 +92,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['especial'] >= 6 && $total >= 10) 
+                    @if (Session::get('total')['especial'] >= 12 && $total >= 11) 
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -212,7 +212,7 @@
             </td>
         </tr>
         <tr>
-            <td>4.3d) Passaporte</td> 
+            <td>4.3d) Passaporte (Todas as folhas de identificação)</td> 
             <td class="text-center">
                 @if(!empty($passaporte->codigoArquivo))
                     <i class="fa fa-check text-success"></i>

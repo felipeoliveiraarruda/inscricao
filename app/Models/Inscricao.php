@@ -355,9 +355,9 @@ class Inscricao extends Model
     public static function obterFinanceiroInscricao($codigoInscricao)
     {
         $financeiro = RecursoFinanceiro::select(\DB::raw('inscricoes.codigoEdital, inscricoes.statusInscricao, recursos_financeiros.*, users.*, inscricoes_recursos_financeiros.codigoInscricaoRecursoFinanceiro'))                                       
-                                       ->rightJoin('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                     
-                                       ->rightJoin('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                                           
-                                       ->leftJoin('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoInscricao', '=', 'inscricoes.codigoInscricao')
+                                       ->join('users', 'users.id', '=', 'recursos_financeiros.codigoUsuario')                     
+                                       ->join('inscricoes', 'users.id', '=', 'inscricoes.codigoUsuario')                                                                           
+                                       ->join('inscricoes_recursos_financeiros', 'inscricoes_recursos_financeiros.codigoInscricao', '=', 'inscricoes.codigoInscricao')
                                        ->where('inscricoes.codigoInscricao', $codigoInscricao)
                                        ->first();
                                        
@@ -534,17 +534,19 @@ class Inscricao extends Model
 
         if ($tipo == 'ppgem')
         {
-            if ($nivel == 'ME' || $nivel == 'DD')
-            {
-                if (empty($dados->numeroRG))
-                {
-                    $documento = $dados->numeroDocumento;
-                }
-                else
-                {
-                    $documento = $dados->numeroRG;
-                }
+            $coordenador = 'Prof. Dr. Clodoaldo Saron';
 
+            if (empty($dados->numeroRG))
+            {
+                $documento = $dados->numeroDocumento;
+            }
+            else
+            {
+                $documento = $dados->numeroRG;
+            }
+
+            if ($nivel == 'ME' || $nivel == 'DD' || $nivel == 'MF')
+            {
                 if ($edital->dataDoeEdital->format('m') < 7)
                 {
                     //$diretorio = $edital->dataDoeEdital->format('Y').'2/mestrado';
@@ -557,7 +559,7 @@ class Inscricao extends Model
                     $diretorio = $ano.'1'; 
                 }
 
-                $texto = "<p>Eu, {$dados->name}, RG {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <bu>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+                $texto = "<p>Eu, {$dados->name}, {$dados->tipoDocumento} {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <bu>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
 
                 $pdf->SetFont('Arial','B', 16);
                 $pdf->SetFillColor(190,190,190);
@@ -579,7 +581,7 @@ class Inscricao extends Model
                     $semestre  = '2º Semestre de '.$ano;
                 }
                 
-                $texto = "<p>Eu, {$dados->name}, RG {$dados->numeroRG}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Engenharia de Materiais</p>";
+                $texto = "<p>Eu, ".trim($dados->name).", {$dados->tipoDocumento} {$documento}, e-mail {$dados->email}, residente à {$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco} {$endereco->bairroEndereco}, na cidade de {$endereco->localidadeEndereco}/{$endereco->ufEndereco}, CEP {$endereco->cepEndereco}, telefone {$dados->telefone}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>ESPECIAL</b>, no <b>{$semestre}</b> do Programa de Pós-Graduação em Engenharia de Materiais</p>";
 
                 $pdf->SetFont('Arial','B', 16);
                 $pdf->SetFillColor(190,190,190);
@@ -590,6 +592,8 @@ class Inscricao extends Model
 
         if ($tipo == 'ppgpe')
         {
+            $coordenador = 'Prof. Dr. Carlos Alberto Moreira dos Santos';
+
             if (empty($dados->numeroRG))
             {
                 $documento = $dados->numeroDocumento;
@@ -701,7 +705,7 @@ class Inscricao extends Model
         $pdf->WriteTag(190,8, utf8_decode($texto), 0, 'J');
         $pdf->Ln(5);
 
-        if ($nivel == 'ME' || $nivel == 'DD')
+        if ($nivel == 'ME' || $nivel == 'DD' || $nivel == 'MF')
         { 
             $disciplinas = Inscricao::obterDisciplinaInscricao($codigoInscricao);
 
@@ -752,7 +756,8 @@ class Inscricao extends Model
             $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);*/
             
             $pdf->SetFont('Arial', '', 12);
-            $pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+            //$pdf->Cell(75,  5, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+            $pdf->Cell(75,  5, utf8_decode('Prof. Dr. Clodoaldo Saron'), 0, 0, 'C', false);
             $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
             $pdf->Cell(75,  5, utf8_decode('"OAc"'), 0, 0, 'C', false);
             $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
@@ -826,13 +831,15 @@ class Inscricao extends Model
             $pdf->Ln();*/
 
             $sigla   = Str::lower($sigla);
-            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
-            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf";
+            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/".trim($dados->name).".pdf");
+            $nome    = "{$sigla}/{$diretorio}/matricula/".trim($dados->name).".pdf";
     
-            if (!file_exists($arquivo))
+            /*if (!file_exists($arquivo))
             {
                 $pdf->Output('F', $arquivo);
-            }
+            }*/
+
+            $pdf->Output();
     
             return $arquivo;
         }
@@ -852,12 +859,23 @@ class Inscricao extends Model
 
             foreach($disciplinas as $disciplina)
             {   
-                $temp = Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '05/08/2024', '30/11/2024');                
+                $temp = Utils::obterOferecimentoPos($disciplina->codigoDisciplina, '17/03/2025', '29/06/2025');                
                 $docente = User::where('codpes', $disciplina->codigoPessoaDeferimento)->first();
+
+                $pdf->Cell(25, 8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}/{$temp['numofe']}"), 1, 0, 'C', false);
+                $pdf->CellFitScale(90, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
+                $pdf->Cell(75, 8, utf8_decode($docente->name), 1, 0, 'C', false);
                 
-                $pdf->Cell(25,  8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}/{$temp['numofe']}"), 1, 0, 'C', false);
-                $pdf->Cell(90, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
+                /*$pdf->Cell(25,  8, utf8_decode("{$temp['sgldis']}-{$temp['numseqdis']}/{$temp['numofe']}"), 1, 0, 'C', false);
+                $pdf->CellFitScale(90, 8, utf8_decode($temp['nomdis']), 1, 0, 'L', false);
                 $pdf->Cell(75,  8, utf8_decode($docente->name), 1, 0, 'C', false);
+
+
+                    
+                $pdf->Cell(40,  8, utf8_decode("{$disciplina->codigoDisciplina}"), 1, 0, 'C', false);
+                $pdf->CellFitScale(110, 8, utf8_decode(" {$temp['nomdis']}"), 1, 0, 'L', false);
+                $pdf->Cell(40,  8, utf8_decode(" {$temp['numcretotdis']}"), 1, 0, 'C', false);*/
+
                 $pdf->Ln();  
             }
 
@@ -906,7 +924,7 @@ class Inscricao extends Model
             
             $pdf->SetFont('Arial', '', 12);
             $pdf->Cell(56, 8, '', 0, 0, 'L', false);
-            $pdf->Cell(75, 8, '', 'B', 0, 'C', false);            
+            $pdf->Cell(75, 8, utf8_decode($coordenador), 'B', 0, 'C', false);            
             $pdf->Cell(54, 8, '', 0, 0, 'L', false);
             $pdf->Ln();  
 
@@ -917,16 +935,18 @@ class Inscricao extends Model
             $pdf->Ln(); 
             $pdf->Ln();
     
-            /*$sigla   = Str::lower($sigla);
-            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf");
-            $nome    = "{$sigla}/{$diretorio}/matricula/{$dados->name}.pdf";
+            $sigla   = Str::lower($sigla);
+            $arquivo = storage_path("app/public/{$sigla}/{$diretorio}/matricula/".trim($dados->name).".pdf");
+            $nome    = "{$sigla}/{$diretorio}/matricula/".trim($dados->name).".pdf";
     
-            if (!file_exists($arquivo))
+            /*if (!file_exists($arquivo))
             {
                 $pdf->Output('F', $arquivo);
             }*/
 
             $pdf->Output();
+
+            return $arquivo;
         }
     }
 

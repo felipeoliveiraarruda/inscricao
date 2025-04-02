@@ -24,7 +24,7 @@
                             <tr>    
                                 <th scope="col">Ex-aluno PPGEM?</th>
                                 <th scope="col">Nível</th>
-                                <th scope="col">Local e Atividade de Atuação</th>
+                                <th scope="col">Instituição/Empresa e Atividade de Atuação</th>
                                 <th scope="col">Atividade relacionada com a formação acadêmica</th>
                             </tr>
                         </thead>

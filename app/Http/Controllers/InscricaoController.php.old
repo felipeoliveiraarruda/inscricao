@@ -269,7 +269,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Inscrições Encerradas';
+            $item['story'] = 'InscriÃ§Ãµes Encerradas';
 
             return view('components.modal',
             [
@@ -739,20 +739,19 @@ class InscricaoController extends Controller
 
     public function financeiro($codigoInscricao)
     {         
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
         $inscricao = Inscricao::obterFinanceiroInscricao($codigoInscricao);
       
         Utils::obterTotalInscricao($codigoInscricao);
         $total = Utils::obterTotalArquivos($codigoInscricao, array(27, 28, 1, 2, 4, 3, 29, 30, 9, 31, 32, 33, 34, 35, 36, 37, 38));;
 
-        $voltar = "inscricao/{$codigoEdital}/financeiro";
+        $voltar = "inscricao/{$inscricao->codigoEdital}/financeiro";
 
         $status = Inscricao::obterStatusInscricao($codigoInscricao);
     
         return view('financeiro',
         [
             'codigoInscricao'   => $codigoInscricao,
-            'codigoEdital'      => $codigoEdital,
+            'codigoEdital'      => $inscricao->codigoEdital,
             'link_voltar'       => $voltar,
             'financeiros'       => $inscricao,
             'nivel'             => session(['nivel']),
@@ -764,7 +763,6 @@ class InscricaoController extends Controller
     public function financeiro_create($codigoInscricao)
     {
         $inscricao = Inscricao::obterFinanceiroInscricao($codigoInscricao);
-        $codigoEdital = Inscricao::obterEditalInscricao($codigoInscricao);
 
         $status    = Inscricao::obterStatusInscricao($codigoInscricao);
         $edital    = Inscricao::obterEditalInscricao($codigoInscricao);
@@ -779,7 +777,7 @@ class InscricaoController extends Controller
         return view('inscricao.financeiro',
         [
             'codigoInscricao'   => $codigoInscricao, 
-            'codigoEdital'      => $codigoEdital,
+            'codigoEdital'      => $inscricao->codigoEdital,
             'financeiros'       => $inscricao,
             'status'            => $status, 
             'resumo'            => $resumo,
@@ -801,7 +799,7 @@ class InscricaoController extends Controller
         {            
             if ($inscricao->codigoEdital == 22)
             {
-                $titulo = 'Carta de Motivação';
+                $titulo = 'Carta de MotivaÃ§Ã£o';
             }
             else
             {
@@ -810,7 +808,7 @@ class InscricaoController extends Controller
         }
         else
         {
-            $titulo = 'Quais as suas expectativas com relação ao curso?';
+            $titulo = 'Quais as suas expectativas com relaÃ§Ã£o ao curso?';
         }
 
         $status = Inscricao::obterStatusInscricao($codigoInscricao);
@@ -846,7 +844,7 @@ class InscricaoController extends Controller
         {
             if ($inscricao->codigoEdital == 22)
             {
-                $titulo = 'Carta de Motivação';
+                $titulo = 'Carta de MotivaÃ§Ã£o';
             }
             else
             {
@@ -855,7 +853,7 @@ class InscricaoController extends Controller
         }
         else
         {
-            $titulo = 'Quais as suas expectativas com relação ao curso?';
+            $titulo = 'Quais as suas expectativas com relaÃ§Ã£o ao curso?';
         }
       
         Utils::obterTotalInscricao($codigoInscricao);
@@ -958,7 +956,7 @@ class InscricaoController extends Controller
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
-        request()->session()->flash('alert-success', 'Currículo cadastrado com sucesso');    
+        request()->session()->flash('alert-success', 'CurrÃ­culo cadastrado com sucesso');    
         $voltar = "inscricao/{$request->codigoInscricao}/curriculo";
 
         return redirect($voltar); 
@@ -1032,7 +1030,7 @@ class InscricaoController extends Controller
             'codigoPessoaAlteracao' => Auth::user()->codpes,
         ]);
 
-        request()->session()->flash('alert-success', 'Pré-projeto cadastrado com sucesso');    
+        request()->session()->flash('alert-success', 'PrÃ©-projeto cadastrado com sucesso');    
         $voltar = "inscricao/{$request->codigoInscricao}/pre-projeto";
 
         return redirect($voltar); 
@@ -1231,7 +1229,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Inscricão Encerrada';
+            $item['story'] = 'InscricÃ£o Encerrada';
 
             return view('components.modal',
             [
@@ -1258,7 +1256,7 @@ class InscricaoController extends Controller
         $pdf->Ln(2);
 
         $pdf->SetFont('Arial','B', 10);    
-        $pdf->Cell(140, 8, utf8_decode('NÚMERO DE INSCRIÇÃO'), 1, 0, 'R', true);
+        $pdf->Cell(140, 8, utf8_decode('NÃMERO DE INSCRIÃÃO'), 1, 0, 'R', true);
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetFillColor(255,255,255);
         $pdf->Cell(50, 8, $pessoais->numeroInscricao . ' - '.$anosemestre, 1, 0, 'L', true);
@@ -1301,38 +1299,22 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(45, 8, utf8_decode($pessoais->estadoCivilPessoal), 0,  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(32, 8, utf8_decode('Nº Dependente(s):'), 0,  0, 'L', false);
+            $pdf->Cell(32, 8, utf8_decode('NÂº Dependente(s):'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(5, 8, utf8_decode($pessoais->dependentePessoal), 0,  0, 'L', false);*/
             $eixoy = $eixoy + 8;   
 
             $pdf->SetY($eixoy);
             $pdf->SetFont('Arial', 'B', 10);
-
-            if ($pessoais->paisPessoal == 1)
-            {
-                $pdf->Cell(12, 8, utf8_decode('CPF:'), 'L', 0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(25, 8, $pessoais->cpf, 0, 0, 'L', false);
-
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 0,  0, 'L', false);    
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
-                $eixoy = $eixoy + 8;
-            }
-            else
-            {
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 'L',  0, 'L', false);    
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
-
-                $pdf->Cell(22, 8, utf8_decode(''), 0, 0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(20, 8, '', 0, 0, 'L', false);
-                $eixoy = $eixoy + 8;
-            }
+            $pdf->Cell(12, 8, utf8_decode('CPF:'), 'L', 0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(25, 8, $pessoais->cpf, 0, 0, 'L', false);
+            
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(37, 8, utf8_decode('Data de Nascimento:'), 0,  0, 'L', false);    
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, $pessoais->dataNascimentoPessoal->format('d/m/Y'), 0,  0, 'L', false);
+            $eixoy = $eixoy + 8;
 
             $pais = Utils::obterPais($pessoais->paisPessoal);
             $localidade = Utils::obterLocalidade($pessoais->naturalidadePessoal);
@@ -1343,47 +1325,25 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 0,  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 0,  0, 'L', false);
+            $pdf->Cell(23, 8, utf8_decode('Estado/PaÃ­s:'), 0,  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
-            $pdf->Cell(40, 8, utf8_decode("{$localidade['sglest']}/{$pais['nompas']}"), 0,  0, 'L', false);
+            $pdf->Cell(40, 8, "{$localidade['sglest']}/{$pais['nompas']}", 0,  0, 'L', false);
             $eixoy = $eixoy + 8;
-
-            if ($pessoais->paisPessoal == 1)
-            {            
-                $pdf->SetY($eixoy);
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(20, 8, utf8_decode('Identidade:'), 'L',  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(25, 8, $pessoais->numeroDocumento, 0,  0, '', false);
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(31, 8, utf8_decode('Data de Emissão:'), 0,  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(20, 8, $pessoais->dataEmissaoRG, 0,  0, 'L', false);
-                $pdf->SetFont('Arial', 'B', 10);
-                /*$pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);*/
-                $eixoy = $eixoy + 8;
-            }
-            else
-            {
-                $carbon = new Carbon($pessoais->dataEmissaoRG);
-
-                $pdf->SetY($eixoy);
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(21, 8, utf8_decode($pessoais->tipoDocumento).':', 'L',  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(25, 8, $pessoais->numeroDocumento, 0,  0, '', false);
-                $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(30, 8, utf8_decode('Data de Emissão:'), 0,  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(20, 8, $carbon->format('d/m/Y'), 0,  0, 'L', false);
-                $pdf->SetFont('Arial', 'B', 10);
-                /*$pdf->Cell(28, 8, utf8_decode('Orgão Emissor:'), 0,  0, 'L', false);
-                $pdf->SetFont('Arial', '', 10);
-                $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);*/
-                $eixoy = $eixoy + 8;
-            }
+            
+            $pdf->SetY($eixoy);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(20, 8, utf8_decode('Identidade:'), 'L',  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(25, 8, $pessoais->numeroDocumento, 0,  0, '', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(31, 8, utf8_decode('Data de EmissÃ£o:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(20, 8, $pessoais->dataEmissaoRG, 0,  0, 'L', false);
+            $pdf->SetFont('Arial', 'B', 10);
+            /*$pdf->Cell(28, 8, utf8_decode('OrgÃ£o Emissor:'), 0,  0, 'L', false);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->Cell(50, 8, $pessoais->orgaoEmissorRG, 0,  0, 'L', false);*/
+            $eixoy = $eixoy + 8;
 
             if ($pessoais->especialPessoal == 'S')
             {
@@ -1392,18 +1352,18 @@ class InscricaoController extends Controller
             }
             else
             {
-                $necessidades = utf8_decode('Não');
+                $necessidades = utf8_decode('NÃ£o');
             }
 
             $pdf->SetY($eixoy);
             $pdf->Cell(140, 2, '', 'LB',  0, 'L', false);
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
+            $pdf->Cell(20, 8, utf8_decode('RaÃ§a/Cor:'), 'LB',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
             $pdf->SetFont('Arial', 'B', 10);        
-            $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
+            $pdf->Cell(70, 8, utf8_decode('Ã portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
             
@@ -1423,7 +1383,7 @@ class InscricaoController extends Controller
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(100, 8, $pessoais->email, 'BR',  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(25, 8, utf8_decode('Número USP:'), 'LB',  0, 'L', false);
+                $pdf->Cell(25, 8, utf8_decode('NÃºmero USP:'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(52, 8, $pessoais->codpes, 'BR',  0, 'L', false);
             }
@@ -1432,7 +1392,7 @@ class InscricaoController extends Controller
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->Cell(18, 8, utf8_decode('EndereÃ§o:'), 'LB',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(172, 8, utf8_decode("{$enderecos->logradouroEndereco}, {$enderecos->numeroEndereco} {$enderecos->complementoEndereco}"), 'BR',  0, 'L', false);
 
@@ -1470,12 +1430,12 @@ class InscricaoController extends Controller
                 }
                 else
                 {
-                    $cursou = utf8_decode('Não');
+                    $cursou = utf8_decode('NÃ£o');
                 }
 
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
+                $pdf->Cell(80, 8, utf8_decode('JÃ¡ cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
             }
@@ -1483,7 +1443,7 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont("Arial","B", 10);
             $pdf->Cell(10, 8, utf8_decode("2."), 1, 0, "L", true);
-            $pdf->Cell(180, 8, utf8_decode("PESSOA A SER NOTIFICADA EM CASO DE EMERGÊNCIA:"), "1", 0, "J", true);
+            $pdf->Cell(180, 8, utf8_decode("PESSOA A SER NOTIFICADA EM CASO DE EMERGÃNCIA:"), "1", 0, "J", true);
 
             $emergencias = Inscricao::obterEmergenciaInscricao($codigoInscricao);
             $endereco = Endereco::find($emergencias->codigoEmergenciaEndereco);
@@ -1496,7 +1456,7 @@ class InscricaoController extends Controller
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->Cell(18, 8, utf8_decode('EndereÃ§o:'), 'LB',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(172, 8, utf8_decode("{$endereco->logradouroEndereco}, {$endereco->numeroEndereco} {$endereco->complementoEndereco}"), 'BR',  0, 'L', false);
 
@@ -1532,8 +1492,8 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
-            $pdf->Cell(70, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
-            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('TÃTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
+            $pdf->Cell(25, 8, utf8_decode('INÃCIO'), 1, 0, 'C', false);
             $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
             
             $pdf->SetFont('Arial', '', 10);
@@ -1566,8 +1526,8 @@ class InscricaoController extends Controller
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('IDIOMA'), 1, 0, 'C', false);
             $pdf->Cell(40, 8, utf8_decode('LEITURA'), 1, 0, 'C', false);
-            $pdf->Cell(40, 8, utf8_decode('REDAÇÃO'), 1, 0, 'C', false);
-            $pdf->Cell(40, 8, utf8_decode('CONVERSAÇÃO'), 1, 0, 'C', false);
+            $pdf->Cell(40, 8, utf8_decode('REDAÃÃO'), 1, 0, 'C', false);
+            $pdf->Cell(40, 8, utf8_decode('CONVERSAÃÃO'), 1, 0, 'C', false);
 
             $idiomas = Inscricao::obterIdiomaInscricao($codigoInscricao);
 
@@ -1584,21 +1544,19 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(10, 8, utf8_decode('5.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA PROFISSIONAL'), '1', 0, 'J', true);
+            $pdf->Cell(180, 8, utf8_decode('EXPERIÃNCIA PROFISSIONAL'), '1', 0, 'J', true);
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
-            $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
-            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('POSIÃÃO OCUPADA'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('INÃCIO'), 1, 0, 'C', false);
             $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);            
             $pdf->SetFont('Arial', '', 10);
 
             $profissionais = Inscricao::obterProfissionalInscricao($codigoInscricao);
 
-            //dd($profissionais);
-
-            if (!empty($profissionais))
+            if (!empty($profissionais->codigoExperiencia))
             {
                 foreach($profissionais as $profissional)
                 {   
@@ -1621,13 +1579,13 @@ class InscricaoController extends Controller
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(10, 8, utf8_decode('6.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA EM ENSINO'), '1', 0, 'J', true);
+            $pdf->Cell(180, 8, utf8_decode('EXPERIÃNCIA EM ENSINO'), '1', 0, 'J', true);
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
-            $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
-            $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+            $pdf->Cell(70, 8, utf8_decode('POSIÃÃO OCUPADA'), 1, 0, 'C', false);
+            $pdf->Cell(25, 8, utf8_decode('INÃCIO'), 1, 0, 'C', false);
             $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);
             $pdf->SetFont('Arial', '', 10);
 
@@ -1673,7 +1631,7 @@ class InscricaoController extends Controller
                         $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
 
                         $pdf->Ln();
-                        $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                        $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' crÃ©ditos)'), 1, 0, 'J', false);
                     } 
 
                     if ($inscricao->codigoCurso == 97004)
@@ -1698,20 +1656,20 @@ class InscricaoController extends Controller
             
                 $pdf->Ln();
                 $pdf->SetFont("Arial","", 10);
-                $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
+                $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituiÃ§Ã£o?'), "L", 0, "L");
         
                 $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
         
                 if ($financeiros->bolsaRecursoFinanceiro == 'S')
                 {
                     $bolsa = true;
-                    $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                    $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
                     $pdf->Ln();
             
-                    $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                    $pdf->Cell(100, 8, utf8_decode("- Nome do Ã³rgÃ£o financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
                     $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
                     $pdf->Ln();
-                    $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                    $pdf->Cell(190, 8, utf8_decode("- PerÃ­odo de vigÃªncia (mÃªs/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
                     $pdf->Ln();
             
                     $pdf->Cell(190, 8, "", "LR", 0, "L");
@@ -1719,9 +1677,9 @@ class InscricaoController extends Controller
                 }
                 else
                 {
-                    $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+                    $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'NÃ£o';
         
-                    $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                    $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
                     $pdf->Ln();
             
                     $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
@@ -1729,7 +1687,7 @@ class InscricaoController extends Controller
 
                     if ($financeiros->solicitarRecursoFinanceiro == 'S')
                     {
-                        $pdf->Cell(190, 8, utf8_decode("Agência: {$financeiros->agenciaRecursoFinanceiro} C/C: {$financeiros->contaRecursoFinanceiro} Local: {$financeiros->localRecursoFinanceiro}"), "LR", 0, "L");
+                        $pdf->Cell(190, 8, utf8_decode("AgÃªncia: {$financeiros->agenciaRecursoFinanceiro} C/C: {$financeiros->contaRecursoFinanceiro} Local: {$financeiros->localRecursoFinanceiro}"), "LR", 0, "L");
                         $pdf->Ln();
                     }
 
@@ -1738,10 +1696,10 @@ class InscricaoController extends Controller
                 }   
         
                 $pdf->SetFont("Arial","B", 10);
-                $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq sÃ£o concedidas competitivamente em nÃºmero limitado. NÃ£o Ã© permitido ao bolsista acumular bolsas ou ter vÃ­nculo empregatÃ­cio com qualquer instituiÃ§Ã£o ou empresa."), "LRB", "J", false);
                 $pdf->SetFont("Arial","B", 10);
                 $pdf->Cell(10, 8, utf8_decode("8."), 1, 0, "L", true);
-                $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÇÃO AO CURSO ?"), "1", 0, "J", true);
+                $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS COM RELAÃÃO AO CURSO ?"), "1", 0, "J", true);
         
                 $expectativas = Inscricao::obterExpectativaInscricao($codigoInscricao);
         
@@ -1765,8 +1723,8 @@ class InscricaoController extends Controller
                 }
 
                 $assunto      = "MESTRADO - {$sigla}";
-                $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                $curso        = 'SeleÃ§Ã£o do Curso de Mestrado para ingresso no '.$semestre;
+                $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.' conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
 
             // if ($nivel == 'AE')
@@ -1783,18 +1741,18 @@ class InscricaoController extends Controller
             //     }
                 
             //     $assunto      = "MESTRADO - {$sigla}";
-            //     $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-            //     $requerimento = 'Venho requerer minha inscrição para aluno especial conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.'.';
+            //     $curso        = 'SeleÃ§Ã£o do Curso de Mestrado para ingresso no '.$semestre;
+            //     $requerimento = 'Venho requerer minha inscriÃ§Ã£o para aluno especial conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.'.';
             // }
 
             if ($nivel == 'DF')
             {            
-                $ano       = $edital->dataDoeEdital->format('Y');
+                $ano       = $edital->dataDoeEdital->format('Y') + 1;
                 $diretorio = $ano;
 
                 $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
-                $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
-                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                $curso        = 'SeleÃ§Ã£o do Curso de Doutorado Fluxo ContÃ­nuo para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.' conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
 
             $pdf->SetFont('Arial', '', 10);
@@ -1853,7 +1811,7 @@ class InscricaoController extends Controller
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 'B',  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 'B',  0, 'L', false);
+                $pdf->Cell(23, 8, utf8_decode('Estado/PaÃ­s:'), 'B',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(42, 8, "{$localidade['sglest']}/{$pais['nompas']}", 'BR',  0, 'L', false);
                                 
@@ -1866,16 +1824,16 @@ class InscricaoController extends Controller
                 }
                 else
                 {
-                    $necessidades = utf8_decode('Não');
+                    $necessidades = utf8_decode('NÃ£o');
                 }
 
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
+                $pdf->Cell(20, 8, utf8_decode('RaÃ§a/Cor:'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);        
-                $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
+                $pdf->Cell(70, 8, utf8_decode('Ã portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
             }
@@ -1952,7 +1910,7 @@ class InscricaoController extends Controller
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(55, 8, utf8_decode($localidade["cidloc"]), 0,  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(23, 8, utf8_decode('Estado/País:'), 0,  0, 'L', false);
+                $pdf->Cell(23, 8, utf8_decode('Estado/PaÃ­s:'), 0,  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(40, 8, "{$localidade['sglest']}/".utf8_decode($pais['nompas']), 0,  0, 'L', false);
                 $eixoy = $eixoy + 8;
@@ -1964,18 +1922,18 @@ class InscricaoController extends Controller
                 }
                 else
                 {
-                    $necessidades = utf8_decode('Não');
+                    $necessidades = utf8_decode('NÃ£o');
                 }
     
                 $pdf->SetY($eixoy);
                 $pdf->Cell(140, 2, '', 'LB',  0, 'L', false);
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(20, 8, utf8_decode('Raça/Cor:'), 'LB',  0, 'L', false);
+                $pdf->Cell(20, 8, utf8_decode('RaÃ§a/Cor:'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(30, 8, utf8_decode($pessoais->racaPessoal), 'B',  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);        
-                $pdf->Cell(70, 8, utf8_decode('É portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
+                $pdf->Cell(70, 8, utf8_decode('Ã portador de Necessidades Especiais?'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(70, 8, $necessidades, 'BR',  0, 'L', false);
             }
@@ -1996,7 +1954,7 @@ class InscricaoController extends Controller
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(100, 8, $pessoais->email, 'BR',  0, 'L', false);
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(25, 8, utf8_decode('Número USP:'), 'LB',  0, 'L', false);
+                $pdf->Cell(25, 8, utf8_decode('NÃºmero USP:'), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(52, 8, $pessoais->codpes, 'BR',  0, 'L', false);
             }
@@ -2005,7 +1963,7 @@ class InscricaoController extends Controller
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
-            $pdf->Cell(18, 8, utf8_decode('Endereço:'), 'LB',  0, 'L', false);
+            $pdf->Cell(18, 8, utf8_decode('EndereÃ§o:'), 'LB',  0, 'L', false);
             $pdf->SetFont('Arial', '', 10);
             $pdf->Cell(172, 8, utf8_decode("{$enderecos->logradouroEndereco}, {$enderecos->numeroEndereco} {$enderecos->complementoEndereco}"), 'BR',  0, 'L', false);
 
@@ -2043,12 +2001,12 @@ class InscricaoController extends Controller
                 }
                 else
                 {
-                    $cursou = utf8_decode('Não');
+                    $cursou = utf8_decode('NÃ£o');
                 }
 
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
-                $pdf->Cell(80, 8, utf8_decode('Já cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
+                $pdf->Cell(80, 8, utf8_decode('JÃ¡ cursou Disciplina como Aluno Especial? '), 'LB',  0, 'L', false);
                 $pdf->SetFont('Arial', '', 10);
                 $pdf->Cell(110, 8, $cursou, 'BR',  0, 'L', false);    
             }
@@ -2058,7 +2016,7 @@ class InscricaoController extends Controller
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
                 $pdf->Cell(10, 8, utf8_decode('2.'), 1, 0, 'L', true);
-                $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (Graduação, concluído ou em andamento'), '1', 0, 'J', true);
+                $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (GraduaÃ§Ã£o, concluÃ­do ou em andamento'), '1', 0, 'J', true);
             }
 
             if ($nivel == 'DD')
@@ -2066,20 +2024,20 @@ class InscricaoController extends Controller
                 $pdf->Ln();
                 $pdf->SetFont('Arial', 'B', 10);
                 $pdf->Cell(10, 8, utf8_decode('2.'), 1, 0, 'L', true);
-                $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (Mestrado, concluído ou em andamento'), '1', 0, 'J', true);
+                $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (Mestrado, concluÃ­do ou em andamento'), '1', 0, 'J', true);
             }
 
             /*$pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(10, 8, utf8_decode('2.'), 1, 0, 'L', true);
-            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (Graduação ou Mestrado, concluído ou em andamento'), '1', 0, 'J', true);*/
+            $pdf->Cell(180, 8, utf8_decode('RESUMO ESCOLAR (GraduaÃ§Ã£o ou Mestrado, concluÃ­do ou em andamento'), '1', 0, 'J', true);*/
 
             $pdf->Ln();
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->Cell(70, 8, utf8_decode('ESCOLA'), 1, 0, 'C', false);
-            $pdf->Cell(85, 8, utf8_decode('TÍTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
-            $pdf->Cell(35, 8, utf8_decode('ANO TITULAÇÃO'), 1, 0, 'C', false);
-            //$pdf->Cell(25, 8, utf8_decode('SITUAÇÃO'), 1, 0, 'C', false);
+            $pdf->Cell(85, 8, utf8_decode('TÃTULO/ESPECIALIDADE'), 1, 0, 'C', false);    
+            $pdf->Cell(35, 8, utf8_decode('ANO TITULAÃÃO'), 1, 0, 'C', false);
+            //$pdf->Cell(25, 8, utf8_decode('SITUAÃÃO'), 1, 0, 'C', false);
             
             $pdf->SetFont('Arial', '', 10);
 
@@ -2135,7 +2093,7 @@ class InscricaoController extends Controller
                     $temp = Posgraduacao::disciplina($disciplina->codigoDisciplina);
 
                     $pdf->Ln();
-                    $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' créditos)'), 1, 0, 'J', false);
+                    $pdf->CellFitScale(190, 8, utf8_decode($temp['sgldis'].'-'.$temp['numseqdis'].' - '.$temp['nomdis'].' ('.$temp['numcretotdis'].' crÃ©ditos)'), 1, 0, 'J', false);
                 } 
 
                 if($edital->codigoCurso == 97004)
@@ -2157,13 +2115,13 @@ class InscricaoController extends Controller
                     $pdf->Ln();
                     $pdf->SetFont('Arial', 'B', 10);
                     $pdf->Cell(10, 8, utf8_decode('3.'), 1, 0, 'L', true);
-                    $pdf->Cell(180, 8, utf8_decode('EXPERIÊNCIA PROFISSIONAL'), '1', 0, 'J', true);
+                    $pdf->Cell(180, 8, utf8_decode('EXPERIÃNCIA PROFISSIONAL'), '1', 0, 'J', true);
         
                     $pdf->Ln();
                     $pdf->SetFont('Arial', 'B', 10);
                     $pdf->Cell(70, 8, utf8_decode('ENTIDADE'), 1, 0, 'C', false);
-                    $pdf->Cell(70, 8, utf8_decode('POSIÇÃO OCUPADA'), 1, 0, 'C', false);
-                    $pdf->Cell(25, 8, utf8_decode('INÍCIO'), 1, 0, 'C', false);
+                    $pdf->Cell(70, 8, utf8_decode('POSIÃÃO OCUPADA'), 1, 0, 'C', false);
+                    $pdf->Cell(25, 8, utf8_decode('INÃCIO'), 1, 0, 'C', false);
                     $pdf->Cell(25, 8, utf8_decode('FIM'), 1, 0, 'C', false);            
                     $pdf->SetFont('Arial', '', 10);
         
@@ -2194,7 +2152,7 @@ class InscricaoController extends Controller
                     $pdf->Ln();
                     $pdf->SetFont("Arial","B", 10);
                     $pdf->Cell(10, 8, utf8_decode("4."), 1, 0, "L", true);
-                    $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS EM RELAÇÃO AO CURSO"), "1", 0, "J", true);
+                    $pdf->Cell(180, 8, utf8_decode("QUAIS AS SUAS EXPECTATIVAS EM RELAÃÃO AO CURSO"), "1", 0, "J", true);
 
                     $pdf->Ln();
                     $pdf->SetFont("Arial","", 10);
@@ -2211,20 +2169,20 @@ class InscricaoController extends Controller
                     
                         $pdf->Ln();
                         $pdf->SetFont("Arial","", 10);
-                        $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituição?'), "L", 0, "L");
+                        $pdf->Cell(80, 8, utf8_decode('Possui bolsa de estudos de alguma instituiÃ§Ã£o?'), "L", 0, "L");
                 
                         $financeiros = Inscricao::obterFinanceiroInscricao($codigoInscricao);
                 
                         if ($financeiros->bolsaRecursoFinanceiro == 'S')
                         {
                             $bolsa = true;
-                            $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
+                            $pdf->Cell(110, 8, utf8_decode("SIM ( X )   NÃO (  )"), "R", 0, "J");
                             $pdf->Ln();
                     
-                            $pdf->Cell(100, 8, utf8_decode("- Nome do órgão financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
+                            $pdf->Cell(100, 8, utf8_decode("- Nome do Ã³rgÃ£o financiador: ".$financeiros->orgaoRecursoFinanceiro), "L", 0, "L");
                             $pdf->Cell(90, 8, utf8_decode("- Tipo de Bolsa: ".$financeiros->tipoBolsaFinanceiro), "R", 0, "L");
                             $pdf->Ln();
-                            $pdf->Cell(190, 8, utf8_decode("- Período de vigência (mês/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
+                            $pdf->Cell(190, 8, utf8_decode("- PerÃ­odo de vigÃªncia (mÃªs/ano):  de ".date('m/Y', strtotime($financeiros->inicioRecursoFinanceiro))." a ".date('m/Y', strtotime($financeiros->finalRecursoFinanceiro))), "LR", 0, "L");
                             $pdf->Ln();
                     
                             $pdf->Cell(190, 8, "", "LR", 0, "L");
@@ -2232,9 +2190,9 @@ class InscricaoController extends Controller
                         }
                         else
                         {
-                            $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'Não';
+                            $solicitar = ($financeiros->solicitarRecursoFinanceiro == 'S') ? 'Sim' : 'NÃ£o';
                 
-                            $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
+                            $pdf->Cell(110, 8, utf8_decode("SIM (  )   NÃO ( X )"), "R", 0, "J");
                             $pdf->Ln();
                     
                             $pdf->Cell(190, 8, utf8_decode("- Deseja solicitar bolsa? {$solicitar}"), "LR", 0, "L");
@@ -2245,7 +2203,7 @@ class InscricaoController extends Controller
                         }   
                 
                         $pdf->SetFont("Arial","B", 10);
-                        $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq são concedidas competitivamente em número limitado. Não é permitido ao bolsista acumular bolsas ou ter vínculo empregatício com qualquer instituição ou empresa."), "LRB", "J", false);
+                        $pdf->MultiCell(190, 8, utf8_decode("Obs.: As bolsas da CAPES e do CNPq sÃ£o concedidas competitivamente em nÃºmero limitado. NÃ£o Ã© permitido ao bolsista acumular bolsas ou ter vÃ­nculo empregatÃ­cio com qualquer instituiÃ§Ã£o ou empresa."), "LRB", "J", false);
                     }
                     else
                     {
@@ -2271,14 +2229,14 @@ class InscricaoController extends Controller
                 if($edital->codigoEdital == 13)
                 {
                     $assunto      = "MESTRADO - {$sigla}";
-                    $curso        = 'Seleção de Aluno Regular no Programa de Pós-graduação em Projetos Educacionais ('.$sigla.')';
-                    $requerimento = 'Venho requerer minha inscrição para '.$curso.', conforme regulamenta o edital publicado na página da Comissão de Pós-graduação (CPG).';                
+                    $curso        = 'SeleÃ§Ã£o de Aluno Regular no Programa de PÃ³s-graduaÃ§Ã£o em Projetos Educacionais ('.$sigla.')';
+                    $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.', conforme regulamenta o edital publicado na pÃ¡gina da ComissÃ£o de PÃ³s-graduaÃ§Ã£o (CPG).';                
                 }
                 else
                 {
                     $assunto      = "MESTRADO - {$sigla}";
-                    $curso        = 'Seleção do Curso de Mestrado para ingresso no '.$semestre;
-                    $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                    $curso        = 'SeleÃ§Ã£o do Curso de Mestrado para ingresso no '.$semestre;
+                    $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.' conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
                 }
             }
 
@@ -2297,18 +2255,18 @@ class InscricaoController extends Controller
                 }
 
                 $assunto      = "DOUTORADO DIRETO - {$sigla}";
-                $curso        = 'Seleção do Curso de Doutorado Direto para ingresso em '.$ano;
-                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                $curso        = 'SeleÃ§Ã£o do Curso de Doutorado Direto para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.' conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
 
             if ($nivel == 'DF')
             {            
-                $ano       = $edital->dataDoeEdital->format('Y');
+                $ano       = $edital->dataDoeEdital->format('Y') + 1;
                 $diretorio = $ano;
 
                 $assunto      = "DOUTORADO FLUXO CONTINUO - {$sigla}";
-                $curso        = 'Seleção do Curso de Doutorado Fluxo Contínuo para ingresso em '.$ano;
-                $requerimento = 'Venho requerer minha inscrição para '.$curso.' conforme regulamenta o edital '.$sigla.' Nº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
+                $curso        = 'SeleÃ§Ã£o do Curso de Doutorado Fluxo ContÃ­nuo para ingresso em '.$ano;
+                $requerimento = 'Venho requerer minha inscriÃ§Ã£o para '.$curso.' conforme regulamenta o edital '.$sigla.' NÂº '.$anosemestre.' (DOESP de '.$edital->dataDoeEdital->format('d/m/Y').').';
             }
 
             if ($nivel == 'AE')
@@ -2323,7 +2281,7 @@ class InscricaoController extends Controller
                     $diretorio = $ano.'2'; 
                 }
 
-                $requerimento = 'Venho requerer minha inscrição como Aluno Especial, conforme regulamenta os procedimentos publicados na página da Comissão de Pós-graduação (CPG).';
+                $requerimento = 'Venho requerer minha inscriÃ§Ã£o como Aluno Especial, conforme regulamenta os procedimentos publicados na pÃ¡gina da ComissÃ£o de PÃ³s-graduaÃ§Ã£o (CPG).';
             }
 
             if ($nivel == 'ME' || $nivel == 'DD' || $nivel == 'DF' || $nivel == 'MF')
@@ -2334,7 +2292,7 @@ class InscricaoController extends Controller
 
                 $pdf->Ln();
                 //$pdf->Cell(140, 8, 'Assinatura original/certificada do candidato:', 'LB', 0, 'L', false);
-                $pdf->Cell(140, 8,  utf8_decode('Assinatura eletrônica certificada do candidato(a):'), 'LB', 0, 'L', false);
+                $pdf->Cell(140, 8,  utf8_decode('Assinatura eletrÃ´nica certificada do candidato(a):'), 'LB', 0, 'L', false);
                 $pdf->Cell(50, 8, 'Data:         /         /', 'BR', 0, 'L', false);
             }
 
@@ -2371,13 +2329,13 @@ class InscricaoController extends Controller
         $pdf->SetDisplayMode('real');
         $pdf->AliasNbPages();   
 
-        $texto = "<p>Eu, {$inscricao->name}, Passaporte {$gcub->passaporteAluno}, e-mail {$inscricao->email}, venho requerer à <b><i>Comissão de Pós-Graduação</i></b>, matrícula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de Pós-Graduação em Engenharia de Materiais</b> na área de concentração: <b>97134 - Materiais Convencionais e Avançados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
+        $texto = "<p>Eu, {$inscricao->name}, Passaporte {$gcub->passaporteAluno}, e-mail {$inscricao->email}, venho requerer Ã  <b><i>ComissÃ£o de PÃ³s-GraduaÃ§Ã£o</i></b>, matrÃ­cula como aluno(a) <b>REGULAR</b>, no Mestrado do <b>Programa de PÃ³s-GraduaÃ§Ã£o em Engenharia de Materiais</b> na Ã¡rea de concentraÃ§Ã£o: <b>97134 - Materiais Convencionais e AvanÃ§ados</b>, nas <b>Disciplinas</b> abaixo listadas:</p>";
 
         $pdf->AddPage();
         
         $pdf->SetFont('Arial','B', 16);
         $pdf->SetFillColor(190,190,190);
-        $pdf->MultiCell(190, 8, utf8_decode('PÓS-GRADUAÇÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÍCULA REGULAR'), 1, 'C', true);
+        $pdf->MultiCell(190, 8, utf8_decode('PÃS-GRADUAÃÃO EM ENGENHARIA DE MATERIAIS - PPGEM REQUERIMENTO DE PRIMEIRA MATRÃCULA REGULAR'), 1, 'C', true);
         $pdf->Ln();
         
         $pdf->SetFont('Arial', '', 14);
@@ -2387,9 +2345,9 @@ class InscricaoController extends Controller
                     
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->SetFillColor(190,190,190);
-        $pdf->Cell(40,  8, utf8_decode('CÓDIGO'), 1, 0, 'C', true);
+        $pdf->Cell(40,  8, utf8_decode('CÃDIGO'), 1, 0, 'C', true);
         $pdf->Cell(110, 8, utf8_decode('DISCIPLINA'), 1, 0, 'C', true);
-        $pdf->Cell(40,  8, utf8_decode('Nº DE CRÉDITOS'), 1, 0, 'C', true);
+        $pdf->Cell(40,  8, utf8_decode('NÂº DE CRÃDITOS'), 1, 0, 'C', true);
         $pdf->Ln();    
         
         $pdf->SetFont('Arial', '', 10);
@@ -2423,7 +2381,7 @@ class InscricaoController extends Controller
         $pdf->Cell(35, 8, utf8_decode(''), 0, 0, 'C', false);
         
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(75,  8, utf8_decode('Orientação Acadêmica'), 0, 0, 'C', false);
+        $pdf->Cell(75,  8, utf8_decode('OrientaÃ§Ã£o AcadÃªmica'), 0, 0, 'C', false);
         $pdf->Cell(5,  8, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
@@ -2434,7 +2392,7 @@ class InscricaoController extends Controller
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Ln();
 
-        $pdf->Cell(75,  5, utf8_decode('Orientador Acadêmico'), 0, 0, 'C', false);
+        $pdf->Cell(75,  5, utf8_decode('Orientador AcadÃªmico'), 0, 0, 'C', false);
         $pdf->Cell(35, 5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Cell(75,  5, utf8_decode(''), 0, 0, 'C', false);
         $pdf->Cell(5,  5, utf8_decode(''), 0, 0, 'C', false);
@@ -2636,13 +2594,13 @@ class InscricaoController extends Controller
 
         if (Mail::failures()) 
         {
-            request()->session()->flash('alert-danger', "Ocorreu um erro na validação da inscrição Nº {$inscricao->numeroInscricao}.");
+            request()->session()->flash('alert-danger', "Ocorreu um erro na validaÃ§Ã£o da inscriÃ§Ã£o NÂº {$inscricao->numeroInscricao}.");
         }    
         else
         {
             Inscricao::where('codigoInscricao', $codigoInscricao)->where('statusInscricao', 'P')->update(['statusInscricao' => 'C']);
 
-            request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} validada com sucesso.");
+            request()->session()->flash('alert-success', "InscriÃ§Ã£o NÂº {$inscricao->numeroInscricao} validada com sucesso.");
         } 
 
         return redirect("/inscricao/visualizar/{$codigoInscricao}");
@@ -2654,7 +2612,7 @@ class InscricaoController extends Controller
 
         Inscricao::where('codigoInscricao', $codigoInscricao)->update(['statusInscricao' => 'R']);
         
-        request()->session()->flash('alert-success', "Inscrição Nº {$codigoInscricao} recusada com sucesso.");
+        request()->session()->flash('alert-success', "InscriÃ§Ã£o NÂº {$codigoInscricao} recusada com sucesso.");
 
         return redirect("admin/listar-inscritos/{$inscricao->codigoEdital}");
     }
@@ -2681,13 +2639,13 @@ class InscricaoController extends Controller
         
         if (Mail::failures()) 
         {
-            request()->session()->flash('alert-danger', "Ocorreu um erro na devolução da inscrição Nº {$inscricao->numeroInscricao}.");
+            request()->session()->flash('alert-danger', "Ocorreu um erro na devoluÃ§Ã£o da inscriÃ§Ã£o NÂº {$inscricao->numeroInscricao}.");
         }    
         else
         {
             Inscricao::where('codigoInscricao', $codigoInscricao)->where('statusInscricao', 'P')->update(['statusInscricao' => 'N']);
 
-            request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} devolvida com sucesso.");
+            request()->session()->flash('alert-success', "InscriÃ§Ã£o NÂº {$inscricao->numeroInscricao} devolvida com sucesso.");
         } 
 
         return redirect("/inscricao/visualizar/{$codigoInscricao}");
@@ -2701,7 +2659,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Você não tem permissão de acessar essa página.';
+            $item['story'] = 'VocÃª nÃ£o tem permissÃ£o de acessar essa pÃ¡gina.';
 
             return view('components.modal',
             [
@@ -2716,7 +2674,7 @@ class InscricaoController extends Controller
             {
                 $item = array();
                 $item['title'] = 'Aviso';
-                $item['story'] = 'Você já enviou o Requerimento de Primeira Matrícula.<br/>Aguarde novas informações no seu e-mail cadastrado';
+                $item['story'] = 'VocÃª jÃ¡ enviou o Requerimento de Primeira MatrÃ­cula.<br/>Aguarde novas informaÃ§Ãµes no seu e-mail cadastrado';
     
                 return view('components.modal',
                 [
@@ -2805,11 +2763,11 @@ class InscricaoController extends Controller
         
         if (Mail::failures()) 
         {
-            request()->session()->flash('alert-danger', "Ocorreu um erro no cadastrado do Requerimento de Primeira Matrícula. Tente novamente mais tarde.");
+            request()->session()->flash('alert-danger', "Ocorreu um erro no cadastrado do Requerimento de Primeira MatrÃ­cula. Tente novamente mais tarde.");
         }    
         else
         {
-            request()->session()->flash('alert-success', 'Requerimento de Primeira Matrícula cadastrado com sucesso. Aguarde informações no seu e-mail cadastrado.'); 
+            request()->session()->flash('alert-success', 'Requerimento de Primeira MatrÃ­cula cadastrado com sucesso. Aguarde informaÃ§Ãµes no seu e-mail cadastrado.'); 
         } 
     
         return redirect('dashboard'); 
@@ -2843,7 +2801,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Inscricão Encerrada';
+            $item['story'] = 'InscricÃ£o Encerrada';
 
             return view('components.modal',
             [
@@ -2917,7 +2875,7 @@ class InscricaoController extends Controller
             {
                 $item = array();
                 $item['title'] = 'Aviso';
-                $item['story'] = 'Inscricão Encerrada';
+                $item['story'] = 'InscricÃ£o Encerrada';
 
                 return view('components.modal',
                 [
@@ -2936,7 +2894,7 @@ class InscricaoController extends Controller
         }
 
         $edital = Edital::obterNumeroEdital($inscricao->codigoEdital);
-        $requerimento = 'Eu, '.mb_strtoupper($inscricao->name).', portador do CPF Nº '.$inscricao->cpf.', venho requerer minha inscrição para o processo seletivo conforme regulamenta o edital PPGPE Nº '.$edital.' (DOESP de 30/09/2022).';
+        $requerimento = 'Eu, '.mb_strtoupper($inscricao->name).', portador do CPF NÂº '.$inscricao->cpf.', venho requerer minha inscriÃ§Ã£o para o processo seletivo conforme regulamenta o edital PPGPE NÂº '.$edital.' (DOESP de 30/09/2022).';
 
         $pdf->AddPage();
         $pdf->SetFillColor(190,190,190);
@@ -2948,7 +2906,7 @@ class InscricaoController extends Controller
         $pdf->Ln();        
         $pdf->Cell(190, 2, '', 'LR',  0, 'C', false);
         $pdf->Ln();
-        $pdf->Cell(190, 8, utf8_decode("NÚMERO DE INSCRIÇÃO: {$inscricao->numeroInscricao} - {$edital}"), 'LR',  0, 'C', false);
+        $pdf->Cell(190, 8, utf8_decode("NÃMERO DE INSCRIÃÃO: {$inscricao->numeroInscricao} - {$edital}"), 'LR',  0, 'C', false);
         $pdf->Ln();
         $pdf->Cell(190, 2, '', 'LR',  0, 'C', false);
         $pdf->Ln();   
@@ -2961,8 +2919,8 @@ class InscricaoController extends Controller
                         
         $pdf->SetFont('Arial','B',8);
         $pdf->SetY(-30);
-        $pdf->Cell(95, 3, utf8_decode('ÁREA I'), 0, 0, 'L');
-        $pdf->Cell(95, 3, utf8_decode('ÁREA II'), 0, 0, 'R');
+        $pdf->Cell(95, 3, utf8_decode('ÃREA I'), 0, 0, 'L');
+        $pdf->Cell(95, 3, utf8_decode('ÃREA II'), 0, 0, 'R');
         $pdf->SetFont('Times', '', 7);
         $pdf->Ln();
         $pdf->Cell(95, 3, 'Estrada Municipal  do Campinho, 100, Campinho - LORENA - S.P.', 0, 0, 'L');
@@ -2984,7 +2942,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Inscricão Encerrada';
+            $item['story'] = 'InscricÃ£o Encerrada';
 
             return view('components.modal',
             [
@@ -3042,7 +3000,7 @@ class InscricaoController extends Controller
         {
             $item = array();
             $item['title'] = 'Aviso';
-            $item['story'] = 'Inscricão Encerrada';
+            $item['story'] = 'InscricÃ£o Encerrada';
 
             return view('components.modal',
             [
@@ -3099,13 +3057,13 @@ class InscricaoController extends Controller
         
         if (Mail::failures()) 
         {
-            request()->session()->flash('alert-danger', "Ocorreu um erro na validação da inscrição Nº {$inscricao->numeroInscricao}.");
+            request()->session()->flash('alert-danger', "Ocorreu um erro na validaÃ§Ã£o da inscriÃ§Ã£o NÂº {$inscricao->numeroInscricao}.");
         }    
         else
         {
             Inscricao::where('codigoInscricao', $id)->where('statusInscricao', 'P')->update(['statusInscricao' => 'C']);
 
-            request()->session()->flash('alert-success', "Inscrição Nº {$inscricao->numeroInscricao} validada com sucesso.");
+            request()->session()->flash('alert-success', "InscriÃ§Ã£o NÂº {$inscricao->numeroInscricao} validada com sucesso.");
         } 
 
         return redirect("/inscricao/visualizar/{$id}");
@@ -3130,11 +3088,11 @@ class InscricaoController extends Controller
 
         if(Auth::user()->codpes == 13556853)
         {
-            $texto = "<p>Eu Ana Carolina B. da Silva, N.ºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nível de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientação do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de Proficiência em Língua Estrangeira, no idioma Inglês.</b></p>";
+            $texto = "<p>Eu Ana Carolina B. da Silva, N.ÂºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de PÃ³s-GraduaÃ§Ã£o em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nÃ­vel de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientaÃ§Ã£o do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de ProficiÃªncia em LÃ­ngua Estrangeira, no idioma InglÃªs.</b></p>";
         }
         else
         {
-            $texto = "<p>Eu ".Auth::user()->name.", - N.ºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de Pós-Graduação em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nível de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientação do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de Proficiência em Língua Estrangeira, no idioma Inglês.</b></p>";
+            $texto = "<p>Eu ".Auth::user()->name.", - N.ÂºUSP: ".Auth::user()->codpes.", aluno(a) regularmente matriculado(a) no Programa de PÃ³s-GraduaÃ§Ã£o em Engenharia de Materiais da Escola de Engenharia de Lorena - EEL/USP, em nÃ­vel de (".$mestrado.") Mestrado / (".$doutorado.") Doutorado, sob orientaÃ§Ã£o do(a) Prof(a). Dr(a). ".$pos['nompesori'].", venho requerer <b>Exame de ProficiÃªncia em LÃ­ngua Estrangeira, no idioma InglÃªs.</b></p>";
         }
        
         $pdf->setCabecalhoPresenca('ppgem');
@@ -3150,7 +3108,7 @@ class InscricaoController extends Controller
         $pdf->AddPage();
         $pdf->SetFont('Arial','B', 14);
         $pdf->Ln(5);
-        $pdf->MultiCell(190, 8, utf8_decode('REQUERIMENTO PARA EXAME DE PROFICIÊNCIA EM LÍNGUA ESTRANGEIRA'), 0, 'C');            
+        $pdf->MultiCell(190, 8, utf8_decode('REQUERIMENTO PARA EXAME DE PROFICIÃNCIA EM LÃNGUA ESTRANGEIRA'), 0, 'C');            
         $pdf->Ln();
 
         $pdf->SetFont('Arial','', 12);
@@ -3255,11 +3213,11 @@ class InscricaoController extends Controller
 
         if ($edital->dataExameEdital->format('m') < 7)
         {
-            $data = $edital->dataExameEdital->format('d/m/Y')." - 1º Exame ".$edital->dataExameEdital->format('Y');
+            $data = $edital->dataExameEdital->format('d/m/Y')." - 1Âº Exame ".$edital->dataExameEdital->format('Y');
         }
         else
         {
-            $data = $edital->dataExameEdital->format('d/m/Y')." - 2º Exame ".$edital->dataExameEdital->format('Y');
+            $data = $edital->dataExameEdital->format('d/m/Y')." - 2Âº Exame ".$edital->dataExameEdital->format('Y');
         }
 
         $pdf->setCabecalhoPresenca('ppgem');
@@ -3275,7 +3233,7 @@ class InscricaoController extends Controller
         $pdf->AddPage();
         $pdf->SetFont('Arial','B', 14);
         $pdf->Ln(5);
-        $pdf->Cell(190, 8, utf8_decode('Alunos Inscritos para Exame de Proficiência em Língua - Inglês'), 0, 0, 'C');            
+        $pdf->Cell(190, 8, utf8_decode('Alunos Inscritos para Exame de ProficiÃªncia em LÃ­ngua - InglÃªs'), 0, 0, 'C');            
         $pdf->Ln();
         $pdf->Cell(190, 8, utf8_decode($data), 0, 0, 'C'); 
         $pdf->Ln(10);
@@ -3289,8 +3247,8 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial','B', 12);
         $pdf->SetFillColor(190,190,190);
         $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
-        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
-        $pdf->Cell(25, 8, utf8_decode('Nº USP'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
+        $pdf->Cell(25, 8, utf8_decode('NÂº USP'), 1, 0, 'C', true);
         $pdf->Cell(80, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
         $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
@@ -3334,8 +3292,8 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial','B', 12);
         $pdf->SetFillColor(190,190,190);
         $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
-        $pdf->Cell(15, 8, utf8_decode('Nº'), 1, 0, 'C', true);
-        $pdf->Cell(25, 8, utf8_decode('Nº USP'), 1, 0, 'C', true);
+        $pdf->Cell(15, 8, utf8_decode('NÂº'), 1, 0, 'C', true);
+        $pdf->Cell(25, 8, utf8_decode('NÂº USP'), 1, 0, 'C', true);
         $pdf->Cell(80, 8, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(60, 8, utf8_decode('Assinatura'), 1, 0, 'C', true);
         $pdf->Cell(5, 8, utf8_decode(''), 0, 0, 'C');
@@ -3417,7 +3375,7 @@ class InscricaoController extends Controller
         $pdf->SetFont('Arial','B', 10);
         $pdf->SetFillColor(190,190,190);
         $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
-        $pdf->Cell(15, 10, utf8_decode('Nº'), 1, 0, 'C', true);
+        $pdf->Cell(15, 10, utf8_decode('NÂº'), 1, 0, 'C', true);
         $pdf->Cell(80, 10, utf8_decode('Nome'), 1, 0, 'C', true);
         $pdf->Cell(35, 10, utf8_decode('Documento'), 1, 0, 'C', true);
         $pdf->Cell(55, 10, utf8_decode('Assinatura'), 1, 0, 'C', true);
@@ -3457,7 +3415,7 @@ class InscricaoController extends Controller
                 $pdf->SetFont('Arial','B', 10);
                 $pdf->SetFillColor(190,190,190);
                 $pdf->Cell(5, 10, utf8_decode(''), 0, 0, 'C');
-                $pdf->Cell(15, 10, utf8_decode('Nº'), 1, 0, 'C', true);
+                $pdf->Cell(15, 10, utf8_decode('NÂº'), 1, 0, 'C', true);
                 $pdf->Cell(80, 10, utf8_decode('Nome'), 1, 0, 'C', true);
                 $pdf->Cell(35, 10, utf8_decode('Documento'), 1, 0, 'C', true);
                 $pdf->Cell(55, 10, utf8_decode('Assinatura'), 1, 0, 'C', true);

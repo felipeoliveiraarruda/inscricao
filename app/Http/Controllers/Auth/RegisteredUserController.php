@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Documento;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -36,9 +37,10 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'cpf' => ['required', 'string', 'cpf', 'max:14', 'unique:users'],
-            'rg' => ['required', 'string'],
-            'telefone' => ['required', 'string'],
+            #'cpf' => ['required', 'string', 'cpf', 'max:14', 'unique:users'],
+            'cpf' => ['required', 'string', 'max:11', 'unique:users'],
+            #'rg' => ['required', 'string'],
+            #'telefone' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -54,6 +56,18 @@ class RegisteredUserController extends Controller
                 'codpes'   => User::gerarCodigoPessoaExterna(),
                 'password' => Hash::make($request->password),
             ]);
+                        
+            if ($request->tipoDocumento == 1)
+            {
+                /* Cadastra o documento */
+                $documento = Documento::create([
+                    'codigoUsuario'         => $user->id,
+                    'tipoDocumento'         => 'Passaporte',
+                    'dataEmissaoRG'         => NULL,
+                    'numeroDocumento'       => $request->cpf,
+                    'codigoPessoaAlteracao' => $user->codpes,
+                ]);
+            }
     
             event(new Registered($user));
     

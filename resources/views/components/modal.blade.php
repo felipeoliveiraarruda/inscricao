@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="modal modal-blur fade" id="modalImportar" tabindex="-1" aria-hidden="true">
+<div class="modal modal-blur fade" id="modalAviso" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

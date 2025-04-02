@@ -20,9 +20,20 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <div id="exibirCampoCpf">
+                            <div class="form-group text-center">  
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tipoDocumento" id="inlineRadioCPF" value="0" checked>
+                                    <label class="form-check-label font-weight-bold" for="inlineRadioCPF">CPF</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="tipoDocumento" id="inlineRadioPassaporte" value="1">
+                                    <label class="form-check-label font-weight-bold" for="inlineRadioPassaporte">Passaporte</label>
+                                </div>
+                            </div>
+
                             <div class="form-group">                            
-                                <label for="cpfVerificar" class="font-weight-bold">{{ __('CPF') }}<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="cpfVerificar" name="cpfVerificar" value="{{ old('cpVerificar') }}" required autofocus>
+                                <label for="cpfVerificar" id="nomeDocumento" class="font-weight-bold">{{ __('CPF') }}<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="cpfVerificar" name="cpfVerificar" value="{{ old('cpVerificar') }}" required autofocus maxlength="11">
                             </div>
 
                             <button id="btnProsseguir" type="button" class="btn btn-primary btn-block" name="cadastrar" value="cadastrar" style="background-color: #26385C;">Prosseguir</button>
@@ -42,12 +53,12 @@
 
                             <div class="form-group">                            
                                 <label for="rg" class="font-weight-bold">{{ __('RG') }}</label>
-                                <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') }}" required>
+                                <input type="text" class="form-control" id="rg" name="rg" value="{{ old('rg') }}">
                             </div>
 
                             <div class="form-group">                            
                                 <label for="telefone" class="font-weight-bold">{{ __('Telefone') }}</label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('telefone') }}"  required>
+                                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ old('telefone') }}">
                             </div>
 
                             <div class="form-group">                            

@@ -13,5 +13,7 @@ Route::middleware(['auth','verified'])->group(function ()
         Route::get('declaracao-acumulo/{codigoInscricao}',      [ImpressaoController::class, 'declaracao_acumulos']);
         Route::get('certificado-proficiencia/{codigoEdital}',   [ImpressaoController::class, 'certificado_proficiencia']);
         Route::get('regulamentacao/{codigoRegulamentacao}',     [ImpressaoController::class, 'regulamentacao']);
+
+        Route::get('gerar-primeira-matricula/{codigoEdital}',   [ImpressaoController::class, 'gerar_primeira_matricula']);
     });
 });

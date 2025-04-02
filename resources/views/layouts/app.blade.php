@@ -13,9 +13,7 @@
 
 @section('javascripts_bottom')
   @parent
-  <script type="text/javascript" src="{{ asset('js/mascara.js') }}"></script>
-  <script src="https://cdn.tiny.cloud/1/6gp4wemfll2rht9wyhq9idfb5v2h2e2sv8fd9yqkp9nh5337/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-  
+  <script type="text/javascript" src="{{ asset('js/mascara.js') }}"></script>  
   
   <script>
     // Exemplo de JavaScript inicial para desativar envios de formulario, se houver campos invalidos.
@@ -259,9 +257,9 @@
 
           $("#anoTitulacaoRecursoFinanceiro").prop('required',true);
           $("#iesTitulacaoRecursoFinanceiro").prop('required',true);
-          $("#agenciaRecursoFinanceiro").prop('required',true);
+          /*$("#agenciaRecursoFinanceiro").prop('required',true);
           $("#contaRecursoFinanceiro").prop('required',true);
-          $("#localRecursoFinanceiro").prop('required',true);
+          $("#localRecursoFinanceiro").prop('required',true);*/
 
           $("#solicitarBolsaDados").show();
         }
@@ -304,9 +302,9 @@
 
             $("#anoTitulacaoRecursoFinanceiro").prop('required',true);
             $("#iesTitulacaoRecursoFinanceiro").prop('required',true);
-            $("#agenciaRecursoFinanceiro").prop('required',true);
+            /*$("#agenciaRecursoFinanceiro").prop('required',true);
             $("#contaRecursoFinanceiro").prop('required',true);
-            $("#localRecursoFinanceiro").prop('required',true);
+            $("#localRecursoFinanceiro").prop('required',true);*/
           }
         });
 
@@ -520,7 +518,26 @@
           }
         });
 
-        $("#exibirCampos").hide();
+      $("#exibirCampos").hide();
+
+      $("#inlineRadioPassaporte").click(function() 
+      {
+        //$("#cpfVerificar").prop('disabled', true);
+        $("#nomeDocumento").html('Passaporte<span class="text-danger">*</span>');
+        $("#cpfVerificar").prop('maxlenght', 11);
+        $('#cpfVerificar').unmask();
+        $("#cpfVerificar").prop('disabled', false);
+        
+      });
+
+      $("#inlineRadioCPF").click(function() 
+      {
+        //$("#cpfVerificar").prop('disabled', true);
+        $("#nomeDocumento").html('CPF<span class="text-danger">*</span>');
+        $('#cpfVerificar').mask('000.000.000-00');
+        $("#cpfVerificar").prop('maxlenght', 14);
+        $("#cpfVerificar").prop('disabled', false);
+      });
 
       $("#btnProsseguir").click(function() 
       {
@@ -543,7 +560,7 @@
               }
               else
               {
-                $("#exibirCampos").html('<div class="mb-4 text-sm text-danger text-center">CPF '+$("#cpfVerificar").val()+' já está cadastrado.</div><div class="mb-4 text-sm text-justify text-gray-600">Acesse o sistema através do menu "Entrar" no canto superior direito com seu e-mail e senha cadastrados.</div><div class="mb-4 text-sm text-justify text-gray-600">Ao criar a sua conta em nosso sistema um e-mail de verificação foi enviado ao e-mail cadastrado. Verifique se sua caixa de e-mail não está cheia ou se o e-mail enviado caiu em sua caixa de "SPAM"</div>');
+                $("#exibirCampos").html('<div class="mb-4 text-sm text-danger text-center">Documento '+$("#cpfVerificar").val()+' já está cadastrado.</div><div class="mb-4 text-sm text-justify text-gray-600">Acesse o sistema através do menu "Entrar" no canto superior direito com seu e-mail e senha cadastrados.</div><div class="mb-4 text-sm text-justify text-gray-600">Ao criar a sua conta em nosso sistema um e-mail de verificação foi enviado ao e-mail cadastrado. Verifique se sua caixa de e-mail não está cheia ou se o e-mail enviado caiu em sua caixa de "SPAM"</div>');
                 $("#exibirCampos").show();
               }
             },
