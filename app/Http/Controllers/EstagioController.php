@@ -9,6 +9,11 @@ use App\Models\Utils;
 use App\Models\Auxiliar;
 use App\Models\EditalEstagio;
 use App\Http\Requests\EstagioPostRequest;
+use Carbon\Carbon;
+use Mail;
+use App\Jobs\Estagio\ConfirmacaoJob;
+use App\Jobs\Estagio\InscricaoJob;
+
 
 class EstagioController extends Controller
 {
@@ -74,7 +79,6 @@ class EstagioController extends Controller
                 'item' => $item,                
             ]);
         }
-
 
         return view("estagios.comunicacao.create",
         [
@@ -150,7 +154,17 @@ class EstagioController extends Controller
 
         $request->session()->forget('cpfEstagio');
 
-        request()->session()->flash('alert-success', 'Inscrição realizada com sucesso.');    
+        dispatch(new ConfirmacaoJob($codigoEstagio, $estagio->emailEstagio));
+        dispatch(new InscricaoJob($estagio->codigoEstagio));
+
+        if (Mail::failures()) 
+        {
+            request()->session()->flash('alert-danger', 'Ocorreu um erro no envio do e-mail de inscrição.');
+        }    
+        else
+        {    
+            request()->session()->flash('alert-success','Inscrição realizada com sucesso.'); 
+        }
         
         return redirect("estagios/comunicacao");
     }
@@ -215,12 +229,6 @@ class EstagioController extends Controller
         if ($estagio == '')
         {
             return redirect("estagios/comunicacao/create");
-
-            /*return view("estagios.comunicacao.create",
-            [
-                'tipo'  => 'comunicacao',
-                'cpf'   => $request->cpfEstagio
-            ]); */
         }
     }
 
