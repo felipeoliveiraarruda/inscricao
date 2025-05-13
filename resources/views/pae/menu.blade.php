@@ -3,7 +3,7 @@
     <a href="#" class="list-group-item list-group-item-action">Análise de Currículo Lattes</a>
     <a href="#" class="list-group-item list-group-item-action">Documentação</a>-->
 
-	@if ($inscricao->statusInscricao == 'N')
+	@if ($inscricao->statusInscricao == 'N' && date('Y-m-d') < '2025-05-05')
 		@if ($total)
 			<a href="inscricao/{{ $codigoEdital }}/pae/finalizar" class="list-group-item list-group-item-action" style="background-color: #26385C; color: white;">Enviar Documentação</a>
 			

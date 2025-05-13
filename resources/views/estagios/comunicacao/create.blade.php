@@ -44,7 +44,7 @@
                             <div class="form-row">
                                 <div class="col-2">
                                     <label for="cpfEstagio" class="font-weight-bold">{{ __('CPF') }}<span class="text-danger">*</span></label>            
-                                    <input type="text" class="form-control" id="cpfEstagio" name="cpfEstagio" value="{{ old('cpfEstagio', session('cpfEstagio')) }}" required disabled>
+                                    <input type="text" class="form-control" id="cpfEstagio" name="cpfEstagio" value="{{ old('cpfEstagio', session('cpfEstagio')) }}" required>
                                 </div>
 
                                 <div class="col">               
@@ -186,7 +186,30 @@
                     
                                     <div class="card-body">
                                         <div id="exibirIdioma">
-
+                                        @if (!empty($auxiliar))          
+                                            <div class="table-responsive">                          
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Idioma</th>
+                                                            <th scope="col">Leitura</th>
+                                                            <th scope="col">Redação</th>
+                                                            <th scope="col">Conversação</th>
+                                                            <th scope="col"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    @foreach($auxiliar as $idioma)
+                                                    <tr>
+                                                        <td>{{ $idioma->descricaoIdioma }}</td>
+                                                        <td>{{ $idioma->leituraIdioma }}</td>
+                                                        <td>{{ $idioma->redacaoIdioma }}</td>
+                                                        <td>{{ $idioma->conversacaoIdioma }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    @endforeach
+                                                </table>                                  
+                                            </div>
+                                        @endif   
                                         </div>                                        
                                     </div>
                                 </div>
@@ -236,11 +259,11 @@
                             <div class="form-row">
                                 <div class="col-4">  
                                     <label for="curriculoEstagio" class="font-weight-bold">Se desejar compartilhar o seu CV, anexe-o aqui</label>
-                                    <input type="file" class="form-control-file" id="curriculoEstagio" name="curriculoEstagio" required>
+                                    <input type="file" class="form-control-file" id="curriculoEstagio" name="curriculoEstagio">
                                 </div>
                                 <div class="col-8">  
                                     <label for="trabalhoEstagio" class="font-weight-bold">Se desejar compartilhar algum(ns) trabalho(s) realizado(s) por você, anexe-o(s) aqui. (É necessário comprovar a autoria)</label>
-                                    <input type="file" class="form-control-file" id="trabalhoEstagio" name="trabalhoEstagio" required>                                
+                                    <input type="file" class="form-control-file" id="trabalhoEstagio" name="trabalhoEstagio">                                
                                 </div>
                             </div>   
                         </div>

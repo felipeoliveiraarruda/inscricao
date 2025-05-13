@@ -47,7 +47,15 @@ class Comprovante extends Fpdf
 		}
 		else
 		{
-			$this->Image($this->cabecalho, 10, 10, 190);
+			if ($this->sigla == 'ppgem')
+			{
+				$this->Image($this->cabecalho, 10, 10, 190);
+			}
+			else
+			{
+				$this->Image($this->cabecalho, 0, 0, 210);
+			}
+			
 			$this->Ln(35);
 		}
     }
@@ -70,34 +78,44 @@ class Comprovante extends Fpdf
         }
         else
         {
-            $this->SetFont("Times", "", 7);
-            $this->SetY(-30);
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("Escola de Engenharia de Lorena - EEL/USP"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("Área II / DEMAR / PPGEM"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("Estrada Municipal do Campinho, Nº 100, Campinho, Lorena/SP"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("CEP: 12.602-810 - Lorena/SP"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("(12) 3159-9904"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Cell(170, 3, utf8_decode("www.eel.usp.br / ppgem-eel@usp.br"), 0, 0, "L");
-            $this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
-            $this->Ln();
+			if ($this->sigla == 'ppgem')
+			{
+				$this->SetFont("Times", "", 7);
+				$this->SetY(-30);
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("Escola de Engenharia de Lorena - EEL/USP"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("Área II / DEMAR / PPGEM"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("Estrada Municipal do Campinho, Nº 100, Campinho, Lorena/SP"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("CEP: 12.602-810 - Lorena/SP"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("(12) 3159-9904"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Cell(170, 3, utf8_decode("www.eel.usp.br / ppgem-eel@usp.br"), 0, 0, "L");
+				$this->Cell(10, 3, utf8_decode(''), 0, 0, "L");
+				$this->Ln();
 
-            $this->Image(asset("images/cabecalho/presenca/logo_{$this->presenca}.jpg"), 135, 270, 30);
+				$this->Image(asset("images/cabecalho/presenca/logo_{$this->presenca}.jpg"), 135, 270, 30);
+			}
+			else
+			{
+				$this->SetY(-30);
+				$this->Image(asset("images/cabecalho/presenca/rodape_{$this->presenca}.png"), -1, 259, 212);
+			}
+
+
         }
 
     }

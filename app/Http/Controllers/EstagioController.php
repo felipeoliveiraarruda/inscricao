@@ -80,11 +80,14 @@ class EstagioController extends Controller
             ]);
         }
 
+        $auxiliar = Auxiliar::where('codigoUsuario', session('cpfEstagio'))->get();
+
         return view("estagios.comunicacao.create",
         [
             'tipo'          => $tipo,
             'cpfEstagio'    => session('cpfEstagio'),
             'idiomas'       => Utils::obterDadosSysUtils('idioma'),
+            'auxiliar'      => $auxiliar
         ]); 
     }
 
@@ -98,10 +101,19 @@ class EstagioController extends Controller
     {        
         $validated = $request->validated();
 
+        $pathCurriculo = NULL;
+        $pathTrabalho  = NULL;
         $idiomas = array();
 
-        $pathCurriculo = $request->file('curriculoEstagio')->store('estagios/comunicacao', 'public');
-        $pathTrabalho = $request->file('trabalhoEstagio')->store('estagios/comunicacao', 'public');
+        if ($request->file('curriculoEstagio') != '')
+        {
+            $pathCurriculo = $request->file('curriculoEstagio')->store('estagios/comunicacao', 'public');
+        }
+
+        if ($request->file('trabalhoEstagio') != '')
+        {
+            $pathTrabalho = $request->file('trabalhoEstagio')->store('estagios/comunicacao', 'public');
+        }
 
         $auxiliar = Auxiliar::where('codigoUsuario', session('cpfEstagio'))->get();
 
@@ -154,7 +166,7 @@ class EstagioController extends Controller
 
         $request->session()->forget('cpfEstagio');
 
-        dispatch(new ConfirmacaoJob($codigoEstagio, $estagio->emailEstagio));
+        dispatch(new ConfirmacaoJob($estagio->codigoEstagio, $estagio->emailEstagio));
         dispatch(new InscricaoJob($estagio->codigoEstagio));
 
         if (Mail::failures()) 
@@ -223,12 +235,23 @@ class EstagioController extends Controller
     {
         $validated = $request->validated();
 
-        $estagio = Estagio::where('cpfEstagio', $request->cpfPessoal)->first();
+        $estagio = Estagio::where('cpfEstagio', preg_replace('/[^0-9]/', '', $request->cpfPessoal))->first();
         session(['cpfEstagio' => $request->cpfPessoal]);
 
         if ($estagio == '')
         {
             return redirect("estagios/comunicacao/create");
+        }
+        else
+        {
+            $item = array();
+            $item['title'] = 'Aviso';
+            $item['story'] = 'CPF já inscrito no processo seletivo';
+
+            return view('components.modal',
+            [
+                'item' => $item,                
+            ]);
         }
     }
 

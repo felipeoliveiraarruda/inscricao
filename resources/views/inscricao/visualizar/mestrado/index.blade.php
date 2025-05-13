@@ -336,5 +336,129 @@
                 @endif
             </td>
         </tr>
+
+        @if($pais != 1)
+        <tr>
+            <td>3.1.1. Projeto de Pesquisa</td> 
+            <td class="text-center">
+                @if(!empty($projeto->codigoInscricaoArquivo))
+                    <i class="fa fa-check text-success"></i>
+                @else
+                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
+                @endif 
+            </td>
+            <td class="text-center">
+                @if (!empty($projeto->codigoInscricaoArquivo))
+                    <a href="{{ asset('storage/'.$projeto->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    @if ($status == 'N')
+                        <a href="documento/{{ $projeto->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a href="documento/{{ $projeto->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    @endif 
+                @else
+                    <a href="documento/{{$codigoInscricao}}/32" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                        <i class="fa fa-plus"></i>
+                    </a> 
+                @endif                
+            </td>
+        </tr>
+        <tr>
+            <td>3.2.2. Plano de Estudos - <a href="https://cpg.eel.usp.br/aluno/formularios/plano-de-estudo" target="_new">Modelo</a></td> 
+            <td class="text-center">
+                @if(!empty($plano_estudo->codigoInscricaoArquivo))
+                    <i class="fa fa-check text-success"></i>
+                @else
+                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
+                @endif 
+            </td>
+            <td class="text-center">
+                @if (!empty($plano_estudo->codigoInscricaoArquivo))
+                    <a href="{{ asset('storage/'.$plano_estudo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    @if ($status == 'N')
+                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a href="documento/{{ $plano_estudo->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    @endif 
+                @else
+                    <a href="documento/{{$codigoInscricao}}/31" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                        <i class="fa fa-plus"></i>
+                    </a> 
+                @endif                
+            </td>
+        </tr>
+        <tr>
+            <td>3.2.3. Carta digital de encaminhamento do futuro orientador</td> 
+            <td class="text-center">
+                @if(!empty($carta->codigoInscricaoArquivo))
+                    <i class="fa fa-check text-success"></i>
+                @else
+                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
+                @endif 
+            </td>
+            <td class="text-center">
+                @if (!empty($carta->codigoInscricaoArquivo))
+                    <a href="{{ asset('storage/'.$carta->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    @if ($status == 'N')
+                        <a href="documento/{{ $carta->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a href="documento/{{ $carta->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    @endif 
+                @else
+                    <a href="documento/{{$codigoInscricao}}/33" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                        <i class="fa fa-plus"></i>
+                    </a> 
+                @endif                
+            </td>
+        </tr>
+        <tr>
+            <td>3.2.4. Termo de Compromisso de Orientação - <a href="https://cpg.eel.usp.br/sites/files/cpg/arquivos/formularios/12_Termo_Compromisso_de_Orientacao.pdf" target="_new">Modelo</a></td> 
+            <td class="text-center">
+                @if(!empty($termo_orientacao->codigoInscricaoArquivo))
+                    <i class="fa fa-check text-success"></i>
+                @else
+                    <i class="fa fa-exclamation-triangle text-warning"></i>                                  
+                @endif 
+            </td>
+            <td class="text-center">
+                @if (!empty($termo_orientacao->codigoInscricaoArquivo))
+                    <a href="{{ asset('storage/'.$termo_orientacao->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-primary btn-sm" target="_new" data-toggle="tooltip" data-placement="bottom" title="Visualizar">
+                        <i class="fas fa-eye"></i>
+                    </a>
+
+                    @if ($status == 'N')
+                        <a href="documento/{{ $termo_orientacao->codigoArquivo }}/edit/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="bottom" title="Alterar">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <a href="documento/{{ $termo_orientacao->codigoArquivo }}/destroy/{{ $codigoInscricao }}" role="button" aria-pressed="true" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="bottom" title="Apagar">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    @endif 
+                @else
+                    <a href="documento/{{$codigoInscricao}}/35" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
+                        <i class="fa fa-plus"></i>
+                    </a> 
+                @endif                
+            </td>  
+        </tr>
+        @endif
+
     </tbody> 
 </table>

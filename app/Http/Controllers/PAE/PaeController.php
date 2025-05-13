@@ -45,10 +45,10 @@ class PaeController extends Controller
         $total       = Arquivo::verificaArquivosPae($inscricao->codigoPae);
 
         $recurso = RecursoPae::join('pae', 'recurso_pae.codigoPae', '=', 'pae.codigoPae')
-                                ->join('avaliadores_pae', 'avaliadores_pae.codigoPae', '=', 'pae.codigoPae')
-                                ->join('avaliacao_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
-                                ->where('pae.codigoPae', '=', $inscricao->codigoPae)
-                                ->first();
+                             ->join('avaliadores_pae', 'avaliadores_pae.codigoPae', '=', 'pae.codigoPae')
+                             ->join('avaliacao_pae', 'avaliacao_pae.codigoAvaliadorPae', '=', 'avaliadores_pae.codigoAvaliadorPae')
+                             ->where('pae.codigoPae', '=', $inscricao->codigoPae)
+                             ->first();
 
         return view('pae.index',
         [

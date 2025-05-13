@@ -27,9 +27,9 @@
         <td> 
             <select class="form-control" id="aceitarDocumento[{{ $analise->codigoAnaliseCurriculo }}]" name="aceitarDocumento[{{ $analise->codigoAnaliseCurriculo }}]" required>
                 <option value="">Selecione uma opção</option>
-                <option value="S|{{ $analise->codigoAnaliseCurriculo }}" @if ($analise->statusAnaliseCurriculo == 'S') selected @endif>Aceitar</option>
-                <option value="N|{{ $analise->codigoAnaliseCurriculo }}" @if ($analise->statusAnaliseCurriculo == 'N') selected @endif>Alterar</option>
-                <option value="R|{{ $analise->codigoAnaliseCurriculo }}" @if ($analise->statusAnaliseCurriculo == 'R') selected @endif>Rejeitar</option>
+                <option value="S|{{ $arquivo->codigoArquivo }}" @if ($analise->statusAnaliseCurriculo == 'S') selected @endif>Aceitar</option>
+                <option value="N|{{ $arquivo->codigoArquivo }}" @if ($analise->statusAnaliseCurriculo == 'N') selected @endif>Alterar</option>
+                <option value="R|{{ $arquivo->codigoArquivo }}" @if ($analise->statusAnaliseCurriculo == 'R') selected @endif>Rejeitar</option>
             </select>         
         </td>
         <td>

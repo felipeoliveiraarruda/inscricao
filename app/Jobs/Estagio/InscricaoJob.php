@@ -29,6 +29,6 @@ class InscricaoJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to('cpg@eel.usp.br')->send(new InscricaoMail($this->codigoEstagio));
+        Mail::to('cpq@eel.usp.br')->send(new InscricaoMail($this->codigoEstagio));
     }
 }

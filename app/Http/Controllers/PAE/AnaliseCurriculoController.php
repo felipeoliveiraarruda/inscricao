@@ -262,7 +262,7 @@ class AnaliseCurriculoController extends Controller
 
             if (isset($request->tipoDocumentoAnalise[$codigoAnaliseCurriculo]))
             {
-                $arquivo = Arquivo::find($codigoArquivo);
+                $arquivo = Arquivo::find($codigoArquivo);            
                 $arquivo->codigoTipoDocumento = $request->tipoDocumentoAnalise[$codigoAnaliseCurriculo];
                 $arquivo->save();
             }
@@ -272,6 +272,7 @@ class AnaliseCurriculoController extends Controller
             $analise->statusAnaliseCurriculo        = $statusAnaliseCurriculo;
             $analise->justificativaAnaliseCurriculo = (isset($request->justificativaAnalise[$codigoAnaliseCurriculo]) ? $request->justificativaAnalise[$codigoAnaliseCurriculo] : NULL);            
             $analise->codigoPessoaAlteracao         = Auth::user()->codpes;
+            $analise->save();
             
             $pontuacao = $pontuacao + $request->pontuacaoAnalise[$codigoAnaliseCurriculo];
         }        

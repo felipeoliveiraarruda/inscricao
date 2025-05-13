@@ -13,8 +13,8 @@
             <th scope="col">Justificativa</th>
         </tr>
     </thead>
-@foreach($arquivos as $arquivo)
-    <tr>
+    @foreach($arquivos as $arquivo)
+     <tr>
         <td>
             <a href="{{ asset('storage/'.$arquivo->linkArquivo) }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" target="_new" title="Visualizar">
                 <i class="far fa-eye"></i>

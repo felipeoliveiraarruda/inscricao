@@ -1,4 +1,4 @@
-@if (Session::get('total')['especial'] >= 12 && $total >= 11 && !empty($requerimento) && $status == 'N')
+@if (Session::get('total')['especial'] >= 8 && $total >= 11 && !empty($requerimento) && $status == 'N')
         <!-- Validation Errors -->
         <x-auth-validation-errors class="text-danger mb-4" :errors="$errors" />
 
@@ -66,7 +66,7 @@
         </tr>
         <tr>
             <td>4.2 Ficha de Inscrição            
-                @if (Session::get('total')['especial'] >= 12 && $total >= 11)     
+                @if (Session::get('total')['especial'] >= 8 && $total >= 11)     
                  - <a href="inscricao/comprovante/{{ $codigoInscricao }}" target="_new">Imprimir</a>
                 @endif
             </td>   
@@ -92,7 +92,7 @@
                         </a>
                     @endif 
                 @else
-                    @if (Session::get('total')['especial'] >= 12 && $total >= 11) 
+                    @if (Session::get('total')['especial'] >= 8 && $total >= 11) 
                     <a href="documento/{{$codigoInscricao}}/28" role="button" aria-pressed="true" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom" title="Novo">
                         <i class="fa fa-plus"></i>
                     </a>

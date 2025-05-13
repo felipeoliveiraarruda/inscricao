@@ -52,7 +52,7 @@ class Arquivo extends Model
                                    $join->on('arquivos.codigoArquivo', '=', 'inscricoes_arquivos.codigoArquivo');
                                })
                                ->where('inscricoes.codigoInscricao',  $codigoInscricao)                               
-                               ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
+                               ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)                               
                                ->get();
         }
 

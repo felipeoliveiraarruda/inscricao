@@ -39,6 +39,7 @@ class ComprovanteEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::mailer($this->codigoCurso)->to($this->email)->send(new ComprovanteMail($this->codigoInscricao));
+       // Mail::mailer($this->codigoCurso)->to($this->email)->send(new ComprovanteMail($this->codigoInscricao));
+       Mail::to($this->email)->send(new ComprovanteMail($this->codigoInscricao));
     }
 }

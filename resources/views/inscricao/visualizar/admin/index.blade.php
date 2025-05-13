@@ -11,7 +11,7 @@
             <div class="card bg-default">
                 <h5 class="card-header">{{ $inscricao->numeroInscricao }} - {{ $inscricao->name }}
 
-                    @if ($status != 'N' && $codigoEdital != 8)
+                    @if ($status != 'N' && (Session::get('nivel') == 6))
                         <a href="inscricao/{{ $codigoInscricao }}/download" role="button" aria-pressed="true" class="btn btn-info btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Download">
                             <i class="fas fa-file-download"></i>
                         </a>
@@ -69,8 +69,8 @@
 
                                 <!-- Modal -->
                                 @include('utils.loader')
+                                
                             @endif
-
 
                             @foreach($arquivos as $arquivo)
                             <tr>
@@ -83,7 +83,7 @@
                             </tr>
                             @endforeach
                         </table>
-                        @if ($codigoEdital == 8 && !empty($arquivo->linkArquivo))
+                        @if (Session::get('nivel') == 6 && !empty($arquivo->linkArquivo))
                             <embed src="{{ asset('storage/'.$arquivo->linkArquivo) }}" width="1024" height="500" alt="pdf" />
                         @endif
                     </div>

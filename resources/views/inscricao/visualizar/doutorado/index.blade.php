@@ -547,7 +547,7 @@
             </td>
         </tr>
         <tr>
-            <td>3.2.5 Termo de Compromisso de Orientação<span class="text-danger">*</span> - <a href="https://cpg.eel.usp.br/sites/files/cpg/arquivos/formularios/12_Termo_Compromisso_de_Orientacao.pdf" target="_new">Modelo</a></td> 
+            <td>3.2.4 Termo de Compromisso de Orientação<span class="text-danger">*</span> - <a href="https://cpg.eel.usp.br/sites/files/cpg/arquivos/formularios/12_Termo_Compromisso_de_Orientacao.pdf" target="_new">Modelo</a></td> 
             <td class="text-center">
                 @if(!empty($termo_orientacao->codigoInscricaoArquivo))
                     <i class="fa fa-check text-success"></i>

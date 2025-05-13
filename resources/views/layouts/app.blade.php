@@ -581,7 +581,81 @@
         $("#exibirNaoRegular").show();
         $("#egressoAtividade").prop('required', false);
       });
-    })  
+
+      $('#exibirIdioma').show();
+
+      $('#save-idioma').click(function(e)
+		  {			
+        var fields = false;
+        var idiomas = {};
+        
+        $("input[data-idioma='true']").each(function() 
+        {
+            var element = $(this);			
+            
+          if (element.val() == "") 
+          {
+            element.addClass('is-invalid');
+            fields = true;
+            }
+          else
+          {
+            element.removeClass('is-invalid');
+            fields = false;
+            idiomas[$(this).attr('name')] = $(this).val();
+          }
+        });
+
+        $("select[data-idioma='true']").each(function() 
+        {
+            var element = $(this);
+            
+          if (element.val() == "") 
+          {
+            element.addClass('is-invalid');
+            fields = true;
+            }
+          else
+          {
+            element.removeClass('is-invalid');
+            fields = false;
+            idiomas[$(this).attr('name')] = $(this).find(":selected").val();
+          }
+        });
+        
+        if (fields === false)
+        {
+          $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          }); 
+
+          $.ajax(
+          {
+            type: "POST",					
+            url: "{{ url('idiomas/store') }}",
+            data:  { idiomas: idiomas },
+                              
+            success:function(response)
+            {
+              $('#exibirIdioma').html(response);
+              $("input[data-idioma='true']").val('');
+              $("select[data-idioma='true']").val('""');
+                      
+              $('#addIdioma').modal("hide");
+            },
+            error: function(error)
+            {                   	
+              alert("Ocorreu um erro no cadastro do idioma");
+            }
+          });
+        }			
+      });
+  });
+
+
+
 
     /*tinymce.init({
       selector: 'textarea',

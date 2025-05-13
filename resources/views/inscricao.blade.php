@@ -58,12 +58,16 @@
                             <p class="text-justify">Não serão aceitos fotos, "prints" ou digitalização do documento assinado eletronicamente.</p>                                    
                         @endif-->
 
-                        @if ($codigoEdital == 14)
+                        @if (Session::get('nivel') == 6)
                             @php
                                 $pos = \Uspdev\Replicado\Posgraduacao::obterVinculoAtivo(Auth::user()->codpes);
                             @endphp
-
-                            <p class="text-justify">Verifique os seus dados, imprima e assine original ou eletronicamente por assinatura qualificada (por exemplo, Imprensa Oficial, Docusign etc.) o requerimento de inscrição e faça o upload do arquivo para finalizar sua inscrição.</p>
+                            
+                            @if ($codigoEdital == 28)
+                                <p class="text-justify">Verifique os seus dados, imprima o requerimento em pdf e colha as assinaturas eletrônicas certificadas (Gov.br, Docusign ou outra) do aluno e do orientador no requerimento de inscrição. Faça o upload do arquivo assinado para finalizar a sua inscrição.</p>
+                            @else
+                                <p class="text-justify">Verifique os seus dados, imprima e assine original ou eletronicamente por assinatura qualificada (por exemplo, Imprensa Oficial, Docusign etc.) o requerimento de inscrição e faça o upload do arquivo para finalizar sua inscrição.</p>
+                            @endif
 
                             <table class="table table-striped">
                                 <thead>

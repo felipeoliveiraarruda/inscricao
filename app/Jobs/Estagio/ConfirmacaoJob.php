@@ -31,6 +31,6 @@ class ConfirmacaoJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::mailer('cpg')->to($this->emailEstagio)->send(new InscricaoMail($this->codigoEstagio));
+        Mail::mailer('cpq')->to($this->emailEstagio)->send(new InscricaoMail($this->codigoEstagio));
     }
 }

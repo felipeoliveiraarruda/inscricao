@@ -44,8 +44,8 @@ class EstagioPostRequest extends FormRequest
             "powerPointEstagio" => 'required|string',
             "podcastEstagio" => 'required|string',
             "doodleEstagio" => 'required|string',
-            "curriculoEstagio" => 'file|mimes:pdf',
-            "trabalhoEstagio" => 'file|mimes:pdf',
+            "curriculoEstagio" => 'mimes:pdf|max:64000',
+            "trabalhoEstagio" => 'mimes:pdf|max:64000',
         ];
     }
 }

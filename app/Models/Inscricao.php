@@ -464,7 +464,7 @@ class Inscricao extends Model
                         ->where('inscricoes.codigoInscricao', $codigoInscricao)
                         ->whereIn('arquivos.codigoTipoDocumento', $codigoTipoDocumento)
                         ->whereNull('inscricoes_arquivos.deleted_at')
-                        ->orderBy('editais_tipo_documentos.ordemTipoDocumento', 'asc')
+                        ->orderBy('editais_tipo_documentos.codigoEditalTipoDocumento')
                         //->groupBy('inscricoes_arquivos.codigoInscricaoArquivo')
                         ->get();  
 

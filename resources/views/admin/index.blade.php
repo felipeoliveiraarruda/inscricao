@@ -54,9 +54,11 @@
                                                         <i class="fas fa-graduation-cap"></i>
                                                     </a>
                                                 @else
-                                                    <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
-                                                        <i class="fas fa-tasks"></i>
-                                                    </a>
+                                                    @if ($edital->codigoNivel != 5)
+                                                        <a href="admin/confirmados/{{ $edital->codigoEdital }}" role="button" aria-pressed="true" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="bottom" title="Confirmados">
+                                                            <i class="fas fa-tasks"></i>
+                                                        </a>
+                                                    @endif
                                                 @endif
 
                                                 @if ($edital->codigoNivel == 6)
@@ -88,7 +90,7 @@
                                                     </a>
                                                 @endif
 
-                                                @if ($edital->codigoNivel == 5)
+                                                @if ($edital->codigoNivel == 5 && (date('Y-m-d') >= $edital->dataInicioRecurso && date('Y-m-d') <= $edital->dataFinalRecurso ))
                                                     <a href="admin/{{ $edital->codigoEdital }}/pae/recurso" role="button" aria-pressed="true" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="bottom" title="Recursos">
                                                         <i class="fas fa-exchange-alt"></i>
                                                     </a>

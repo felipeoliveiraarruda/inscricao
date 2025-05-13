@@ -104,7 +104,7 @@ class ImpressaoController extends Controller
             $nivel = 'Mestrado';
         }
 
-        if ($nivel == 'DD')
+        if ($nivel == 'DD' || $nivel == 'DF')
         {
             $nivel = 'Doutorado';
         }
@@ -306,7 +306,7 @@ class ImpressaoController extends Controller
             $nivel = 'Mestrado';
         }
 
-        if ($nivel == 'DD')
+        if ($nivel == 'DD' || $nivel == 'DF')
         {
             $nivel = 'Doutorado';
         }
@@ -763,7 +763,7 @@ class ImpressaoController extends Controller
         $pdf->Ln();
 
         $pdf->Cell(92, 6, '', 0, 0, 'C');
-        $pdf->Cell(23, 6, utf8_decode('03/2025'), 0, 0, 'L');
+        $pdf->Cell(23, 6, utf8_decode('05/2025'), 0, 0, 'L');
         $pdf->Cell(44, 6, '', 0, 0, 'L');
         $pdf->Cell(31, 6, utf8_decode('03/2025'), 0, 0, 'L');
         $pdf->Ln();
@@ -772,7 +772,7 @@ class ImpressaoController extends Controller
         $pdf->Ln();
 
         $pdf->Cell(92, 6, '', 0, 0, 'C');
-        $pdf->Cell(98, 6, utf8_decode('24 meses'), 0, 0, 'L');
+        $pdf->Cell(98, 6, utf8_decode('13 meses'), 0, 0, 'L');
         $pdf->Ln();
 
 
